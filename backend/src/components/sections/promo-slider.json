@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_sections_promo_sliders",
+  "info": {
+    "displayName": "Promo Slider Section",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "richtext"
+    },
+    "slides": {
+      "type": "component",
+      "repeatable": true,
+      "component": "items.promo-slide"
+    }
+  }
+}

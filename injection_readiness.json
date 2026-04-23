@@ -1,0 +1,725 @@
+{
+  "status": "warning",
+  "gates": {
+    "boot": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "locales": [
+          "el",
+          "ru"
+        ],
+        "pages_count": 0,
+        "tags_count": 0
+      }
+    },
+    "normalization": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "recorded_audit_version": "1ce8c23979ef8491a59c2cf9d2ac183931d1f7c71dd3a3d136e17650f9a9d8b4",
+        "current_audit_sha256": "1ce8c23979ef8491a59c2cf9d2ac183931d1f7c71dd3a3d136e17650f9a9d8b4",
+        "pair_count": 136,
+        "web_singleton_count": 47,
+        "rus_singleton_count": 7
+      }
+    },
+    "strapi_page_schema": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "missing_in_page_schema": [],
+        "schema_attribute_count": 21
+      }
+    },
+    "coverage": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "source_web_count": 183,
+        "source_rus_count": 143,
+        "missing_from_normalization": {
+          "web": [],
+          "rus": []
+        },
+        "normalization_references_missing_sources": {
+          "web": [],
+          "rus": []
+        }
+      }
+    },
+    "schema_coverage": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "fields": {
+          "id": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "type": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "contentType": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "pagetitle": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "title",
+            "rows": 735
+          },
+          "longtitle": {
+            "type": "field",
+            "classification": "drop(policy)",
+            "destination": "drop(policy): folded into metaTitle fallback when TV absent",
+            "rows": 613
+          },
+          "description": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "seo.metaDescription",
+            "rows": 582
+          },
+          "alias": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "slug",
+            "rows": 735
+          },
+          "published": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "publishedAt",
+            "rows": 735
+          },
+          "pub_date": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "unpub_date": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "parent": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "parentPage",
+            "rows": 735
+          },
+          "isfolder": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "isFolder",
+            "rows": 735
+          },
+          "introtext": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "excerpt",
+            "rows": 464
+          },
+          "richtext": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "template": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "templateId",
+            "rows": 735
+          },
+          "menuindex": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "menuIndex",
+            "rows": 735
+          },
+          "searchable": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "cacheable": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "createdby": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "createdon": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "editedby": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "editedon": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "deleted": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "deletedon": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "deletedby": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "publishedon": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "publishedby": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "donthit": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "privateweb": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "privatemgr": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "content_dispo": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "hidemenu": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "hideFromMenu",
+            "rows": 735
+          },
+          "class_key": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "context_key": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "locale",
+            "rows": 735
+          },
+          "content_type": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "uri": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "uri_override": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "hide_children_in_tree": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "show_in_tree": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "properties": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "alias_visible": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "template_variables": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "children": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 61
+          },
+          "_import": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 735
+          },
+          "TV:migxSocial": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.social-link)",
+            "rows": 2
+          },
+          "TV:metaTitle": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "seo.metaTitle",
+            "rows": 573
+          },
+          "TV:metaDescription": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "seo.metaDescription",
+            "rows": 231
+          },
+          "TV:migxResources": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.faq-item)",
+            "rows": 2
+          },
+          "TV:metaKeywords": {
+            "type": "tv",
+            "classification": "drop(policy)",
+            "destination": "drop(policy): Strapi SEO component drops keywords",
+            "rows": 622
+          },
+          "TV:videoMp4": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.video)",
+            "rows": 2
+          },
+          "TV:migxPromoSlider": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.promo-slide)",
+            "rows": 2
+          },
+          "TV:videoWebm": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.video)",
+            "rows": 2
+          },
+          "TV:imageVideo": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.video)",
+            "rows": 2
+          },
+          "TV:popUpClose": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "popUpClose",
+            "rows": 2
+          },
+          "TV:babelLanguageLinks": {
+            "type": "tv",
+            "classification": "drop(policy)",
+            "destination": "drop(policy): replaced by babel_normalization.json",
+            "rows": 735
+          },
+          "TV:infoBlockBottom": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "infoBlockBottom",
+            "rows": 73
+          },
+          "content": {
+            "type": "field",
+            "classification": "direct",
+            "destination": "content",
+            "rows": 648
+          },
+          "TV:class": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "(html class passthrough)",
+            "rows": 30
+          },
+          "TV:image": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "featuredImage",
+            "rows": 682
+          },
+          "TV:migxFaq": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.faq-item)",
+            "rows": 4
+          },
+          "TV:tags": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "tags",
+            "rows": 518
+          },
+          "TV:articleAuthor": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "articleAuthor",
+            "rows": 322
+          },
+          "TV:sources": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "sources",
+            "rows": 307
+          },
+          "TV:location": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(shared.location)",
+            "rows": 57
+          },
+          "TV:imageCenter": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "imageCenter",
+            "rows": 227
+          },
+          "menutitle": {
+            "type": "field",
+            "classification": "drop(policy)",
+            "destination": "drop(policy): Strapi uses title in nav",
+            "rows": 45
+          },
+          "TV:migxGallery": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.gallery-image)",
+            "rows": 59
+          },
+          "TV:url": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "externalUrl",
+            "rows": 51
+          },
+          "TV:migxVideo": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.video)",
+            "rows": 4
+          },
+          "TV:videoTags": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.video)",
+            "rows": 4
+          },
+          "link_attributes": {
+            "type": "field",
+            "classification": "drop(system)",
+            "destination": "MODX-internal column, not content",
+            "rows": 2
+          },
+          "TV:migxAccordion": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.accordion-item)",
+            "rows": 36
+          },
+          "TV:migxContacts": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.contact-detail)",
+            "rows": 2
+          },
+          "TV:migxLocation": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.clinic)",
+            "rows": 2
+          },
+          "TV:migxTabs": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.tab-item)",
+            "rows": 3
+          },
+          "TV:migxTabsLink": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.tab-item)",
+            "rows": 3
+          },
+          "TV:migxAdvantages": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.advantage)",
+            "rows": 1
+          },
+          "TV:AffiliateAddress": {
+            "type": "tv",
+            "classification": "drop(policy)",
+            "destination": "drop(policy): affiliate-only, not modelled",
+            "rows": 4
+          },
+          "TV:AffiliatePhone": {
+            "type": "tv",
+            "classification": "drop(policy)",
+            "destination": "drop(policy): affiliate-only, not modelled",
+            "rows": 4
+          },
+          "TV:AffiliateEmail": {
+            "type": "tv",
+            "classification": "drop(policy)",
+            "destination": "drop(policy): affiliate-only, not modelled",
+            "rows": 4
+          },
+          "TV:AffiliateCoords": {
+            "type": "tv",
+            "classification": "drop(policy)",
+            "destination": "drop(policy): affiliate-only, not modelled",
+            "rows": 4
+          },
+          "TV:migxLocation2": {
+            "type": "tv",
+            "classification": "transform",
+            "destination": "pageBlocks(blocks.clinic)",
+            "rows": 1
+          }
+        }
+      }
+    },
+    "migx": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "resources_with_migx_tvs": 112,
+        "resources_missing_blocks": [],
+        "invalid_blocks": [],
+        "raw_parse_failures": []
+      }
+    },
+    "asset": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "unresolved_html_references": [],
+        "unresolved_tv_references": [],
+        "documented_orphan_html": [],
+        "documented_orphan_tv": [],
+        "asset_map_entries": 1424
+      }
+    },
+    "internal_page_hrefs": {
+      "status": "warning",
+      "findings": [
+        "2 relative anchor(s) are not plain ``/slug`` paths (Greek/encoded/modifiers?)"
+      ],
+      "details": {
+        "legacy_site_hrefs": [],
+        "legacy_site_href_count": 0,
+        "non_ascii_slug_relative_hrefs": [
+          {
+            "id": 222,
+            "context": "rus",
+            "field": "blocks",
+            "href": "files/images/diseases/hoarseness-of-voice/vocal cord nodule.jpg"
+          },
+          {
+            "id": 222,
+            "context": "rus",
+            "field": "blocks",
+            "href": "files/images/diseases/hoarseness-of-voice/vocal cord nodule.jpg"
+          }
+        ],
+        "non_ascii_slug_relative_count": 2
+      }
+    },
+    "stale_html_placeholders": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "modx_link_tag_total": 0,
+        "modx_link_samples": [],
+        "trivial_hash_href_total": 0,
+        "trivial_hash_samples": [],
+        "empty_href_total": 0,
+        "empty_href_samples": [],
+        "empty_img_src_total": 0,
+        "empty_img_src_samples": []
+      }
+    },
+    "slug": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "collisions": {
+          "web": [],
+          "rus": []
+        },
+        "skipped_ids": [
+          11
+        ]
+      }
+    },
+    "parent": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "orphans": {
+          "web": [],
+          "rus": []
+        }
+      }
+    },
+    "tags": {
+      "status": "ok",
+      "findings": [],
+      "details": {
+        "distinct_tags": {
+          "web": {
+            "Επεμβάσεις": 153,
+            "Φάρυγγας": 40,
+            "Ρινός": 102,
+            "Λάρυγγας": 20,
+            "Παιδο-ΩΡΛ": 67,
+            "Αυτί": 70,
+            "Ίλιγγος - Ζάλη": 11,
+            "Λαιμός": 42,
+            "Ενδοσκοπική χειρουργική": 46,
+            "Θυρεοειδής αδένας": 21,
+            "Αμυγδαλές": 17,
+            "Ιγμορίτιδα": 16,
+            "Κρεατάκια": 10,
+            "Πλαστική προσώπου": 57,
+            "Σιελογόνοι αδένες": 9
+          },
+          "rus": {
+            "Ухо": 21,
+            "Шея": 11,
+            "Нос": 9,
+            "Гортань": 13,
+            "Глотка": 15,
+            "заложенность Детская ЛОР": 3,
+            "Детская ЛОР": 36,
+            "Vertigo - Головокружение": 5,
+            "глотка": 7,
+            "нос": 38,
+            "вмешательства": 3,
+            "шея": 8,
+            "горло": 11,
+            "Хирургия": 31,
+            "Эндоскопическая хирургия": 10,
+            "хирургия": 28,
+            "синусит": 8,
+            "Синусит": 2,
+            "эндоскопическая хирургия": 4,
+            "Миндалины": 18,
+            "шеи": 20,
+            "Επεμβάσεις": 16,
+            "Ρινός": 6,
+            "Носовая эндоскопическая хирургия": 3,
+            "Нос хирургии": 8,
+            "гортань": 6,
+            "миндалины": 6,
+            "детская ЛОР": 18,
+            "ухо": 14,
+            "Αυτί": 15,
+            "Головокружение - Головокружение": 6,
+            "Ear": 6,
+            "слюнных желез": 2,
+            "Слюнные железы хирургия": 2,
+            "Вмешательства": 2,
+            "слюнные железы": 2,
+            "У детей ЛОР": 2,
+            "пластичное лицо": 2,
+            "Шеи": 3,
+            "горла": 3,
+            "хирургии": 3,
+            "аденоиды": 9,
+            "Παιδο-ΩΡΛ": 7,
+            "Κρεατάκια": 2,
+            "Αμυγδαλές": 2,
+            "Φάρυγγας": 2,
+            "Аденоиды": 3,
+            "носа": 2,
+            "пластика лица": 2,
+            "ушей": 2,
+            "заложенность эндоскопической хирургии": 4,
+            "Πλαστική προσώπου": 22,
+            "Пластиковые лица": 3,
+            "пластик для лица": 6,
+            "Пластическая хирургия лица": 15,
+            "Щитовидная железа": 6,
+            "щитовидная железа": 8
+          }
+        },
+        "warnings": [],
+        "resolved": true,
+        "unresolved": {
+          "web": [],
+          "rus": []
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "note": "Dead legacy references - source files either missing from the archived public_html tree or prefix-truncated during archival. Dropped per the pragmatic-drop policy documented in import_policy.md. transform_data.py removes the enclosing <img> tag; the asset gate treats these as documented warnings, not blockers.",
+  "html": [
+    {
+      "resource_id": 43,
+      "field": "content",
+      "href": "/files/images/pediatric-ent/hearing-loss-in-children/τυποι-βαρηκοίας-στα-παιδιά.jpg",
+      "decoded": "/files/images/pediatric-ent/hearing-loss-in-children/τυποι-βαρηκοίας-στα-παιδιά.jpg"
+    },
+    {
+      "resource_id": 43,
+      "field": "content",
+      "href": "/files/images/pediatric-ent/hearing-loss-in-children/ακουστικό-στο-παιδί.jpg",
+      "decoded": "/files/images/pediatric-ent/hearing-loss-in-children/ακουστικό-στο-παιδί.jpg"
+    },
+    {
+      "resource_id": 109,
+      "field": "content",
+      "href": "/files/images/pediatric-ent/tonsils-adenoids-snoring-sleep-apnea/αδενοειδές προσωπείο.jpg",
+      "decoded": "/files/images/pediatric-ent/tonsils-adenoids-snoring-sleep-apnea/αδενοειδές προσωπείο.jpg"
+    },
+    {
+      "resource_id": 136,
+      "field": "content",
+      "href": "files/images/about/εικόνα-004.jpg",
+      "decoded": "files/images/about/εικόνα-004.jpg"
+    },
+    {
+      "resource_id": 286,
+      "field": "content",
+      "href": "/files/images/1.reklama/ринопластика-01-01.jpg",
+      "decoded": "/files/images/1.reklama/ринопластика-01-01.jpg"
+    },
+    {
+      "resource_id": 286,
+      "field": "content",
+      "href": "/files/images/1.reklama/ринопластика-01-01-01.jpg",
+      "decoded": "/files/images/1.reklama/ринопластика-01-01-01.jpg"
+    },
+    {
+      "resource_id": 299,
+      "field": "content",
+      "href": "/files/images/1.reklama/буллхорн3.jpg",
+      "decoded": "/files/images/1.reklama/буллхорн3.jpg"
+    },
+    {
+      "resource_id": 302,
+      "field": "content",
+      "href": "/files/images/1.reklama/пересадка-бровей-01-01-01.jpg",
+      "decoded": "/files/images/1.reklama/пересадка-бровей-01-01-01.jpg"
+    },
+    {
+      "resource_id": 327,
+      "field": "content",
+      "href": "/files/images/1.reklama/блефаропластика1.jpg",
+      "decoded": "/files/images/1.reklama/блефаропластика1.jpg"
+    },
+    {
+      "resource_id": 327,
+      "field": "content",
+      "href": "/files/images/1.reklama/блефаропластика2.jpg",
+      "decoded": "/files/images/1.reklama/блефаропластика2.jpg"
+    },
+    {
+      "resource_id": 335,
+      "field": "content",
+      "href": "/files/images/1.reklama/отопластика-2.jpg",
+      "decoded": "/files/images/1.reklama/отопластика-2.jpg"
+    },
+    {
+      "resource_id": 336,
+      "field": "content",
+      "href": "/files/images/1.reklama/отопластика3.jpg",
+      "decoded": "/files/images/1.reklama/отопластика3.jpg"
+    },
+    {
+      "resource_id": 366,
+      "field": "content",
+      "href": "/files/images/diseases/nasal-fructure/Κάταγμα+ρινός.jpg",
+      "decoded": "/files/images/diseases/nasal-fructure/Κάταγμα+ρινός.jpg"
+    },
+    {
+      "resource_id": 392,
+      "field": "content",
+      "href": "/files/images/diseases/κυστη.jpg",
+      "decoded": "/files/images/diseases/κυστη.jpg"
+    },
+    {
+      "resource_id": 392,
+      "field": "content",
+      "href": "/files/images/diseases/acute-deafness/συριγγιο4.jpg",
+      "decoded": "/files/images/diseases/acute-deafness/συριγγιο4.jpg"
+    },
+    {
+      "resource_id": 392,
+      "field": "content",
+      "href": "/files/images/diseases/acute-deafness/συριγγιο2.jpg",
+      "decoded": "/files/images/diseases/acute-deafness/συριγγιο2.jpg"
+    },
+    {
+      "resource_id": 392,
+      "field": "content",
+      "href": "/files/images/diseases/acute-deafness/συριγγιο3.jpg",
+      "decoded": "/files/images/diseases/acute-deafness/συριγγιο3.jpg"
+    },
+    {
+      "resource_id": 394,
+      "field": "content",
+      "href": "/files/images/diseases/σπιλος.jpg",
+      "decoded": "/files/images/diseases/σπιλος.jpg"
+    },
+    {
+      "resource_id": 394,
+      "field": "content",
+      "href": "/files/images/diseases/σπιλος2.jpg",
+      "decoded": "/files/images/diseases/σπιλος2.jpg"
+    }
+  ],
+  "tv": [
+    {
+      "resource_id": 392,
+      "tv": "image",
+      "value": "files/images/diseases/κυστη2.jpg"
+    }
+  ]
+}

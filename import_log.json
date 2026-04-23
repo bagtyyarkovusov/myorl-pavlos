@@ -1,0 +1,18 @@
+{
+  "unresolved": [],
+  "skipped": [
+    {
+      "id": 11,
+      "context": "web",
+      "reason": "xml sitemap, template 0; not a CMS page"
+    }
+  ],
+  "drops_summary": {
+    "longtitle": 260,
+    "metaKeywords": 272,
+    "menutitle": 21,
+    "orphan_block:blocks.video": 109,
+    "orphan_block:blocks.gallery-image": 6
+  },
+  "dry_run_payloads": []
+}

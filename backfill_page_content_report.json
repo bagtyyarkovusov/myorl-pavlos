@@ -1,0 +1,21 @@
+{
+  "ok": [
+    {
+      "modx_id": 1,
+      "document_id": "sriidscf66ymzh3j44opm6uc",
+      "locale": "el"
+    },
+    {
+      "modx_id": 74,
+      "document_id": "rzaot0bdv512y0b8xnfctwql",
+      "locale": "el"
+    }
+  ],
+  "errors": [],
+  "skipped": [],
+  "counts": {
+    "ok": 2,
+    "errors": 0,
+    "skipped": 0
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_blocks_social_links",
+  "info": {
+    "displayName": "Social Link"
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}

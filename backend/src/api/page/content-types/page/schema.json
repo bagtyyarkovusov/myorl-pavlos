@@ -1,0 +1,426 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "singularName": "page",
+    "pluralName": "pages",
+    "displayName": "Page",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "content": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "excerpt": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "parentPage": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::page.page",
+      "inversedBy": "childrenPages",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "childrenPages": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::page.page",
+      "mappedBy": "parentPage",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "pages",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "relatedPages": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::page.page",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "featuredImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "templateId": {
+      "type": "enumeration",
+      "enum": [
+        "template_0",
+        "template_1",
+        "template_2",
+        "template_3",
+        "template_5",
+        "template_6",
+        "template_7",
+        "template_8",
+        "template_10",
+        "template_11",
+        "template_12",
+        "template_13",
+        "template_14",
+        "template_15",
+        "template_16",
+        "template_17",
+        "template_18",
+        "template_20"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "pageType": {
+      "type": "enumeration",
+      "enum": [
+        "home",
+        "content",
+        "faq",
+        "accordion",
+        "tabs",
+        "gallery",
+        "contact",
+        "system"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "layoutVariant": {
+      "type": "enumeration",
+      "enum": [
+        "home",
+        "standard",
+        "service-article",
+        "service-faq",
+        "service-accordion",
+        "service-tabs",
+        "clinic-gallery",
+        "office-gallery",
+        "encyclopedia-article",
+        "section-index",
+        "clinic-index",
+        "video-index",
+        "encyclopedia-index",
+        "appointment-form",
+        "not-found",
+        "search-results",
+        "sitemap",
+        "specialized-article",
+        "contact"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "imageCenter": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "infoBlockBottom": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "externalUrl": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "isFolder": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "hideFromMenu": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "menuIndex": {
+      "type": "integer",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "articleAuthor": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sources": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "popUpClose": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "pageSections": {
+      "type": "dynamiczone",
+      "components": [
+        "sections.promo-slider",
+        "sections.faq",
+        "sections.social-links",
+        "sections.video",
+        "sections.advantages",
+        "sections.accordion",
+        "sections.tabs",
+        "sections.gallery",
+        "sections.contact"
+      ],
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "pageType"
+            },
+            "home"
+          ]
+        }
+      },
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "faqSection": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.faq",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "pageType"
+            },
+            "faq"
+          ]
+        }
+      },
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "accordionSection": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.accordion",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "pageType"
+            },
+            "accordion"
+          ]
+        }
+      },
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "tabsSection": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.tabs",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "pageType"
+            },
+            "tabs"
+          ]
+        }
+      },
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "gallerySection": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.gallery",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "pageType"
+            },
+            "gallery"
+          ]
+        }
+      },
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "contactSection": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.contact",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "pageType"
+            },
+            "contact"
+          ]
+        }
+      },
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "pageBlocks": {
+      "type": "dynamiczone",
+      "components": [
+        "blocks.accordion-item",
+        "blocks.faq-item",
+        "blocks.gallery-image",
+        "blocks.tab-item",
+        "blocks.video",
+        "blocks.clinic",
+        "blocks.social-link",
+        "blocks.promo-slide",
+        "blocks.contact-detail",
+        "blocks.advantage",
+        "shared.location"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}

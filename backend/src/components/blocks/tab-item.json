@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_blocks_tab_items",
+  "info": {
+    "displayName": "Tab Item",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "link": {
+      "type": "string"
+    }
+  }
+}

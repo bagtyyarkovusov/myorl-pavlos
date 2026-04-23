@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_sections_social_links",
+  "info": {
+    "displayName": "Social Links Section",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "richtext"
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "items.social-link"
+    }
+  }
+}

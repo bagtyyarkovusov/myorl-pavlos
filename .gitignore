@@ -1,0 +1,47 @@
+# Secrets and local env
+.env
+backend/.env
+*.local.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / Strapi build output
+node_modules/
+backend/node_modules/
+backend/dist/
+backend/.tmp/
+backend/.cache/
+
+# Generated migration / audit artefacts (re-run scripts to reproduce)
+slug_parity_report.json
+slug_migration_errors.json
+nav_sync_report.json
+dry_run_payloads.json
+parity_report.json
+page_model_migration*.json
+
+# Local checkpoint backups (keep checkpoint.json tracked)
+checkpoint.json.bak-*
+checkpoint.prev.json
+modx_to_strapi.json.bak-*
+modx_to_strapi.prev.json
+tag_id_map.json.bak-*
+tag_id_map.prev.json
+import_log.json.bak-*
+import_log.prev.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

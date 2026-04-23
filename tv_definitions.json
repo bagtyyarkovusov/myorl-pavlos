@@ -1,0 +1,335 @@
+[
+  {
+    "id": 1,
+    "name": "metaTitle",
+    "caption": "Заголовок страницы",
+    "description": "",
+    "type": "text",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 2,
+    "name": "metaKeywords",
+    "caption": "Ключевые слова страницы",
+    "description": "",
+    "type": "autotag",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 3,
+    "name": "metaDescription",
+    "caption": "Описание страницы",
+    "description": "",
+    "type": "textarea",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 4,
+    "name": "image",
+    "caption": "Изображение",
+    "description": "",
+    "type": "image",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 5,
+    "name": "location",
+    "caption": "Локация",
+    "description": "",
+    "type": "maplocationtv",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 6,
+    "name": "migxGallery",
+    "caption": "Галерея",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 7,
+    "name": "migxAccordion",
+    "caption": "Аккордеон ",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 8,
+    "name": "migxSocial",
+    "caption": "Социальные сети",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 9,
+    "name": "tags",
+    "caption": "Теги",
+    "description": "",
+    "type": "autotag",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 10,
+    "name": "infoBlockTop",
+    "caption": "Верхний информационный блок",
+    "description": "",
+    "type": "textarea",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 11,
+    "name": "infoBlockBottom",
+    "caption": "Нижний информационный блок",
+    "description": "",
+    "type": "richtext",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 12,
+    "name": "class",
+    "caption": "Класс для изображения",
+    "description": "",
+    "type": "text",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 13,
+    "name": "url",
+    "caption": "Ссылка",
+    "description": "",
+    "type": "url",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 14,
+    "name": "migxContacts",
+    "caption": "Дополнительные контактные поля",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 15,
+    "name": "migxResources",
+    "caption": "Список ресурсов",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 16,
+    "name": "migxLocation",
+    "caption": "Расположение оффисов",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 17,
+    "name": "migxTabs",
+    "caption": "Табы",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 18,
+    "name": "migxPromoSlider",
+    "caption": "Слайдер",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 19,
+    "name": "videoMp4",
+    "caption": "Видео (MP4)",
+    "description": "",
+    "type": "file",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 20,
+    "name": "imageVideo",
+    "caption": "Изображение для видео",
+    "description": "",
+    "type": "image",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 21,
+    "name": "videoWebm",
+    "caption": "Видео (WEBM)",
+    "description": "",
+    "type": "file",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 22,
+    "name": "imageCenter",
+    "caption": "Изображение по центру контента",
+    "description": "",
+    "type": "image",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 23,
+    "name": "migxVideo",
+    "caption": "Список видео",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 24,
+    "name": "videoTags",
+    "caption": "Видео теги",
+    "description": "",
+    "type": "autotag",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 25,
+    "name": "migxTabsLink",
+    "caption": "Табы линки",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 26,
+    "name": "popUpClose",
+    "caption": "Информация при закрытии",
+    "description": "",
+    "type": "richtext",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 27,
+    "name": "babelLanguageLinks",
+    "caption": "Babel Translation Links",
+    "description": "Используется плагином Babel. Не изменяйте!",
+    "type": "hidden",
+    "elements": null,
+    "default_text": ""
+  },
+  {
+    "id": 28,
+    "name": "migxAdvantages",
+    "caption": "Преимущества",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 29,
+    "name": "articleAuthor",
+    "caption": "Автор",
+    "description": "",
+    "type": "text",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 30,
+    "name": "sources",
+    "caption": "Источники",
+    "description": "",
+    "type": "richtext",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 31,
+    "name": "migxLocation2",
+    "caption": "Копия Расположение оффисов",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 32,
+    "name": "location2",
+    "caption": "Копия Локация",
+    "description": "",
+    "type": "text",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 33,
+    "name": "AffiliateAddress",
+    "caption": "Адрес",
+    "description": "",
+    "type": "text",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 34,
+    "name": "AffiliatePhone",
+    "caption": "Телефон",
+    "description": "",
+    "type": "text",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 35,
+    "name": "AffiliateEmail",
+    "caption": "E-Mail",
+    "description": "",
+    "type": "text",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 36,
+    "name": "AffiliateCoords",
+    "caption": "Координаты",
+    "description": "Широта;Долгота",
+    "type": "text",
+    "elements": "",
+    "default_text": ""
+  },
+  {
+    "id": 37,
+    "name": "migxFaq",
+    "caption": "FAQ",
+    "description": "",
+    "type": "migx",
+    "elements": "",
+    "default_text": ""
+  }
+]

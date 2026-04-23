@@ -1,0 +1,2167 @@
+{
+  "strict_pairs": [
+    {
+      "web": 1,
+      "rus": 153
+    },
+    {
+      "web": 2,
+      "rus": 209
+    },
+    {
+      "web": 3,
+      "rus": 212
+    },
+    {
+      "web": 4,
+      "rus": 255
+    },
+    {
+      "web": 5,
+      "rus": 275
+    },
+    {
+      "web": 7,
+      "rus": 307
+    },
+    {
+      "web": 8,
+      "rus": 315
+    },
+    {
+      "web": 9,
+      "rus": 317
+    },
+    {
+      "web": 10,
+      "rus": 318
+    },
+    {
+      "web": 13,
+      "rus": 213
+    },
+    {
+      "web": 14,
+      "rus": 225
+    },
+    {
+      "web": 15,
+      "rus": 230
+    },
+    {
+      "web": 16,
+      "rus": 231
+    },
+    {
+      "web": 17,
+      "rus": 224
+    },
+    {
+      "web": 19,
+      "rus": 233
+    },
+    {
+      "web": 20,
+      "rus": 232
+    },
+    {
+      "web": 21,
+      "rus": 234
+    },
+    {
+      "web": 22,
+      "rus": 226
+    },
+    {
+      "web": 23,
+      "rus": 217
+    },
+    {
+      "web": 24,
+      "rus": 235
+    },
+    {
+      "web": 25,
+      "rus": 236
+    },
+    {
+      "web": 26,
+      "rus": 237
+    },
+    {
+      "web": 27,
+      "rus": 239
+    },
+    {
+      "web": 28,
+      "rus": 240
+    },
+    {
+      "web": 30,
+      "rus": 241
+    },
+    {
+      "web": 31,
+      "rus": 242
+    },
+    {
+      "web": 32,
+      "rus": 214
+    },
+    {
+      "web": 33,
+      "rus": 243
+    },
+    {
+      "web": 34,
+      "rus": 222
+    },
+    {
+      "web": 36,
+      "rus": 244
+    },
+    {
+      "web": 37,
+      "rus": 223
+    },
+    {
+      "web": 38,
+      "rus": 216
+    },
+    {
+      "web": 39,
+      "rus": 267
+    },
+    {
+      "web": 41,
+      "rus": 265
+    },
+    {
+      "web": 42,
+      "rus": 264
+    },
+    {
+      "web": 43,
+      "rus": 269
+    },
+    {
+      "web": 44,
+      "rus": 266
+    },
+    {
+      "web": 45,
+      "rus": 270
+    },
+    {
+      "web": 46,
+      "rus": 273
+    },
+    {
+      "web": 47,
+      "rus": 271
+    },
+    {
+      "web": 48,
+      "rus": 272
+    },
+    {
+      "web": 49,
+      "rus": 263
+    },
+    {
+      "web": 50,
+      "rus": 276
+    },
+    {
+      "web": 51,
+      "rus": 277
+    },
+    {
+      "web": 52,
+      "rus": 278
+    },
+    {
+      "web": 53,
+      "rus": 279
+    },
+    {
+      "web": 55,
+      "rus": 281
+    },
+    {
+      "web": 59,
+      "rus": 284
+    },
+    {
+      "web": 64,
+      "rus": 297
+    },
+    {
+      "web": 66,
+      "rus": 299
+    },
+    {
+      "web": 67,
+      "rus": 310
+    },
+    {
+      "web": 68,
+      "rus": 308
+    },
+    {
+      "web": 69,
+      "rus": 309
+    },
+    {
+      "web": 70,
+      "rus": 311
+    },
+    {
+      "web": 71,
+      "rus": 312
+    },
+    {
+      "web": 72,
+      "rus": 313
+    },
+    {
+      "web": 73,
+      "rus": 314
+    },
+    {
+      "web": 74,
+      "rus": 182
+    },
+    {
+      "web": 75,
+      "rus": 183
+    },
+    {
+      "web": 76,
+      "rus": 184
+    },
+    {
+      "web": 77,
+      "rus": 196
+    },
+    {
+      "web": 78,
+      "rus": 203
+    },
+    {
+      "web": 79,
+      "rus": 204
+    },
+    {
+      "web": 81,
+      "rus": 185
+    },
+    {
+      "web": 82,
+      "rus": 186
+    },
+    {
+      "web": 83,
+      "rus": 187
+    },
+    {
+      "web": 84,
+      "rus": 188
+    },
+    {
+      "web": 85,
+      "rus": 189
+    },
+    {
+      "web": 86,
+      "rus": 190
+    },
+    {
+      "web": 87,
+      "rus": 191
+    },
+    {
+      "web": 88,
+      "rus": 192
+    },
+    {
+      "web": 89,
+      "rus": 193
+    },
+    {
+      "web": 90,
+      "rus": 194
+    },
+    {
+      "web": 91,
+      "rus": 198
+    },
+    {
+      "web": 92,
+      "rus": 199
+    },
+    {
+      "web": 93,
+      "rus": 200
+    },
+    {
+      "web": 94,
+      "rus": 197
+    },
+    {
+      "web": 95,
+      "rus": 201
+    },
+    {
+      "web": 96,
+      "rus": 202
+    },
+    {
+      "web": 97,
+      "rus": 205
+    },
+    {
+      "web": 98,
+      "rus": 210
+    },
+    {
+      "web": 99,
+      "rus": 211
+    },
+    {
+      "web": 100,
+      "rus": 316
+    },
+    {
+      "web": 102,
+      "rus": 206
+    },
+    {
+      "web": 103,
+      "rus": 215
+    },
+    {
+      "web": 104,
+      "rus": 268
+    },
+    {
+      "web": 105,
+      "rus": 245
+    },
+    {
+      "web": 106,
+      "rus": 300
+    },
+    {
+      "web": 107,
+      "rus": 246
+    },
+    {
+      "web": 109,
+      "rus": 258
+    },
+    {
+      "web": 110,
+      "rus": 247
+    },
+    {
+      "web": 111,
+      "rus": 259
+    },
+    {
+      "web": 112,
+      "rus": 260
+    },
+    {
+      "web": 113,
+      "rus": 261
+    },
+    {
+      "web": 116,
+      "rus": 218
+    },
+    {
+      "web": 117,
+      "rus": 219
+    },
+    {
+      "web": 119,
+      "rus": 227
+    },
+    {
+      "web": 120,
+      "rus": 228
+    },
+    {
+      "web": 121,
+      "rus": 229
+    },
+    {
+      "web": 122,
+      "rus": 285
+    },
+    {
+      "web": 123,
+      "rus": 286
+    },
+    {
+      "web": 124,
+      "rus": 287
+    },
+    {
+      "web": 125,
+      "rus": 288
+    },
+    {
+      "web": 126,
+      "rus": 289
+    },
+    {
+      "web": 130,
+      "rus": 301
+    },
+    {
+      "web": 131,
+      "rus": 302
+    },
+    {
+      "web": 132,
+      "rus": 303
+    },
+    {
+      "web": 133,
+      "rus": 304
+    },
+    {
+      "web": 136,
+      "rus": 207
+    },
+    {
+      "web": 137,
+      "rus": 305
+    },
+    {
+      "web": 138,
+      "rus": 248
+    },
+    {
+      "web": 140,
+      "rus": 220
+    },
+    {
+      "web": 141,
+      "rus": 221
+    },
+    {
+      "web": 142,
+      "rus": 195
+    },
+    {
+      "web": 143,
+      "rus": 274
+    },
+    {
+      "web": 145,
+      "rus": 249
+    },
+    {
+      "web": 146,
+      "rus": 250
+    },
+    {
+      "web": 147,
+      "rus": 251
+    },
+    {
+      "web": 148,
+      "rus": 252
+    },
+    {
+      "web": 149,
+      "rus": 253
+    },
+    {
+      "web": 150,
+      "rus": 254
+    },
+    {
+      "web": 151,
+      "rus": 282
+    },
+    {
+      "web": 415,
+      "rus": 417
+    }
+  ],
+  "broken_web": [
+    {
+      "id": 6,
+      "alias": "plastiki-aisthitiki-prosopou",
+      "title": "Πλαστική προσώπου",
+      "dead_rus_id": 283,
+      "current_babel": {
+        "web": 6,
+        "rus": 283
+      }
+    },
+    {
+      "id": 54,
+      "alias": "endoskopiki-facelift-browlift",
+      "title": "Ανύψωση φρυδιών και μετώπου",
+      "dead_rus_id": 280,
+      "current_babel": {
+        "web": 54,
+        "rus": 280
+      }
+    },
+    {
+      "id": 57,
+      "alias": "facelift",
+      "title": "Λίφτινγκ προσώπου (Face Lift)",
+      "dead_rus_id": 294,
+      "current_babel": {
+        "rus": 294,
+        "web": 57
+      }
+    },
+    {
+      "id": 58,
+      "alias": "vlefaroplastiki",
+      "title": "Βλεφαροπλαστική - Πλαστική βλεφάρων",
+      "dead_rus_id": 292,
+      "current_babel": {
+        "web": 58,
+        "rus": 292
+      }
+    },
+    {
+      "id": 61,
+      "alias": "otoplastiki",
+      "title": "Ωτοπλαστική",
+      "dead_rus_id": 290,
+      "current_babel": {
+        "web": 61,
+        "rus": 290
+      }
+    },
+    {
+      "id": 62,
+      "alias": "diorthosi-loviou-aytiou",
+      "title": "Διόρθωση λοβίου αυτιού -  Σκισμένα λοβία",
+      "dead_rus_id": 295,
+      "current_babel": {
+        "rus": 295,
+        "web": 62
+      }
+    },
+    {
+      "id": 63,
+      "alias": "silhouette-soft",
+      "title": "Silhouette Soft",
+      "dead_rus_id": 296,
+      "current_babel": {
+        "rus": 296,
+        "web": 63
+      }
+    },
+    {
+      "id": 129,
+      "alias": "syxnes-erwtiseis-apantiseis-2",
+      "title": "Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική",
+      "dead_rus_id": 291,
+      "current_babel": {
+        "rus": 291,
+        "web": 129
+      }
+    },
+    {
+      "id": 144,
+      "alias": "plirofories-gia-asfalismenous-edoeap-kai-trapeza-tis-ellados",
+      "title": "Πληροφορίες για ασφαλισμένους ΕΔΟΕΑΠ και Τράπεζας της Ελλάδος",
+      "dead_rus_id": 208,
+      "current_babel": {
+        "web": 144,
+        "rus": 208
+      }
+    },
+    {
+      "id": 403,
+      "alias": "lftynnk-prospou-2",
+      "title": "Λίφτινγκ προσώπου 2",
+      "dead_rus_id": 403,
+      "current_babel": {
+        "rus": 403
+      }
+    }
+  ],
+  "broken_rus": [
+    {
+      "id": 238,
+      "alias": "ypognathios-adenas",
+      "title": "Подчелюстная железа",
+      "dead_web_id": 35,
+      "current_babel": {
+        "rus": 238,
+        "web": 35
+      }
+    },
+    {
+      "id": 256,
+      "alias": "amygdales-adenoeideis-ekvlastiseis",
+      "title": "Аденоиды, гланды, храп, апноэ сна",
+      "dead_web_id": 40,
+      "current_babel": {
+        "web": 40,
+        "rus": 256
+      }
+    },
+    {
+      "id": 257,
+      "alias": "amygdales",
+      "title": "Миндалины (\"гланды\")",
+      "dead_web_id": 108,
+      "current_babel": {
+        "web": 108,
+        "rus": 257
+      }
+    },
+    {
+      "id": 262,
+      "alias": "syxnes-erwtiseis-apantiseis",
+      "title": "FAQ - вопросы и ответы",
+      "dead_web_id": 114,
+      "current_babel": {
+        "web": 114,
+        "rus": 262
+      }
+    },
+    {
+      "id": 298,
+      "alias": "fillers",
+      "title": "Филлеры",
+      "dead_web_id": 65,
+      "current_babel": {
+        "rus": 298,
+        "web": 65
+      }
+    },
+    {
+      "id": 335,
+      "alias": "plasticheskaia-xeirourgia-otoplastika",
+      "title": "Отопластика",
+      "dead_web_id": 335,
+      "current_babel": {
+        "web": 335
+      }
+    }
+  ],
+  "web_proposals": [
+    {
+      "source_id": 11,
+      "source_alias": "sitemap",
+      "source_title": "Sitemap",
+      "source_parent": 0,
+      "source_template": 0,
+      "current_babel": {
+        "web": 11
+      },
+      "candidates": [
+        {
+          "candidate_id": 387,
+          "candidate_alias": "sitemap",
+          "candidate_title": "Карта сайта",
+          "candidate_parent": 0,
+          "candidate_template": 12,
+          "score": 60,
+          "content_evidence": 60,
+          "reasons": [
+            "alias exact match"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 18,
+      "source_alias": "xronia-otitida",
+      "source_title": "Χρόνια ωτίτιδα",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 18
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 80,
+      "source_alias": "sitemap",
+      "source_title": "Sitemap",
+      "source_parent": 0,
+      "source_template": 12,
+      "current_babel": {
+        "web": 80
+      },
+      "candidates": [
+        {
+          "candidate_id": 387,
+          "candidate_alias": "sitemap",
+          "candidate_title": "Карта сайта",
+          "candidate_parent": 0,
+          "candidate_template": 12,
+          "score": 65,
+          "content_evidence": 60,
+          "reasons": [
+            "alias exact match",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 101,
+      "source_alias": "ru-page",
+      "source_title": "Ru",
+      "source_parent": 0,
+      "source_template": 15,
+      "current_babel": {
+        "web": 101
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 128,
+      "source_alias": "otoplastiki-1",
+      "source_title": "Ωτοπλαστική",
+      "source_parent": 61,
+      "source_template": 18,
+      "current_babel": {
+        "web": 128
+      },
+      "candidates": [
+        {
+          "candidate_id": 335,
+          "candidate_alias": "plasticheskaia-xeirourgia-otoplastika",
+          "candidate_title": "Отопластика",
+          "candidate_parent": 334,
+          "candidate_template": 18,
+          "score": 30,
+          "content_evidence": 25,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki-andres.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 319,
+      "source_alias": "thilomata-spiloi",
+      "source_title": "Θηλώματα",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "web": 319
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 321,
+      "source_alias": "xiloeidi-auti",
+      "source_title": "Χηλοειδή αυτιών",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "web": 321
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 358,
+      "source_alias": "otoplastiki-xwris-tomi",
+      "source_title": "Ωτοπλαστική χωρίς τομή",
+      "source_parent": 61,
+      "source_template": 18,
+      "current_babel": {
+        "web": 358
+      },
+      "candidates": [
+        {
+          "candidate_id": 373,
+          "candidate_alias": "novaia-otoplastika-bez-razrezov",
+          "candidate_title": "Новая отопластика без разрезов",
+          "candidate_parent": 334,
+          "candidate_template": 18,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/otoplasty/1prin-meta.png', 'files/images/plastic-face/otoplasty/2prin-meta.png', 'files/images/plastic-face/otoplasty/otoplastiki-xwis-tomes.png']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 359,
+      "source_alias": "osteoma-kraniou",
+      "source_title": "Οστέωμα και λίπωμα κρανίου",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "web": 359
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 360,
+      "source_alias": "neognikos-elenxos-akois-otoakoustikes-ekpompes",
+      "source_title": "Νεογνικός Έλεγχος Ακοής - Ωτοακουστικές Εκπομπές",
+      "source_parent": 76,
+      "source_template": 8,
+      "current_babel": {
+        "web": 360
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 362,
+      "source_alias": "pathiseis-sielogonon-adenon",
+      "source_title": "Παθήσεις σιελογόνων αδένων",
+      "source_parent": 363,
+      "source_template": 18,
+      "current_babel": {
+        "web": 362
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 363,
+      "source_alias": "parotida-ypognathios-adenas",
+      "source_title": "Παρωτίδα και υπογνάθιος αδένας",
+      "source_parent": 3,
+      "source_template": 20,
+      "current_babel": {
+        "web": 363
+      },
+      "candidates": [
+        {
+          "candidate_id": 238,
+          "candidate_alias": "ypognathios-adenas",
+          "candidate_title": "Подчелюстная железа",
+          "candidate_parent": 212,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 25,
+          "reasons": [
+            "alias tokens overlap (0.67)",
+            "parent is in a known strict pair"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 364,
+      "source_alias": "ypognathios-adenas",
+      "source_title": "Αφαίρεση υπογνάθιου αδένα",
+      "source_parent": 363,
+      "source_template": 18,
+      "current_babel": {
+        "web": 364
+      },
+      "candidates": [
+        {
+          "candidate_id": 238,
+          "candidate_alias": "ypognathios-adenas",
+          "candidate_title": "Подчелюстная железа",
+          "candidate_parent": 212,
+          "candidate_template": 8,
+          "score": 100,
+          "content_evidence": 100,
+          "reasons": [
+            "alias exact match",
+            "shared asset paths: ['files/images/diseases/submandibular-gland/img1.jpg', 'files/images/diseases/submandibular-gland/img2.jpg', 'files/images/diseases/submandibular-gland/img6.jpg']"
+          ]
+        }
+      ],
+      "bucket": "auto_link"
+    },
+    {
+      "source_id": 365,
+      "source_alias": "ogkoi-sielogonon-adenon",
+      "source_title": "Όγκοι των σιελογόνων αδένων",
+      "source_parent": 363,
+      "source_template": 18,
+      "current_babel": {
+        "web": 365
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 366,
+      "source_alias": "katagma-mitis",
+      "source_title": "Κάταγμα μύτης (ρινός)",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 366
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 367,
+      "source_alias": "yposmia",
+      "source_title": "Υποσμία",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 367
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 368,
+      "source_alias": "trypa-sto-tympano",
+      "source_title": "Διάτρηση τυμπανικής μεμβράνης",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 368
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 369,
+      "source_alias": "test-osfrisis",
+      "source_title": "Τεστ όσφρησης",
+      "source_parent": 76,
+      "source_template": 8,
+      "current_babel": {
+        "web": 369
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 370,
+      "source_alias": "otosklirinsi",
+      "source_title": "Ωτοσκλήρυνση",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 370
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 371,
+      "source_alias": "thyreoplasty",
+      "source_title": "Θυρεοπλαστική",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 371
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 374,
+      "source_alias": "syndromo-adeias-mytis",
+      "source_title": "Σύνδρομο άδειας μύτης",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 374
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 375,
+      "source_alias": "syndromo-eagle",
+      "source_title": "Σύνδρομο Eagle",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 375
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 376,
+      "source_alias": "pankolpitida",
+      "source_title": "Πανκολπίτιδα",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 376
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 377,
+      "source_alias": "vlefaroplastiki-laser",
+      "source_title": "Βλεφαροπλαστική με λέιζερ",
+      "source_parent": 378,
+      "source_template": 8,
+      "current_babel": {
+        "web": 377
+      },
+      "candidates": [
+        {
+          "candidate_id": 381,
+          "candidate_alias": "лазерная-блефаропластика",
+          "candidate_title": "Лазерная блефаропластика",
+          "candidate_parent": 380,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/blepharoplasty/blepharoplasty-plexr.jpg', 'files/images/plastic-face/blepharoplasty/blepharoplasty-plexr2.jpg', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki-laser-1.png']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 378,
+      "source_alias": "blepharoplasty",
+      "source_title": "Βλεφαροπλαστική",
+      "source_parent": 6,
+      "source_template": 20,
+      "current_babel": {
+        "web": 378
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 379,
+      "source_alias": "karkinos-sto-auti",
+      "source_title": "Όγκοι του ωτικού πτερυγίου",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 379
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 382,
+      "source_alias": "typet",
+      "source_title": "ΤΥΠΕΤ",
+      "source_parent": 77,
+      "source_template": 11,
+      "current_babel": {
+        "web": 382
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 383,
+      "source_alias": "iaso-paidwn",
+      "source_title": "ΙΑΣΩ Παίδων",
+      "source_parent": 77,
+      "source_template": 11,
+      "current_babel": {
+        "web": 383
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 384,
+      "source_alias": "euroclinc",
+      "source_title": "Ευρωκλινική Αθηνών",
+      "source_parent": 77,
+      "source_template": 11,
+      "current_babel": {
+        "web": 384
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 385,
+      "source_alias": "euroclinic-paidon",
+      "source_title": "Ευρωκλινική Παίδων",
+      "source_parent": 77,
+      "source_template": 11,
+      "current_babel": {
+        "web": 385
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 386,
+      "source_alias": "bioclinic-athinwn",
+      "source_title": "Βιοκλινική Αθηνών",
+      "source_parent": 77,
+      "source_template": 11,
+      "current_babel": {
+        "web": 386
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 388,
+      "source_alias": "mikitoma-igmoreiou",
+      "source_title": "Μυκήτωμα ιγμορείου",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 388
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 389,
+      "source_alias": "endoskopiki-kryoxeirourgiki",
+      "source_title": "Ενδοσκοπική κρυοχειρουργική",
+      "source_parent": 5,
+      "source_template": 8,
+      "current_babel": {
+        "web": 389
+      },
+      "candidates": [
+        {
+          "candidate_id": 325,
+          "candidate_alias": "endoskopiki-facelift-browlift",
+          "candidate_title": "Подтяжка бровей - Подтяжка лба",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 15,
+          "content_evidence": 10,
+          "reasons": [
+            "alias tokens partially overlap (0.25)",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 390,
+      "source_alias": "anastrofo-thiloma",
+      "source_title": "Ανάστροφο θήλωμα",
+      "source_parent": 5,
+      "source_template": 8,
+      "current_babel": {
+        "web": 390
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 391,
+      "source_alias": "rinofima",
+      "source_title": "Ρινόφυμα",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 391
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 392,
+      "source_alias": "preauricular-cyst",
+      "source_title": "Προωτιαίο συρίγγιο",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 392
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 393,
+      "source_alias": "lipoma",
+      "source_title": "Λίπωμα",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 393
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 394,
+      "source_alias": "spiloi-prosopou",
+      "source_title": "Σπίλοι προσώπου",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "web": 394
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 395,
+      "source_alias": "roxalito-kai-apnoia",
+      "source_title": "Ροχαλητό και άπνοια",
+      "source_parent": 3,
+      "source_template": 20,
+      "current_babel": {
+        "web": 395
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 396,
+      "source_alias": "kakosmia-stomatos",
+      "source_title": "Κακοσμία στόματος",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 396
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 397,
+      "source_alias": "rinoplastiki-piezotome",
+      "source_title": "Ρινοπλαστική με Piezotome",
+      "source_parent": 59,
+      "source_template": 18,
+      "current_babel": {
+        "web": 397
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 402,
+      "source_alias": "anorthosi-laimou",
+      "source_title": "Ανόρθωση λαιμού και πηγουνιού (Νeck Lifting)",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "web": 402
+      },
+      "candidates": [
+        {
+          "candidate_id": 398,
+          "candidate_alias": "necklift",
+          "candidate_title": "Пластика шеи и подбородка",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/necklift/necklift-1.jpg', 'files/images/plastic-face/necklift/necklift-2.jpg', 'files/images/plastic-face/necklift/necklift-3.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 404,
+      "source_alias": "concha-bullosa",
+      "source_title": "Φυσαλιδώδης κόγχη - Concha bullosa",
+      "source_parent": 5,
+      "source_template": 8,
+      "current_babel": {
+        "web": 404
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 405,
+      "source_alias": "afairesi-oulis-prosopou",
+      "source_title": "Αφαίρεση ουλής προσώπου",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "web": 405
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 406,
+      "source_alias": "rendu-osler-weber",
+      "source_title": "Κληρονομική αιμορραγική τηλαγγειεκτασία",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 406
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 407,
+      "source_alias": "smigmatogonos-kysti",
+      "source_title": "Σμηγματογόνος κύστη",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 407
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 408,
+      "source_alias": "trachiostomia",
+      "source_title": "Τραχειοστομία  - Σύγκλιση τραχειοστομίας",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 408
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 409,
+      "source_alias": "atrisia",
+      "source_title": "Ατρησία ρινικής χοάνης",
+      "source_parent": 3,
+      "source_template": 8,
+      "current_babel": {
+        "web": 409
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 413,
+      "source_alias": "meiosi-lovion",
+      "source_title": "Μείωση λοβίων",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "web": 413
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 414,
+      "source_alias": "xeno-soma-igmoreio",
+      "source_title": "Ξένο σώμα στο ιγμόρειο άντρο",
+      "source_parent": 5,
+      "source_template": 8,
+      "current_babel": {
+        "web": 414
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 6,
+      "source_alias": "plastiki-aisthitiki-prosopou",
+      "source_title": "Πλαστική προσώπου",
+      "source_parent": 0,
+      "source_template": 7,
+      "current_babel": {
+        "web": 6,
+        "rus": 283
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 54,
+      "source_alias": "endoskopiki-facelift-browlift",
+      "source_title": "Ανύψωση φρυδιών και μετώπου",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "web": 54,
+        "rus": 280
+      },
+      "candidates": [
+        {
+          "candidate_id": 325,
+          "candidate_alias": "endoskopiki-facelift-browlift",
+          "candidate_title": "Подтяжка бровей - Подтяжка лба",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 105,
+          "content_evidence": 100,
+          "reasons": [
+            "alias exact match",
+            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/browlift-1.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/face-endoscopic-facelift.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/img2.png']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "auto_link"
+    },
+    {
+      "source_id": 57,
+      "source_alias": "facelift",
+      "source_title": "Λίφτινγκ προσώπου (Face Lift)",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 294,
+        "web": 57
+      },
+      "candidates": [
+        {
+          "candidate_id": 326,
+          "candidate_alias": "facelifting",
+          "candidate_title": "Подтяжка лица - Фейслифтинг",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 40,
+          "content_evidence": 35,
+          "reasons": [
+            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']",
+            "same template"
+          ]
+        },
+        {
+          "candidate_id": 325,
+          "candidate_alias": "endoskopiki-facelift-browlift",
+          "candidate_title": "Подтяжка бровей - Подтяжка лба",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 15,
+          "content_evidence": 10,
+          "reasons": [
+            "alias tokens partially overlap (0.33)",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 58,
+      "source_alias": "vlefaroplastiki",
+      "source_title": "Βλεφαροπλαστική - Πλαστική βλεφάρων",
+      "source_parent": 378,
+      "source_template": 18,
+      "current_babel": {
+        "web": 58,
+        "rus": 292
+      },
+      "candidates": [
+        {
+          "candidate_id": 327,
+          "candidate_alias": "blefaroplastika-v-athinah",
+          "candidate_title": "Блефаропластика",
+          "candidate_parent": 380,
+          "candidate_template": 18,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/blepharoplasty/upper-eyelid-surgery.jpg', 'files/images/plastic-face/blepharoplasty/vlefarolastiki.png', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 61,
+      "source_alias": "otoplastiki",
+      "source_title": "Ωτοπλαστική",
+      "source_parent": 6,
+      "source_template": 20,
+      "current_babel": {
+        "web": 61,
+        "rus": 290
+      },
+      "candidates": [
+        {
+          "candidate_id": 334,
+          "candidate_alias": "otoplastika-v-athinah",
+          "candidate_title": "Отопластика",
+          "candidate_parent": 323,
+          "candidate_template": 20,
+          "score": 30,
+          "content_evidence": 25,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 62,
+      "source_alias": "diorthosi-loviou-aytiou",
+      "source_title": "Διόρθωση λοβίου αυτιού -  Σκισμένα λοβία",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 295,
+        "web": 62
+      },
+      "candidates": [
+        {
+          "candidate_id": 337,
+          "candidate_alias": "ear-lobe-repair",
+          "candidate_title": "Реконструкция мочки уха",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/correction-the-ear-lobe/diortosi-loviou- autiou-5.jpg', 'files/images/plastic-face/correction-the-ear-lobe/earlobe-repair.jpg', 'files/images/plastic-face/correction-the-ear-lobe/plastiki-loviou-1.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 63,
+      "source_alias": "silhouette-soft",
+      "source_title": "Silhouette Soft",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 296,
+        "web": 63
+      },
+      "candidates": [
+        {
+          "candidate_id": 338,
+          "candidate_alias": "silhouette-soft-afini",
+          "candidate_title": "Силуэт Софт",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 96,
+          "content_evidence": 91,
+          "reasons": [
+            "alias tokens nearly identical (1.00)",
+            "shared asset paths: ['files/images/plastic-face/silhouette-soft/before-after.png', 'files/images/plastic-face/silhouette-soft/img1.jpg', 'files/images/plastic-face/silhouette-soft/img2.jpg']",
+            "same template",
+            "title token partial overlap (0.33)"
+          ]
+        }
+      ],
+      "bucket": "auto_link"
+    },
+    {
+      "source_id": 129,
+      "source_alias": "syxnes-erwtiseis-apantiseis-2",
+      "source_title": "Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική",
+      "source_parent": 61,
+      "source_template": 18,
+      "current_babel": {
+        "rus": 291,
+        "web": 129
+      },
+      "candidates": [
+        {
+          "candidate_id": 262,
+          "candidate_alias": "syxnes-erwtiseis-apantiseis",
+          "candidate_title": "FAQ - вопросы и ответы",
+          "candidate_parent": 256,
+          "candidate_template": 18,
+          "score": 60,
+          "content_evidence": 55,
+          "reasons": [
+            "alias tokens nearly identical (1.00)",
+            "alias Levenshtein 2",
+            "same template"
+          ]
+        },
+        {
+          "candidate_id": 336,
+          "candidate_alias": "voprosi-otvei-otoplastika",
+          "candidate_title": "Ответы на часто задаваемые вопросы по отопластике",
+          "candidate_parent": 334,
+          "candidate_template": 18,
+          "score": 30,
+          "content_evidence": 25,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/otoplasty/sxediasmos pterigiou.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 144,
+      "source_alias": "plirofories-gia-asfalismenous-edoeap-kai-trapeza-tis-ellados",
+      "source_title": "Πληροφορίες για ασφαλισμένους ΕΔΟΕΑΠ και Τράπεζας της Ελλάδος",
+      "source_parent": 1,
+      "source_template": 8,
+      "current_babel": {
+        "web": 144,
+        "rus": 208
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 403,
+      "source_alias": "lftynnk-prospou-2",
+      "source_title": "Λίφτινγκ προσώπου 2",
+      "source_parent": 6,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 403
+      },
+      "candidates": [
+        {
+          "candidate_id": 326,
+          "candidate_alias": "facelifting",
+          "candidate_title": "Подтяжка лица - Фейслифтинг",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 40,
+          "content_evidence": 35,
+          "reasons": [
+            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    }
+  ],
+  "rus_proposals": [
+    {
+      "source_id": 323,
+      "source_alias": "пластика-лица",
+      "source_title": "Пластика лица",
+      "source_parent": 0,
+      "source_template": 7,
+      "current_babel": {
+        "rus": 323
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 325,
+      "source_alias": "endoskopiki-facelift-browlift",
+      "source_title": "Подтяжка бровей - Подтяжка лба",
+      "source_parent": 323,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 325
+      },
+      "candidates": [
+        {
+          "candidate_id": 54,
+          "candidate_alias": "endoskopiki-facelift-browlift",
+          "candidate_title": "Ανύψωση φρυδιών και μετώπου",
+          "candidate_parent": 6,
+          "candidate_template": 8,
+          "score": 105,
+          "content_evidence": 100,
+          "reasons": [
+            "alias exact match",
+            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/browlift-1.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/face-endoscopic-facelift.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/img2.png']",
+            "same template"
+          ]
+        },
+        {
+          "candidate_id": 389,
+          "candidate_alias": "endoskopiki-kryoxeirourgiki",
+          "candidate_title": "Ενδοσκοπική κρυοχειρουργική",
+          "candidate_parent": 5,
+          "candidate_template": 8,
+          "score": 15,
+          "content_evidence": 10,
+          "reasons": [
+            "alias tokens partially overlap (0.25)",
+            "same template"
+          ]
+        },
+        {
+          "candidate_id": 57,
+          "candidate_alias": "facelift",
+          "candidate_title": "Λίφτινγκ προσώπου (Face Lift)",
+          "candidate_parent": 6,
+          "candidate_template": 8,
+          "score": 15,
+          "content_evidence": 10,
+          "reasons": [
+            "alias tokens partially overlap (0.33)",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "auto_link"
+    },
+    {
+      "source_id": 326,
+      "source_alias": "facelifting",
+      "source_title": "Подтяжка лица - Фейслифтинг",
+      "source_parent": 323,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 326
+      },
+      "candidates": [
+        {
+          "candidate_id": 57,
+          "candidate_alias": "facelift",
+          "candidate_title": "Λίφτινγκ προσώπου (Face Lift)",
+          "candidate_parent": 6,
+          "candidate_template": 8,
+          "score": 40,
+          "content_evidence": 35,
+          "reasons": [
+            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']",
+            "same template"
+          ]
+        },
+        {
+          "candidate_id": 403,
+          "candidate_alias": "lftynnk-prospou-2",
+          "candidate_title": "Λίφτινγκ προσώπου 2",
+          "candidate_parent": 6,
+          "candidate_template": 8,
+          "score": 40,
+          "content_evidence": 35,
+          "reasons": [
+            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 327,
+      "source_alias": "blefaroplastika-v-athinah",
+      "source_title": "Блефаропластика",
+      "source_parent": 380,
+      "source_template": 18,
+      "current_babel": {
+        "rus": 327
+      },
+      "candidates": [
+        {
+          "candidate_id": 58,
+          "candidate_alias": "vlefaroplastiki",
+          "candidate_title": "Βλεφαροπλαστική - Πλαστική βλεφάρων",
+          "candidate_parent": 378,
+          "candidate_template": 18,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/blepharoplasty/upper-eyelid-surgery.jpg', 'files/images/plastic-face/blepharoplasty/vlefarolastiki.png', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 334,
+      "source_alias": "otoplastika-v-athinah",
+      "source_title": "Отопластика",
+      "source_parent": 323,
+      "source_template": 20,
+      "current_babel": {
+        "rus": 334
+      },
+      "candidates": [
+        {
+          "candidate_id": 61,
+          "candidate_alias": "otoplastiki",
+          "candidate_title": "Ωτοπλαστική",
+          "candidate_parent": 6,
+          "candidate_template": 20,
+          "score": 30,
+          "content_evidence": 25,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 336,
+      "source_alias": "voprosi-otvei-otoplastika",
+      "source_title": "Ответы на часто задаваемые вопросы по отопластике",
+      "source_parent": 334,
+      "source_template": 18,
+      "current_babel": {
+        "rus": 336
+      },
+      "candidates": [
+        {
+          "candidate_id": 129,
+          "candidate_alias": "syxnes-erwtiseis-apantiseis-2",
+          "candidate_title": "Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική",
+          "candidate_parent": 61,
+          "candidate_template": 18,
+          "score": 30,
+          "content_evidence": 25,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/otoplasty/sxediasmos pterigiou.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 337,
+      "source_alias": "ear-lobe-repair",
+      "source_title": "Реконструкция мочки уха",
+      "source_parent": 323,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 337
+      },
+      "candidates": [
+        {
+          "candidate_id": 62,
+          "candidate_alias": "diorthosi-loviou-aytiou",
+          "candidate_title": "Διόρθωση λοβίου αυτιού -  Σκισμένα λοβία",
+          "candidate_parent": 6,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/correction-the-ear-lobe/diortosi-loviou- autiou-5.jpg', 'files/images/plastic-face/correction-the-ear-lobe/earlobe-repair.jpg', 'files/images/plastic-face/correction-the-ear-lobe/plastiki-loviou-1.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 338,
+      "source_alias": "silhouette-soft-afini",
+      "source_title": "Силуэт Софт",
+      "source_parent": 323,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 338
+      },
+      "candidates": [
+        {
+          "candidate_id": 63,
+          "candidate_alias": "silhouette-soft",
+          "candidate_title": "Silhouette Soft",
+          "candidate_parent": 6,
+          "candidate_template": 8,
+          "score": 96,
+          "content_evidence": 91,
+          "reasons": [
+            "alias tokens nearly identical (1.00)",
+            "shared asset paths: ['files/images/plastic-face/silhouette-soft/before-after.png', 'files/images/plastic-face/silhouette-soft/img1.jpg', 'files/images/plastic-face/silhouette-soft/img2.jpg']",
+            "same template",
+            "title token partial overlap (0.33)"
+          ]
+        }
+      ],
+      "bucket": "auto_link"
+    },
+    {
+      "source_id": 348,
+      "source_alias": "botulinotherapia-ru",
+      "source_title": "Ботулинотерапия",
+      "source_parent": 323,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 348
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 373,
+      "source_alias": "novaia-otoplastika-bez-razrezov",
+      "source_title": "Новая отопластика без разрезов",
+      "source_parent": 334,
+      "source_template": 18,
+      "current_babel": {
+        "rus": 373
+      },
+      "candidates": [
+        {
+          "candidate_id": 358,
+          "candidate_alias": "otoplastiki-xwris-tomi",
+          "candidate_title": "Ωτοπλαστική χωρίς τομή",
+          "candidate_parent": 61,
+          "candidate_template": 18,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/otoplasty/1prin-meta.png', 'files/images/plastic-face/otoplasty/2prin-meta.png', 'files/images/plastic-face/otoplasty/otoplastiki-xwis-tomes.png']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 380,
+      "source_alias": "блефаропластика-пластика-глаз",
+      "source_title": "Блефаропластика - Пластика глаз",
+      "source_parent": 323,
+      "source_template": 20,
+      "current_babel": {
+        "rus": 380
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 381,
+      "source_alias": "лазерная-блефаропластика",
+      "source_title": "Лазерная блефаропластика",
+      "source_parent": 380,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 381
+      },
+      "candidates": [
+        {
+          "candidate_id": 377,
+          "candidate_alias": "vlefaroplastiki-laser",
+          "candidate_title": "Βλεφαροπλαστική με λέιζερ",
+          "candidate_parent": 378,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/blepharoplasty/blepharoplasty-plexr.jpg', 'files/images/plastic-face/blepharoplasty/blepharoplasty-plexr2.jpg', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki-laser-1.png']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 387,
+      "source_alias": "sitemap",
+      "source_title": "Карта сайта",
+      "source_parent": 0,
+      "source_template": 12,
+      "current_babel": {
+        "rus": 387
+      },
+      "candidates": [
+        {
+          "candidate_id": 80,
+          "candidate_alias": "sitemap",
+          "candidate_title": "Sitemap",
+          "candidate_parent": 0,
+          "candidate_template": 12,
+          "score": 65,
+          "content_evidence": 60,
+          "reasons": [
+            "alias exact match",
+            "same template"
+          ]
+        },
+        {
+          "candidate_id": 11,
+          "candidate_alias": "sitemap",
+          "candidate_title": "Sitemap",
+          "candidate_parent": 0,
+          "candidate_template": 0,
+          "score": 60,
+          "content_evidence": 60,
+          "reasons": [
+            "alias exact match"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 398,
+      "source_alias": "necklift",
+      "source_title": "Пластика шеи и подбородка",
+      "source_parent": 323,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 398
+      },
+      "candidates": [
+        {
+          "candidate_id": 402,
+          "candidate_alias": "anorthosi-laimou",
+          "candidate_title": "Ανόρθωση λαιμού και πηγουνιού (Νeck Lifting)",
+          "candidate_parent": 6,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/necklift/necklift-1.jpg', 'files/images/plastic-face/necklift/necklift-2.jpg', 'files/images/plastic-face/necklift/necklift-3.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 238,
+      "source_alias": "ypognathios-adenas",
+      "source_title": "Подчелюстная железа",
+      "source_parent": 212,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 238,
+        "web": 35
+      },
+      "candidates": [
+        {
+          "candidate_id": 364,
+          "candidate_alias": "ypognathios-adenas",
+          "candidate_title": "Αφαίρεση υπογνάθιου αδένα",
+          "candidate_parent": 363,
+          "candidate_template": 18,
+          "score": 100,
+          "content_evidence": 100,
+          "reasons": [
+            "alias exact match",
+            "shared asset paths: ['files/images/diseases/submandibular-gland/img1.jpg', 'files/images/diseases/submandibular-gland/img2.jpg', 'files/images/diseases/submandibular-gland/img6.jpg']"
+          ]
+        },
+        {
+          "candidate_id": 363,
+          "candidate_alias": "parotida-ypognathios-adenas",
+          "candidate_title": "Παρωτίδα και υπογνάθιος αδένας",
+          "candidate_parent": 3,
+          "candidate_template": 20,
+          "score": 45,
+          "content_evidence": 25,
+          "reasons": [
+            "alias tokens overlap (0.67)",
+            "parent is in a known strict pair"
+          ]
+        }
+      ],
+      "bucket": "auto_link"
+    },
+    {
+      "source_id": 256,
+      "source_alias": "amygdales-adenoeideis-ekvlastiseis",
+      "source_title": "Аденоиды, гланды, храп, апноэ сна",
+      "source_parent": 255,
+      "source_template": 20,
+      "current_babel": {
+        "web": 40,
+        "rus": 256
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 257,
+      "source_alias": "amygdales",
+      "source_title": "Миндалины (\"гланды\")",
+      "source_parent": 256,
+      "source_template": 18,
+      "current_babel": {
+        "web": 108,
+        "rus": 257
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 262,
+      "source_alias": "syxnes-erwtiseis-apantiseis",
+      "source_title": "FAQ - вопросы и ответы",
+      "source_parent": 256,
+      "source_template": 18,
+      "current_babel": {
+        "web": 114,
+        "rus": 262
+      },
+      "candidates": [
+        {
+          "candidate_id": 129,
+          "candidate_alias": "syxnes-erwtiseis-apantiseis-2",
+          "candidate_title": "Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική",
+          "candidate_parent": 61,
+          "candidate_template": 18,
+          "score": 60,
+          "content_evidence": 55,
+          "reasons": [
+            "alias tokens nearly identical (1.00)",
+            "alias Levenshtein 2",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    },
+    {
+      "source_id": 298,
+      "source_alias": "fillers",
+      "source_title": "Филлеры",
+      "source_parent": 323,
+      "source_template": 8,
+      "current_babel": {
+        "rus": 298,
+        "web": 65
+      },
+      "candidates": [],
+      "bucket": "truly_unlocalized"
+    },
+    {
+      "source_id": 335,
+      "source_alias": "plasticheskaia-xeirourgia-otoplastika",
+      "source_title": "Отопластика",
+      "source_parent": 334,
+      "source_template": 18,
+      "current_babel": {
+        "web": 335
+      },
+      "candidates": [
+        {
+          "candidate_id": 128,
+          "candidate_alias": "otoplastiki-1",
+          "candidate_title": "Ωτοπλαστική",
+          "candidate_parent": 61,
+          "candidate_template": 18,
+          "score": 30,
+          "content_evidence": 25,
+          "reasons": [
+            "shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki-andres.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
+    }
+  ]
+}

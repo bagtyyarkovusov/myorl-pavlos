@@ -1,0 +1,21 @@
+import requests
+import json
+
+API_URL = "http://localhost:1337/api/i18n/locales"
+TOKEN = "9149081bacf8a9cc4e33e98e17f5a02c7fd428e782f848643473bfe9cf69c82c2bdbf6010c79454e072ec494f99db9fcf71cdae76768a6006b8ab95230971514312263efe66d9b0dbb869b7d536c213dab2b9c01cf9e24e07fef77fb72c7dfae882c5a8d57da2fa973a0167ee84f74e977ccee7743456f256f43cdb00b4abf87"
+
+headers = {
+    "Authorization": f"Bearer {TOKEN}",
+    "Content-Type": "application/json"
+}
+
+data = {
+    "name": "Greek (el)",
+    "code": "el"
+}
+
+print("Creating Greek locale...")
+res = requests.post(API_URL, headers=headers, json=data)
+print(res.status_code)
+print(res.text)
+

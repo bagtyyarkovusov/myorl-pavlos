@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_items_contact_details",
+  "info": {
+    "displayName": "Contact Detail",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "string"
+    },
+    "value": {
+      "type": "richtext"
+    }
+  }
+}

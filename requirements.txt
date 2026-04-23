@@ -1,0 +1,3 @@
+# Python tooling for migration scripts (transform, Strapi HTTP client, link rewrite)
+beautifulsoup4>=4.12.0
+unidecode>=1.3.0

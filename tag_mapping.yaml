@@ -1,0 +1,137 @@
+# Canonical tag plan for the Strapi import.
+#
+# Every distinct tag value used by any page (see distinct_tags in
+# injection_readiness.json) must resolve to exactly one entry here. Each
+# canonical entry becomes ONE Tag document with two locale versions; each
+# russian_only entry becomes a standalone ru-only Tag.
+#
+# The `aliases_el` / `aliases_ru` lists let us absorb the data-entry noise
+# (case variants, Greek strings accidentally assigned to Russian pages,
+# synonyms) without polluting the canonical labels. `build_tag_plan.py`
+# expands these into the flat `source_value -> slug` map the importer uses.
+
+canonical_tags:
+  - slug: vertigo
+    el: "Ίλιγγος - Ζάλη"
+    ru: "Головокружение"
+    aliases_ru:
+      - "Головокружение - Головокружение"
+      - "Vertigo - Головокружение"
+
+  - slug: tonsils
+    el: "Αμυγδαλές"
+    ru: "Миндалины"
+    aliases_ru:
+      - "миндалины"
+      - "Αμυγδαλές"
+    aliases_el: []
+
+  - slug: ear
+    el: "Αυτί"
+    ru: "Ухо"
+    aliases_ru:
+      - "ухо"
+      - "ушей"
+      - "Ear"
+      - "Αυτί"
+    aliases_el: []
+
+  - slug: endoscopic-surgery
+    el: "Ενδοσκοπική χειρουργική"
+    ru: "Эндоскопическая хирургия"
+    aliases_ru:
+      - "эндоскопическая хирургия"
+      - "Носовая эндоскопическая хирургия"
+      - "заложенность эндоскопической хирургии"
+
+  - slug: procedures
+    el: "Επεμβάσεις"
+    ru: "Вмешательства"
+    aliases_ru:
+      - "вмешательства"
+      - "Επεμβάσεις"
+
+  - slug: thyroid-gland
+    el: "Θυρεοειδής αδένας"
+    ru: "Щитовидная железа"
+    aliases_ru:
+      - "щитовидная железа"
+
+  - slug: sinusitis
+    el: "Ιγμορίτιδα"
+    ru: "Синусит"
+    aliases_ru:
+      - "синусит"
+
+  - slug: adenoids
+    el: "Κρεατάκια"
+    ru: "Аденоиды"
+    aliases_ru:
+      - "аденоиды"
+      - "Κρεατάκια"
+
+  - slug: larynx
+    el: "Λάρυγγας"
+    ru: "Гортань"
+    aliases_ru:
+      - "гортань"
+
+  - slug: throat
+    el: "Λαιμός"
+    ru: "Шея"
+    aliases_ru:
+      - "шея"
+      - "шеи"
+      - "Шеи"
+      - "горло"
+      - "горла"
+
+  - slug: pediatric-orl
+    el: "Παιδο-ΩΡΛ"
+    ru: "Детская ЛОР"
+    aliases_ru:
+      - "детская ЛОР"
+      - "У детей ЛОР"
+      - "заложенность Детская ЛОР"
+      - "Παιδο-ΩΡΛ"
+
+  - slug: facial-plastic-surgery
+    el: "Πλαστική προσώπου"
+    ru: "Пластическая хирургия лица"
+    aliases_ru:
+      - "пластик для лица"
+      - "пластика лица"
+      - "пластичное лицо"
+      - "Пластиковые лица"
+      - "Πλαστική προσώπου"
+
+  - slug: nose
+    el: "Ρινός"
+    ru: "Нос"
+    aliases_ru:
+      - "нос"
+      - "носа"
+      - "Нос хирургии"
+      - "Ρινός"
+
+  - slug: salivary-glands
+    el: "Σιελογόνοι αδένες"
+    ru: "Слюнные железы"
+    aliases_ru:
+      - "слюнные железы"
+      - "слюнных желез"
+      - "Слюнные железы хирургия"
+
+  - slug: pharynx
+    el: "Φάρυγγας"
+    ru: "Глотка"
+    aliases_ru:
+      - "глотка"
+      - "Φάρυγγας"
+
+russian_only_tags:
+  - slug: surgery-ru
+    ru: "Хирургия"
+    aliases_ru:
+      - "хирургия"
+      - "хирургии"

@@ -1,0 +1,15 @@
+{
+  "resourceTargets": {
+    "ru": {
+      "292": {
+        "documentId": "wolv96366knzp3t1bnotozkr",
+        "note": "Reviewed override: the Russian homepage promo slider points at missing MODX resource 292, so use the imported Blefaroplastika page document."
+      }
+    }
+  },
+  "slugOverrides": {
+    "or75ksubaq5h2exns2uga6k0": {
+      "el": "privacy-policy"
+    }
+  }
+}

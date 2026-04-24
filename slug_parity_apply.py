@@ -12,6 +12,7 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 
+from slug_uid_utils import strapi_slug_for_modx_alias
 from strapi_client import StrapiClient, StrapiError, load_strapi_env_from_dotenv
 
 logger = logging.getLogger("slug_parity_apply")
@@ -19,6 +20,17 @@ logger = logging.getLogger("slug_parity_apply")
 ROOT = Path(__file__).resolve().parent
 DEFAULT_REPORT = ROOT / "slug_parity_report.json"
 DEFAULT_ERRORS = ROOT / "slug_migration_errors.json"
+
+
+def _row_target_slug(row: Dict[str, Any]) -> str:
+    """Strapi ``uid`` value from report row (prefers analyzer ``strapi_slug_resolved``)."""
+
+    for key in ("strapi_slug_resolved", "strapi_slug_ascii"):
+        val = row.get(key)
+        if val:
+            return str(val).strip()
+    prop = row.get("proposed_slug") or row.get("alias") or ""
+    return strapi_slug_for_modx_alias(str(prop)) if prop else ""
 
 
 def _temp_slug(document_id: str) -> str:
@@ -57,7 +69,7 @@ def _plan_puts(
             continue
         doc = row.get("document_id")
         loc = row.get("strapi_locale")
-        prop = row.get("proposed_slug")
+        prop = _row_target_slug(row)
         if not doc or not loc or not prop:
             continue
         if only_document_id and doc != only_document_id:
@@ -81,8 +93,8 @@ def _plan_puts(
             tb = _temp_slug(b)
             cur_a = ra.get("current_slug") or ""
             cur_b = rb.get("current_slug") or ""
-            prop_a = ra.get("proposed_slug") or ""
-            prop_b = rb.get("proposed_slug") or ""
+            prop_a = _row_target_slug(ra)
+            prop_b = _row_target_slug(rb)
             if prop_a != cur_b or prop_b != cur_a:
                 continue
             loc = ra.get("strapi_locale")
@@ -105,7 +117,7 @@ def _plan_puts(
             {
                 "document_id": doc,
                 "locale": row["strapi_locale"],
-                "slug": row["proposed_slug"],
+                "slug": _row_target_slug(row),
                 "phase": "direct",
             }
         )

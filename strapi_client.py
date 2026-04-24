@@ -38,14 +38,33 @@ def _read_dotenv_into_environ(path: Path) -> None:
             os.environ[key] = value
 
 
+def _read_dotenv_fill_empty_keys(path: Path) -> None:
+    """Set keys from ``path`` when ``os.environ`` has missing or empty values (root ``.env`` placeholders)."""
+
+    if not path.is_file():
+        return
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if not key:
+            continue
+        if not os.environ.get(key):
+            os.environ[key] = value
+
+
 def load_strapi_env_from_dotenv() -> None:
-    """Load project-root ``.env`` once so ``STRAPI_URL`` / ``STRAPI_TOKEN`` work without ``export``."""
+    """Load project-root ``.env`` then ``backend/.env`` for missing/empty keys (Strapi app env)."""
 
     global _STRAPI_DOTENV_LOADED
     if _STRAPI_DOTENV_LOADED:
         return
     _STRAPI_DOTENV_LOADED = True
     _read_dotenv_into_environ(_CLI_ROOT / ".env")
+    _read_dotenv_fill_empty_keys(_CLI_ROOT / "backend" / ".env")
 
 MAX_RETRIES = 3
 DEBOUNCE_DELAY_MS = 500

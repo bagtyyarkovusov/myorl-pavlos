@@ -35,7 +35,7 @@ source for `metaTitle`.
 | MODX column  | Strapi attribute         |
 |--------------|--------------------------|
 | `pagetitle`  | `title`                  |
-| `alias`      | `slug` (verbatim when set; see slug rules below) |
+| `alias`      | `slug` (verbatim when ASCII URL-safe; see slug rules below) |
 | `content`    | `content`                |
 | `introtext`  | `excerpt`                |
 | `parent`     | `parentPage` (resolved)  |
@@ -46,13 +46,16 @@ source for `metaTitle`.
 | `published`  | `publishedAt`            |
 | `context_key`| `locale` (`web` -> `el`) |
 
-Slug rules (per `context_key` / locale): if MODX `alias` is non-empty, it is
-copied into `_import.slug` **unchanged** after trimming whitespace (legacy URL
-parity). If `alias` is empty, the slug is ASCII-transliterated from `pagetitle`
-and collisions among those derived-only slugs append `-{MODX id}`. Duplicate
-non-empty aliases in one locale yield duplicate `_import.slug` values and must
-be fixed in source or Strapi. Downstream code reads `_import.slug`, not `alias`
-directly.
+Slug rules (per `context_key` / locale): Strapi **5** `Page.slug` is a **`uid`**
+field and only accepts ASCII URL-safe characters (`[A-Za-z0-9-_.~]`). If MODX
+`alias` is non-empty and already matches that set, it is copied into
+`_import.slug` after trimming (legacy URL parity). If `alias` contains other
+characters (e.g. Cyrillic), `_import.slug` must use a **deterministic ASCII
+transliteration** (see `slug_uid_utils.py` — same rules as
+`slug_parity_analyze` / `slug_parity_apply`). If `alias` is empty, the slug is
+transliterated from `pagetitle` and collisions append `-{MODX id}`. Duplicate
+non-empty aliases in one locale must be fixed in source or Strapi. Downstream
+code reads `_import.slug`, not `alias` directly.
 
 ## Slug parity migration (existing Strapi data)
 
@@ -64,9 +67,13 @@ segment), use the parity tools at the repo root:
    [`transformed_resources.json`](transformed_resources.json)),
    [`checkpoint.json`](checkpoint.json) (`pages.web` / `pages.rus` → Strapi
    `documentId`), and live Strapi `GET /api/pages` to emit
-   [`slug_parity_report.json`](slug_parity_report.json). Rows with
-   `blocked_reason: collision` need editorial resolution; `swap_pair` rows can
-   be applied with a two-phase temp slug sequence.
+   [`slug_parity_report.json`](slug_parity_report.json). Each row includes
+   **`strapi_slug_ascii`** (transliterated segment), **`strapi_slug_resolved`**
+   (batch-unique per locale), **`non_ascii_modx_alias`**, and
+   **`change_needed`** compares Strapi `current_slug` to **`strapi_slug_resolved`**
+   (not raw MODX `alias` when Cyrillic). Rows with `blocked_reason: collision`
+   need editorial resolution; `swap_pair` rows can be applied with a two-phase
+   temp slug sequence.
 
    Options: `--skip-strapi` builds MODX-side rows only (no `change_needed`
    flags); `--output` to choose the report path.
@@ -75,12 +82,17 @@ segment), use the parity tools at the repo root:
    before writing.
 
 3. **Apply** — [`slug_parity_apply.py`](slug_parity_apply.py) defaults to
-   **dry-run** (logged `PUT`s, no writes). Use `--apply` after backing up the DB
+   **dry-run** (logged `PUT`s, no writes). It sends **`strapi_slug_resolved`**
+   from the report (fallback: transliterate `proposed_slug`), so non-ASCII MODX
+   aliases never hit Strapi as raw Unicode. Use `--apply` after backing up the DB
    (e.g. copy `backend/.tmp/data.db` in local SQLite dev). Failures append to
    [`slug_migration_errors.json`](slug_migration_errors.json).
 
    Flags: `--include-swaps` for documented `swap_pair` two-phase updates;
    `--document-id` to scope a single page; `--sleep-ms` to throttle requests.
+
+   **Order:** run **analyze** (step 1) immediately before apply so the report
+   contains `strapi_slug_resolved` for your current MODX export.
 
 4. **Dependent content** — After slug changes, re-run
    [`internal_link_rewrite.py`](internal_link_rewrite.py) on transformed HTML
@@ -90,8 +102,25 @@ segment), use the parity tools at the repo root:
    `--merge` so navigation `path` / `uiRouterKey` match the new slugs (see
    [`docs/admin-hierarchy-ux.md`](docs/admin-hierarchy-ux.md)).
 
-5. **Optional** — Emit Next.js `redirects` only for URLs that actually changed
-   and still receive traffic.
+5. **Redirects for Next.js** — [`emit_slug_redirects.py`](emit_slug_redirects.py)
+   reads the MODX export + [`slug_parity_report.json`](slug_parity_report.json)
+   and writes [`slug_redirects_next.json`](slug_redirects_next.json): primary
+   rows use **`fromPathVariants`** built from MODX `alias`, `uri`, and
+   `properties.autoredirector.old_uri`, with **`toPath`** pointing at the
+   canonical **`/{locale}/{strapi_slug_resolved}`** route. Cyrillic (or other
+   non-ASCII) MODX aliases get **`nonAsciiModxAlias: true`** and redirect from
+   the real old path to the ASCII slug. By default, rows where every variant
+   already equals `toPath` are omitted (`--include-unchanged` keeps them). The
+   file also includes **`optionalStagingSlugRedirects`** (`current_slug` →
+   resolved target) for non-production Strapi URLs if you ever need them.
+
+   Example middleware helper: [`examples/next_slug_redirects_loader.mjs`](examples/next_slug_redirects_loader.mjs).
+
+   **Reminder:** non-ASCII MODX aliases (RU Cyrillic + one Greek-script alias on
+   `rus`) **must** ship with Next redirects — see
+   [`docs/NEXTJS_SLUG_REDIRECTS_REMINDER.md`](docs/NEXTJS_SLUG_REDIRECTS_REMINDER.md).
+   Automated audit: [`slug_migration_audit.py`](slug_migration_audit.py) →
+   [`slug_migration_verification_audit.json`](slug_migration_verification_audit.json).
 
 ## Transform map (TV -> Strapi)
 

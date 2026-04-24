@@ -204,6 +204,21 @@ export interface ItemsGalleryItem extends Struct.ComponentSchema {
   };
 }
 
+export interface ItemsLinkedResource extends Struct.ComponentSchema {
+  collectionName: 'components_items_linked_resources';
+  info: {
+    description: '';
+    displayName: 'Linked Resource';
+  };
+  attributes: {
+    description: Schema.Attribute.RichText;
+    legacySourceResourceId: Schema.Attribute.Integer;
+    targetPage: Schema.Attribute.Relation<'manyToOne', 'api::page.page'>;
+    targetUrl: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface ItemsPromoSlide extends Struct.ComponentSchema {
   collectionName: 'components_items_promo_slides';
   info: {
@@ -213,6 +228,9 @@ export interface ItemsPromoSlide extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images'>;
+    legacySourceResourceId: Schema.Attribute.Integer;
+    targetPage: Schema.Attribute.Relation<'manyToOne', 'api::page.page'>;
+    targetUrl: Schema.Attribute.String;
     title: Schema.Attribute.String;
   };
 }
@@ -324,6 +342,19 @@ export interface SectionsGallery extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsLinkedResources extends Struct.ComponentSchema {
+  collectionName: 'components_sections_linked_resources';
+  info: {
+    description: '';
+    displayName: 'Linked Resources Section';
+  };
+  attributes: {
+    heading: Schema.Attribute.String;
+    intro: Schema.Attribute.RichText;
+    items: Schema.Attribute.Component<'items.linked-resource', true>;
+  };
+}
+
 export interface SectionsPromoSlider extends Struct.ComponentSchema {
   collectionName: 'components_sections_promo_sliders';
   info: {
@@ -420,6 +451,7 @@ declare module '@strapi/strapi' {
       'items.contact-detail': ItemsContactDetail;
       'items.faq-item': ItemsFaqItem;
       'items.gallery-item': ItemsGalleryItem;
+      'items.linked-resource': ItemsLinkedResource;
       'items.promo-slide': ItemsPromoSlide;
       'items.social-link': ItemsSocialLink;
       'items.tab-item': ItemsTabItem;
@@ -429,6 +461,7 @@ declare module '@strapi/strapi' {
       'sections.contact': SectionsContact;
       'sections.faq': SectionsFaq;
       'sections.gallery': SectionsGallery;
+      'sections.linked-resources': SectionsLinkedResources;
       'sections.promo-slider': SectionsPromoSlider;
       'sections.social-links': SectionsSocialLinks;
       'sections.tabs': SectionsTabs;

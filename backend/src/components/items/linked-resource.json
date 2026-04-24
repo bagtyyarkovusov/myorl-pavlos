@@ -1,7 +1,7 @@
 {
-  "collectionName": "components_items_promo_slides",
+  "collectionName": "components_items_linked_resources",
   "info": {
-    "displayName": "Promo Slide",
+    "displayName": "Linked Resource",
     "description": ""
   },
   "options": {},
@@ -10,7 +10,7 @@
       "type": "string"
     },
     "description": {
-      "type": "text"
+      "type": "richtext"
     },
     "targetPage": {
       "type": "relation",
@@ -22,14 +22,6 @@
     },
     "legacySourceResourceId": {
       "type": "integer"
-    },
-    "image": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images"
-      ]
     }
   }
 }

@@ -597,7 +597,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     pageSections: Schema.Attribute.DynamicZone<
       [
         'sections.promo-slider',
-        'sections.faq',
+        'sections.linked-resources',
         'sections.social-links',
         'sections.video',
         'sections.advantages',

@@ -15,6 +15,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
+from slug_uid_utils import assign_resolved_slugs_for_report_rows
 from strapi_client import StrapiClient, StrapiError, load_strapi_env_from_dotenv
 from transform_data import iter_resource_tree
 
@@ -102,13 +103,13 @@ def _detect_swap_pairs(rows: List[Dict[str, Any]]) -> List[Tuple[str, str]]:
     for i, ra in enumerate(active):
         da = ra["document_id"]
         ca = ra.get("current_slug") or ""
-        pa = ra.get("proposed_slug") or ""
+        pa = ra.get("strapi_slug_resolved") or ra.get("strapi_slug_ascii") or ra.get("proposed_slug") or ""
         if not pa:
             continue
         for rb in active[i + 1 :]:
             db = rb["document_id"]
             cb = rb.get("current_slug") or ""
-            pb = rb.get("proposed_slug") or ""
+            pb = rb.get("strapi_slug_resolved") or rb.get("strapi_slug_ascii") or rb.get("proposed_slug") or ""
             if pa == cb and pb == ca:
                 key = tuple(sorted((da, db)))
                 if key not in seen:
@@ -198,15 +199,6 @@ def main() -> int:
             current_slug = strapi_locale_slugs.get(locale, {}).get(str(document_id))
 
         proposed_slug = alias if alias else None
-        change_needed = bool(proposed_slug and current_slug is not None and current_slug != proposed_slug)
-
-        collision_doc: Optional[str] = None
-        blocked_reason: Optional[str] = None
-        if change_needed and proposed_slug and not args.skip_strapi:
-            holders = [d for d in slug_to_docs[locale].get(proposed_slug, []) if d != str(document_id)]
-            if holders:
-                collision_doc = holders[0]
-                blocked_reason = "collision"
 
         notes_parts: List[str] = []
         if alias and current_slug and _slug_suffix_is_modx_id(current_slug, modx_id):
@@ -224,12 +216,34 @@ def main() -> int:
                 "pagetitle": (resource.get("pagetitle") or "")[:200],
                 "current_slug": current_slug,
                 "proposed_slug": proposed_slug,
-                "change_needed": change_needed,
-                "collision_document_id": collision_doc,
-                "blocked_reason": blocked_reason,
+                "change_needed": False,
+                "collision_document_id": None,
+                "blocked_reason": None,
                 "notes": ";".join(notes_parts) if notes_parts else None,
             }
         )
+
+    assign_resolved_slugs_for_report_rows(rows)
+
+    if not args.skip_strapi:
+        for row in rows:
+            doc = row.get("document_id")
+            locale = row.get("strapi_locale")
+            current_slug = row.get("current_slug")
+            resolved = row.get("strapi_slug_resolved")
+            collision_doc: Optional[str] = None
+            blocked_reason: Optional[str] = None
+            change_needed = False
+            if doc and resolved is not None and current_slug is not None:
+                change_needed = current_slug != resolved
+            if change_needed and resolved and locale:
+                holders = [d for d in slug_to_docs[str(locale)].get(resolved, []) if d != str(doc)]
+                if holders:
+                    collision_doc = holders[0]
+                    blocked_reason = "collision"
+            row["change_needed"] = change_needed
+            row["collision_document_id"] = collision_doc
+            row["blocked_reason"] = blocked_reason
 
     swap_pairs = _detect_swap_pairs(rows)
     partner: Dict[str, str] = {}
@@ -263,6 +277,7 @@ def main() -> int:
                 if r.get("change_needed") and not r.get("blocked_reason")
             ),
             "swap_pairs_count": len(swap_pairs),
+            "non_ascii_modx_alias_rows": sum(1 for r in rows if r.get("non_ascii_modx_alias")),
         },
         "swap_pairs": [
             {
@@ -279,11 +294,12 @@ def main() -> int:
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     logger.info("Wrote %s", args.output)
     logger.info(
-        "summary: change_needed=%s ready=%s blocked_collision=%s blocked_swap=%s",
+        "summary: change_needed=%s ready=%s blocked_collision=%s blocked_swap=%s non_ascii_modx_alias=%s",
         report["summary"]["change_needed"],
         report["summary"]["ready_to_apply"],
         report["summary"]["blocked_collision"],
         report["summary"]["blocked_swap"],
+        report["summary"]["non_ascii_modx_alias_rows"],
     )
     return 0
 

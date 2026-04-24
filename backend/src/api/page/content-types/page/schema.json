@@ -276,7 +276,7 @@
       "type": "dynamiczone",
       "components": [
         "sections.promo-slider",
-        "sections.faq",
+        "sections.linked-resources",
         "sections.social-links",
         "sections.video",
         "sections.advantages",

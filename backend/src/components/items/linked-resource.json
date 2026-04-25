@@ -21,7 +21,8 @@
       "type": "string"
     },
     "legacySourceResourceId": {
-      "type": "integer"
+      "type": "integer",
+      "private": true
     }
   }
 }

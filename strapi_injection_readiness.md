@@ -1,5 +1,7 @@
 # Strapi Injection Readiness and Zero-Loss Check
 
+> Historical note: this document captures the pre-injection readiness audit and the zero-loss migration constraints for the earlier empty-target rehearsal state. For the current populated Strapi system and the active Next.js contract recommendation, use [/Users/bagtyyar/Projects/gemini-export/docs/strapi-nextjs-audit.md](/Users/bagtyyar/Projects/gemini-export/docs/strapi-nextjs-audit.md).
+
 ## Status
 
 - Overall decision: `NO-GO` for full localized content injection.

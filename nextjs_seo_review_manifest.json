@@ -1,0 +1,137 @@
+{
+  "summary": {
+    "count": 13
+  },
+  "documents": [
+    {
+      "documentId": "ytyqvzdorkvcqaar0fh78lob",
+      "locale": "el",
+      "sourceResourceId": 44,
+      "slug": "allergiki-rinitida-paidia",
+      "title": "Αλλεργική ρινίτιδα στα παιδιά",
+      "currentSeoMetaTitle": "Αλλεργική ρινίτιδα στα παιδιά",
+      "legacyLongTitle": "Η συμπτωματολογία και τα αίτια καθως και η θεραπεία της αλλεργικής ρινίτιδας στα παιδιά",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "qhw6s5b7k8lgqawdpcwkzxou",
+      "locale": "el",
+      "sourceResourceId": 46,
+      "slug": "xena-somata-paidia",
+      "title": "Ξένα σώματα στα παιδιά",
+      "currentSeoMetaTitle": "Ξένα σώματα στα παιδιά",
+      "legacyLongTitle": "Ξένα σώματα των παιδιών",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "tcf2s0464m90t8aghtax3xu6",
+      "locale": "el",
+      "sourceResourceId": 48,
+      "slug": "afestota-ota",
+      "title": "Ωτοπλαστική σε παιδιά",
+      "currentSeoMetaTitle": "Ωτοπλαστική σε παιδιά",
+      "legacyLongTitle": "Ωτοπλαστική σε παιδιά - Αφεστώτα ώτα",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "r6x30sgigdotchjj0wkjk7bp",
+      "locale": "el",
+      "sourceResourceId": 53,
+      "slug": "endoskopiki-diafragmatoplastiki",
+      "title": "Ενδοσκοπική διαφραγματοπλαστική",
+      "currentSeoMetaTitle": "Ενδοσκοπική διαφραγματοπλαστική",
+      "legacyLongTitle": "Ενδοσκοπική διαφραγματοπλαστική - Νέα ενδοσκοπική χειρουργική αντιμετώπιση δυσχέρειας ρινικής αναπνοής",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "jb80un76bcp89er5a1hl304q",
+      "locale": "el",
+      "sourceResourceId": 68,
+      "slug": "endeixeis-gia-thyreoeidektomi",
+      "title": "Ενδείξεις για θυρεοειδεκτομή",
+      "currentSeoMetaTitle": "Ενδείξεις για θυρεοειδεκτομή",
+      "legacyLongTitle": "Θυρεοειδής αδένας: Λειτουργία, Χειρουργείο",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "swi2f3anzcpb05ot9cvptefr",
+      "locale": "el",
+      "sourceResourceId": 69,
+      "slug": "texniki-olikis-thyreoeidektomis",
+      "title": "Τεχνική ολικής θυρεοειδεκτομής και οδηγίες",
+      "currentSeoMetaTitle": "Τεχνική ολικής θυρεοειδεκτομής και οδηγίες",
+      "legacyLongTitle": "Ολική θυρεοειδεκτομή",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "heb4sy4apu5ejullyg8b2rlv",
+      "locale": "el",
+      "sourceResourceId": 70,
+      "slug": "kindinoi-thyreoeidektomis",
+      "title": "Κίνδυνοι της θυρεοειδεκτομής",
+      "currentSeoMetaTitle": "Κίνδυνοι της θυρεοειδεκτομής",
+      "legacyLongTitle": "Πιθανές επιπλοκές θυρεοειδεκτομής",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "so2mvk30n5565rkoyhygh6zd",
+      "locale": "el",
+      "sourceResourceId": 72,
+      "slug": "prognosi-meta-apo-afairesi-thyreoeidous",
+      "title": "Πρόγνωση μετά από αφαίρεση θυρεοειδούς",
+      "currentSeoMetaTitle": "Πρόγνωση μετά από αφαίρεση θυρεοειδούς",
+      "legacyLongTitle": "Παράγοντες κινδύνου πρόγνωσης θυρεοειδεκτομής",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "tm1bmv7gxbzdvjt9jd7xmjfr",
+      "locale": "el",
+      "sourceResourceId": 73,
+      "slug": "parathyreoeidektomi",
+      "title": "Παραθυρεοειδεκτομή",
+      "currentSeoMetaTitle": "Παραθυρεοειδεκτομή",
+      "legacyLongTitle": "Η παραθυρεοειδεκτομή είναι η χειρουργική επέμβαση για την αφαίρεση παραθυρεοειδείς αδένων ή όγκων των παραθυρεοειδών",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "aocmnkl6xe0zawpdeb96dw2v",
+      "locale": "el",
+      "sourceResourceId": 88,
+      "slug": "meleti-ypnou-gia-ektimisi-tou-roxalitou",
+      "title": "Μελέτη ύπνου για εκτίμηση του ροχαλητού",
+      "currentSeoMetaTitle": "Μελέτη ύπνου για εκτίμηση του ροχαλητού",
+      "legacyLongTitle": "Μελέτη ύπνου-Ροχαλητό-Σύνδρομο υπνικής άπνοιας",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "yc2gyjkx2vvi8zn3bei49n6o",
+      "locale": "el",
+      "sourceResourceId": 409,
+      "slug": "atrisia",
+      "title": "Ατρησία ρινικής χοάνης",
+      "currentSeoMetaTitle": "Ατρησία ρινικής χοάνης",
+      "legacyLongTitle": "Η ατρησία των ρινικών χοανών (choanal atresia) είναι μια αναπτυξιακή διαταραχή κατά την οποία αποτυγχάνει η δημιουργία πόρου-θαλάμης στο ένα ή στο άλλο ρουθούνι ως αποτέλεσμα συγγενούς δυσπλασίας του οπίσθιου τμήματος της ρινικής κοιλότητας",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "g5x98i8y7f7j5jhnqe5lv6m7",
+      "locale": "el",
+      "sourceResourceId": 413,
+      "slug": "meiosi-lovion",
+      "title": "Μείωση λοβίων",
+      "currentSeoMetaTitle": "Μείωση λοβίων",
+      "legacyLongTitle": "Μεγάλα λοβία - Μείωση λοβίων",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    },
+    {
+      "documentId": "w9zphntrudf60jfz7n359kc2",
+      "locale": "el",
+      "sourceResourceId": 414,
+      "slug": "xeno-soma-igmoreio",
+      "title": "Ξένο σώμα στο ιγμόρειο άντρο",
+      "currentSeoMetaTitle": "Ξένο σώμα στο ιγμόρειο άντρο",
+      "legacyLongTitle": "Ξένα Σώματα στο Ιγμόρειο Άντρο: Εμφυτεύματα και Εμφρακτικό Υλικό",
+      "recommendedAction": "editorial-review-longtitle-for-seo-meta-title"
+    }
+  ]
+}

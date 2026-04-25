@@ -1,0 +1,261 @@
+{
+  "summary": {
+    "legacyRowsWithMenuTitle": 21,
+    "rowsWhereMenuTitleDiffersFromTitle": 13,
+    "plannedCount": 21
+  },
+  "plannedUpdates": [
+    {
+      "documentId": "z6egtdv1ie0g6eik8sjn0s6y",
+      "locale": "el",
+      "sourceResourceId": 15,
+      "title": "Εκκριτική ωτίτιδα",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Υγρό στο αυτί",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Υγρό στο αυτί"
+      }
+    },
+    {
+      "documentId": "j7a8upt0bi5uheu2l77ivs2j",
+      "locale": "el",
+      "sourceResourceId": 21,
+      "title": "Βράγχος φωνής",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Βράγχος φωνής",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Βράγχος φωνής"
+      }
+    },
+    {
+      "documentId": "nkgl6v5e8j0u9d9hnodffo12",
+      "locale": "el",
+      "sourceResourceId": 23,
+      "title": "Σκολίωση ρινικού διαφράγματος (Στραβό διάφραγμα)",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Σκολίωση ρινικού διαφράγματος",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Σκολίωση ρινικού διαφράγματος"
+      }
+    },
+    {
+      "documentId": "sc6d4h52xwhpwulg1klrv7tu",
+      "locale": "el",
+      "sourceResourceId": 28,
+      "title": "Εμβοές",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Εμβοές ωτών",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Εμβοές ωτών"
+      }
+    },
+    {
+      "documentId": "h91e3z6ikow2nr8p97k5r0lk",
+      "locale": "el",
+      "sourceResourceId": 49,
+      "title": "Αφαίρεση αμυγδαλών (αμυγδαλεκτομή)",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Αμυγδαλεκτομή",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Αμυγδαλεκτομή"
+      }
+    },
+    {
+      "documentId": "ifhut06wvfjzk85chctslxbw",
+      "locale": "el",
+      "sourceResourceId": 50,
+      "title": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων (FESS)",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων"
+      }
+    },
+    {
+      "documentId": "wolv96366knzp3t1bnotozkr",
+      "locale": "el",
+      "sourceResourceId": 58,
+      "title": "Βλεφαροπλαστική - Πλαστική βλεφάρων",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Βλεφαροπλαστική",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Βλεφαροπλαστική"
+      }
+    },
+    {
+      "documentId": "v42oefpjqxksckbxmouqcea7",
+      "locale": "el",
+      "sourceResourceId": 105,
+      "title": "Βουλωμένη μύτη",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Βουλωμένη μύτη",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Βουλωμένη μύτη"
+      }
+    },
+    {
+      "documentId": "y9t0ouq6vr2ndfvtgy579u4p",
+      "locale": "el",
+      "sourceResourceId": 109,
+      "title": "Κρεατάκια (Αδενοειδείς εκβλαστήσεις ) - διάγνωση, θεραπεία, επέμβαση",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Αδενοειδείς εκβλαστήσεις (Κρεατάκια)",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Αδενοειδείς εκβλαστήσεις (Κρεατάκια)"
+      }
+    },
+    {
+      "documentId": "l46au3fudjqmzpzm3d1f8lyc",
+      "locale": "el",
+      "sourceResourceId": 111,
+      "title": "Αμυγδαλεκτομή στα παιδιά",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Αμυγδαλεκτομή στα παιδιά",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Αμυγδαλεκτομή στα παιδιά"
+      }
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "el",
+      "sourceResourceId": 116,
+      "title": "Σκολίωση ρινικού διαφράγματος (Στραβό διάφραγμα)",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Στραβό διάφραγμα",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Στραβό διάφραγμα"
+      }
+    },
+    {
+      "documentId": "q0xqwm7761r1qpiqs8gvn9ms",
+      "locale": "el",
+      "sourceResourceId": 119,
+      "title": "Ρινικές κόγχες",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Τα συμπτώματα υπερτροφίας κάτω ρινικών κογχών",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Τα συμπτώματα υπερτροφίας κάτω ρινικών κογχών"
+      }
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "el",
+      "sourceResourceId": 141,
+      "title": "Συχνές ερωτήσεις - Απαντήσεις",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Οι πιο συχνές ερωτήσεις για την διαφραγματοπλαστική",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Οι πιο συχνές ερωτήσεις για την διαφραγματοπλαστική"
+      }
+    },
+    {
+      "documentId": "ygy4tsas9lefpk55xkgureep",
+      "locale": "el",
+      "sourceResourceId": 143,
+      "title": "Ρινική καταρροή σε βρέφη και παιδιά",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Ρινική καταρροή σε βρέφη και παιδιά",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Ρινική καταρροή σε βρέφη και παιδιά"
+      }
+    },
+    {
+      "documentId": "h91e3z6ikow2nr8p97k5r0lk",
+      "locale": "ru",
+      "sourceResourceId": 263,
+      "title": "Удаление миндалин (тонзиллэктомия)",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Удаление миндалин",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Удаление миндалин"
+      }
+    },
+    {
+      "documentId": "ygy4tsas9lefpk55xkgureep",
+      "locale": "ru",
+      "sourceResourceId": 274,
+      "title": "Храп или насморк у младенцев и детей",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Храп или насморк у младенцев и детей",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Храп или насморк у младенцев и детей"
+      }
+    },
+    {
+      "documentId": "fd4nxd5gji5rmqgfp7pgtq8i",
+      "locale": "el",
+      "sourceResourceId": 368,
+      "title": "Διάτρηση τυμπανικής μεμβράνης",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Τρύπα στο τύμπανο",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Τρύπα στο τύμπανο"
+      }
+    },
+    {
+      "documentId": "bcnez4hyyvw9niicnfvdb7q7",
+      "locale": "el",
+      "sourceResourceId": 369,
+      "title": "Τεστ όσφρησης",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Έλεγχος όσφρησης",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Έλεγχος όσφρησης"
+      }
+    },
+    {
+      "documentId": "yc2gyjkx2vvi8zn3bei49n6o",
+      "locale": "el",
+      "sourceResourceId": 409,
+      "title": "Ατρησία ρινικής χοάνης",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Ατρησία ρινικής χοάνης",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Ατρησία ρινικής χοάνης"
+      }
+    },
+    {
+      "documentId": "or75ksubaq5h2exns2uga6k0",
+      "locale": "el",
+      "sourceResourceId": 415,
+      "title": "Πολιτική Απορρήτου",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Πολιτική Απορρήτου",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Πολιτική Απορρήτου"
+      }
+    },
+    {
+      "documentId": "or75ksubaq5h2exns2uga6k0",
+      "locale": "ru",
+      "sourceResourceId": 417,
+      "title": "Политика конфиденциальности",
+      "currentMenuTitle": null,
+      "legacyMenuTitle": "Политика конфиденциальности",
+      "hasPublished": true,
+      "payload": {
+        "menuTitle": "Политика конфиденциальности"
+      }
+    }
+  ]
+}

@@ -574,6 +574,12 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    menuTitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     pageBlocks: Schema.Attribute.DynamicZone<
       [
         'blocks.accordion-item',
@@ -589,6 +595,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'shared.location',
       ]
     > &
+      Schema.Attribute.Private &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -700,6 +707,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'template_20',
       ]
     > &
+      Schema.Attribute.Private &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -753,6 +761,13 @@ export interface ApiTagTag extends Struct.CollectionTypeSchema {
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

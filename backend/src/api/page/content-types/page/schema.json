@@ -25,6 +25,14 @@
         }
       }
     },
+    "menuTitle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
     "slug": {
       "type": "uid",
       "targetField": "title",
@@ -141,6 +149,7 @@
         "template_18",
         "template_20"
       ],
+      "private": true,
       "pluginOptions": {
         "i18n": {
           "localized": true
@@ -403,6 +412,7 @@
     },
     "pageBlocks": {
       "type": "dynamiczone",
+      "private": true,
       "components": [
         "blocks.accordion-item",
         "blocks.faq-item",

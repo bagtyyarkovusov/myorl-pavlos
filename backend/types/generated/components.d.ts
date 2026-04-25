@@ -212,7 +212,7 @@ export interface ItemsLinkedResource extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.RichText;
-    legacySourceResourceId: Schema.Attribute.Integer;
+    legacySourceResourceId: Schema.Attribute.Integer & Schema.Attribute.Private;
     targetPage: Schema.Attribute.Relation<'manyToOne', 'api::page.page'>;
     targetUrl: Schema.Attribute.String;
     title: Schema.Attribute.String;
@@ -228,7 +228,7 @@ export interface ItemsPromoSlide extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images'>;
-    legacySourceResourceId: Schema.Attribute.Integer;
+    legacySourceResourceId: Schema.Attribute.Integer & Schema.Attribute.Private;
     targetPage: Schema.Attribute.Relation<'manyToOne', 'api::page.page'>;
     targetUrl: Schema.Attribute.String;
     title: Schema.Attribute.String;

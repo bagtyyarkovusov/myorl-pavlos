@@ -85,13 +85,13 @@ async function main() {
         ok.push({
           documentId: entry.documentId,
           locale: entry.locale,
-          pageType: entry.payload.pageType,
-          layoutVariant: entry.payload.layoutVariant,
+          changedKeys: Object.keys(entry.payload || {}).sort(),
+          payload: entry.payload,
         });
 
         if ((index + 1) % 25 === 0 || index === plannedUpdates.length - 1) {
           console.log(
-            `[page-model] Applied ${index + 1}/${plannedUpdates.length} ${entry.documentId} ${entry.locale}`
+            `[page-plan] Applied ${index + 1}/${plannedUpdates.length} ${entry.documentId} ${entry.locale}`
           );
         }
       } catch (error) {
@@ -101,7 +101,7 @@ async function main() {
           locale: entry.locale,
           error: message,
         });
-        console.error(`[page-model] Failed ${entry.documentId} ${entry.locale}: ${message}`);
+        console.error(`[page-plan] Failed ${entry.documentId} ${entry.locale}: ${message}`);
       }
 
       if (args.sleepMs > 0) {
@@ -132,6 +132,6 @@ async function main() {
 
 main().catch(async (error) => {
   const message = error instanceof Error ? error.stack || error.message : String(error);
-  console.error(`[page-model] Fatal: ${message}`);
+  console.error(`[page-plan] Fatal: ${message}`);
   process.exitCode = 1;
 });

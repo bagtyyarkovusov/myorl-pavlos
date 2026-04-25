@@ -1,0 +1,441 @@
+{
+  "batch": "batch-b-bilingual",
+  "summary": {
+    "canonicalCount": 16,
+    "localizedCount": 32,
+    "pageTypeCounts": {
+      "accordion": 6,
+      "home": 1,
+      "gallery": 7,
+      "faq": 1,
+      "contact": 1
+    }
+  },
+  "documents": [
+    {
+      "documentId": "bsuslnw4e1q3vnr4ym3pmxbf",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Κύστη θυρεογλωσσικού πόρου",
+          "slug": "kysti-thyrioglossikou-porou",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 5
+          }
+        },
+        "ru": {
+          "title": "Киста щитоязычного протока",
+          "slug": "kysti-thyrioglossikou-porou",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 5
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "d4sutmel62e6418oo7wm7vy9",
+      "pageType": "home",
+      "semanticField": "pageSections",
+      "locales": {
+        "el": {
+          "title": "Menu",
+          "slug": "index",
+          "semanticCount": 4,
+          "pageBlocksCount": 33,
+          "pageBlockComponents": {
+            "blocks.faq-item": 10,
+            "blocks.promo-slide": 18,
+            "blocks.social-link": 4,
+            "blocks.video": 1
+          }
+        },
+        "ru": {
+          "title": "Меню",
+          "slug": "index",
+          "semanticCount": 5,
+          "pageBlocksCount": 36,
+          "pageBlockComponents": {
+            "blocks.advantage": 4,
+            "blocks.faq-item": 10,
+            "blocks.promo-slide": 18,
+            "blocks.social-link": 3,
+            "blocks.video": 1
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "dy4bhu8b4yq6pzda10vgw3td",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Μetropolitan General",
+          "slug": "iaso-general",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 6
+          }
+        },
+        "ru": {
+          "title": "Metropolitan General",
+          "slug": "iaso-general",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 6
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "flpm6kfhzgwk0fes4y3iee4o",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Κεντρική Κλινική Αθηνών",
+          "slug": "kentriki-kliniki-athinon",
+          "semanticCount": 1,
+          "pageBlocksCount": 3,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 3
+          }
+        },
+        "ru": {
+          "title": "Kentriki Kliniki Athinon",
+          "slug": "kentriki-kliniki-athinon",
+          "semanticCount": 1,
+          "pageBlocksCount": 3,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 3
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "h91e3z6ikow2nr8p97k5r0lk",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Αφαίρεση αμυγδαλών (αμυγδαλεκτομή)",
+          "slug": "afairesi-amygdalwn",
+          "semanticCount": 1,
+          "pageBlocksCount": 2,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 2
+          }
+        },
+        "ru": {
+          "title": "Удаление миндалин (тонзиллэктомия)",
+          "slug": "afairesi-amygdalwn",
+          "semanticCount": 1,
+          "pageBlocksCount": 10,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 10
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Αμπελόκηποι",
+          "slug": "iatreio-alexandras",
+          "semanticCount": 1,
+          "pageBlocksCount": 12,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 12
+          }
+        },
+        "ru": {
+          "title": "Абелокипи",
+          "slug": "iatreio-alexandras",
+          "semanticCount": 1,
+          "pageBlocksCount": 12,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 12
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "jdsakp5pldnhyiu5bv60mbii",
+      "pageType": "faq",
+      "semanticField": "faqSection",
+      "locales": {
+        "el": {
+          "title": "Υπηρεσίες",
+          "slug": "yperesies",
+          "semanticCount": 1,
+          "pageBlocksCount": 7,
+          "pageBlockComponents": {
+            "blocks.faq-item": 7
+          }
+        },
+        "ru": {
+          "title": "Услуги",
+          "slug": "yperesies",
+          "semanticCount": 1,
+          "pageBlocksCount": 7,
+          "pageBlockComponents": {
+            "blocks.faq-item": 7
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "jnkudfxwg4zxgrtat45rhrbt",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Ιατρικό Φαλήρου",
+          "slug": "iatriko-falirou",
+          "semanticCount": 1,
+          "pageBlocksCount": 3,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 3
+          }
+        },
+        "ru": {
+          "title": "Iatriko Falirou",
+          "slug": "iatriko-falirou",
+          "semanticCount": 1,
+          "pageBlocksCount": 3,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 3
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "n1h2yld3ulfyk2g2iwgaabob",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "ΡΕΑ",
+          "slug": "rea",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 6
+          }
+        },
+        "ru": {
+          "title": "ΡΕΑ",
+          "slug": "rea",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 6
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "nbsun7tvpb5x9cewbhpkvs84",
+      "pageType": "contact",
+      "semanticField": "contactSection",
+      "locales": {
+        "el": {
+          "title": "Επικοινωνία",
+          "slug": "epikoinonia",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.clinic": 3,
+            "blocks.contact-detail": 3
+          }
+        },
+        "ru": {
+          "title": "Контакты",
+          "slug": "epikoinonia",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.clinic": 3,
+            "blocks.contact-detail": 3
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "ookwcuma6lt0koqk123dcd70",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Λοιμώξεις αυτιών",
+          "slug": "loimoxeis-aytion",
+          "semanticCount": 1,
+          "pageBlocksCount": 16,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 16
+          }
+        },
+        "ru": {
+          "title": "Ушные инфекции у детей",
+          "slug": "loimoxeis-aytion",
+          "semanticCount": 1,
+          "pageBlocksCount": 19,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 19
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Κουκάκι",
+          "slug": "iatreio-koukaki",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 5
+          }
+        },
+        "ru": {
+          "title": "Кукаки",
+          "slug": "iatreio-koukaki",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 5
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "q6xj2tn5nwfs45gvst77neg3",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Κλινική Καρρά",
+          "slug": "orl-athens-clinic",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 6
+          }
+        },
+        "ru": {
+          "title": "ORL Athens Clinic",
+          "slug": "orl-athens-clinic",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 6
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "s0xdvhtm58zxky95ju5yehpm",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Η γενική αναισθησία για το παιδί σας",
+          "slug": "geniki-anaisthisia-gia-to-paidi-sas",
+          "semanticCount": 1,
+          "pageBlocksCount": 9,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 9
+          }
+        },
+        "ru": {
+          "title": "Общая анестезия для вашего ребенка",
+          "slug": "geniki-anaisthisia-gia-to-paidi-sas",
+          "semanticCount": 1,
+          "pageBlocksCount": 9,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 9
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "ytyqvzdorkvcqaar0fh78lob",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Αλλεργική ρινίτιδα στα παιδιά",
+          "slug": "allergiki-rinitida-paidia",
+          "semanticCount": 1,
+          "pageBlocksCount": 8,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 8
+          }
+        },
+        "ru": {
+          "title": "Аллергический ринит у детей",
+          "slug": "allergiki-rinitida-paidia",
+          "semanticCount": 1,
+          "pageBlocksCount": 8,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 8
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "yv09o1x42ubffjze8oqkgnz5",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Ρινορραγίες στα παιδιά (Επίσταξη ρινός)",
+          "slug": "rinorragies",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 5
+          }
+        },
+        "ru": {
+          "title": "Носовые кровотечения у детей",
+          "slug": "rinorragies",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 5
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    }
+  ]
+}

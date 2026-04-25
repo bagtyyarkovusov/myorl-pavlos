@@ -205,6 +205,10 @@ def _build_page_payload(
         },
     }
 
+    menu_title = resource.get("menutitle")
+    if isinstance(menu_title, str) and menu_title.strip():
+        payload["menuTitle"] = menu_title.strip()
+
     for attribute, tv_key in (
         ("articleAuthor", "articleAuthor"),
         ("sources", "sources"),
@@ -336,11 +340,11 @@ class Importer:
             slug = entry["slug"]
             if slug in self.tag_id_map:
                 continue
-            el_payload = {"name": entry.get("el") or slug}
+            el_payload = {"name": entry.get("el") or slug, "slug": slug}
             created = self.client.post("/api/tags", {"data": el_payload}, locale="el")
             document_id = self._extract_document_id(created)
             if entry.get("ru"):
-                ru_payload = {"name": entry.get("ru")}
+                ru_payload = {"name": entry.get("ru"), "slug": slug}
                 self.client.put(
                     f"/api/tags/{document_id}", {"data": ru_payload}, locale="ru"
                 )
@@ -352,7 +356,7 @@ class Importer:
             slug = entry["slug"]
             if slug in self.tag_id_map:
                 continue
-            ru_payload = {"name": entry.get("ru") or slug}
+            ru_payload = {"name": entry.get("ru") or slug, "slug": slug}
             created = self.client.post("/api/tags", {"data": ru_payload}, locale="ru")
             document_id = self._extract_document_id(created)
             self.tag_id_map[slug] = document_id

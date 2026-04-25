@@ -747,10 +747,10 @@
           "candidate_title": "Отопластика",
           "candidate_parent": 334,
           "candidate_template": 18,
-          "score": 30,
-          "content_evidence": 25,
+          "score": 45,
+          "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki-andres.jpg']",
+            "shared asset paths: ['uploads/otoplastiki_epemvasi_1_31648a69bb.jpg', 'uploads/otoplastiki_epemvasi_1da52e26e0.jpg', 'uploads/otoplastiki_epemvasi_3_3d8201721a.jpg']",
             "same template"
           ]
         }
@@ -800,7 +800,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/otoplasty/1prin-meta.png', 'files/images/plastic-face/otoplasty/2prin-meta.png', 'files/images/plastic-face/otoplasty/otoplastiki-xwis-tomes.png']",
+            "shared asset paths: ['uploads/1prin_meta_11408dba55.png', 'uploads/2prin_meta_abc60f1140.png', 'uploads/otoplastiki_xwis_tomes_2d0c21d5ea.png']",
             "same template"
           ]
         }
@@ -889,7 +889,7 @@
           "content_evidence": 100,
           "reasons": [
             "alias exact match",
-            "shared asset paths: ['files/images/diseases/submandibular-gland/img1.jpg', 'files/images/diseases/submandibular-gland/img2.jpg', 'files/images/diseases/submandibular-gland/img6.jpg']"
+            "shared asset paths: ['uploads/img1_3ccdbc7113.jpg', 'uploads/img2_d7517d6551.jpg', 'uploads/img6_a4d1684441.jpg']"
           ]
         }
       ],
@@ -1034,7 +1034,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/blepharoplasty/blepharoplasty-plexr.jpg', 'files/images/plastic-face/blepharoplasty/blepharoplasty-plexr2.jpg', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki-laser-1.png']",
+            "shared asset paths: ['uploads/blepharoplasty_plexr2_3782c582c5.jpg', 'uploads/vlefaroplastiki_laser_1_3bcf317ed6.png', 'uploads/vlefaroplastiki_laser_2_9dfb973134.png']",
             "same template"
           ]
         }
@@ -1278,7 +1278,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/necklift/necklift-1.jpg', 'files/images/plastic-face/necklift/necklift-2.jpg', 'files/images/plastic-face/necklift/necklift-3.jpg']",
+            "shared asset paths: ['uploads/necklift_1_09197eae3e.jpg', 'uploads/necklift_2_64daac92c1.jpg', 'uploads/necklift_3_7656d016b8.jpg']",
             "same template"
           ]
         }
@@ -1366,8 +1366,22 @@
       "current_babel": {
         "web": 413
       },
-      "candidates": [],
-      "bucket": "truly_unlocalized"
+      "candidates": [
+        {
+          "candidate_id": 337,
+          "candidate_alias": "ear-lobe-repair",
+          "candidate_title": "Реконструкция мочки уха",
+          "candidate_parent": 323,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['uploads/diortosi_loviou_autiou_1_efd9a4201b.jpg', 'uploads/meiotiki_loviou_otos_1_dddce667d1.jpg', 'uploads/meiotiki_loviou_otos_2_c5dcf96a91.jpg']",
+            "same template"
+          ]
+        }
+      ],
+      "bucket": "review"
     },
     {
       "source_id": 414,
@@ -1415,7 +1429,7 @@
           "content_evidence": 100,
           "reasons": [
             "alias exact match",
-            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/browlift-1.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/face-endoscopic-facelift.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/img2.png']",
+            "shared asset paths: ['uploads/browlift_1_dc2c3868f6.jpg', 'uploads/face_endoscopic_facelift_22a9ddf7af.jpg', 'uploads/img2_b93c52f66e.png']",
             "same template"
           ]
         }
@@ -1439,10 +1453,10 @@
           "candidate_title": "Подтяжка лица - Фейслифтинг",
           "candidate_parent": 323,
           "candidate_template": 8,
-          "score": 40,
-          "content_evidence": 35,
+          "score": 30,
+          "content_evidence": 25,
           "reasons": [
-            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']",
+            "shared asset paths: ['uploads/1a_e868810a1f.jpg']",
             "same template"
           ]
         },
@@ -1482,7 +1496,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/blepharoplasty/upper-eyelid-surgery.jpg', 'files/images/plastic-face/blepharoplasty/vlefarolastiki.png', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki.jpg']",
+            "shared asset paths: ['uploads/upper_eyelid_surgery_758aec88f9.jpg', 'uploads/vlefarolastiki_2efb91784b.png', 'uploads/vlefaroplastiki_1_e660b6c24f.jpg']",
             "same template"
           ]
         }
@@ -1499,22 +1513,8 @@
         "web": 61,
         "rus": 290
       },
-      "candidates": [
-        {
-          "candidate_id": 334,
-          "candidate_alias": "otoplastika-v-athinah",
-          "candidate_title": "Отопластика",
-          "candidate_parent": 323,
-          "candidate_template": 20,
-          "score": 30,
-          "content_evidence": 25,
-          "reasons": [
-            "shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki.jpg']",
-            "same template"
-          ]
-        }
-      ],
-      "bucket": "review"
+      "candidates": [],
+      "bucket": "truly_unlocalized"
     },
     {
       "source_id": 62,
@@ -1536,7 +1536,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/correction-the-ear-lobe/diortosi-loviou- autiou-5.jpg', 'files/images/plastic-face/correction-the-ear-lobe/earlobe-repair.jpg', 'files/images/plastic-face/correction-the-ear-lobe/plastiki-loviou-1.jpg']",
+            "shared asset paths: ['uploads/diortosi_loviou_autiou_2_320aae8206.jpg', 'uploads/diortosi_loviou_autiou_3_d36c7c41f9.jpg', 'uploads/diortosi_loviou_autiou_4_b183078594.jpg']",
             "same template"
           ]
         }
@@ -1564,7 +1564,7 @@
           "content_evidence": 91,
           "reasons": [
             "alias tokens nearly identical (1.00)",
-            "shared asset paths: ['files/images/plastic-face/silhouette-soft/before-after.png', 'files/images/plastic-face/silhouette-soft/img1.jpg', 'files/images/plastic-face/silhouette-soft/img2.jpg']",
+            "shared asset paths: ['uploads/before_after_fd603c89b8.png', 'uploads/img2_3be7d17f47.jpg', 'uploads/img3_eb8ace6c07.jpg']",
             "same template",
             "title token partial overlap (0.33)"
           ]
@@ -1603,10 +1603,10 @@
           "candidate_title": "Ответы на часто задаваемые вопросы по отопластике",
           "candidate_parent": 334,
           "candidate_template": 18,
-          "score": 30,
-          "content_evidence": 25,
+          "score": 45,
+          "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/otoplasty/sxediasmos pterigiou.jpg']",
+            "shared asset paths: ['uploads/otoplas3iki_2_edf490ac03.jpg', 'uploads/otoplastiki_1_fcafa71c5e.jpg', 'uploads/otoplastiki_4_388da295bd.jpg']",
             "same template"
           ]
         }
@@ -1642,10 +1642,10 @@
           "candidate_title": "Подтяжка лица - Фейслифтинг",
           "candidate_parent": 323,
           "candidate_template": 8,
-          "score": 40,
-          "content_evidence": 35,
+          "score": 30,
+          "content_evidence": 25,
           "reasons": [
-            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']",
+            "shared asset paths: ['uploads/1a_e868810a1f.jpg']",
             "same template"
           ]
         }
@@ -1686,7 +1686,7 @@
           "content_evidence": 100,
           "reasons": [
             "alias exact match",
-            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/browlift-1.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/face-endoscopic-facelift.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/img2.png']",
+            "shared asset paths: ['uploads/browlift_1_dc2c3868f6.jpg', 'uploads/face_endoscopic_facelift_22a9ddf7af.jpg', 'uploads/img2_b93c52f66e.png']",
             "same template"
           ]
         },
@@ -1735,10 +1735,10 @@
           "candidate_title": "Λίφτινγκ προσώπου (Face Lift)",
           "candidate_parent": 6,
           "candidate_template": 8,
-          "score": 40,
-          "content_evidence": 35,
+          "score": 30,
+          "content_evidence": 25,
           "reasons": [
-            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']",
+            "shared asset paths: ['uploads/1a_e868810a1f.jpg']",
             "same template"
           ]
         },
@@ -1748,10 +1748,10 @@
           "candidate_title": "Λίφτινγκ προσώπου 2",
           "candidate_parent": 6,
           "candidate_template": 8,
-          "score": 40,
-          "content_evidence": 35,
+          "score": 30,
+          "content_evidence": 25,
           "reasons": [
-            "shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']",
+            "shared asset paths: ['uploads/1a_e868810a1f.jpg']",
             "same template"
           ]
         }
@@ -1777,7 +1777,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/blepharoplasty/upper-eyelid-surgery.jpg', 'files/images/plastic-face/blepharoplasty/vlefarolastiki.png', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki.jpg']",
+            "shared asset paths: ['uploads/upper_eyelid_surgery_758aec88f9.jpg', 'uploads/vlefarolastiki_2efb91784b.png', 'uploads/vlefaroplastiki_1_e660b6c24f.jpg']",
             "same template"
           ]
         }
@@ -1793,22 +1793,8 @@
       "current_babel": {
         "rus": 334
       },
-      "candidates": [
-        {
-          "candidate_id": 61,
-          "candidate_alias": "otoplastiki",
-          "candidate_title": "Ωτοπλαστική",
-          "candidate_parent": 6,
-          "candidate_template": 20,
-          "score": 30,
-          "content_evidence": 25,
-          "reasons": [
-            "shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki.jpg']",
-            "same template"
-          ]
-        }
-      ],
-      "bucket": "review"
+      "candidates": [],
+      "bucket": "truly_unlocalized"
     },
     {
       "source_id": 336,
@@ -1826,10 +1812,10 @@
           "candidate_title": "Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική",
           "candidate_parent": 61,
           "candidate_template": 18,
-          "score": 30,
-          "content_evidence": 25,
+          "score": 45,
+          "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/otoplasty/sxediasmos pterigiou.jpg']",
+            "shared asset paths: ['uploads/otoplas3iki_2_edf490ac03.jpg', 'uploads/otoplastiki_1_fcafa71c5e.jpg', 'uploads/otoplastiki_4_388da295bd.jpg']",
             "same template"
           ]
         }
@@ -1847,6 +1833,19 @@
       },
       "candidates": [
         {
+          "candidate_id": 413,
+          "candidate_alias": "meiosi-lovion",
+          "candidate_title": "Μείωση λοβίων",
+          "candidate_parent": 6,
+          "candidate_template": 8,
+          "score": 45,
+          "content_evidence": 40,
+          "reasons": [
+            "shared asset paths: ['uploads/diortosi_loviou_autiou_1_efd9a4201b.jpg', 'uploads/meiotiki_loviou_otos_1_dddce667d1.jpg', 'uploads/meiotiki_loviou_otos_2_c5dcf96a91.jpg']",
+            "same template"
+          ]
+        },
+        {
           "candidate_id": 62,
           "candidate_alias": "diorthosi-loviou-aytiou",
           "candidate_title": "Διόρθωση λοβίου αυτιού -  Σκισμένα λοβία",
@@ -1855,7 +1854,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/correction-the-ear-lobe/diortosi-loviou- autiou-5.jpg', 'files/images/plastic-face/correction-the-ear-lobe/earlobe-repair.jpg', 'files/images/plastic-face/correction-the-ear-lobe/plastiki-loviou-1.jpg']",
+            "shared asset paths: ['uploads/diortosi_loviou_autiou_2_320aae8206.jpg', 'uploads/diortosi_loviou_autiou_3_d36c7c41f9.jpg', 'uploads/diortosi_loviou_autiou_4_b183078594.jpg']",
             "same template"
           ]
         }
@@ -1882,7 +1881,7 @@
           "content_evidence": 91,
           "reasons": [
             "alias tokens nearly identical (1.00)",
-            "shared asset paths: ['files/images/plastic-face/silhouette-soft/before-after.png', 'files/images/plastic-face/silhouette-soft/img1.jpg', 'files/images/plastic-face/silhouette-soft/img2.jpg']",
+            "shared asset paths: ['uploads/before_after_fd603c89b8.png', 'uploads/img2_3be7d17f47.jpg', 'uploads/img3_eb8ace6c07.jpg']",
             "same template",
             "title token partial overlap (0.33)"
           ]
@@ -1921,7 +1920,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/otoplasty/1prin-meta.png', 'files/images/plastic-face/otoplasty/2prin-meta.png', 'files/images/plastic-face/otoplasty/otoplastiki-xwis-tomes.png']",
+            "shared asset paths: ['uploads/1prin_meta_11408dba55.png', 'uploads/2prin_meta_abc60f1140.png', 'uploads/otoplastiki_xwis_tomes_2d0c21d5ea.png']",
             "same template"
           ]
         }
@@ -1959,7 +1958,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/blepharoplasty/blepharoplasty-plexr.jpg', 'files/images/plastic-face/blepharoplasty/blepharoplasty-plexr2.jpg', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki-laser-1.png']",
+            "shared asset paths: ['uploads/blepharoplasty_plexr2_3782c582c5.jpg', 'uploads/vlefaroplastiki_laser_1_3bcf317ed6.png', 'uploads/vlefaroplastiki_laser_2_9dfb973134.png']",
             "same template"
           ]
         }
@@ -2023,7 +2022,7 @@
           "score": 45,
           "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/necklift/necklift-1.jpg', 'files/images/plastic-face/necklift/necklift-2.jpg', 'files/images/plastic-face/necklift/necklift-3.jpg']",
+            "shared asset paths: ['uploads/necklift_1_09197eae3e.jpg', 'uploads/necklift_2_64daac92c1.jpg', 'uploads/necklift_3_7656d016b8.jpg']",
             "same template"
           ]
         }
@@ -2051,7 +2050,7 @@
           "content_evidence": 100,
           "reasons": [
             "alias exact match",
-            "shared asset paths: ['files/images/diseases/submandibular-gland/img1.jpg', 'files/images/diseases/submandibular-gland/img2.jpg', 'files/images/diseases/submandibular-gland/img6.jpg']"
+            "shared asset paths: ['uploads/img1_3ccdbc7113.jpg', 'uploads/img2_d7517d6551.jpg', 'uploads/img6_a4d1684441.jpg']"
           ]
         },
         {
@@ -2153,10 +2152,10 @@
           "candidate_title": "Ωτοπλαστική",
           "candidate_parent": 61,
           "candidate_template": 18,
-          "score": 30,
-          "content_evidence": 25,
+          "score": 45,
+          "content_evidence": 40,
           "reasons": [
-            "shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki-andres.jpg']",
+            "shared asset paths: ['uploads/otoplastiki_epemvasi_1_31648a69bb.jpg', 'uploads/otoplastiki_epemvasi_1da52e26e0.jpg', 'uploads/otoplastiki_epemvasi_3_3d8201721a.jpg']",
             "same template"
           ]
         }

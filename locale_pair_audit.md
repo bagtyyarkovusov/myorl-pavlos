@@ -17,7 +17,7 @@ Deterministic audit for the MODX -> Strapi migration. Starts from `transformed_r
 | Side | Auto-link | Needs review | Truly unlocalized |
 | --- | ---: | ---: | ---: |
 | Greek (web) orphans | 3 | 13 | 44 |
-| Russian (rus) orphans | 3 | 11 | 6 |
+| Russian (rus) orphans | 3 | 10 | 7 |
 
 ### Cross-collisions (ambiguities)
 
@@ -27,6 +27,7 @@ Two or more orphans picked the same partner as their top-1 candidate. These must
 | --- | --- | --- |
 | Greek (web) | Russian (rus) 387 | 11, 80 |
 | Greek (web) | Russian (rus) 238 | 363, 364 |
+| Greek (web) | Russian (rus) 337 | 62, 413 |
 | Greek (web) | Russian (rus) 326 | 57, 403 |
 | Russian (rus) | Greek (web) 129 | 262, 336 |
 
@@ -65,13 +66,13 @@ Rows that already claim a translation partner in the opposite context, but whose
 ### Auto-linkable (reciprocal top-1, score ≥ 70)
 
 - **web 54** `endoskopiki-facelift-browlift` — Ανύψωση φρυδιών και μετώπου (parent 6, tpl 8, current babel: rus:280; web:54)
-  1. rus **325** `endoskopiki-facelift-browlift` — Подтяжка бровей - Подтяжка лба (parent 323, tpl 8) — score **105** — alias exact match; shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/browlift-1.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/face-endoscopic-facelift.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/img2.png']; same template
+  1. rus **325** `endoskopiki-facelift-browlift` — Подтяжка бровей - Подтяжка лба (parent 323, tpl 8) — score **105** — alias exact match; shared asset paths: ['uploads/browlift_1_dc2c3868f6.jpg', 'uploads/face_endoscopic_facelift_22a9ddf7af.jpg', 'uploads/img2_b93c52f66e.png']; same template
 
 - **web 63** `silhouette-soft` — Silhouette Soft (parent 6, tpl 8, current babel: rus:296; web:63)
-  1. rus **338** `silhouette-soft-afini` — Силуэт Софт (parent 323, tpl 8) — score **96** — alias tokens nearly identical (1.00); shared asset paths: ['files/images/plastic-face/silhouette-soft/before-after.png', 'files/images/plastic-face/silhouette-soft/img1.jpg', 'files/images/plastic-face/silhouette-soft/img2.jpg']; same template; title token partial overlap (0.33)
+  1. rus **338** `silhouette-soft-afini` — Силуэт Софт (parent 323, tpl 8) — score **96** — alias tokens nearly identical (1.00); shared asset paths: ['uploads/before_after_fd603c89b8.png', 'uploads/img2_3be7d17f47.jpg', 'uploads/img3_eb8ace6c07.jpg']; same template; title token partial overlap (0.33)
 
 - **web 364** `ypognathios-adenas` — Αφαίρεση υπογνάθιου αδένα (parent 363, tpl 18, current babel: web:364)
-  1. rus **238** `ypognathios-adenas` — Подчелюстная железа (parent 212, tpl 8) — score **100** — alias exact match; shared asset paths: ['files/images/diseases/submandibular-gland/img1.jpg', 'files/images/diseases/submandibular-gland/img2.jpg', 'files/images/diseases/submandibular-gland/img6.jpg']
+  1. rus **238** `ypognathios-adenas` — Подчелюстная железа (parent 212, tpl 8) — score **100** — alias exact match; shared asset paths: ['uploads/img1_3ccdbc7113.jpg', 'uploads/img2_d7517d6551.jpg', 'uploads/img6_a4d1684441.jpg']
 
 ### Needs human review (score ≥ 25)
 
@@ -79,42 +80,42 @@ Rows that already claim a translation partner in the opposite context, but whose
   1. rus **387** `sitemap` — Карта сайта (parent 0, tpl 12) — score **60** — alias exact match
 
 - **web 57** `facelift` — Λίφτινγκ προσώπου (Face Lift) (parent 6, tpl 8, current babel: rus:294; web:57)
-  1. rus **326** `facelifting` — Подтяжка лица - Фейслифтинг (parent 323, tpl 8) — score **40** — shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']; same template
+  1. rus **326** `facelifting` — Подтяжка лица - Фейслифтинг (parent 323, tpl 8) — score **30** — shared asset paths: ['uploads/1a_e868810a1f.jpg']; same template
   2. rus **325** `endoskopiki-facelift-browlift` — Подтяжка бровей - Подтяжка лба (parent 323, tpl 8) — score **15** — alias tokens partially overlap (0.33); same template
 
 - **web 58** `vlefaroplastiki` — Βλεφαροπλαστική - Πλαστική βλεφάρων (parent 378, tpl 18, current babel: rus:292; web:58)
-  1. rus **327** `blefaroplastika-v-athinah` — Блефаропластика (parent 380, tpl 18) — score **45** — shared asset paths: ['files/images/plastic-face/blepharoplasty/upper-eyelid-surgery.jpg', 'files/images/plastic-face/blepharoplasty/vlefarolastiki.png', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki.jpg']; same template
-
-- **web 61** `otoplastiki` — Ωτοπλαστική (parent 6, tpl 20, current babel: rus:290; web:61)
-  1. rus **334** `otoplastika-v-athinah` — Отопластика (parent 323, tpl 20) — score **30** — shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki.jpg']; same template
+  1. rus **327** `blefaroplastika-v-athinah` — Блефаропластика (parent 380, tpl 18) — score **45** — shared asset paths: ['uploads/upper_eyelid_surgery_758aec88f9.jpg', 'uploads/vlefarolastiki_2efb91784b.png', 'uploads/vlefaroplastiki_1_e660b6c24f.jpg']; same template
 
 - **web 62** `diorthosi-loviou-aytiou` — Διόρθωση λοβίου αυτιού -  Σκισμένα λοβία (parent 6, tpl 8, current babel: rus:295; web:62)
-  1. rus **337** `ear-lobe-repair` — Реконструкция мочки уха (parent 323, tpl 8) — score **45** — shared asset paths: ['files/images/plastic-face/correction-the-ear-lobe/diortosi-loviou- autiou-5.jpg', 'files/images/plastic-face/correction-the-ear-lobe/earlobe-repair.jpg', 'files/images/plastic-face/correction-the-ear-lobe/plastiki-loviou-1.jpg']; same template
+  1. rus **337** `ear-lobe-repair` — Реконструкция мочки уха (parent 323, tpl 8) — score **45** — shared asset paths: ['uploads/diortosi_loviou_autiou_2_320aae8206.jpg', 'uploads/diortosi_loviou_autiou_3_d36c7c41f9.jpg', 'uploads/diortosi_loviou_autiou_4_b183078594.jpg']; same template
 
 - **web 80** `sitemap` — Sitemap (parent 0, tpl 12, current babel: web:80)
   1. rus **387** `sitemap` — Карта сайта (parent 0, tpl 12) — score **65** — alias exact match; same template
 
 - **web 128** `otoplastiki-1` — Ωτοπλαστική (parent 61, tpl 18, current babel: web:128)
-  1. rus **335** `plasticheskaia-xeirourgia-otoplastika` — Отопластика (parent 334, tpl 18) — score **30** — shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki-andres.jpg']; same template
+  1. rus **335** `plasticheskaia-xeirourgia-otoplastika` — Отопластика (parent 334, tpl 18) — score **45** — shared asset paths: ['uploads/otoplastiki_epemvasi_1_31648a69bb.jpg', 'uploads/otoplastiki_epemvasi_1da52e26e0.jpg', 'uploads/otoplastiki_epemvasi_3_3d8201721a.jpg']; same template
 
 - **web 129** `syxnes-erwtiseis-apantiseis-2` — Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική (parent 61, tpl 18, current babel: rus:291; web:129)
   1. rus **262** `syxnes-erwtiseis-apantiseis` — FAQ - вопросы и ответы (parent 256, tpl 18) — score **60** — alias tokens nearly identical (1.00); alias Levenshtein 2; same template
-  2. rus **336** `voprosi-otvei-otoplastika` — Ответы на часто задаваемые вопросы по отопластике (parent 334, tpl 18) — score **30** — shared asset paths: ['files/images/plastic-face/otoplasty/sxediasmos pterigiou.jpg']; same template
+  2. rus **336** `voprosi-otvei-otoplastika` — Ответы на часто задаваемые вопросы по отопластике (parent 334, tpl 18) — score **45** — shared asset paths: ['uploads/otoplas3iki_2_edf490ac03.jpg', 'uploads/otoplastiki_1_fcafa71c5e.jpg', 'uploads/otoplastiki_4_388da295bd.jpg']; same template
 
 - **web 358** `otoplastiki-xwris-tomi` — Ωτοπλαστική χωρίς τομή (parent 61, tpl 18, current babel: web:358)
-  1. rus **373** `novaia-otoplastika-bez-razrezov` — Новая отопластика без разрезов (parent 334, tpl 18) — score **45** — shared asset paths: ['files/images/plastic-face/otoplasty/1prin-meta.png', 'files/images/plastic-face/otoplasty/2prin-meta.png', 'files/images/plastic-face/otoplasty/otoplastiki-xwis-tomes.png']; same template
+  1. rus **373** `novaia-otoplastika-bez-razrezov` — Новая отопластика без разрезов (parent 334, tpl 18) — score **45** — shared asset paths: ['uploads/1prin_meta_11408dba55.png', 'uploads/2prin_meta_abc60f1140.png', 'uploads/otoplastiki_xwis_tomes_2d0c21d5ea.png']; same template
 
 - **web 363** `parotida-ypognathios-adenas` — Παρωτίδα και υπογνάθιος αδένας (parent 3, tpl 20, current babel: web:363)
   1. rus **238** `ypognathios-adenas` — Подчелюстная железа (parent 212, tpl 8) — score **45** — alias tokens overlap (0.67); parent is in a known strict pair
 
 - **web 377** `vlefaroplastiki-laser` — Βλεφαροπλαστική με λέιζερ (parent 378, tpl 8, current babel: web:377)
-  1. rus **381** `лазерная-блефаропластика` — Лазерная блефаропластика (parent 380, tpl 8) — score **45** — shared asset paths: ['files/images/plastic-face/blepharoplasty/blepharoplasty-plexr.jpg', 'files/images/plastic-face/blepharoplasty/blepharoplasty-plexr2.jpg', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki-laser-1.png']; same template
+  1. rus **381** `лазерная-блефаропластика` — Лазерная блефаропластика (parent 380, tpl 8) — score **45** — shared asset paths: ['uploads/blepharoplasty_plexr2_3782c582c5.jpg', 'uploads/vlefaroplastiki_laser_1_3bcf317ed6.png', 'uploads/vlefaroplastiki_laser_2_9dfb973134.png']; same template
 
 - **web 402** `anorthosi-laimou` — Ανόρθωση λαιμού και πηγουνιού (Νeck Lifting) (parent 6, tpl 8, current babel: web:402)
-  1. rus **398** `necklift` — Пластика шеи и подбородка (parent 323, tpl 8) — score **45** — shared asset paths: ['files/images/plastic-face/necklift/necklift-1.jpg', 'files/images/plastic-face/necklift/necklift-2.jpg', 'files/images/plastic-face/necklift/necklift-3.jpg']; same template
+  1. rus **398** `necklift` — Пластика шеи и подбородка (parent 323, tpl 8) — score **45** — shared asset paths: ['uploads/necklift_1_09197eae3e.jpg', 'uploads/necklift_2_64daac92c1.jpg', 'uploads/necklift_3_7656d016b8.jpg']; same template
 
 - **web 403** `lftynnk-prospou-2` — Λίφτινγκ προσώπου 2 (parent 6, tpl 8, current babel: rus:403)
-  1. rus **326** `facelifting` — Подтяжка лица - Фейслифтинг (parent 323, tpl 8) — score **40** — shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']; same template
+  1. rus **326** `facelifting` — Подтяжка лица - Фейслифтинг (parent 323, tpl 8) — score **30** — shared asset paths: ['uploads/1a_e868810a1f.jpg']; same template
+
+- **web 413** `meiosi-lovion` — Μείωση λοβίων (parent 6, tpl 8, current babel: web:413)
+  1. rus **337** `ear-lobe-repair` — Реконструкция мочки уха (parent 323, tpl 8) — score **45** — shared asset paths: ['uploads/diortosi_loviou_autiou_1_efd9a4201b.jpg', 'uploads/meiotiki_loviou_otos_1_dddce667d1.jpg', 'uploads/meiotiki_loviou_otos_2_c5dcf96a91.jpg']; same template
 
 ### Truly unlocalized (no credible candidate)
 
@@ -122,6 +123,9 @@ Rows that already claim a translation partner in the opposite context, but whose
   - No rus candidate in the current dataset.
 
 - **web 18** `xronia-otitida` — Χρόνια ωτίτιδα (parent 3, tpl 8, current babel: web:18)
+  - No rus candidate in the current dataset.
+
+- **web 61** `otoplastiki` — Ωτοπλαστική (parent 6, tpl 20, current babel: rus:290; web:61)
   - No rus candidate in the current dataset.
 
 - **web 101** `ru-page` — Ru (parent 0, tpl 15, current babel: web:101)
@@ -244,9 +248,6 @@ Rows that already claim a translation partner in the opposite context, but whose
 - **web 409** `atrisia` — Ατρησία ρινικής χοάνης (parent 3, tpl 8, current babel: web:409)
   - No rus candidate in the current dataset.
 
-- **web 413** `meiosi-lovion` — Μείωση λοβίων (parent 6, tpl 8, current babel: web:413)
-  - No rus candidate in the current dataset.
-
 - **web 414** `xeno-soma-igmoreio` — Ξένο σώμα στο ιγμόρειο άντρο (parent 5, tpl 8, current babel: web:414)
   - No rus candidate in the current dataset.
 
@@ -255,16 +256,16 @@ Rows that already claim a translation partner in the opposite context, but whose
 ### Auto-linkable (reciprocal top-1, score ≥ 70)
 
 - **rus 238** `ypognathios-adenas` — Подчелюстная железа (parent 212, tpl 8, current babel: rus:238; web:35)
-  1. web **364** `ypognathios-adenas` — Αφαίρεση υπογνάθιου αδένα (parent 363, tpl 18) — score **100** — alias exact match; shared asset paths: ['files/images/diseases/submandibular-gland/img1.jpg', 'files/images/diseases/submandibular-gland/img2.jpg', 'files/images/diseases/submandibular-gland/img6.jpg']
+  1. web **364** `ypognathios-adenas` — Αφαίρεση υπογνάθιου αδένα (parent 363, tpl 18) — score **100** — alias exact match; shared asset paths: ['uploads/img1_3ccdbc7113.jpg', 'uploads/img2_d7517d6551.jpg', 'uploads/img6_a4d1684441.jpg']
   2. web **363** `parotida-ypognathios-adenas` — Παρωτίδα και υπογνάθιος αδένας (parent 3, tpl 20) — score **45** — alias tokens overlap (0.67); parent is in a known strict pair
 
 - **rus 325** `endoskopiki-facelift-browlift` — Подтяжка бровей - Подтяжка лба (parent 323, tpl 8, current babel: rus:325)
-  1. web **54** `endoskopiki-facelift-browlift` — Ανύψωση φρυδιών και μετώπου (parent 6, tpl 8) — score **105** — alias exact match; shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/browlift-1.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/face-endoscopic-facelift.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/img2.png']; same template
+  1. web **54** `endoskopiki-facelift-browlift` — Ανύψωση φρυδιών και μετώπου (parent 6, tpl 8) — score **105** — alias exact match; shared asset paths: ['uploads/browlift_1_dc2c3868f6.jpg', 'uploads/face_endoscopic_facelift_22a9ddf7af.jpg', 'uploads/img2_b93c52f66e.png']; same template
   2. web **389** `endoskopiki-kryoxeirourgiki` — Ενδοσκοπική κρυοχειρουργική (parent 5, tpl 8) — score **15** — alias tokens partially overlap (0.25); same template
   3. web **57** `facelift` — Λίφτινγκ προσώπου (Face Lift) (parent 6, tpl 8) — score **15** — alias tokens partially overlap (0.33); same template
 
 - **rus 338** `silhouette-soft-afini` — Силуэт Софт (parent 323, tpl 8, current babel: rus:338)
-  1. web **63** `silhouette-soft` — Silhouette Soft (parent 6, tpl 8) — score **96** — alias tokens nearly identical (1.00); shared asset paths: ['files/images/plastic-face/silhouette-soft/before-after.png', 'files/images/plastic-face/silhouette-soft/img1.jpg', 'files/images/plastic-face/silhouette-soft/img2.jpg']; same template; title token partial overlap (0.33)
+  1. web **63** `silhouette-soft` — Silhouette Soft (parent 6, tpl 8) — score **96** — alias tokens nearly identical (1.00); shared asset paths: ['uploads/before_after_fd603c89b8.png', 'uploads/img2_3be7d17f47.jpg', 'uploads/img3_eb8ace6c07.jpg']; same template; title token partial overlap (0.33)
 
 ### Needs human review (score ≥ 25)
 
@@ -272,36 +273,34 @@ Rows that already claim a translation partner in the opposite context, but whose
   1. web **129** `syxnes-erwtiseis-apantiseis-2` — Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική (parent 61, tpl 18) — score **60** — alias tokens nearly identical (1.00); alias Levenshtein 2; same template
 
 - **rus 326** `facelifting` — Подтяжка лица - Фейслифтинг (parent 323, tpl 8, current babel: rus:326)
-  1. web **57** `facelift` — Λίφτινγκ προσώπου (Face Lift) (parent 6, tpl 8) — score **40** — shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']; same template
-  2. web **403** `lftynnk-prospou-2` — Λίφτινγκ προσώπου 2 (parent 6, tpl 8) — score **40** — shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/1a.jpg', 'files/images/plastic-face/facelifting.png']; same template
+  1. web **57** `facelift` — Λίφτινγκ προσώπου (Face Lift) (parent 6, tpl 8) — score **30** — shared asset paths: ['uploads/1a_e868810a1f.jpg']; same template
+  2. web **403** `lftynnk-prospou-2` — Λίφτινγκ προσώπου 2 (parent 6, tpl 8) — score **30** — shared asset paths: ['uploads/1a_e868810a1f.jpg']; same template
 
 - **rus 327** `blefaroplastika-v-athinah` — Блефаропластика (parent 380, tpl 18, current babel: rus:327)
-  1. web **58** `vlefaroplastiki` — Βλεφαροπλαστική - Πλαστική βλεφάρων (parent 378, tpl 18) — score **45** — shared asset paths: ['files/images/plastic-face/blepharoplasty/upper-eyelid-surgery.jpg', 'files/images/plastic-face/blepharoplasty/vlefarolastiki.png', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki.jpg']; same template
-
-- **rus 334** `otoplastika-v-athinah` — Отопластика (parent 323, tpl 20, current babel: rus:334)
-  1. web **61** `otoplastiki` — Ωτοπλαστική (parent 6, tpl 20) — score **30** — shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki.jpg']; same template
+  1. web **58** `vlefaroplastiki` — Βλεφαροπλαστική - Πλαστική βλεφάρων (parent 378, tpl 18) — score **45** — shared asset paths: ['uploads/upper_eyelid_surgery_758aec88f9.jpg', 'uploads/vlefarolastiki_2efb91784b.png', 'uploads/vlefaroplastiki_1_e660b6c24f.jpg']; same template
 
 - **rus 335** `plasticheskaia-xeirourgia-otoplastika` — Отопластика (parent 334, tpl 18, current babel: web:335)
-  1. web **128** `otoplastiki-1` — Ωτοπλαστική (parent 61, tpl 18) — score **30** — shared asset paths: ['files/images/plastic-face/otoplasty/otoplastiki-andres.jpg']; same template
+  1. web **128** `otoplastiki-1` — Ωτοπλαστική (parent 61, tpl 18) — score **45** — shared asset paths: ['uploads/otoplastiki_epemvasi_1_31648a69bb.jpg', 'uploads/otoplastiki_epemvasi_1da52e26e0.jpg', 'uploads/otoplastiki_epemvasi_3_3d8201721a.jpg']; same template
 
 - **rus 336** `voprosi-otvei-otoplastika` — Ответы на часто задаваемые вопросы по отопластике (parent 334, tpl 18, current babel: rus:336)
-  1. web **129** `syxnes-erwtiseis-apantiseis-2` — Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική (parent 61, tpl 18) — score **30** — shared asset paths: ['files/images/plastic-face/otoplasty/sxediasmos pterigiou.jpg']; same template
+  1. web **129** `syxnes-erwtiseis-apantiseis-2` — Συχνές ερωτήσεις - Απαντήσεις για ωτοπλαστική (parent 61, tpl 18) — score **45** — shared asset paths: ['uploads/otoplas3iki_2_edf490ac03.jpg', 'uploads/otoplastiki_1_fcafa71c5e.jpg', 'uploads/otoplastiki_4_388da295bd.jpg']; same template
 
 - **rus 337** `ear-lobe-repair` — Реконструкция мочки уха (parent 323, tpl 8, current babel: rus:337)
-  1. web **62** `diorthosi-loviou-aytiou` — Διόρθωση λοβίου αυτιού -  Σκισμένα λοβία (parent 6, tpl 8) — score **45** — shared asset paths: ['files/images/plastic-face/correction-the-ear-lobe/diortosi-loviou- autiou-5.jpg', 'files/images/plastic-face/correction-the-ear-lobe/earlobe-repair.jpg', 'files/images/plastic-face/correction-the-ear-lobe/plastiki-loviou-1.jpg']; same template
+  1. web **413** `meiosi-lovion` — Μείωση λοβίων (parent 6, tpl 8) — score **45** — shared asset paths: ['uploads/diortosi_loviou_autiou_1_efd9a4201b.jpg', 'uploads/meiotiki_loviou_otos_1_dddce667d1.jpg', 'uploads/meiotiki_loviou_otos_2_c5dcf96a91.jpg']; same template
+  2. web **62** `diorthosi-loviou-aytiou` — Διόρθωση λοβίου αυτιού -  Σκισμένα λοβία (parent 6, tpl 8) — score **45** — shared asset paths: ['uploads/diortosi_loviou_autiou_2_320aae8206.jpg', 'uploads/diortosi_loviou_autiou_3_d36c7c41f9.jpg', 'uploads/diortosi_loviou_autiou_4_b183078594.jpg']; same template
 
 - **rus 373** `novaia-otoplastika-bez-razrezov` — Новая отопластика без разрезов (parent 334, tpl 18, current babel: rus:373)
-  1. web **358** `otoplastiki-xwris-tomi` — Ωτοπλαστική χωρίς τομή (parent 61, tpl 18) — score **45** — shared asset paths: ['files/images/plastic-face/otoplasty/1prin-meta.png', 'files/images/plastic-face/otoplasty/2prin-meta.png', 'files/images/plastic-face/otoplasty/otoplastiki-xwis-tomes.png']; same template
+  1. web **358** `otoplastiki-xwris-tomi` — Ωτοπλαστική χωρίς τομή (parent 61, tpl 18) — score **45** — shared asset paths: ['uploads/1prin_meta_11408dba55.png', 'uploads/2prin_meta_abc60f1140.png', 'uploads/otoplastiki_xwis_tomes_2d0c21d5ea.png']; same template
 
 - **rus 381** `лазерная-блефаропластика` — Лазерная блефаропластика (parent 380, tpl 8, current babel: rus:381)
-  1. web **377** `vlefaroplastiki-laser` — Βλεφαροπλαστική με λέιζερ (parent 378, tpl 8) — score **45** — shared asset paths: ['files/images/plastic-face/blepharoplasty/blepharoplasty-plexr.jpg', 'files/images/plastic-face/blepharoplasty/blepharoplasty-plexr2.jpg', 'files/images/plastic-face/blepharoplasty/vlefaroplastiki-laser-1.png']; same template
+  1. web **377** `vlefaroplastiki-laser` — Βλεφαροπλαστική με λέιζερ (parent 378, tpl 8) — score **45** — shared asset paths: ['uploads/blepharoplasty_plexr2_3782c582c5.jpg', 'uploads/vlefaroplastiki_laser_1_3bcf317ed6.png', 'uploads/vlefaroplastiki_laser_2_9dfb973134.png']; same template
 
 - **rus 387** `sitemap` — Карта сайта (parent 0, tpl 12, current babel: rus:387)
   1. web **80** `sitemap` — Sitemap (parent 0, tpl 12) — score **65** — alias exact match; same template
   2. web **11** `sitemap` — Sitemap (parent 0, tpl 0) — score **60** — alias exact match
 
 - **rus 398** `necklift` — Пластика шеи и подбородка (parent 323, tpl 8, current babel: rus:398)
-  1. web **402** `anorthosi-laimou` — Ανόρθωση λαιμού και πηγουνιού (Νeck Lifting) (parent 6, tpl 8) — score **45** — shared asset paths: ['files/images/plastic-face/necklift/necklift-1.jpg', 'files/images/plastic-face/necklift/necklift-2.jpg', 'files/images/plastic-face/necklift/necklift-3.jpg']; same template
+  1. web **402** `anorthosi-laimou` — Ανόρθωση λαιμού και πηγουνιού (Νeck Lifting) (parent 6, tpl 8) — score **45** — shared asset paths: ['uploads/necklift_1_09197eae3e.jpg', 'uploads/necklift_2_64daac92c1.jpg', 'uploads/necklift_3_7656d016b8.jpg']; same template
 
 ### Truly unlocalized (no credible candidate)
 
@@ -315,6 +314,9 @@ Rows that already claim a translation partner in the opposite context, but whose
   - No web candidate in the current dataset.
 
 - **rus 323** `пластика-лица` — Пластика лица (parent 0, tpl 7, current babel: rus:323)
+  - No web candidate in the current dataset.
+
+- **rus 334** `otoplastika-v-athinah` — Отопластика (parent 323, tpl 20, current babel: rus:334)
   - No web candidate in the current dataset.
 
 - **rus 348** `botulinotherapia-ru` — Ботулинотерапия (parent 323, tpl 8, current babel: rus:348)

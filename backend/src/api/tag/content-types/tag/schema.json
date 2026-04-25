@@ -24,6 +24,15 @@
         }
       }
     },
+    "slug": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
     "pages": {
       "type": "relation",
       "relation": "manyToMany",

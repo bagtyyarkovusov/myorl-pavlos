@@ -1,0 +1,269 @@
+{
+  "batch": "batch-a-single-locale",
+  "summary": {
+    "canonicalCount": 15,
+    "localizedCount": 15,
+    "pageTypeCounts": {
+      "gallery": 6,
+      "accordion": 6,
+      "tabs": 3
+    }
+  },
+  "documents": [
+    {
+      "documentId": "af75v2k760st40nppinvq139",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Βιοκλινική Αθηνών",
+          "slug": "bioclinic-athinwn",
+          "semanticCount": 1,
+          "pageBlocksCount": 4,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 4
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "e0p9zmqcaegsn3g12ry8tnhd",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Χρόνια ρινίτιδα",
+          "slug": "rinitida",
+          "semanticCount": 1,
+          "pageBlocksCount": 10,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 10
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "gsal64tpo5n2xzduimtxaxpg",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Ρινικοί πολύποδες",
+          "slug": "rinikoi-polypodes",
+          "semanticCount": 1,
+          "pageBlocksCount": 1,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 1
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "ifhut06wvfjzk85chctslxbw",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων (FESS)",
+          "slug": "endoskopiki-xeirourgiki-rinos-fess",
+          "semanticCount": 1,
+          "pageBlocksCount": 1,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 1
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "inlmdr6up716tq1l11aybqec",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "ΤΥΠΕΤ",
+          "slug": "typet",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 5
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "j962t4mtm9632xvs7x1m0c54",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "ΙΑΣΩ Παίδων",
+          "slug": "iaso-paidwn",
+          "semanticCount": 1,
+          "pageBlocksCount": 4,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 4
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "janag6p6g80f3n3r1873r63w",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Τραχηλικές διογκώσεις",
+          "slug": "traxilikes-diogkoseis",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 5
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "jwo4jdihc76be0oi75wk0lnx",
+      "pageType": "tabs",
+      "semanticField": "tabsSection",
+      "locales": {
+        "ru": {
+          "title": "Аденоиды, гланды, храп, апноэ сна",
+          "slug": "amygdales-adenoeideis-ekvlastiseis",
+          "semanticCount": 1,
+          "pageBlocksCount": 7,
+          "pageBlockComponents": {
+            "blocks.tab-item": 7
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "ml7c4v5s98d13flurmre521t",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "el": {
+          "title": "Ιγμορίτιδα",
+          "slug": "igmoritida",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 6
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "qsyitd5m4vz7cbgsvpiuqkjl",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Mediterraneo Hospital",
+          "slug": "mediterraneo",
+          "semanticCount": 1,
+          "pageBlocksCount": 6,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 6
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "trytbm1fw6hdhyc5vekg89em",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Ευρωκλινική Παίδων",
+          "slug": "euroclinic-paidon",
+          "semanticCount": 1,
+          "pageBlocksCount": 4,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 4
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "vmyxiw5z7pzy12a7j6lyvsty",
+      "pageType": "accordion",
+      "semanticField": "accordionSection",
+      "locales": {
+        "ru": {
+          "title": "Болезни голосовых связок",
+          "slug": "pathiseis-fonitikon-xordon",
+          "semanticCount": 1,
+          "pageBlocksCount": 10,
+          "pageBlockComponents": {
+            "blocks.accordion-item": 10
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "vthbigu9gvy5xrxput4nin37",
+      "pageType": "gallery",
+      "semanticField": "gallerySection",
+      "locales": {
+        "el": {
+          "title": "Ευρωκλινική Αθηνών",
+          "slug": "euroclinc",
+          "semanticCount": 1,
+          "pageBlocksCount": 5,
+          "pageBlockComponents": {
+            "blocks.gallery-image": 5
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "wo48qn0s6tcxykv0qtcs7q94",
+      "pageType": "tabs",
+      "semanticField": "tabsSection",
+      "locales": {
+        "el": {
+          "title": "Ru",
+          "slug": "ru-page",
+          "semanticCount": 1,
+          "pageBlocksCount": 10,
+          "pageBlockComponents": {
+            "blocks.tab-item": 10
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    },
+    {
+      "documentId": "xwg9ip1n5dli5ec7ndd6yi3p",
+      "pageType": "tabs",
+      "semanticField": "tabsSection",
+      "locales": {
+        "ru": {
+          "title": "Ботулинотерапия",
+          "slug": "botulinotherapia-ru",
+          "semanticCount": 1,
+          "pageBlocksCount": 2,
+          "pageBlockComponents": {
+            "blocks.tab-item": 2
+          }
+        }
+      },
+      "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
+    }
+  ]
+}

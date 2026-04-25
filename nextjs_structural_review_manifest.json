@@ -1,0 +1,810 @@
+{
+  "count": 37,
+  "driftCounts": {
+    "templateId": 17,
+    "layoutVariant": 23,
+    "parentDocumentId": 24,
+    "pageType": 6,
+    "menuIndex": 67
+  },
+  "documents": [
+    {
+      "documentId": "aiiskv6k8ypik5cfhx1ma9gy",
+      "titles": {
+        "el": "Προετοιμασία για θυρεοειδεκτομή",
+        "ru": "Подготовка к тиреоидэктомии"
+      },
+      "slugs": {
+        "el": "proetoimasia-gia-thyreoeidektomi",
+        "ru": "proetoimasia-gia-thyreoeidektomi"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "aqbhriti77cnoithsrvowjh9",
+      "titles": {
+        "el": "Ωτοπλαστική",
+        "ru": "Отопластика"
+      },
+      "slugs": {
+        "el": "otoplastika-v-athinah",
+        "ru": "otoplastika-v-athinah"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "b52sj2toic4uiq10n3dx973z",
+      "titles": {
+        "el": "Βλεφαροπλαστική με λέιζερ",
+        "ru": "Лазерная блефаропластика"
+      },
+      "slugs": {
+        "el": "lazernaia-blefaroplastika",
+        "ru": "lazernaia-blefaroplastika"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "n3ryx3cfn7jvdofsw0ktycle",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "bw2ac3p104jdjrr53cr9ew1r",
+      "titles": {
+        "el": "Ανύψωση φρυδιών και μετώπου",
+        "ru": "Подтяжка бровей - Подтяжка лба"
+      },
+      "slugs": {
+        "el": "endoskopiki-facelift-browlift",
+        "ru": "endoskopiki-facelift-browlift"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "c7d12byxuclr4k18las14y1b",
+      "titles": {
+        "el": "Θυρεοειδής αδένας",
+        "ru": "Щитовидная железа"
+      },
+      "slugs": {
+        "el": "thyreoeidis-adenas",
+        "ru": "thyreoeidis-adenas"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_20",
+          "ru": "template_7"
+        },
+        "layoutVariant": {
+          "el": "specialized-article",
+          "ru": "section-index"
+        },
+        "parentDocumentId": {
+          "el": "uvthw35eqptuswwlxj0c5lm1",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "co5cdztycix2a73ev36nowjm",
+      "titles": {
+        "el": "Λίφτινγκ προσώπου (Face Lift)",
+        "ru": "Подтяжка лица - Фейслифтинг"
+      },
+      "slugs": {
+        "el": "facelifting",
+        "ru": "facelifting"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "e0p9zmqcaegsn3g12ry8tnhd",
+      "titles": {
+        "el": "Χρόνια ρινίτιδα",
+        "ru": "Хронический ринит"
+      },
+      "slugs": {
+        "el": "rinitida",
+        "ru": "rinitida"
+      },
+      "diffs": {
+        "pageType": {
+          "el": "accordion",
+          "ru": "content"
+        },
+        "layoutVariant": {
+          "el": "service-accordion",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "eb75hu9nrjqxfn78t5lf23i5",
+      "titles": {
+        "el": "Πονόλαιμος στο παιδί",
+        "ru": "Ангина"
+      },
+      "slugs": {
+        "el": "ponolaimos-sta-paidia",
+        "ru": "ponolaimos-sta-paidia"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_8",
+          "ru": "template_18"
+        },
+        "layoutVariant": {
+          "el": "service-article",
+          "ru": "encyclopedia-article"
+        },
+        "parentDocumentId": {
+          "el": "n8cl3u5xw93pboim5ca8w5mf",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "g5erxrpzv3ool4dztm27ovvk",
+      "titles": {
+        "el": "Μεταμόσχευση μαλλιών: φρυδιών, βλεφαρίδων, γενιών",
+        "ru": "Пересадка волос: брови, ресницы, борода"
+      },
+      "slugs": {
+        "el": "metamosxeusi-mallion",
+        "ru": "metamosxeusi-mallion"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "gsal64tpo5n2xzduimtxaxpg",
+      "titles": {
+        "el": "Ρινικοί πολύποδες",
+        "ru": "Носовые полипы"
+      },
+      "slugs": {
+        "el": "rinikoi-polypodes",
+        "ru": "rinikoi-polypodes"
+      },
+      "diffs": {
+        "pageType": {
+          "el": "accordion",
+          "ru": "content"
+        },
+        "layoutVariant": {
+          "el": "service-accordion",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "h91e3z6ikow2nr8p97k5r0lk",
+      "titles": {
+        "el": "Αφαίρεση αμυγδαλών (αμυγδαλεκτομή)",
+        "ru": "Удаление миндалин (тонзиллэктомия)"
+      },
+      "slugs": {
+        "el": "afairesi-amygdalwn",
+        "ru": "afairesi-amygdalwn"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "uvthw35eqptuswwlxj0c5lm1",
+          "ru": "n8cl3u5xw93pboim5ca8w5mf"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "heb4sy4apu5ejullyg8b2rlv",
+      "titles": {
+        "el": "Κίνδυνοι της θυρεοειδεκτομής",
+        "ru": "Риски тиреоидэктомии"
+      },
+      "slugs": {
+        "el": "kindinoi-thyreoeidektomis",
+        "ru": "kindinoi-thyreoeidektomis"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "ifhut06wvfjzk85chctslxbw",
+      "titles": {
+        "el": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων (FESS)",
+        "ru": "Эндоскопические операции на пазухах носа по методике FESS"
+      },
+      "slugs": {
+        "el": "endoskopiki-xeirourgiki-rinos-fess",
+        "ru": "endoskopiki-xeirourgiki-rinos-fess"
+      },
+      "diffs": {
+        "pageType": {
+          "el": "accordion",
+          "ru": "content"
+        },
+        "layoutVariant": {
+          "el": "service-accordion",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "janag6p6g80f3n3r1873r63w",
+      "titles": {
+        "el": "Τραχηλικές διογκώσεις",
+        "ru": "Припухлость на шее"
+      },
+      "slugs": {
+        "el": "traxilikes-diogkoseis",
+        "ru": "traxilikes-diogkoseis"
+      },
+      "diffs": {
+        "pageType": {
+          "el": "accordion",
+          "ru": "content"
+        },
+        "layoutVariant": {
+          "el": "service-accordion",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "jb80un76bcp89er5a1hl304q",
+      "titles": {
+        "el": "Ενδείξεις για θυρεοειδεκτομή",
+        "ru": "Показания к тиреоидэктомии"
+      },
+      "slugs": {
+        "el": "endeixeis-gia-thyreoeidektomi",
+        "ru": "endeixeis-gia-thyreoeidektomi"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "k9q5mx54chpe5jxnqc2r8qqa",
+      "titles": {
+        "el": "Ροχαλητό στα παιδιά",
+        "ru": "Храп у детей"
+      },
+      "slugs": {
+        "el": "roxalito-paidiou",
+        "ru": "roxalito-paidiou"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_8",
+          "ru": "template_18"
+        },
+        "layoutVariant": {
+          "el": "service-article",
+          "ru": "encyclopedia-article"
+        },
+        "parentDocumentId": {
+          "el": "n8cl3u5xw93pboim5ca8w5mf",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "kd8nbu7thaqsy5i1ndu1yg1s",
+      "titles": {
+        "el": "Ενδοσκοπική θυρεοειδεκτομή",
+        "ru": "Эндоскопическая тиреоидэктомия"
+      },
+      "slugs": {
+        "el": "endoskopiki-thyreoeidektomi",
+        "ru": "endoskopiki-thyreoeidektomi"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "l46au3fudjqmzpzm3d1f8lyc",
+      "titles": {
+        "el": "Αμυγδαλεκτομή στα παιδιά",
+        "ru": "Тонзиллэктомия"
+      },
+      "slugs": {
+        "el": "amygdalektomi",
+        "ru": "amygdalektomi"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_8",
+          "ru": "template_18"
+        },
+        "layoutVariant": {
+          "el": "service-article",
+          "ru": "encyclopedia-article"
+        },
+        "parentDocumentId": {
+          "el": "n8cl3u5xw93pboim5ca8w5mf",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "ml7c4v5s98d13flurmre521t",
+      "titles": {
+        "el": "Ιγμορίτιδα",
+        "ru": "Гайморит"
+      },
+      "slugs": {
+        "el": "igmoritida",
+        "ru": "igmoritida"
+      },
+      "diffs": {
+        "pageType": {
+          "el": "accordion",
+          "ru": "content"
+        },
+        "layoutVariant": {
+          "el": "service-accordion",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "pgg130qrrscxdaobgpiauynv",
+      "titles": {
+        "el": "Παρωτιδεκτομή",
+        "ru": "Околоушная железа"
+      },
+      "slugs": {
+        "el": "parotida",
+        "ru": "parotida"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        },
+        "parentDocumentId": {
+          "el": "t5p48kwy6ynfbuzbxtb3lcyi",
+          "ru": "uvthw35eqptuswwlxj0c5lm1"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "py3oz7almmutvqh0hkuuchs7",
+      "titles": {
+        "el": "Πλαστική στα χείλια",
+        "ru": "Пластика верхней губы"
+      },
+      "slugs": {
+        "el": "plastika-verhnei-gubi",
+        "ru": "plastika-verhnei-gubi"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "qm1vehawd58oxlx8gs84ziys",
+      "titles": {
+        "el": "Μεσοθεραπεία",
+        "ru": "Мезотерапия"
+      },
+      "slugs": {
+        "el": "mesotherapeia",
+        "ru": "mesotherapeia"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "qrqbrvdczgpaww71fwvg3od5",
+      "titles": {
+        "el": "Σύγχρονη λειτουργική ρινοπλαστική",
+        "ru": "Современная функциональная ринопластика"
+      },
+      "slugs": {
+        "el": "rinoplastiki",
+        "ru": "rinoplastiki"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "rg59ex0du2z2zrmeyp7usdz9",
+      "titles": {
+        "el": "Αφαίρεση υπογνάθιου αδένα",
+        "ru": "Подчелюстная железа"
+      },
+      "slugs": {
+        "el": "ypognathios-adenas",
+        "ru": "ypognathios-adenas"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        },
+        "parentDocumentId": {
+          "el": "t5p48kwy6ynfbuzbxtb3lcyi",
+          "ru": "uvthw35eqptuswwlxj0c5lm1"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "s5j629gs53u0a80nxtysv328",
+      "titles": {
+        "el": "Ανόρθωση λαιμού και πηγουνιού (Νeck Lifting)",
+        "ru": "Пластика шеи и подбородка"
+      },
+      "slugs": {
+        "el": "necklift",
+        "ru": "necklift"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "so2mvk30n5565rkoyhygh6zd",
+      "titles": {
+        "el": "Πρόγνωση μετά από αφαίρεση θυρεοειδούς",
+        "ru": "Прогноз после удаления щитовидной железы"
+      },
+      "slugs": {
+        "el": "prognosi-meta-apo-afairesi-thyreoeidous",
+        "ru": "prognosi-meta-apo-afairesi-thyreoeidous"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "swi2f3anzcpb05ot9cvptefr",
+      "titles": {
+        "el": "Τεχνική ολικής θυρεοειδεκτομής και οδηγίες",
+        "ru": "Технические тиреоидэктомии и инструкции"
+      },
+      "slugs": {
+        "el": "texniki-olikis-thyreoeidektomis",
+        "ru": "texniki-olikis-thyreoeidektomis"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "tm1bmv7gxbzdvjt9jd7xmjfr",
+      "titles": {
+        "el": "Παραθυρεοειδεκτομή",
+        "ru": "Паратиреоидэктомия"
+      },
+      "slugs": {
+        "el": "parathyreoeidektomi",
+        "ru": "parathyreoeidektomi"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "v6rvg8uobsjx8kunr9hy3ie0",
+      "titles": {
+        "el": "Σιελαδενίτιδα και σιελολιθίαση",
+        "ru": "Сиаладенит"
+      },
+      "slugs": {
+        "el": "sialolithiasi",
+        "ru": "sialolithiasi"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        },
+        "parentDocumentId": {
+          "el": "t5p48kwy6ynfbuzbxtb3lcyi",
+          "ru": "uvthw35eqptuswwlxj0c5lm1"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "vfpz9232z2wy6olvyovzja8d",
+      "titles": {
+        "el": "Silhouette Soft",
+        "ru": "Силуэт Софт"
+      },
+      "slugs": {
+        "el": "silhouette-soft-afini",
+        "ru": "silhouette-soft-afini"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "vmyxiw5z7pzy12a7j6lyvsty",
+      "titles": {
+        "el": "Παθήσεις φωνητικών χορδών",
+        "ru": "Болезни голосовых связок"
+      },
+      "slugs": {
+        "el": "pathiseis-fonitikon-xordon",
+        "ru": "pathiseis-fonitikon-xordon"
+      },
+      "diffs": {
+        "pageType": {
+          "el": "content",
+          "ru": "accordion"
+        },
+        "layoutVariant": {
+          "el": "service-article",
+          "ru": "service-accordion"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "wfl8bwm934elg41rt86lzsia",
+      "titles": {
+        "el": "Μεσοθεραπεία με Dermapen",
+        "ru": "Мезотерапия с Dermapen"
+      },
+      "slugs": {
+        "el": "mesotherapeia-me-dermapen",
+        "ru": "mesotherapeia-me-dermapen"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "wolv96366knzp3t1bnotozkr",
+      "titles": {
+        "el": "Βλεφαροπλαστική - Πλαστική βλεφάρων",
+        "ru": "Блефаропластика"
+      },
+      "slugs": {
+        "el": "blefaroplastika-v-athinah",
+        "ru": "blefaroplastika-v-athinah"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "n3ryx3cfn7jvdofsw0ktycle",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "y7ze8grsx9a3zlwubgybmybl",
+      "titles": {
+        "el": "Διόρθωση λοβίου αυτιού -  Σκισμένα λοβία",
+        "ru": "Реконструкция мочки уха"
+      },
+      "slugs": {
+        "el": "ear-lobe-repair",
+        "ru": "ear-lobe-repair"
+      },
+      "diffs": {
+        "parentDocumentId": {
+          "el": "nnj3mgpi6l3x2ymhsdft0uwm",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "y9t0ouq6vr2ndfvtgy579u4p",
+      "titles": {
+        "el": "Κρεατάκια (Αδενοειδείς εκβλαστήσεις ) - διάγνωση, θεραπεία, επέμβαση",
+        "ru": "Удаление аденоидов (аденотомия)"
+      },
+      "slugs": {
+        "el": "kreatakia-egxeirisi",
+        "ru": "kreatakia-egxeirisi"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_8",
+          "ru": "template_18"
+        },
+        "layoutVariant": {
+          "el": "service-article",
+          "ru": "encyclopedia-article"
+        },
+        "parentDocumentId": {
+          "el": "n8cl3u5xw93pboim5ca8w5mf",
+          "ru": null
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "ycpzlf1emnkizeduo3e7wrvu",
+      "titles": {
+        "el": "Αντιμετώπιση ροχαλητού – υπνικής άπνοιας",
+        "ru": "Храп и апноэ сна - современное лечение"
+      },
+      "slugs": {
+        "el": "antimetopisi-roxalitou",
+        "ru": "antimetopisi-roxalitou"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        },
+        "parentDocumentId": {
+          "el": "xol5hvue3ppy26k6y966scr9",
+          "ru": "uvthw35eqptuswwlxj0c5lm1"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    },
+    {
+      "documentId": "yrkfbgd2yby64x206ksrzg6k",
+      "titles": {
+        "el": "Ροχαλητό - Υπνική άπνοια",
+        "ru": "Храп и синдром апноэ сна"
+      },
+      "slugs": {
+        "el": "roxalito-ypniki-apnoia",
+        "ru": "roxalito-ypniki-apnoia"
+      },
+      "diffs": {
+        "templateId": {
+          "el": "template_18",
+          "ru": "template_8"
+        },
+        "layoutVariant": {
+          "el": "encyclopedia-article",
+          "ru": "service-article"
+        },
+        "parentDocumentId": {
+          "el": "xol5hvue3ppy26k6y966scr9",
+          "ru": "uvthw35eqptuswwlxj0c5lm1"
+        }
+      },
+      "recommendedAction": "review-localized-structure-before-de-localizing-navigation-or-layout-fields"
+    }
+  ]
+}

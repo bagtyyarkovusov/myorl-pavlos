@@ -17,7 +17,7 @@ type AnyStrapi = {
   contentTypes: Record<string, any>;
 };
 
-const SEED_VERSION = 'v3';
+const SEED_VERSION = 'v5';
 const MARKER_KEY = 'hierarchy_ui_seed_version';
 
 type EditRow = Array<{ name: string; size: number }>;
@@ -48,6 +48,16 @@ const pageConfig: CMConfigOverride = {
     title: {
       edit: { label: 'Title', description: '', placeholder: '', visible: true, editable: true },
       list: { label: 'Title', searchable: true, sortable: true },
+    },
+    menuTitle: {
+      edit: {
+        label: 'Menu title',
+        description: 'Optional shorter navigation label used by Next.js when it differs from the page title',
+        placeholder: '',
+        visible: true,
+        editable: true,
+      },
+      list: { label: 'Menu title', searchable: true, sortable: true },
     },
     slug: {
       edit: { label: 'Slug', description: 'URL-safe identifier derived from Title', placeholder: '', visible: true, editable: true },
@@ -116,16 +126,6 @@ const pageConfig: CMConfigOverride = {
     imageCenter: {
       edit: { label: 'Image (center)', description: 'Secondary centered image', placeholder: '', visible: true, editable: true },
       list: { label: 'Image center', searchable: false, sortable: false },
-    },
-    templateId: {
-      edit: {
-        label: 'Legacy template',
-        description: 'Legacy numeric template id retained for fallback during the page-model migration',
-        placeholder: '',
-        visible: true,
-        editable: false,
-      },
-      list: { label: 'Template', searchable: true, sortable: true },
     },
     pageType: {
       edit: {
@@ -239,16 +239,6 @@ const pageConfig: CMConfigOverride = {
       },
       list: { label: 'Contact section', searchable: false, sortable: false },
     },
-    pageBlocks: {
-      edit: {
-        label: 'Legacy blocks',
-        description: 'Legacy migration fallback blocks retained read-only until the contract phase removes them',
-        placeholder: '',
-        visible: true,
-        editable: false,
-      },
-      list: { label: 'Blocks', searchable: false, sortable: false },
-    },
   },
   layouts: {
     // Self-relations in the list view have been the most fragile part of the
@@ -257,8 +247,9 @@ const pageConfig: CMConfigOverride = {
     // and Navigation plugin.
     list: ['title', 'slug', 'pageType', 'layoutVariant', 'menuIndex', 'isFolder', 'hideFromMenu'],
     edit: [
-      [{ name: 'title', size: 6 }, { name: 'slug', size: 6 }],
-      [{ name: 'pageType', size: 4 }, { name: 'layoutVariant', size: 4 }, { name: 'templateId', size: 4 }],
+      [{ name: 'title', size: 6 }, { name: 'menuTitle', size: 6 }],
+      [{ name: 'slug', size: 12 }],
+      [{ name: 'pageType', size: 6 }, { name: 'layoutVariant', size: 6 }],
       [{ name: 'parentPage', size: 6 }, { name: 'menuIndex', size: 3 }, { name: 'isFolder', size: 3 }],
       [{ name: 'hideFromMenu', size: 3 }, { name: 'externalUrl', size: 9 }],
       [{ name: 'childrenPages', size: 6 }, { name: 'tags', size: 6 }],
@@ -275,7 +266,6 @@ const pageConfig: CMConfigOverride = {
       [{ name: 'infoBlockBottom', size: 12 }],
       [{ name: 'sources', size: 12 }],
       [{ name: 'popUpClose', size: 12 }],
-      [{ name: 'pageBlocks', size: 12 }],
     ],
   },
 };
@@ -296,6 +286,16 @@ const tagConfig: CMConfigOverride = {
       edit: { label: 'Name', description: '', placeholder: '', visible: true, editable: true },
       list: { label: 'Name', searchable: true, sortable: true },
     },
+    slug: {
+      edit: {
+        label: 'Slug',
+        description: 'Canonical taxonomy key used by the Next.js frontend for routes and filter state',
+        placeholder: '',
+        visible: true,
+        editable: true,
+      },
+      list: { label: 'Slug', searchable: true, sortable: true },
+    },
     pages: {
       edit: {
         label: 'Pages',
@@ -309,8 +309,11 @@ const tagConfig: CMConfigOverride = {
     },
   },
   layouts: {
-    list: ['name', 'pages'],
-    edit: [[{ name: 'name', size: 12 }], [{ name: 'pages', size: 12 }]],
+    list: ['name', 'slug', 'pages'],
+    edit: [
+      [{ name: 'name', size: 6 }, { name: 'slug', size: 6 }],
+      [{ name: 'pages', size: 12 }],
+    ],
   },
 };
 

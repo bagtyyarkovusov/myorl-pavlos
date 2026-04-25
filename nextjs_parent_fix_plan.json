@@ -1,0 +1,11 @@
+{
+  "summary": {
+    "plannedCount": 0,
+    "unresolvedCount": 0,
+    "byLocale": {},
+    "byExpectedParentDocumentId": {},
+    "note": "Plan covers published pages whose original source parent is non-root but whose current Strapi parent relation is missing or different."
+  },
+  "plannedUpdates": [],
+  "unresolved": []
+}

@@ -264,6 +264,7 @@ class Importer:
                 "pair_attachments": {},
                 "related_pages": {},
                 "reconciled": False,
+                "parent_relations_reconciled": False,
             },
         )
         self.tag_id_map: dict[str, str] = _load_json(TAG_ID_MAP_PATH, {})
@@ -497,7 +498,7 @@ class Importer:
             self._persist()
 
     def import_standalone_russian(self) -> None:
-        ids = self._rus_standalone_ids()
+        ids = self._bfs_order("rus", self._rus_standalone_ids())
         for rus_id in ids:
             if str(rus_id) in self.checkpoint["pages"]["rus"]:
                 continue
@@ -544,11 +545,76 @@ class Importer:
 
     # ----- relations --------------------------------------------------
 
+    def _iter_imported_resource_ids(self, ctx: str) -> list[int]:
+        if ctx == "web":
+            pair_ids = {p["web_id"] for p in self.normalization.get("pairs", [])}
+            standalone_ids = {
+                s["id"]
+                for s in self.normalization.get("web_singletons", [])
+                if s.get("action") == "standalone"
+            }
+            skipped_ids = self._skipped_web_ids()
+            return self._bfs_order("web", (pair_ids | standalone_ids) - skipped_ids)
+
+        pair_ids = {p["rus_id"] for p in self.normalization.get("pairs", [])}
+        standalone_ids = {
+            s["id"]
+            for s in self.normalization.get("rus_singletons", [])
+            if s.get("action") == "standalone"
+        }
+        return self._bfs_order("rus", pair_ids | standalone_ids)
+
+    def reconcile_parent_pages(self) -> None:
+        if self.checkpoint.get("parent_relations_reconciled"):
+            return
+
+        updates = 0
+        unresolved = 0
+        for ctx in ("web", "rus"):
+            locale = "el" if ctx == "web" else "ru"
+            for resource_id in self._iter_imported_resource_ids(ctx):
+                resource = self.resources_by_id[ctx].get(resource_id)
+                if resource is None:
+                    continue
+                parent_id = int(resource.get("parent") or 0)
+                if parent_id == 0:
+                    continue
+
+                document_id = self.checkpoint["pages"][ctx].get(str(resource_id))
+                parent_document_id = self.checkpoint["pages"][ctx].get(str(parent_id))
+                if not document_id or not parent_document_id:
+                    unresolved += 1
+                    self._record_unresolved(
+                        {
+                            "phase": "parent_reconcile",
+                            "context": ctx,
+                            "id": resource_id,
+                            "parent_id": parent_id,
+                            "reason": "page or parent was not imported",
+                        }
+                    )
+                    continue
+
+                self.client.put(
+                    f"/api/pages/{document_id}",
+                    {"data": {"parentPage": parent_document_id}},
+                    locale=locale,
+                )
+                updates += 1
+
+        self.checkpoint["parent_relations_reconciled"] = True
+        self.checkpoint["parent_relation_reconcile_summary"] = {
+            "updates": updates,
+            "unresolved": unresolved,
+        }
+        self._persist()
+
     def reconcile_relations(self) -> None:
+        self.reconcile_parent_pages()
         # Placeholder for a future `relatedPages` TV pipeline. The source
         # dataset currently carries no relatedPages references in any TV, so
-        # the reconciliation pass is a no-op that still sets the checkpoint
-        # so re-runs can detect completion.
+        # the rest of the reconciliation pass is a no-op that still sets the
+        # checkpoint so re-runs can detect completion.
         self.checkpoint["reconciled"] = True
         self._persist()
 

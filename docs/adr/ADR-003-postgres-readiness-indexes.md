@@ -22,13 +22,15 @@ The initial SQL artifacts cover:
 
 - `pages(locale, slug, published_at)`
 - `pages(locale, page_type, layout_variant, published_at, menu_index)`
-- a deferred tag-slug index decision once the production routing contract is finalized
+- `tags(locale, slug)` because live tag rows are localized and `slug` alone has duplicate values across locales
 
 ## Alternatives Considered
 - Add SQLite-only indexes and treat that as production readiness.
   Rejected because it does not validate the real deployment target.
 - Mix DDL and data cleanup into one migration step.
   Rejected because it makes rollback and rehearsal harder.
+- Index `tags(slug)` only.
+  Rejected because the current localized tag rows reuse canonical slugs across `el` and `ru`.
 
 ## Consequences
 - Positive: production hardening stays explicit and reversible.

@@ -1,12 +1,12 @@
 {
   "score": {
-    "total": 81,
+    "total": 84,
     "baselineBeforeThisPass": 78
   },
   "breakdown": {
     "contractApi": 30,
-    "routingNavigation": 17,
-    "localizationParity": 11,
+    "routingNavigation": 18,
+    "localizationParity": 13,
     "contentQuality": 17,
     "operationalReadiness": 6
   },
@@ -25,6 +25,9 @@
       "pageType": 6,
       "menuIndex": 67
     },
+    "sourceParentIntegrityIssues": 0,
+    "sourceParentIntegrityUnresolved": 0,
+    "parentFixPlannedCount": 0,
     "legacyDuplicationLocalized": 0,
     "legacyDuplicationCanonical": 0,
     "legacyDuplicationByPageType": {},
@@ -32,7 +35,7 @@
     "menuTitleBackfillPending": 0,
     "menuTitleLegacyRows": 21,
     "seoReviewDocuments": 13,
-    "sourceAuthenticatedStructuralDocuments": 20,
+    "sourceAuthenticatedStructuralDocuments": 37,
     "contractFixPlannedCount": 0,
     "publishedTags": 31,
     "publishedTagsWithSlug": 31,
@@ -235,262 +238,9 @@
         "summary": {
           "legacyRowsWithMenuTitle": 21,
           "rowsWhereMenuTitleDiffersFromTitle": 13,
-          "plannedCount": 21
+          "plannedCount": 0
         },
-        "plannedUpdates": [
-          {
-            "documentId": "z6egtdv1ie0g6eik8sjn0s6y",
-            "locale": "el",
-            "sourceResourceId": 15,
-            "title": "Εκκριτική ωτίτιδα",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Υγρό στο αυτί",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Υγρό στο αυτί"
-            }
-          },
-          {
-            "documentId": "j7a8upt0bi5uheu2l77ivs2j",
-            "locale": "el",
-            "sourceResourceId": 21,
-            "title": "Βράγχος φωνής",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Βράγχος φωνής",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Βράγχος φωνής"
-            }
-          },
-          {
-            "documentId": "nkgl6v5e8j0u9d9hnodffo12",
-            "locale": "el",
-            "sourceResourceId": 23,
-            "title": "Σκολίωση ρινικού διαφράγματος (Στραβό διάφραγμα)",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Σκολίωση ρινικού διαφράγματος",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Σκολίωση ρινικού διαφράγματος"
-            }
-          },
-          {
-            "documentId": "sc6d4h52xwhpwulg1klrv7tu",
-            "locale": "el",
-            "sourceResourceId": 28,
-            "title": "Εμβοές",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Εμβοές ωτών",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Εμβοές ωτών"
-            }
-          },
-          {
-            "documentId": "h91e3z6ikow2nr8p97k5r0lk",
-            "locale": "el",
-            "sourceResourceId": 49,
-            "title": "Αφαίρεση αμυγδαλών (αμυγδαλεκτομή)",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Αμυγδαλεκτομή",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Αμυγδαλεκτομή"
-            }
-          },
-          {
-            "documentId": "ifhut06wvfjzk85chctslxbw",
-            "locale": "el",
-            "sourceResourceId": 50,
-            "title": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων (FESS)",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων"
-            }
-          },
-          {
-            "documentId": "wolv96366knzp3t1bnotozkr",
-            "locale": "el",
-            "sourceResourceId": 58,
-            "title": "Βλεφαροπλαστική - Πλαστική βλεφάρων",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Βλεφαροπλαστική",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Βλεφαροπλαστική"
-            }
-          },
-          {
-            "documentId": "v42oefpjqxksckbxmouqcea7",
-            "locale": "el",
-            "sourceResourceId": 105,
-            "title": "Βουλωμένη μύτη",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Βουλωμένη μύτη",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Βουλωμένη μύτη"
-            }
-          },
-          {
-            "documentId": "y9t0ouq6vr2ndfvtgy579u4p",
-            "locale": "el",
-            "sourceResourceId": 109,
-            "title": "Κρεατάκια (Αδενοειδείς εκβλαστήσεις ) - διάγνωση, θεραπεία, επέμβαση",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Αδενοειδείς εκβλαστήσεις (Κρεατάκια)",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Αδενοειδείς εκβλαστήσεις (Κρεατάκια)"
-            }
-          },
-          {
-            "documentId": "l46au3fudjqmzpzm3d1f8lyc",
-            "locale": "el",
-            "sourceResourceId": 111,
-            "title": "Αμυγδαλεκτομή στα παιδιά",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Αμυγδαλεκτομή στα παιδιά",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Αμυγδαλεκτομή στα παιδιά"
-            }
-          },
-          {
-            "documentId": "xa2ye9997t98whtp0gjc555t",
-            "locale": "el",
-            "sourceResourceId": 116,
-            "title": "Σκολίωση ρινικού διαφράγματος (Στραβό διάφραγμα)",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Στραβό διάφραγμα",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Στραβό διάφραγμα"
-            }
-          },
-          {
-            "documentId": "q0xqwm7761r1qpiqs8gvn9ms",
-            "locale": "el",
-            "sourceResourceId": 119,
-            "title": "Ρινικές κόγχες",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Τα συμπτώματα υπερτροφίας κάτω ρινικών κογχών",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Τα συμπτώματα υπερτροφίας κάτω ρινικών κογχών"
-            }
-          },
-          {
-            "documentId": "lmnz0a5bqobf5nhrp17pckz6",
-            "locale": "el",
-            "sourceResourceId": 141,
-            "title": "Συχνές ερωτήσεις - Απαντήσεις",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Οι πιο συχνές ερωτήσεις για την διαφραγματοπλαστική",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Οι πιο συχνές ερωτήσεις για την διαφραγματοπλαστική"
-            }
-          },
-          {
-            "documentId": "ygy4tsas9lefpk55xkgureep",
-            "locale": "el",
-            "sourceResourceId": 143,
-            "title": "Ρινική καταρροή σε βρέφη και παιδιά",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Ρινική καταρροή σε βρέφη και παιδιά",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Ρινική καταρροή σε βρέφη και παιδιά"
-            }
-          },
-          {
-            "documentId": "h91e3z6ikow2nr8p97k5r0lk",
-            "locale": "ru",
-            "sourceResourceId": 263,
-            "title": "Удаление миндалин (тонзиллэктомия)",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Удаление миндалин",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Удаление миндалин"
-            }
-          },
-          {
-            "documentId": "ygy4tsas9lefpk55xkgureep",
-            "locale": "ru",
-            "sourceResourceId": 274,
-            "title": "Храп или насморк у младенцев и детей",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Храп или насморк у младенцев и детей",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Храп или насморк у младенцев и детей"
-            }
-          },
-          {
-            "documentId": "fd4nxd5gji5rmqgfp7pgtq8i",
-            "locale": "el",
-            "sourceResourceId": 368,
-            "title": "Διάτρηση τυμπανικής μεμβράνης",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Τρύπα στο τύμπανο",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Τρύπα στο τύμπανο"
-            }
-          },
-          {
-            "documentId": "bcnez4hyyvw9niicnfvdb7q7",
-            "locale": "el",
-            "sourceResourceId": 369,
-            "title": "Τεστ όσφρησης",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Έλεγχος όσφρησης",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Έλεγχος όσφρησης"
-            }
-          },
-          {
-            "documentId": "yc2gyjkx2vvi8zn3bei49n6o",
-            "locale": "el",
-            "sourceResourceId": 409,
-            "title": "Ατρησία ρινικής χοάνης",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Ατρησία ρινικής χοάνης",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Ατρησία ρινικής χοάνης"
-            }
-          },
-          {
-            "documentId": "or75ksubaq5h2exns2uga6k0",
-            "locale": "el",
-            "sourceResourceId": 415,
-            "title": "Πολιτική Απορρήτου",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Πολιτική Απορρήτου",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Πολιτική Απορρήτου"
-            }
-          },
-          {
-            "documentId": "or75ksubaq5h2exns2uga6k0",
-            "locale": "ru",
-            "sourceResourceId": 417,
-            "title": "Политика конфиденциальности",
-            "currentMenuTitle": null,
-            "legacyMenuTitle": "Политика конфиденциальности",
-            "hasPublished": true,
-            "payload": {
-              "menuTitle": "Политика конфиденциальности"
-            }
-          }
-        ]
+        "plannedUpdates": []
       },
       "seoReviewManifest": {
         "summary": {
@@ -632,12 +382,12 @@
       "sourceAlignmentManifest": {
         "summary": {
           "documentCount": 37,
-          "sourceAuthenticatedDocumentCount": 20,
-          "manualReviewDocumentCount": 17,
+          "sourceAuthenticatedDocumentCount": 37,
+          "manualReviewDocumentCount": 0,
           "sourceAuthenticatedFieldCounts": {
             "templateId": 17,
             "layoutVariant": 23,
-            "parentDocumentId": 7,
+            "parentDocumentId": 24,
             "pageType": 6
           },
           "note": "This manifest compares current Strapi structure to the original localized source inputs. The remaining cross-locale drift is largely source-authentic, so it should stay localized instead of being auto-normalized for Next.js."
@@ -709,7 +459,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -730,7 +480,7 @@
                 "sourceTemplateId": "template_20",
                 "currentTemplateId": "template_20",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "specialized-article",
@@ -738,11 +488,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "b52sj2toic4uiq10n3dx973z",
@@ -757,7 +507,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "n3ryx3cfn7jvdofsw0ktycle",
-                "ru": null
+                "ru": "mals56qxfw1ckzcm9jm3kq1j"
               }
             },
             "sourceEvidence": {
@@ -778,7 +528,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "mals56qxfw1ckzcm9jm3kq1j",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "mals56qxfw1ckzcm9jm3kq1j",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -786,11 +536,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "bw2ac3p104jdjrr53cr9ew1r",
@@ -805,7 +555,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -826,7 +576,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -834,11 +584,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "c7d12byxuclr4k18las14y1b",
@@ -911,7 +661,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -932,7 +682,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -940,11 +690,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "e0p9zmqcaegsn3g12ry8tnhd",
@@ -1020,7 +770,7 @@
               },
               "parentDocumentId": {
                 "el": "n8cl3u5xw93pboim5ca8w5mf",
-                "ru": null
+                "ru": "jwo4jdihc76be0oi75wk0lnx"
               }
             },
             "sourceEvidence": {
@@ -1041,7 +791,7 @@
                 "sourceTemplateId": "template_18",
                 "currentTemplateId": "template_18",
                 "sourceParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "encyclopedia-article",
@@ -1051,12 +801,11 @@
             },
             "sourceAuthenticatedFields": [
               "templateId",
-              "layoutVariant"
-            ],
-            "reviewFields": [
+              "layoutVariant",
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "g5erxrpzv3ool4dztm27ovvk",
@@ -1071,7 +820,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -1092,7 +841,7 @@
                 "sourceTemplateId": "template_20",
                 "currentTemplateId": "template_20",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "specialized-article",
@@ -1100,11 +849,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "gsal64tpo5n2xzduimtxaxpg",
@@ -1440,7 +1189,7 @@
               },
               "parentDocumentId": {
                 "el": "n8cl3u5xw93pboim5ca8w5mf",
-                "ru": null
+                "ru": "jwo4jdihc76be0oi75wk0lnx"
               }
             },
             "sourceEvidence": {
@@ -1461,7 +1210,7 @@
                 "sourceTemplateId": "template_18",
                 "currentTemplateId": "template_18",
                 "sourceParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "encyclopedia-article",
@@ -1471,12 +1220,11 @@
             },
             "sourceAuthenticatedFields": [
               "templateId",
-              "layoutVariant"
-            ],
-            "reviewFields": [
+              "layoutVariant",
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "kd8nbu7thaqsy5i1ndu1yg1s",
@@ -1552,7 +1300,7 @@
               },
               "parentDocumentId": {
                 "el": "n8cl3u5xw93pboim5ca8w5mf",
-                "ru": null
+                "ru": "jwo4jdihc76be0oi75wk0lnx"
               }
             },
             "sourceEvidence": {
@@ -1573,7 +1321,7 @@
                 "sourceTemplateId": "template_18",
                 "currentTemplateId": "template_18",
                 "sourceParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "encyclopedia-article",
@@ -1583,12 +1331,11 @@
             },
             "sourceAuthenticatedFields": [
               "templateId",
-              "layoutVariant"
-            ],
-            "reviewFields": [
+              "layoutVariant",
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "ml7c4v5s98d13flurmre521t",
@@ -1714,7 +1461,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -1735,7 +1482,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -1743,11 +1490,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "qm1vehawd58oxlx8gs84ziys",
@@ -1762,7 +1509,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -1783,7 +1530,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -1791,11 +1538,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "qrqbrvdczgpaww71fwvg3od5",
@@ -1810,7 +1557,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -1831,7 +1578,7 @@
                 "sourceTemplateId": "template_20",
                 "currentTemplateId": "template_20",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "specialized-article",
@@ -1839,11 +1586,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "rg59ex0du2z2zrmeyp7usdz9",
@@ -1916,7 +1663,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -1937,7 +1684,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -1945,11 +1692,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "so2mvk30n5565rkoyhygh6zd",
@@ -2181,7 +1928,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -2202,7 +1949,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -2210,11 +1957,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "vmyxiw5z7pzy12a7j6lyvsty",
@@ -2282,7 +2029,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -2303,7 +2050,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -2311,11 +2058,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "wolv96366knzp3t1bnotozkr",
@@ -2330,7 +2077,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "n3ryx3cfn7jvdofsw0ktycle",
-                "ru": null
+                "ru": "mals56qxfw1ckzcm9jm3kq1j"
               }
             },
             "sourceEvidence": {
@@ -2351,7 +2098,7 @@
                 "sourceTemplateId": "template_18",
                 "currentTemplateId": "template_18",
                 "sourceParentDocumentId": "mals56qxfw1ckzcm9jm3kq1j",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "mals56qxfw1ckzcm9jm3kq1j",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "encyclopedia-article",
@@ -2359,11 +2106,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "y7ze8grsx9a3zlwubgybmybl",
@@ -2378,7 +2125,7 @@
             "diffs": {
               "parentDocumentId": {
                 "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-                "ru": null
+                "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
               }
             },
             "sourceEvidence": {
@@ -2399,7 +2146,7 @@
                 "sourceTemplateId": "template_8",
                 "currentTemplateId": "template_8",
                 "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "service-article",
@@ -2407,11 +2154,11 @@
                 "classificationIssue": null
               }
             },
-            "sourceAuthenticatedFields": [],
-            "reviewFields": [
+            "sourceAuthenticatedFields": [
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "y9t0ouq6vr2ndfvtgy579u4p",
@@ -2434,7 +2181,7 @@
               },
               "parentDocumentId": {
                 "el": "n8cl3u5xw93pboim5ca8w5mf",
-                "ru": null
+                "ru": "jwo4jdihc76be0oi75wk0lnx"
               }
             },
             "sourceEvidence": {
@@ -2455,7 +2202,7 @@
                 "sourceTemplateId": "template_18",
                 "currentTemplateId": "template_18",
                 "sourceParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
-                "currentParentDocumentId": null,
+                "currentParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
                 "expectedPageType": "content",
                 "currentPageType": "content",
                 "expectedLayoutVariant": "encyclopedia-article",
@@ -2465,12 +2212,11 @@
             },
             "sourceAuthenticatedFields": [
               "templateId",
-              "layoutVariant"
-            ],
-            "reviewFields": [
+              "layoutVariant",
               "parentDocumentId"
             ],
-            "recommendedAction": "manual-review-before-normalizing-localized-structure"
+            "reviewFields": [],
+            "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
           },
           {
             "documentId": "ycpzlf1emnkizeduo3e7wrvu",
@@ -2590,15 +2336,2175 @@
           }
         ]
       },
+      "parentFixPlan": {
+        "summary": {
+          "plannedCount": 0,
+          "unresolvedCount": 0,
+          "byLocale": {},
+          "byExpectedParentDocumentId": {},
+          "note": "Plan covers published pages whose original source parent is non-root but whose current Strapi parent relation is missing or different."
+        },
+        "plannedUpdates": [],
+        "unresolved": []
+      },
       "contractFixPlan": {
         "summary": {
           "logicalPageCount": 325,
           "plannedCount": 0,
           "skippedCount": 0,
-          "note": "Current Strapi pageType/layoutVariant values already match the legacy-block classifier for every classifiable locale. Cross-locale differences are not safe bulk-fix targets."
+          "note": "Current Strapi pageType/layoutVariant values match the semantic section contract or the remaining legacy-block classifier for every classifiable locale. Cross-locale differences are not safe bulk-fix targets."
         },
         "logicalPageIssues": [],
-        "legacyBlockIssues": [],
+        "legacyBlockIssues": [
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 109,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 110,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 111,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 112,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 113,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 114,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 115,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 116,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 117,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 118,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 119,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 120,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 121,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 122,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 123,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 124,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 125,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.promo-slide",
+            "componentId": 126,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 103,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 104,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 105,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 106,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 107,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 108,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 109,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 110,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 111,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.faq-item",
+            "componentId": 112,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.social-link",
+            "componentId": 23,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.social-link",
+            "componentId": 24,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.social-link",
+            "componentId": 25,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.social-link",
+            "componentId": 26,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 687,
+            "componentType": "blocks.video",
+            "componentId": 7,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 699,
+            "componentType": "blocks.contact-detail",
+            "componentId": 19,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 699,
+            "componentType": "blocks.contact-detail",
+            "componentId": 20,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 699,
+            "componentType": "blocks.contact-detail",
+            "componentId": 21,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 699,
+            "componentType": "blocks.clinic",
+            "componentId": 23,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 699,
+            "componentType": "blocks.clinic",
+            "componentId": 24,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 699,
+            "componentType": "blocks.clinic",
+            "componentId": 25,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 59,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 60,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 61,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 62,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 63,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 64,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 65,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 66,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 67,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 709,
+            "componentType": "blocks.tab-item",
+            "componentId": 68,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 713,
+            "componentType": "blocks.faq-item",
+            "componentId": 123,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 713,
+            "componentType": "blocks.faq-item",
+            "componentId": 124,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 713,
+            "componentType": "blocks.faq-item",
+            "componentId": 125,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 713,
+            "componentType": "blocks.faq-item",
+            "componentId": 126,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 713,
+            "componentType": "blocks.faq-item",
+            "componentId": 127,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 713,
+            "componentType": "blocks.faq-item",
+            "componentId": 128,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 713,
+            "componentType": "blocks.faq-item",
+            "componentId": 129,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 221,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 222,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 223,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 224,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 225,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 226,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 227,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 228,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 229,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 230,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 231,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 731,
+            "componentType": "blocks.gallery-image",
+            "componentId": 232,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 733,
+            "componentType": "blocks.gallery-image",
+            "componentId": 245,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 733,
+            "componentType": "blocks.gallery-image",
+            "componentId": 246,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 733,
+            "componentType": "blocks.gallery-image",
+            "componentId": 247,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 733,
+            "componentType": "blocks.gallery-image",
+            "componentId": 248,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 733,
+            "componentType": "blocks.gallery-image",
+            "componentId": 249,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 737,
+            "componentType": "blocks.accordion-item",
+            "componentId": 269,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 737,
+            "componentType": "blocks.accordion-item",
+            "componentId": 270,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 737,
+            "componentType": "blocks.accordion-item",
+            "componentId": 271,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 737,
+            "componentType": "blocks.accordion-item",
+            "componentId": 272,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 737,
+            "componentType": "blocks.accordion-item",
+            "componentId": 273,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 737,
+            "componentType": "blocks.accordion-item",
+            "componentId": 274,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 739,
+            "componentType": "blocks.accordion-item",
+            "componentId": 281,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 755,
+            "componentType": "blocks.accordion-item",
+            "componentId": 283,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 755,
+            "componentType": "blocks.accordion-item",
+            "componentId": 284,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 767,
+            "componentType": "blocks.accordion-item",
+            "componentId": 287,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 767,
+            "componentType": "blocks.accordion-item",
+            "componentId": 288,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 767,
+            "componentType": "blocks.accordion-item",
+            "componentId": 289,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 767,
+            "componentType": "blocks.accordion-item",
+            "componentId": 290,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 767,
+            "componentType": "blocks.accordion-item",
+            "componentId": 291,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 297,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 298,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 299,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 300,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 301,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 302,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 303,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 304,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 305,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 773,
+            "componentType": "blocks.accordion-item",
+            "componentId": 306,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 849,
+            "componentType": "blocks.accordion-item",
+            "componentId": 317,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 849,
+            "componentType": "blocks.accordion-item",
+            "componentId": 318,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 849,
+            "componentType": "blocks.accordion-item",
+            "componentId": 319,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 849,
+            "componentType": "blocks.accordion-item",
+            "componentId": 320,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 849,
+            "componentType": "blocks.accordion-item",
+            "componentId": 321,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 849,
+            "componentType": "blocks.accordion-item",
+            "componentId": 322,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 849,
+            "componentType": "blocks.accordion-item",
+            "componentId": 323,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 849,
+            "componentType": "blocks.accordion-item",
+            "componentId": 324,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 333,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 334,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 335,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 336,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 337,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 338,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 339,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 340,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 341,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 342,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 343,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 344,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 345,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 346,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 347,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 851,
+            "componentType": "blocks.accordion-item",
+            "componentId": 348,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 857,
+            "componentType": "blocks.accordion-item",
+            "componentId": 365,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 857,
+            "componentType": "blocks.accordion-item",
+            "componentId": 366,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 857,
+            "componentType": "blocks.accordion-item",
+            "componentId": 367,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 857,
+            "componentType": "blocks.accordion-item",
+            "componentId": 368,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 857,
+            "componentType": "blocks.accordion-item",
+            "componentId": 369,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 859,
+            "componentType": "blocks.accordion-item",
+            "componentId": 375,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 859,
+            "componentType": "blocks.accordion-item",
+            "componentId": 376,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 859,
+            "componentType": "blocks.accordion-item",
+            "componentId": 377,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 859,
+            "componentType": "blocks.accordion-item",
+            "componentId": 378,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 859,
+            "componentType": "blocks.accordion-item",
+            "componentId": 379,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 385,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 386,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 387,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 388,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 389,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 390,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 391,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 392,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 863,
+            "componentType": "blocks.accordion-item",
+            "componentId": 393,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 867,
+            "componentType": "blocks.accordion-item",
+            "componentId": 403,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 951,
+            "componentType": "blocks.gallery-image",
+            "componentId": 255,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 951,
+            "componentType": "blocks.gallery-image",
+            "componentId": 256,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 951,
+            "componentType": "blocks.gallery-image",
+            "componentId": 257,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 951,
+            "componentType": "blocks.gallery-image",
+            "componentId": 258,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 951,
+            "componentType": "blocks.gallery-image",
+            "componentId": 259,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 951,
+            "componentType": "blocks.gallery-image",
+            "componentId": 260,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 953,
+            "componentType": "blocks.gallery-image",
+            "componentId": 267,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 953,
+            "componentType": "blocks.gallery-image",
+            "componentId": 268,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 953,
+            "componentType": "blocks.gallery-image",
+            "componentId": 269,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 955,
+            "componentType": "blocks.gallery-image",
+            "componentId": 273,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 955,
+            "componentType": "blocks.gallery-image",
+            "componentId": 274,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 955,
+            "componentType": "blocks.gallery-image",
+            "componentId": 275,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 955,
+            "componentType": "blocks.gallery-image",
+            "componentId": 276,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 955,
+            "componentType": "blocks.gallery-image",
+            "componentId": 277,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 955,
+            "componentType": "blocks.gallery-image",
+            "componentId": 278,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 957,
+            "componentType": "blocks.gallery-image",
+            "componentId": 285,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 957,
+            "componentType": "blocks.gallery-image",
+            "componentId": 286,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 957,
+            "componentType": "blocks.gallery-image",
+            "componentId": 287,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 957,
+            "componentType": "blocks.gallery-image",
+            "componentId": 288,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 957,
+            "componentType": "blocks.gallery-image",
+            "componentId": 289,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 957,
+            "componentType": "blocks.gallery-image",
+            "componentId": 290,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 959,
+            "componentType": "blocks.gallery-image",
+            "componentId": 297,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 959,
+            "componentType": "blocks.gallery-image",
+            "componentId": 298,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 959,
+            "componentType": "blocks.gallery-image",
+            "componentId": 299,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 959,
+            "componentType": "blocks.gallery-image",
+            "componentId": 300,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 959,
+            "componentType": "blocks.gallery-image",
+            "componentId": 301,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 959,
+            "componentType": "blocks.gallery-image",
+            "componentId": 302,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 961,
+            "componentType": "blocks.gallery-image",
+            "componentId": 309,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 961,
+            "componentType": "blocks.gallery-image",
+            "componentId": 310,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 961,
+            "componentType": "blocks.gallery-image",
+            "componentId": 311,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 963,
+            "componentType": "blocks.gallery-image",
+            "componentId": 315,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 963,
+            "componentType": "blocks.gallery-image",
+            "componentId": 316,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 963,
+            "componentType": "blocks.gallery-image",
+            "componentId": 317,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 963,
+            "componentType": "blocks.gallery-image",
+            "componentId": 318,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 963,
+            "componentType": "blocks.gallery-image",
+            "componentId": 319,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 965,
+            "componentType": "blocks.gallery-image",
+            "componentId": 325,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 965,
+            "componentType": "blocks.gallery-image",
+            "componentId": 326,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 965,
+            "componentType": "blocks.gallery-image",
+            "componentId": 327,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 965,
+            "componentType": "blocks.gallery-image",
+            "componentId": 328,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 967,
+            "componentType": "blocks.gallery-image",
+            "componentId": 333,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 967,
+            "componentType": "blocks.gallery-image",
+            "componentId": 334,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 967,
+            "componentType": "blocks.gallery-image",
+            "componentId": 335,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 967,
+            "componentType": "blocks.gallery-image",
+            "componentId": 336,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 967,
+            "componentType": "blocks.gallery-image",
+            "componentId": 337,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 969,
+            "componentType": "blocks.gallery-image",
+            "componentId": 343,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 969,
+            "componentType": "blocks.gallery-image",
+            "componentId": 344,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 969,
+            "componentType": "blocks.gallery-image",
+            "componentId": 345,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 969,
+            "componentType": "blocks.gallery-image",
+            "componentId": 346,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 971,
+            "componentType": "blocks.gallery-image",
+            "componentId": 351,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 971,
+            "componentType": "blocks.gallery-image",
+            "componentId": 352,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 971,
+            "componentType": "blocks.gallery-image",
+            "componentId": 353,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 971,
+            "componentType": "blocks.gallery-image",
+            "componentId": 354,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 145,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 146,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 147,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 148,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 149,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 150,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 151,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 152,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 153,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 154,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 155,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 156,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 157,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 158,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 159,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 160,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 161,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.promo-slide",
+            "componentId": 162,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 137,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 138,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 139,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 140,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 141,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 142,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 143,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 144,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 145,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.faq-item",
+            "componentId": 146,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.social-link",
+            "componentId": 31,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.social-link",
+            "componentId": 32,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.social-link",
+            "componentId": 33,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.advantage",
+            "componentId": 9,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.advantage",
+            "componentId": 10,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.advantage",
+            "componentId": 11,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.advantage",
+            "componentId": 12,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1051,
+            "componentType": "blocks.video",
+            "componentId": 9,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1063,
+            "componentType": "blocks.contact-detail",
+            "componentId": 25,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1063,
+            "componentType": "blocks.contact-detail",
+            "componentId": 26,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1063,
+            "componentType": "blocks.contact-detail",
+            "componentId": 27,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1063,
+            "componentType": "blocks.clinic",
+            "componentId": 29,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1063,
+            "componentType": "blocks.clinic",
+            "componentId": 30,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1063,
+            "componentType": "blocks.clinic",
+            "componentId": 31,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 405,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 406,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 407,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 408,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 409,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 410,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 411,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 412,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 413,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1107,
+            "componentType": "blocks.accordion-item",
+            "componentId": 414,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 425,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 426,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 427,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 428,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 429,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 430,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 431,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 432,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 433,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 434,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 435,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 436,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 437,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 438,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 439,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 440,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 441,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 442,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1115,
+            "componentType": "blocks.accordion-item",
+            "componentId": 443,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 463,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 464,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 465,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 466,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 467,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 468,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 469,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 470,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1119,
+            "componentType": "blocks.accordion-item",
+            "componentId": 471,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1123,
+            "componentType": "blocks.accordion-item",
+            "componentId": 481,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1123,
+            "componentType": "blocks.accordion-item",
+            "componentId": 482,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1123,
+            "componentType": "blocks.accordion-item",
+            "componentId": 483,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1123,
+            "componentType": "blocks.accordion-item",
+            "componentId": 484,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1123,
+            "componentType": "blocks.accordion-item",
+            "componentId": 485,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1123,
+            "componentType": "blocks.accordion-item",
+            "componentId": 486,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1123,
+            "componentType": "blocks.accordion-item",
+            "componentId": 487,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1123,
+            "componentType": "blocks.accordion-item",
+            "componentId": 488,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1125,
+            "componentType": "blocks.accordion-item",
+            "componentId": 497,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1125,
+            "componentType": "blocks.accordion-item",
+            "componentId": 498,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1125,
+            "componentType": "blocks.accordion-item",
+            "componentId": 499,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1125,
+            "componentType": "blocks.accordion-item",
+            "componentId": 500,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1125,
+            "componentType": "blocks.accordion-item",
+            "componentId": 501,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1129,
+            "componentType": "blocks.accordion-item",
+            "componentId": 507,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1129,
+            "componentType": "blocks.accordion-item",
+            "componentId": 508,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1129,
+            "componentType": "blocks.accordion-item",
+            "componentId": 509,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1129,
+            "componentType": "blocks.accordion-item",
+            "componentId": 510,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1129,
+            "componentType": "blocks.accordion-item",
+            "componentId": 511,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 517,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 518,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 519,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 520,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 521,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 522,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 523,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 524,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 525,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1133,
+            "componentType": "blocks.accordion-item",
+            "componentId": 526,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1165,
+            "componentType": "blocks.faq-item",
+            "componentId": 157,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1165,
+            "componentType": "blocks.faq-item",
+            "componentId": 158,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1165,
+            "componentType": "blocks.faq-item",
+            "componentId": 159,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1165,
+            "componentType": "blocks.faq-item",
+            "componentId": 160,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1165,
+            "componentType": "blocks.faq-item",
+            "componentId": 161,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1165,
+            "componentType": "blocks.faq-item",
+            "componentId": 162,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1165,
+            "componentType": "blocks.faq-item",
+            "componentId": 163,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1197,
+            "componentType": "blocks.gallery-image",
+            "componentId": 359,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1197,
+            "componentType": "blocks.gallery-image",
+            "componentId": 360,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1197,
+            "componentType": "blocks.gallery-image",
+            "componentId": 361,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1199,
+            "componentType": "blocks.gallery-image",
+            "componentId": 365,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1199,
+            "componentType": "blocks.gallery-image",
+            "componentId": 366,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1199,
+            "componentType": "blocks.gallery-image",
+            "componentId": 367,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1199,
+            "componentType": "blocks.gallery-image",
+            "componentId": 368,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1199,
+            "componentType": "blocks.gallery-image",
+            "componentId": 369,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1199,
+            "componentType": "blocks.gallery-image",
+            "componentId": 370,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1201,
+            "componentType": "blocks.gallery-image",
+            "componentId": 377,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1201,
+            "componentType": "blocks.gallery-image",
+            "componentId": 378,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1201,
+            "componentType": "blocks.gallery-image",
+            "componentId": 379,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1201,
+            "componentType": "blocks.gallery-image",
+            "componentId": 380,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1201,
+            "componentType": "blocks.gallery-image",
+            "componentId": 381,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1201,
+            "componentType": "blocks.gallery-image",
+            "componentId": 382,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1203,
+            "componentType": "blocks.gallery-image",
+            "componentId": 389,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1203,
+            "componentType": "blocks.gallery-image",
+            "componentId": 390,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1203,
+            "componentType": "blocks.gallery-image",
+            "componentId": 391,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1203,
+            "componentType": "blocks.gallery-image",
+            "componentId": 392,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1203,
+            "componentType": "blocks.gallery-image",
+            "componentId": 393,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1203,
+            "componentType": "blocks.gallery-image",
+            "componentId": 394,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1207,
+            "componentType": "blocks.gallery-image",
+            "componentId": 401,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1207,
+            "componentType": "blocks.gallery-image",
+            "componentId": 402,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1207,
+            "componentType": "blocks.gallery-image",
+            "componentId": 403,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 407,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 408,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 409,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 410,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 411,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 412,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 413,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 414,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 415,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 416,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 417,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1211,
+            "componentType": "blocks.gallery-image",
+            "componentId": 418,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1213,
+            "componentType": "blocks.gallery-image",
+            "componentId": 431,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1213,
+            "componentType": "blocks.gallery-image",
+            "componentId": 432,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1213,
+            "componentType": "blocks.gallery-image",
+            "componentId": 433,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1213,
+            "componentType": "blocks.gallery-image",
+            "componentId": 434,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1213,
+            "componentType": "blocks.gallery-image",
+            "componentId": 435,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1323,
+            "componentType": "blocks.tab-item",
+            "componentId": 79,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1323,
+            "componentType": "blocks.tab-item",
+            "componentId": 80,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1323,
+            "componentType": "blocks.tab-item",
+            "componentId": 81,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1323,
+            "componentType": "blocks.tab-item",
+            "componentId": 82,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1323,
+            "componentType": "blocks.tab-item",
+            "componentId": 83,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1323,
+            "componentType": "blocks.tab-item",
+            "componentId": 84,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1323,
+            "componentType": "blocks.tab-item",
+            "componentId": 85,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1333,
+            "componentType": "blocks.tab-item",
+            "componentId": 93,
+            "reason": "missing legacy component row or unsupported component type"
+          },
+          {
+            "entityId": 1333,
+            "componentType": "blocks.tab-item",
+            "componentId": 94,
+            "reason": "missing legacy component row or unsupported component type"
+          }
+        ],
         "plannedUpdates": [],
         "sourceChecks": [
           {
@@ -5857,712 +7763,20 @@
       "pageBlocksCleanupBatchA": {
         "batch": "batch-a-single-locale",
         "summary": {
-          "canonicalCount": 15,
-          "localizedCount": 15,
-          "pageTypeCounts": {
-            "gallery": 6,
-            "accordion": 6,
-            "tabs": 3
-          }
+          "canonicalCount": 0,
+          "localizedCount": 0,
+          "pageTypeCounts": {}
         },
-        "documents": [
-          {
-            "documentId": "af75v2k760st40nppinvq139",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Βιοκλινική Αθηνών",
-                "slug": "bioclinic-athinwn",
-                "semanticCount": 1,
-                "pageBlocksCount": 4,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 4
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "e0p9zmqcaegsn3g12ry8tnhd",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Χρόνια ρινίτιδα",
-                "slug": "rinitida",
-                "semanticCount": 1,
-                "pageBlocksCount": 10,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 10
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "gsal64tpo5n2xzduimtxaxpg",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Ρινικοί πολύποδες",
-                "slug": "rinikoi-polypodes",
-                "semanticCount": 1,
-                "pageBlocksCount": 1,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 1
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "ifhut06wvfjzk85chctslxbw",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Ενδοσκοπική χειρουργική ρινός και παραρρινίων (FESS)",
-                "slug": "endoskopiki-xeirourgiki-rinos-fess",
-                "semanticCount": 1,
-                "pageBlocksCount": 1,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 1
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "inlmdr6up716tq1l11aybqec",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "ΤΥΠΕΤ",
-                "slug": "typet",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 5
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "j962t4mtm9632xvs7x1m0c54",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "ΙΑΣΩ Παίδων",
-                "slug": "iaso-paidwn",
-                "semanticCount": 1,
-                "pageBlocksCount": 4,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 4
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "janag6p6g80f3n3r1873r63w",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Τραχηλικές διογκώσεις",
-                "slug": "traxilikes-diogkoseis",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 5
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "jwo4jdihc76be0oi75wk0lnx",
-            "pageType": "tabs",
-            "semanticField": "tabsSection",
-            "locales": {
-              "ru": {
-                "title": "Аденоиды, гланды, храп, апноэ сна",
-                "slug": "amygdales-adenoeideis-ekvlastiseis",
-                "semanticCount": 1,
-                "pageBlocksCount": 7,
-                "pageBlockComponents": {
-                  "blocks.tab-item": 7
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "ml7c4v5s98d13flurmre521t",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Ιγμορίτιδα",
-                "slug": "igmoritida",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 6
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "qsyitd5m4vz7cbgsvpiuqkjl",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Mediterraneo Hospital",
-                "slug": "mediterraneo",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 6
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "trytbm1fw6hdhyc5vekg89em",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Ευρωκλινική Παίδων",
-                "slug": "euroclinic-paidon",
-                "semanticCount": 1,
-                "pageBlocksCount": 4,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 4
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "vmyxiw5z7pzy12a7j6lyvsty",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "ru": {
-                "title": "Болезни голосовых связок",
-                "slug": "pathiseis-fonitikon-xordon",
-                "semanticCount": 1,
-                "pageBlocksCount": 10,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 10
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "vthbigu9gvy5xrxput4nin37",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Ευρωκλινική Αθηνών",
-                "slug": "euroclinc",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 5
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "wo48qn0s6tcxykv0qtcs7q94",
-            "pageType": "tabs",
-            "semanticField": "tabsSection",
-            "locales": {
-              "el": {
-                "title": "Ru",
-                "slug": "ru-page",
-                "semanticCount": 1,
-                "pageBlocksCount": 10,
-                "pageBlockComponents": {
-                  "blocks.tab-item": 10
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "xwg9ip1n5dli5ec7ndd6yi3p",
-            "pageType": "tabs",
-            "semanticField": "tabsSection",
-            "locales": {
-              "ru": {
-                "title": "Ботулинотерапия",
-                "slug": "botulinotherapia-ru",
-                "semanticCount": 1,
-                "pageBlocksCount": 2,
-                "pageBlockComponents": {
-                  "blocks.tab-item": 2
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          }
-        ]
+        "documents": []
       },
       "pageBlocksCleanupBatchB": {
         "batch": "batch-b-bilingual",
         "summary": {
-          "canonicalCount": 16,
-          "localizedCount": 32,
-          "pageTypeCounts": {
-            "accordion": 6,
-            "home": 1,
-            "gallery": 7,
-            "faq": 1,
-            "contact": 1
-          }
+          "canonicalCount": 0,
+          "localizedCount": 0,
+          "pageTypeCounts": {}
         },
-        "documents": [
-          {
-            "documentId": "bsuslnw4e1q3vnr4ym3pmxbf",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Κύστη θυρεογλωσσικού πόρου",
-                "slug": "kysti-thyrioglossikou-porou",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 5
-                }
-              },
-              "ru": {
-                "title": "Киста щитоязычного протока",
-                "slug": "kysti-thyrioglossikou-porou",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 5
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "d4sutmel62e6418oo7wm7vy9",
-            "pageType": "home",
-            "semanticField": "pageSections",
-            "locales": {
-              "el": {
-                "title": "Menu",
-                "slug": "index",
-                "semanticCount": 4,
-                "pageBlocksCount": 33,
-                "pageBlockComponents": {
-                  "blocks.faq-item": 10,
-                  "blocks.promo-slide": 18,
-                  "blocks.social-link": 4,
-                  "blocks.video": 1
-                }
-              },
-              "ru": {
-                "title": "Меню",
-                "slug": "index",
-                "semanticCount": 5,
-                "pageBlocksCount": 36,
-                "pageBlockComponents": {
-                  "blocks.advantage": 4,
-                  "blocks.faq-item": 10,
-                  "blocks.promo-slide": 18,
-                  "blocks.social-link": 3,
-                  "blocks.video": 1
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "dy4bhu8b4yq6pzda10vgw3td",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Μetropolitan General",
-                "slug": "iaso-general",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 6
-                }
-              },
-              "ru": {
-                "title": "Metropolitan General",
-                "slug": "iaso-general",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 6
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "flpm6kfhzgwk0fes4y3iee4o",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Κεντρική Κλινική Αθηνών",
-                "slug": "kentriki-kliniki-athinon",
-                "semanticCount": 1,
-                "pageBlocksCount": 3,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 3
-                }
-              },
-              "ru": {
-                "title": "Kentriki Kliniki Athinon",
-                "slug": "kentriki-kliniki-athinon",
-                "semanticCount": 1,
-                "pageBlocksCount": 3,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 3
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "h91e3z6ikow2nr8p97k5r0lk",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Αφαίρεση αμυγδαλών (αμυγδαλεκτομή)",
-                "slug": "afairesi-amygdalwn",
-                "semanticCount": 1,
-                "pageBlocksCount": 2,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 2
-                }
-              },
-              "ru": {
-                "title": "Удаление миндалин (тонзиллэктомия)",
-                "slug": "afairesi-amygdalwn",
-                "semanticCount": 1,
-                "pageBlocksCount": 10,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 10
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Αμπελόκηποι",
-                "slug": "iatreio-alexandras",
-                "semanticCount": 1,
-                "pageBlocksCount": 12,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 12
-                }
-              },
-              "ru": {
-                "title": "Абелокипи",
-                "slug": "iatreio-alexandras",
-                "semanticCount": 1,
-                "pageBlocksCount": 12,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 12
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "jdsakp5pldnhyiu5bv60mbii",
-            "pageType": "faq",
-            "semanticField": "faqSection",
-            "locales": {
-              "el": {
-                "title": "Υπηρεσίες",
-                "slug": "yperesies",
-                "semanticCount": 1,
-                "pageBlocksCount": 7,
-                "pageBlockComponents": {
-                  "blocks.faq-item": 7
-                }
-              },
-              "ru": {
-                "title": "Услуги",
-                "slug": "yperesies",
-                "semanticCount": 1,
-                "pageBlocksCount": 7,
-                "pageBlockComponents": {
-                  "blocks.faq-item": 7
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "jnkudfxwg4zxgrtat45rhrbt",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Ιατρικό Φαλήρου",
-                "slug": "iatriko-falirou",
-                "semanticCount": 1,
-                "pageBlocksCount": 3,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 3
-                }
-              },
-              "ru": {
-                "title": "Iatriko Falirou",
-                "slug": "iatriko-falirou",
-                "semanticCount": 1,
-                "pageBlocksCount": 3,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 3
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "n1h2yld3ulfyk2g2iwgaabob",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "ΡΕΑ",
-                "slug": "rea",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 6
-                }
-              },
-              "ru": {
-                "title": "ΡΕΑ",
-                "slug": "rea",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 6
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "nbsun7tvpb5x9cewbhpkvs84",
-            "pageType": "contact",
-            "semanticField": "contactSection",
-            "locales": {
-              "el": {
-                "title": "Επικοινωνία",
-                "slug": "epikoinonia",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.clinic": 3,
-                  "blocks.contact-detail": 3
-                }
-              },
-              "ru": {
-                "title": "Контакты",
-                "slug": "epikoinonia",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.clinic": 3,
-                  "blocks.contact-detail": 3
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "ookwcuma6lt0koqk123dcd70",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Λοιμώξεις αυτιών",
-                "slug": "loimoxeis-aytion",
-                "semanticCount": 1,
-                "pageBlocksCount": 16,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 16
-                }
-              },
-              "ru": {
-                "title": "Ушные инфекции у детей",
-                "slug": "loimoxeis-aytion",
-                "semanticCount": 1,
-                "pageBlocksCount": 19,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 19
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "q14iiyrst70dgf0incb0iwgm",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Κουκάκι",
-                "slug": "iatreio-koukaki",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 5
-                }
-              },
-              "ru": {
-                "title": "Кукаки",
-                "slug": "iatreio-koukaki",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 5
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "q6xj2tn5nwfs45gvst77neg3",
-            "pageType": "gallery",
-            "semanticField": "gallerySection",
-            "locales": {
-              "el": {
-                "title": "Κλινική Καρρά",
-                "slug": "orl-athens-clinic",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 6
-                }
-              },
-              "ru": {
-                "title": "ORL Athens Clinic",
-                "slug": "orl-athens-clinic",
-                "semanticCount": 1,
-                "pageBlocksCount": 6,
-                "pageBlockComponents": {
-                  "blocks.gallery-image": 6
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "s0xdvhtm58zxky95ju5yehpm",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Η γενική αναισθησία για το παιδί σας",
-                "slug": "geniki-anaisthisia-gia-to-paidi-sas",
-                "semanticCount": 1,
-                "pageBlocksCount": 9,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 9
-                }
-              },
-              "ru": {
-                "title": "Общая анестезия для вашего ребенка",
-                "slug": "geniki-anaisthisia-gia-to-paidi-sas",
-                "semanticCount": 1,
-                "pageBlocksCount": 9,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 9
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "ytyqvzdorkvcqaar0fh78lob",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Αλλεργική ρινίτιδα στα παιδιά",
-                "slug": "allergiki-rinitida-paidia",
-                "semanticCount": 1,
-                "pageBlocksCount": 8,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 8
-                }
-              },
-              "ru": {
-                "title": "Аллергический ринит у детей",
-                "slug": "allergiki-rinitida-paidia",
-                "semanticCount": 1,
-                "pageBlocksCount": 8,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 8
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          },
-          {
-            "documentId": "yv09o1x42ubffjze8oqkgnz5",
-            "pageType": "accordion",
-            "semanticField": "accordionSection",
-            "locales": {
-              "el": {
-                "title": "Ρινορραγίες στα παιδιά (Επίσταξη ρινός)",
-                "slug": "rinorragies",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 5
-                }
-              },
-              "ru": {
-                "title": "Носовые кровотечения у детей",
-                "slug": "rinorragies",
-                "semanticCount": 1,
-                "pageBlocksCount": 5,
-                "pageBlockComponents": {
-                  "blocks.accordion-item": 5
-                }
-              }
-            },
-            "recommendedAction": "verify semantic section parity, then remove pageBlocks for this document"
-          }
-        ]
+        "documents": []
       }
     },
     "currentIndexes": {
@@ -6612,10 +7826,16 @@
           "partial": 0
         }
       ]
+    },
+    "sourceParentIntegrity": {
+      "issueCount": 0,
+      "unresolvedCount": 0,
+      "issues": [],
+      "unresolved": []
     }
   },
   "remainingRisks": [
-    "37 bilingual documents still drift on template, page type, layout, or parent linkage, even though 20 are now authenticated against source.",
+    "37 bilingual documents still drift on template, page type, layout, or parent linkage, even though 37 are now authenticated against source.",
     "13 localized pages still need editorial review because legacy longtitle adds SEO signal over the current seo.metaTitle.",
     "1 published social link still cannot be mapped to a supported platform and should stay hidden in v1.",
     "6 published clinic cards still lack coordinates, so map UI remains out of scope for v1.",
@@ -6627,6 +7847,7 @@
     "menuTitleBackfillPlan": "nextjs_menu_title_backfill_plan.json",
     "seoReviewManifest": "nextjs_seo_review_manifest.json",
     "sourceAlignmentManifest": "nextjs_source_alignment_manifest.json",
+    "parentFixPlan": "nextjs_parent_fix_plan.json",
     "contractFixPlan": "nextjs_page_contract_fix_plan.json",
     "pageBlocksCleanupBatchA": "nextjs_pageblocks_cleanup_batch_a.json",
     "pageBlocksCleanupBatchB": "nextjs_pageblocks_cleanup_batch_b.json",

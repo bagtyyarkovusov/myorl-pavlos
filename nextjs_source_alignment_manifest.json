@@ -1,12 +1,12 @@
 {
   "summary": {
     "documentCount": 37,
-    "sourceAuthenticatedDocumentCount": 20,
-    "manualReviewDocumentCount": 17,
+    "sourceAuthenticatedDocumentCount": 37,
+    "manualReviewDocumentCount": 0,
     "sourceAuthenticatedFieldCounts": {
       "templateId": 17,
       "layoutVariant": 23,
-      "parentDocumentId": 7,
+      "parentDocumentId": 24,
       "pageType": 6
     },
     "note": "This manifest compares current Strapi structure to the original localized source inputs. The remaining cross-locale drift is largely source-authentic, so it should stay localized instead of being auto-normalized for Next.js."
@@ -78,7 +78,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -99,7 +99,7 @@
           "sourceTemplateId": "template_20",
           "currentTemplateId": "template_20",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "specialized-article",
@@ -107,11 +107,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "b52sj2toic4uiq10n3dx973z",
@@ -126,7 +126,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "n3ryx3cfn7jvdofsw0ktycle",
-          "ru": null
+          "ru": "mals56qxfw1ckzcm9jm3kq1j"
         }
       },
       "sourceEvidence": {
@@ -147,7 +147,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "mals56qxfw1ckzcm9jm3kq1j",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "mals56qxfw1ckzcm9jm3kq1j",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -155,11 +155,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "bw2ac3p104jdjrr53cr9ew1r",
@@ -174,7 +174,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -195,7 +195,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -203,11 +203,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "c7d12byxuclr4k18las14y1b",
@@ -280,7 +280,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -301,7 +301,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -309,11 +309,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "e0p9zmqcaegsn3g12ry8tnhd",
@@ -389,7 +389,7 @@
         },
         "parentDocumentId": {
           "el": "n8cl3u5xw93pboim5ca8w5mf",
-          "ru": null
+          "ru": "jwo4jdihc76be0oi75wk0lnx"
         }
       },
       "sourceEvidence": {
@@ -410,7 +410,7 @@
           "sourceTemplateId": "template_18",
           "currentTemplateId": "template_18",
           "sourceParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "encyclopedia-article",
@@ -420,12 +420,11 @@
       },
       "sourceAuthenticatedFields": [
         "templateId",
-        "layoutVariant"
-      ],
-      "reviewFields": [
+        "layoutVariant",
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "g5erxrpzv3ool4dztm27ovvk",
@@ -440,7 +439,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -461,7 +460,7 @@
           "sourceTemplateId": "template_20",
           "currentTemplateId": "template_20",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "specialized-article",
@@ -469,11 +468,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "gsal64tpo5n2xzduimtxaxpg",
@@ -809,7 +808,7 @@
         },
         "parentDocumentId": {
           "el": "n8cl3u5xw93pboim5ca8w5mf",
-          "ru": null
+          "ru": "jwo4jdihc76be0oi75wk0lnx"
         }
       },
       "sourceEvidence": {
@@ -830,7 +829,7 @@
           "sourceTemplateId": "template_18",
           "currentTemplateId": "template_18",
           "sourceParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "encyclopedia-article",
@@ -840,12 +839,11 @@
       },
       "sourceAuthenticatedFields": [
         "templateId",
-        "layoutVariant"
-      ],
-      "reviewFields": [
+        "layoutVariant",
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "kd8nbu7thaqsy5i1ndu1yg1s",
@@ -921,7 +919,7 @@
         },
         "parentDocumentId": {
           "el": "n8cl3u5xw93pboim5ca8w5mf",
-          "ru": null
+          "ru": "jwo4jdihc76be0oi75wk0lnx"
         }
       },
       "sourceEvidence": {
@@ -942,7 +940,7 @@
           "sourceTemplateId": "template_18",
           "currentTemplateId": "template_18",
           "sourceParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "encyclopedia-article",
@@ -952,12 +950,11 @@
       },
       "sourceAuthenticatedFields": [
         "templateId",
-        "layoutVariant"
-      ],
-      "reviewFields": [
+        "layoutVariant",
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "ml7c4v5s98d13flurmre521t",
@@ -1083,7 +1080,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -1104,7 +1101,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -1112,11 +1109,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "qm1vehawd58oxlx8gs84ziys",
@@ -1131,7 +1128,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -1152,7 +1149,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -1160,11 +1157,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "qrqbrvdczgpaww71fwvg3od5",
@@ -1179,7 +1176,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -1200,7 +1197,7 @@
           "sourceTemplateId": "template_20",
           "currentTemplateId": "template_20",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "specialized-article",
@@ -1208,11 +1205,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "rg59ex0du2z2zrmeyp7usdz9",
@@ -1285,7 +1282,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -1306,7 +1303,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -1314,11 +1311,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "so2mvk30n5565rkoyhygh6zd",
@@ -1550,7 +1547,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -1571,7 +1568,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -1579,11 +1576,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "vmyxiw5z7pzy12a7j6lyvsty",
@@ -1651,7 +1648,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -1672,7 +1669,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -1680,11 +1677,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "wolv96366knzp3t1bnotozkr",
@@ -1699,7 +1696,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "n3ryx3cfn7jvdofsw0ktycle",
-          "ru": null
+          "ru": "mals56qxfw1ckzcm9jm3kq1j"
         }
       },
       "sourceEvidence": {
@@ -1720,7 +1717,7 @@
           "sourceTemplateId": "template_18",
           "currentTemplateId": "template_18",
           "sourceParentDocumentId": "mals56qxfw1ckzcm9jm3kq1j",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "mals56qxfw1ckzcm9jm3kq1j",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "encyclopedia-article",
@@ -1728,11 +1725,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "y7ze8grsx9a3zlwubgybmybl",
@@ -1747,7 +1744,7 @@
       "diffs": {
         "parentDocumentId": {
           "el": "nnj3mgpi6l3x2ymhsdft0uwm",
-          "ru": null
+          "ru": "zpkmxzdqwpf1q6wn27xa7x6a"
         }
       },
       "sourceEvidence": {
@@ -1768,7 +1765,7 @@
           "sourceTemplateId": "template_8",
           "currentTemplateId": "template_8",
           "sourceParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "zpkmxzdqwpf1q6wn27xa7x6a",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "service-article",
@@ -1776,11 +1773,11 @@
           "classificationIssue": null
         }
       },
-      "sourceAuthenticatedFields": [],
-      "reviewFields": [
+      "sourceAuthenticatedFields": [
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "y9t0ouq6vr2ndfvtgy579u4p",
@@ -1803,7 +1800,7 @@
         },
         "parentDocumentId": {
           "el": "n8cl3u5xw93pboim5ca8w5mf",
-          "ru": null
+          "ru": "jwo4jdihc76be0oi75wk0lnx"
         }
       },
       "sourceEvidence": {
@@ -1824,7 +1821,7 @@
           "sourceTemplateId": "template_18",
           "currentTemplateId": "template_18",
           "sourceParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
-          "currentParentDocumentId": null,
+          "currentParentDocumentId": "jwo4jdihc76be0oi75wk0lnx",
           "expectedPageType": "content",
           "currentPageType": "content",
           "expectedLayoutVariant": "encyclopedia-article",
@@ -1834,12 +1831,11 @@
       },
       "sourceAuthenticatedFields": [
         "templateId",
-        "layoutVariant"
-      ],
-      "reviewFields": [
+        "layoutVariant",
         "parentDocumentId"
       ],
-      "recommendedAction": "manual-review-before-normalizing-localized-structure"
+      "reviewFields": [],
+      "recommendedAction": "preserve-localized-structure-and-keep-fields-localized"
     },
     {
       "documentId": "ycpzlf1emnkizeduo3e7wrvu",

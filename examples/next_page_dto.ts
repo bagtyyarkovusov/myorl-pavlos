@@ -128,6 +128,14 @@ export type NavigationNodeDTO = NavigationInput & {
   children: NavigationNodeDTO[]
 }
 
+function compareNavigationItems(left: NavigationInput, right: NavigationInput): number {
+  return (
+    left.menuIndex - right.menuIndex
+    || left.slug.localeCompare(right.slug)
+    || left.navLabel.localeCompare(right.navLabel)
+  )
+}
+
 type StrapiMedia = {
   url: string
   alternativeText?: string | null
@@ -292,7 +300,7 @@ export function toPageDTO(page: StrapiPagePayload): PageDTO {
 export function buildNavigationTree(pages: NavigationInput[], locale: Locale): NavigationNodeDTO[] {
   const scopedPages = pages
     .filter((page) => page.locale === locale && !page.hideFromMenu)
-    .sort((left, right) => left.menuIndex - right.menuIndex || left.navLabel.localeCompare(right.navLabel))
+    .sort(compareNavigationItems)
 
   const nodes = new Map<string, NavigationNodeDTO>()
   for (const page of scopedPages) {
@@ -314,11 +322,9 @@ export function buildNavigationTree(pages: NavigationInput[], locale: Locale): N
   }
 
   for (const node of nodes.values()) {
-    node.children.sort(
-      (left, right) => left.menuIndex - right.menuIndex || left.navLabel.localeCompare(right.navLabel),
-    )
+    node.children.sort(compareNavigationItems)
   }
-  roots.sort((left, right) => left.menuIndex - right.menuIndex || left.navLabel.localeCompare(right.navLabel))
+  roots.sort(compareNavigationItems)
 
   return roots
 }

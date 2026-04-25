@@ -1,6 +1,6 @@
 # System Audit — Database, Schema, and Next.js SEO Frontend Readiness
 
-**Date:** 2026-04-24
+**Date:** 2026-04-25
 **Scope:** consolidated audit of the current Strapi backend, the MODX → Strapi migration state, and pre-Next.js alignment work.
 **Status:** this document is the current entry point for Next.js frontend planning. It cross-links — not replaces — the earlier live-state audit and readiness docs.
 
@@ -11,7 +11,7 @@
 ### 1.1 Headline verdict
 
 - **Overall readiness:** `CONDITIONAL GO` for a bilingual, content-first Next.js App Router launch (no map UI in v1).
-- **Composite readiness score:** `81 / 100` (baseline before the last pass was `78`). See §9 for the re-scored rubric.
+- **Composite readiness score:** `84 / 100` (baseline before the last pass was `78`). See §9 for the re-scored rubric.
 - **Migration landing:** solid. The semantic page model (`pageType` + `layoutVariant` + named sections) is populated and usable today. Legacy `pageBlocks` duplication is cleared (`0` docs, `0` localized rows).
 - **Primary remaining blockers** for a production SEO launch are **schema-level**, not migration-level: the `shared.seo` component is too thin to support modern SEO, and `Tag.slug` has no uniqueness contract.
 
@@ -19,7 +19,7 @@
 
 1. **Extend `shared.seo`** to cover canonical URL, Open Graph, Twitter, robots, and structured data (JSON-LD) — §4.1, Appendix C.
 2. **Lock `Tag.slug` uniqueness and i18n semantics** — currently `type: string`, required but not unique and not localized; this is a direct SEO risk for taxonomy pages — §4.2, Appendix E.
-3. **Decide the Postgres migration window** — local SQLite full-scans key queries today; forward-only index SQL already exists under `backend/database/postgres-readiness/` — §3, Appendix B.
+3. **Decide the Postgres migration window** — local SQLite full-scans key queries today; forward-only Postgres index SQL already exists under `backend/database/postgres-readiness/` — §3, Appendix B.
 4. **Wire a Strapi → Next.js revalidation webhook** before the frontend starts, so ISR on-demand revalidation can be written against a contract that actually exists — §3.4, Appendix D.
 5. **Resolve the 13-doc SEO review queue** where legacy `longtitle` still adds signal over the current `seo.metaTitle` — §6, §7.
 
@@ -32,11 +32,12 @@ Week 0 — close the P0 schema list (§4). Week 1–2 — Postgres rehearsal and
 | Source | Purpose |
 |---|---|
 | [`docs/strapi-nextjs-audit.md`](./strapi-nextjs-audit.md) | Live payload audit, field-strategy table, rollout plan — still current. |
-| [`docs/nextjs-content-readiness.md`](./nextjs-content-readiness.md) | Machine-scored readiness breakdown — still current (`81/100`). |
+| [`docs/nextjs-content-readiness.md`](./nextjs-content-readiness.md) | Machine-scored readiness breakdown — still current (`84/100`). |
 | [`docs/adr/ADR-001-nextjs-semantic-dto-boundary.md`](./adr/ADR-001-nextjs-semantic-dto-boundary.md) | DTO boundary contract. |
 | [`docs/adr/ADR-002-nextjs-v1-contact-and-system-pages.md`](./adr/ADR-002-nextjs-v1-contact-and-system-pages.md) | v1 contact pages (no map), system pages frontend-native. |
 | [`docs/adr/ADR-003-postgres-readiness-indexes.md`](./adr/ADR-003-postgres-readiness-indexes.md) | Forward-only Postgres hardening. |
 | [`docs/adr/ADR-004-flat-locale-routes-and-localized-navigation-labels.md`](./adr/ADR-004-flat-locale-routes-and-localized-navigation-labels.md) | Flat locale routes + localized `menuTitle`. |
+| [`docs/adr/ADR-005-repair-source-parent-integrity-before-postgres-cutover.md`](./adr/ADR-005-repair-source-parent-integrity-before-postgres-cutover.md) | Source parent integrity before PostgreSQL cutover. |
 | [`examples/next_page_dto.ts`](../examples/next_page_dto.ts) | The canonical Next.js DTO the frontend will consume. |
 
 ---
@@ -122,15 +123,15 @@ Rehearsal runs on SQLite. Production target is PostgreSQL. The switch is non-tri
 | File | Indexes |
 |---|---|
 | [`backend/database/postgres-readiness/001_pages_lookup_indexes.sql`](../backend/database/postgres-readiness/001_pages_lookup_indexes.sql) | `pages (locale, slug, published_at)`, `pages (locale, page_type, layout_variant, published_at, menu_index)` |
-| [`backend/database/postgres-readiness/002_tag_slug_indexes.sql`](../backend/database/postgres-readiness/002_tag_slug_indexes.sql) | `tags (slug)` (Option A) or `tags (locale, slug)` (Option B) |
+| [`backend/database/postgres-readiness/002_tag_slug_indexes.sql`](../backend/database/postgres-readiness/002_tag_slug_indexes.sql) | `tags (locale, slug)` |
 
-Option A / Option B in `002_tag_slug_indexes.sql` is load-bearing — it is the same decision surfaced again in §4.2 (tag i18n model). **Pick once, index once.**
+The tag index is locale-scoped because live tag rows are localized and reuse canonical slugs across `el` and `ru`.
 
 ### 3.3 Query hot paths to verify after Postgres cutover
 
 1. **Route resolution** — `WHERE locale = ? AND slug = ? AND published_at IS NOT NULL` → uses `idx_pages_locale_slug_published_at`.
 2. **Listing by type + layout** — e.g. article index pages querying siblings with the same `pageType + layoutVariant` → uses `idx_pages_locale_type_layout_published_menu`.
-3. **Tag filter** — `WHERE slug = ?` (or `WHERE locale = ? AND slug = ?` with Option B) on the taxonomy route → uses `idx_tags_slug` (or `idx_tags_locale_slug`).
+3. **Tag filter** — `WHERE locale = ? AND slug = ?` on the taxonomy route → uses `idx_tags_locale_slug`.
 
 Document expected query plans (EXPLAIN ANALYZE) once the rehearsal Postgres DB is warmed.
 
@@ -188,11 +189,11 @@ Concrete schema shown in Appendix C. Because `shared.seo` is already attached to
 **Gaps:**
 
 1. **No uniqueness constraint.** Two tags can share the same `slug` today; the only thing preventing collisions is the `backfill_tag_slugs.py` script's external collision check.
-2. **Non-localized slug with a localized `name`** is workable for SEO only if the frontend treats `/tags/:slug` as a canonical cross-locale entry point. This needs to match the index choice in `002_tag_slug_indexes.sql` (Option A).
+2. **Non-localized slug with localized rows** means the same slug appears once per locale in the database. The production lookup/index shape must therefore include `locale`.
 
-**Recommendation:** convert to `uid` + keep non-localized (pairs with `002_tag_slug_indexes.sql` Option A). Concrete diff in Appendix E.
+**Recommendation:** keep the current required string field for v1, route/filter tags by `(locale, slug)`, and enforce collision checks through import/backfill verification plus the PostgreSQL `tags(locale, slug)` index. Concrete notes in Appendix E.
 
-Canonical non-localized slug is the simplest SEO path and matches how the importer already behaves (see `tag_plan.json`). Localizing the slug is only worth it if the business wants independent Greek/Russian tag URLs — not the case today.
+Canonical slugs are still useful, but the live Strapi storage model has localized rows. A global `slug` uniqueness assumption would reject valid translated tag rows.
 
 #### 4.3 `Page.slug` — clarify, not change
 
@@ -377,14 +378,13 @@ Always append a `BreadcrumbList` built from `parentPage` chain + localized `menu
 ### 7.1 Pairing
 
 - 123 strict source pairs from the MODX/Babel audit → 136 bilingual docs live in Strapi (strict pairs + later auto-links + manually linked reviews).
-- 20 Russian orphans remain unlinked — candidates either need a Greek sibling authored or a clear decision to ship as ru-only.
+- Published source-parent integrity issues are now `0`; the previous RU orphan navigation issue was repaired before PostgreSQL cutover.
 - Auto-linking decisions and collision analysis are in `locale_pair_audit.md`.
 
 ### 7.2 Structural drift
 
 - 37 bilingual docs have cross-locale drift on `templateId`, `pageType`, `layoutVariant`, `parentPage`, `menuIndex`.
-- Per ADR-004, 20 of those are now authenticated as **source-localized truth** (i.e., the legacy MODX content deliberately had different structure per locale).
-- The remaining 17 are on an editorial review queue — not an importer bug.
+- Per ADR-004 and ADR-005, all 37 are now authenticated as **source-localized truth** or valid localized IA. They should stay localized for v1.
 
 ### 7.3 Legacy fields dropped
 
@@ -414,7 +414,7 @@ Call this Week 0 of the Next.js project. Everything here runs on the Strapi side
 ### 8.1 Must-do (blocks Next.js scaffold start)
 
 - [ ] Apply extended `shared.seo` schema (§4.1, Appendix C).
-- [ ] Apply `Tag.slug` uniqueness change (§4.2, Appendix E) and pick `002_tag_slug_indexes.sql` Option A or B consistently.
+- [ ] Keep tag lookups/indexing on `(locale, slug)` and verify duplicate slugs only occur across locales (§4.2, Appendix E).
 - [ ] Add `required: true` to `Page.slug` (§4.3).
 - [ ] Stand up the revalidation webhook endpoint in Strapi config → Next.js (Appendix D).
 - [ ] Run the Postgres rehearsal:
@@ -460,14 +460,14 @@ The 6-dimension rubric below inherits the same evidence but breaks **Contract/AP
 | Dimension | Score | Justification |
 |---|---:|---|
 | D1. Schema completeness | `11/20` | `Page.slug`, `Tag.slug`, `menuTitle`, and semantic sections landed. `shared.seo` is minimal and sitemap fields absent → −9. |
-| D2. Contract stability | `14/15` | DTO contract exists, legacy fields private, `pageBlocks` duplication cleared. One point off for the 17 unreviewed structural drift docs that are not yet documented per-case. |
-| D3. i18n correctness | `11/15` | Page i18n clean; Tag i18n model ambiguous (slug unique strategy not locked) → −2. Hreflang derivation not yet in DTO → −2. |
+| D2. Contract stability | `15/15` | DTO contract exists, legacy fields are private, `pageBlocks` duplication is cleared, and source-parent integrity is clean. |
+| D3. i18n correctness | `12/15` | Page i18n clean and tag lookup is now locale-scoped; hreflang derivation is still not fully implemented in the frontend DTO → −3. |
 | D4. SEO surface completeness | `5/15` | Only `metaTitle + metaDescription` exist. Canonical, OG, Twitter, robots, structured data, keywords all missing → −10. |
-| D5. Migration data quality | `13/15` | 20 authenticated drift + 0 duplication + 13 editorial SEO queue known = good. −2 for the 20 unresolved ru-only orphans. |
+| D5. Migration data quality | `15/15` | 37 authenticated drift docs, 0 source-parent integrity issues, 0 duplication, and the 13 editorial SEO queue is known. |
 | D6. Operational readiness | `6/20` | Forward-only SQL staged, but no Postgres cutover, no revalidation webhook, production CORS not pinned → −14. |
-| **Total** | **`60/100`** | Stricter rubric than the existing 5-dim score (81/100). |
+| **Total** | **`65/100`** | Stricter rubric than the existing 5-dim score (84/100). |
 
-The two scores are not inconsistent: 81/100 says "the current data and contract are usable today"; 60/100 says "the schema + ops surface a modern SEO Next.js frontend will pull against is not yet complete."
+The two scores are not inconsistent: 84/100 says "the current data and contract are usable today"; 65/100 says "the schema + ops surface a modern SEO Next.js frontend will pull against is not yet complete."
 
 ### 9.3 Projected score after P0 work (§4 P0 + §8.1)
 
@@ -540,7 +540,7 @@ The remaining 3 points are `blocks/*` retirement + author content type + clinic 
 ### Existing audits & decisions
 
 - `docs/strapi-nextjs-audit.md` — live-state audit.
-- `docs/nextjs-content-readiness.md` — 5-dim readiness (`81/100`).
+- `docs/nextjs-content-readiness.md` — 5-dim readiness (`84/100`).
 - `docs/adr/ADR-001-nextjs-semantic-dto-boundary.md`
 - `docs/adr/ADR-002-nextjs-v1-contact-and-system-pages.md`
 - `docs/adr/ADR-003-postgres-readiness-indexes.md`
@@ -574,7 +574,7 @@ Files:
 - `backend/database/postgres-readiness/001_pages_lookup_indexes.sql`
 - `backend/database/postgres-readiness/002_tag_slug_indexes.sql`
 
-Applied verbatim on the production database after the cutover. Do not run inside a transaction block (the scripts rely on `CREATE INDEX CONCURRENTLY`). Pair `002_tag_slug_indexes.sql` Option A with the non-localized Tag slug decision in §4.2.
+Applied verbatim on the production database after the cutover. Do not run inside a transaction block (the scripts rely on `CREATE INDEX CONCURRENTLY`). The tag lookup index is `tags(locale, slug)` because localized rows duplicate canonical slugs.
 
 Validation after application (per §3.3):
 
@@ -737,35 +737,14 @@ The detail belongs to the Next.js scaffolding task. This appendix exists so that
 }
 ```
 
-**After (recommended — Option A, canonical non-localized slug):**
+**After (v1 recommendation):** keep the schema shape above, keep `slug` required and non-localized, and make the production database lookup index locale-scoped:
 
-```json
-"slug": {
-  "type": "uid",
-  "targetField": "name",
-  "required": true,
-  "pluginOptions": {
-    "i18n": { "localized": false }
-  }
-}
+```sql
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_tags_locale_slug
+  ON tags (locale, slug);
 ```
 
-`uid` type in Strapi v5 auto-derives from `targetField`, enforces DB-level uniqueness, and preserves the `required: true` contract. This matches `002_tag_slug_indexes.sql` Option A.
-
-**Alternative (Option B — localized slugs per locale):**
-
-```json
-"slug": {
-  "type": "uid",
-  "targetField": "name",
-  "required": true,
-  "pluginOptions": {
-    "i18n": { "localized": true }
-  }
-}
-```
-
-Only adopt Option B if the business wants distinct `/el/tags/...` and `/ru/tags/...` slugs. Keeps uniqueness per locale. Pair with `002_tag_slug_indexes.sql` Option B. **Recommendation: Option A.**
+This matches the current live data: translated tag rows intentionally share canonical slugs across `el` and `ru`. A later schema phase can consider `uid`, but it should not be coupled to the Next.js v1 launch.
 
 ---
 
@@ -780,7 +759,7 @@ Only adopt Option B if the business wants distinct `/el/tags/...` and `/ru/tags/
 | §6 (SEO surface) | **net-new to this audit** — `docs/NEXTJS_SLUG_REDIRECTS_REMINDER.md` covers redirects only |
 | §7 (migration quality) | `docs/strapi-nextjs-audit.md`, `locale_pair_audit.md`, `strapi_injection_readiness.md` |
 | §8 (pre-Next.js checklist) | extends `docs/nextjs-content-readiness.md` → Next Plan |
-| §9 (readiness score) | extends `docs/nextjs-content-readiness.md` (`81/100`) with a 6-dim rubric |
+| §9 (readiness score) | extends `docs/nextjs-content-readiness.md` (`84/100`) with a 6-dim rubric |
 | §10 (roadmap) | extends `docs/strapi-nextjs-audit.md` → Rollout Plan |
 
 ---

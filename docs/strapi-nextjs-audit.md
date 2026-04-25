@@ -4,7 +4,7 @@
 
 - Decision: `CONDITIONAL GO` for a new Next.js App Router frontend.
 - Safe path: consume the semantic page contract only: `pageType`, `layoutVariant`, `pageSections` or the one named section field for that page type.
-- Not ready for a full parity cutover yet: localized structural drift, the SEO review queue, and a few content-quality gaps still need cleanup.
+- Not ready for a full parity cutover yet: localized structural drift remains by design, while the SEO review queue, social cleanup, and production database hardening still need closure.
 
 This document is the current live-state source of truth for the populated Strapi system. The older `/Users/bagtyyar/Projects/gemini-export/strapi_injection_readiness.md` document remains useful as historical pre-injection context, but it no longer describes the current populated database.
 
@@ -37,6 +37,8 @@ For the current rollout score, structural review manifest, and production-harden
 | `externalUrl` mismatches | `1` |
 
 These counts are the main reason structural fields should remain localized for now. De-localizing them before cleanup would freeze bad data into the frontend contract.
+
+Post-parent-repair note: the localized parent mismatches are now source-authenticated. Published source-parent integrity issues are `0`, so the remaining parent differences should be treated as localized IA, not missing relations.
 
 ## Payload Audit
 
@@ -117,6 +119,7 @@ Representative published payload summaries from the live document service:
   - `40/40` linked resources have `targetPage`
 - Structured content is present for FAQ, gallery, and contact pages without needing legacy `pageBlocks`.
 - Tags now expose a canonical `slug` in the public Tag API.
+- Published pages whose legacy parent is non-root now all have a matching Strapi `parentPage` relation.
 
 ### What Still Needs Cleanup
 
@@ -241,7 +244,7 @@ flowchart LR
 1. Add production-grade indexes before shared/prod rollout:
    - `pages(locale, slug, published_at)`
    - `pages(locale, page_type, layout_variant, published_at, menu_index)`
-   - `tags(slug)` or `tags(locale, slug)` depending on the final DB strategy
+   - `tags(locale, slug)`
 2. Move to PostgreSQL before non-local/shared deployment.
 3. Keep schema and data migrations separate when those indexes and production DB changes are introduced.
 
@@ -255,8 +258,8 @@ flowchart LR
 
 ### Phase 2: Content cleanup
 
-- Review the source-alignment manifest before changing any localized structural fields.
-- Fix the parent-link and IA drift cases that are not source-authenticated.
+- Keep source-authenticated localized structural differences as-is for v1.
+- Treat `nextjs_parent_fix_plan.json` as the source-parent integrity gate; it should stay at `0` pending updates.
 - Resolve the SEO review queue before content freeze.
 - Backfill clinic coordinates only if map UI becomes part of a later release.
 

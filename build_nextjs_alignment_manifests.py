@@ -7,6 +7,7 @@ source only. The generated artifacts are intentionally operational:
 - `nextjs_menu_title_backfill_plan.json`
 - `nextjs_seo_review_manifest.json`
 - `nextjs_source_alignment_manifest.json`
+- `nextjs_parent_fix_plan.json`
 - `nextjs_page_contract_fix_plan.json`
 - `nextjs_pageblocks_cleanup_batch_a.json`
 - `nextjs_pageblocks_cleanup_batch_b.json`
@@ -30,6 +31,7 @@ CHECKPOINT_PATH = ROOT / "checkpoint.json"
 MENU_TITLE_PLAN_PATH = ROOT / "nextjs_menu_title_backfill_plan.json"
 SEO_REVIEW_PATH = ROOT / "nextjs_seo_review_manifest.json"
 SOURCE_ALIGNMENT_PATH = ROOT / "nextjs_source_alignment_manifest.json"
+PARENT_FIX_PLAN_PATH = ROOT / "nextjs_parent_fix_plan.json"
 CONTRACT_FIX_PLAN_PATH = ROOT / "nextjs_page_contract_fix_plan.json"
 PAGEBLOCKS_BATCH_A_PATH = ROOT / "nextjs_pageblocks_cleanup_batch_a.json"
 PAGEBLOCKS_BATCH_B_PATH = ROOT / "nextjs_pageblocks_cleanup_batch_b.json"
@@ -82,6 +84,7 @@ def current_pages(connection: sqlite3.Connection) -> list[dict[str, Any]]:
             p.page_type,
             p.layout_variant,
             p.template_id,
+            p.menu_index,
             {menu_title_select},
             COALESCE(seo.meta_title, '') AS seo_meta_title,
             parent.document_id AS parent_document_id,
@@ -220,6 +223,130 @@ def build_legacy_duplication_manifest(
     return sorted(manifest_by_document.values(), key=lambda item: item["documentId"])
 
 
+def build_parent_fix_plan(
+    resources: list[dict[str, Any]],
+    checkpoint: dict[str, Any],
+    current_by_doc_locale: dict[tuple[str, str], dict[str, Any]],
+) -> dict[str, Any]:
+    planned_updates: list[dict[str, Any]] = []
+    unresolved: list[dict[str, Any]] = []
+    checkpoint_pages = checkpoint.get("pages") or {}
+
+    for resource in resources:
+        context_key = str(resource.get("context_key") or "")
+        if context_key not in {"web", "rus"}:
+            continue
+
+        locale = context_to_locale(context_key)
+        resource_id = int(resource["id"])
+        source_parent_id = int(resource.get("parent") or 0)
+        if source_parent_id == 0:
+            continue
+
+        document_id = (checkpoint_pages.get(context_key) or {}).get(str(resource_id))
+        if not document_id:
+            continue
+
+        current_page = current_by_doc_locale.get((str(document_id), locale))
+        if not current_page:
+            continue
+
+        expected_parent_document_id = (checkpoint_pages.get(context_key) or {}).get(
+            str(source_parent_id)
+        )
+        if not expected_parent_document_id:
+            unresolved.append(
+                {
+                    "documentId": str(document_id),
+                    "locale": locale,
+                    "sourceResourceId": resource_id,
+                    "sourceParentResourceId": source_parent_id,
+                    "slug": current_page.get("slug"),
+                    "title": current_page.get("title"),
+                    "reason": "source-parent-not-imported",
+                }
+            )
+            continue
+
+        expected_parent_page = current_by_doc_locale.get((str(expected_parent_document_id), locale))
+        if not expected_parent_page:
+            unresolved.append(
+                {
+                    "documentId": str(document_id),
+                    "locale": locale,
+                    "sourceResourceId": resource_id,
+                    "sourceParentResourceId": source_parent_id,
+                    "expectedParentDocumentId": str(expected_parent_document_id),
+                    "slug": current_page.get("slug"),
+                    "title": current_page.get("title"),
+                    "reason": "source-parent-not-published-in-locale",
+                }
+            )
+            continue
+
+        current_parent_document_id = current_page.get("parent_document_id")
+        if current_parent_document_id == expected_parent_document_id:
+            continue
+
+        planned_updates.append(
+            {
+                "documentId": str(document_id),
+                "locale": locale,
+                "sourceResourceId": resource_id,
+                "sourceParentResourceId": source_parent_id,
+                "slug": current_page.get("slug"),
+                "title": current_page.get("title"),
+                "currentParentDocumentId": current_parent_document_id,
+                "expectedParentDocumentId": str(expected_parent_document_id),
+                "expectedParentSlug": expected_parent_page.get("slug"),
+                "expectedParentTitle": expected_parent_page.get("title"),
+                "menuIndex": current_page.get("menu_index"),
+                "hasPublished": bool(current_page.get("has_published")),
+                "payload": {
+                    "parentPage": str(expected_parent_document_id),
+                },
+            }
+        )
+
+    by_expected_parent = Counter(
+        update["expectedParentDocumentId"] for update in planned_updates
+    )
+    by_locale = Counter(update["locale"] for update in planned_updates)
+
+    return {
+        "summary": {
+            "plannedCount": len(planned_updates),
+            "unresolvedCount": len(unresolved),
+            "byLocale": dict(by_locale),
+            "byExpectedParentDocumentId": dict(by_expected_parent),
+            "note": (
+                "Plan covers published pages whose original source parent is non-root but "
+                "whose current Strapi parent relation is missing or different."
+            ),
+        },
+        "plannedUpdates": planned_updates,
+        "unresolved": unresolved,
+    }
+
+
+def expected_contract_for_current_page(
+    logical_page: page_model.LogicalPage,
+    current_page: dict[str, Any] | None,
+    page_blocks: list[dict[str, Any]],
+    field_counts: dict[int, dict[str, int]],
+) -> tuple[dict[str, Any] | None, str | None]:
+    if current_page is not None:
+        current_page_type = str(current_page.get("page_type") or "")
+        semantic_field = SEMANTIC_FIELDS.get(current_page_type)
+        if semantic_field and field_counts.get(logical_page.entity_id, {}).get(semantic_field, 0) > 0:
+            return {
+                "pageType": current_page_type,
+                "layoutVariant": current_page.get("layout_variant"),
+            }, None
+
+    return page_model._classify_page(logical_page, page_blocks)
+
+
 def main() -> int:
     resources = load_json(TRANSFORMED_PATH)
     checkpoint = load_json(CHECKPOINT_PATH)
@@ -341,7 +468,12 @@ def main() -> int:
         current_page = current_by_doc_locale.get((logical_page.document_id, logical_page.locale))
         if not current_page:
             continue
-        payload, reason = page_model._classify_page(logical_page, page_blocks.get(logical_page.entity_id, []))
+        payload, reason = expected_contract_for_current_page(
+            logical_page,
+            current_page,
+            page_blocks.get(logical_page.entity_id, []),
+            field_counts,
+        )
         if payload is None or reason is not None:
             contract_skipped.append(
                 {
@@ -392,8 +524,9 @@ def main() -> int:
                 "plannedCount": len(contract_plan_updates),
                 "skippedCount": len(contract_skipped),
                 "note": (
-                    "Current Strapi pageType/layoutVariant values already match the legacy-block classifier "
-                    "for every classifiable locale. Cross-locale differences are not safe bulk-fix targets."
+                    "Current Strapi pageType/layoutVariant values match the semantic section contract "
+                    "or the remaining legacy-block classifier for every classifiable locale. "
+                    "Cross-locale differences are not safe bulk-fix targets."
                 ),
             },
             "logicalPageIssues": logical_page_issues,
@@ -433,9 +566,11 @@ def main() -> int:
             expected_contract = None
             contract_reason = None
             if logical_page is not None:
-                expected_contract, contract_reason = page_model._classify_page(
+                expected_contract, contract_reason = expected_contract_for_current_page(
                     logical_page,
+                    current_page,
                     page_blocks.get(logical_page.entity_id, []),
+                    field_counts,
                 )
             per_locale[locale] = {
                 "sourceResourceId": int(source_resource["id"]) if source_resource else None,
@@ -512,6 +647,11 @@ def main() -> int:
             },
             "documents": source_alignment_documents,
         },
+    )
+
+    dump_json(
+        PARENT_FIX_PLAN_PATH,
+        build_parent_fix_plan(resources, checkpoint, current_by_doc_locale),
     )
 
     batch_a_documents = [item for item in legacy_duplication_manifest if len(item["locales"]) == 1]

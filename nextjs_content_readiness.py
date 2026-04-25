@@ -21,6 +21,7 @@ LEGACY_MANIFEST_PATH = ROOT / "nextjs_legacy_cleanup_manifest.json"
 MENU_TITLE_PLAN_PATH = ROOT / "nextjs_menu_title_backfill_plan.json"
 SEO_REVIEW_PATH = ROOT / "nextjs_seo_review_manifest.json"
 SOURCE_ALIGNMENT_PATH = ROOT / "nextjs_source_alignment_manifest.json"
+PARENT_FIX_PLAN_PATH = ROOT / "nextjs_parent_fix_plan.json"
 CONTRACT_FIX_PLAN_PATH = ROOT / "nextjs_page_contract_fix_plan.json"
 PAGEBLOCKS_BATCH_A_PATH = ROOT / "nextjs_pageblocks_cleanup_batch_a.json"
 PAGEBLOCKS_BATCH_B_PATH = ROOT / "nextjs_pageblocks_cleanup_batch_b.json"
@@ -134,6 +135,99 @@ def published_pages(connection: sqlite3.Connection) -> list[dict[str, Any]]:
         """,
     )
     return [dict(row) for row in rows]
+
+
+def context_to_locale(context_key: str) -> str:
+    return "el" if context_key == "web" else "ru"
+
+
+def source_parent_integrity(
+    resources: list[dict[str, Any]],
+    checkpoint: dict[str, Any],
+    pages: list[dict[str, Any]],
+) -> dict[str, Any]:
+    current_by_doc_locale = {
+        (str(page["document_id"]), str(page["locale"])): page
+        for page in pages
+    }
+    checkpoint_pages = checkpoint.get("pages") or {}
+    issues: list[dict[str, Any]] = []
+    unresolved: list[dict[str, Any]] = []
+
+    for resource in resources:
+        context_key = str(resource.get("context_key") or "")
+        if context_key not in {"web", "rus"}:
+            continue
+
+        source_parent_id = int(resource.get("parent") or 0)
+        if source_parent_id == 0:
+            continue
+
+        locale = context_to_locale(context_key)
+        source_resource_id = int(resource["id"])
+        document_id = (checkpoint_pages.get(context_key) or {}).get(str(source_resource_id))
+        if not document_id:
+            continue
+
+        current_page = current_by_doc_locale.get((str(document_id), locale))
+        if not current_page:
+            continue
+
+        expected_parent_document_id = (checkpoint_pages.get(context_key) or {}).get(
+            str(source_parent_id)
+        )
+        if not expected_parent_document_id:
+            unresolved.append(
+                {
+                    "documentId": str(document_id),
+                    "locale": locale,
+                    "sourceResourceId": source_resource_id,
+                    "sourceParentResourceId": source_parent_id,
+                    "slug": current_page.get("slug"),
+                    "reason": "source-parent-not-imported",
+                }
+            )
+            continue
+
+        expected_parent_page = current_by_doc_locale.get((str(expected_parent_document_id), locale))
+        if not expected_parent_page:
+            unresolved.append(
+                {
+                    "documentId": str(document_id),
+                    "locale": locale,
+                    "sourceResourceId": source_resource_id,
+                    "sourceParentResourceId": source_parent_id,
+                    "expectedParentDocumentId": str(expected_parent_document_id),
+                    "slug": current_page.get("slug"),
+                    "reason": "source-parent-not-published-in-locale",
+                }
+            )
+            continue
+
+        if current_page.get("parent_document_id") == expected_parent_document_id:
+            continue
+
+        issues.append(
+            {
+                "documentId": str(document_id),
+                "locale": locale,
+                "sourceResourceId": source_resource_id,
+                "sourceParentResourceId": source_parent_id,
+                "slug": current_page.get("slug"),
+                "title": current_page.get("title"),
+                "currentParentDocumentId": current_page.get("parent_document_id"),
+                "expectedParentDocumentId": str(expected_parent_document_id),
+                "expectedParentSlug": expected_parent_page.get("slug"),
+                "expectedParentTitle": expected_parent_page.get("title"),
+            }
+        )
+
+    return {
+        "issueCount": len(issues),
+        "unresolvedCount": len(unresolved),
+        "issues": issues,
+        "unresolved": unresolved,
+    }
 
 
 def menu_title_status(connection: sqlite3.Connection, resources: list[dict[str, Any]], checkpoint: dict[str, Any]) -> dict[str, int]:
@@ -561,18 +655,18 @@ def score_contract_api(
 def score_routing_navigation(
     *,
     collision_count: int,
-    structural_drift_counts: dict[str, int],
+    parent_integrity_issue_count: int,
+    menu_mismatch_count: int,
     menu_title_status_data: dict[str, int],
 ) -> int:
     score = 20
     if collision_count > 0:
         score -= 8
-    if structural_drift_counts.get("parentDocumentId", 0) > 0:
-        score -= 1
-    menu_mismatches = structural_drift_counts.get("menuIndex", 0)
-    if menu_mismatches > 50:
+    if parent_integrity_issue_count > 0:
         score -= 2
-    elif menu_mismatches > 0:
+    if menu_mismatch_count > 50:
+        score -= 2
+    elif menu_mismatch_count > 0:
         score -= 1
     if int(menu_title_status_data.get("pending") or 0) > 0:
         score -= 1
@@ -649,6 +743,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     menu_title_plan = MENU_TITLE_PLAN_PATH.name
     seo_review_manifest = SEO_REVIEW_PATH.name
     source_alignment_manifest = SOURCE_ALIGNMENT_PATH.name
+    parent_fix_plan = PARENT_FIX_PLAN_PATH.name
     contract_fix_plan = CONTRACT_FIX_PLAN_PATH.name
     batch_a_manifest = PAGEBLOCKS_BATCH_A_PATH.name
     batch_b_manifest = PAGEBLOCKS_BATCH_B_PATH.name
@@ -668,7 +763,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         "| Area | Score | Why |",
         "| --- | ---: | --- |",
         f"| Contract/API | `{breakdown['contractApi']}/30` | Semantic contract is populated, legacy fields are private in REST, tags expose canonical `slug`, `menuTitle` is part of the page schema, and a DTO/verifier now exist. |",
-        f"| Routing/navigation | `{breakdown['routingNavigation']}/20` | No published slug collisions and flat locale-prefixed routing is still valid, but localized parent/menu drift remains part of the editorial IA review queue. |",
+        f"| Routing/navigation | `{breakdown['routingNavigation']}/20` | No published slug collisions and flat locale-prefixed routing is valid; source-parent integrity issues pending: `{metrics['sourceParentIntegrityIssues']}`. |",
         f"| Localization parity | `{breakdown['localizationParity']}/20` | `{metrics['bilingualDocuments']}` bilingual docs exist, and the current `{metrics['structuralDriftDocuments']}` structural drifts are now documented as localized source truth rather than assumed migration bugs. |",
         f"| Content quality | `{breakdown['contentQuality']}/20` | Contact placeholders, malformed clinics, legacy `<font>` wrappers, and duplicate `pageBlocks` were removed; social legacy handling and missing clinic coordinates remain. |",
         f"| Operational readiness | `{breakdown['operationalReadiness']}/10` | Forward-only Postgres index artifacts exist, but the live rehearsal DB still full-scans key queries and remains SQLite-only. |",
@@ -699,6 +794,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- Published pages: `{metrics['publishedPages']}` localized rows across `{metrics['canonicalDocuments']}` canonical docs.",
         f"- Bilingual docs: `{metrics['bilingualDocuments']}`. Greek-only docs: `{metrics['greekOnlyDocuments']}`. Russian-only docs: `{metrics['russianOnlyDocuments']}`.",
         f"- Structural drift docs: `{metrics['structuralDriftDocuments']}`.",
+        f"- Published source-parent integrity issues: `{metrics['sourceParentIntegrityIssues']}`.",
         f"- Legacy semantic + `pageBlocks` duplication: `{metrics['legacyDuplicationLocalized']}` localized pages across `{metrics['legacyDuplicationCanonical']}` canonical docs.",
         f"- `menuTitle` backfill status: `{metrics['menuTitleBackfillApplied']}` applied, `{metrics['menuTitleBackfillPending']}` pending.",
         f"- SEO review queue: `{metrics['seoReviewDocuments']}` localized pages where legacy `longtitle` still adds signal over the current `seo.metaTitle`.",
@@ -722,17 +818,18 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"- Structural review manifest: [{structural_manifest}](../{structural_manifest})",
             f"- Legacy cleanup manifest: [{legacy_manifest}](../{legacy_manifest})",
             f"- Source alignment manifest: [{source_alignment_manifest}](../{source_alignment_manifest})",
+            f"- Parent-fix plan: [{parent_fix_plan}](../{parent_fix_plan})",
             f"- Contract-fix plan: [{contract_fix_plan}](../{contract_fix_plan})",
             f"- `menuTitle` backfill plan: [{menu_title_plan}](../{menu_title_plan})",
             f"- SEO review manifest: [{seo_review_manifest}](../{seo_review_manifest})",
             f"- PageBlocks cleanup batches: [{batch_a_manifest}](../{batch_a_manifest}), [{batch_b_manifest}](../{batch_b_manifest})",
             "- Next DTO example: [next_page_dto.ts](../examples/next_page_dto.ts)",
-            "- ADRs: [ADR-001](./adr/ADR-001-nextjs-semantic-dto-boundary.md), [ADR-002](./adr/ADR-002-nextjs-v1-contact-and-system-pages.md), [ADR-003](./adr/ADR-003-postgres-readiness-indexes.md), [ADR-004](./adr/ADR-004-flat-locale-routes-and-localized-navigation-labels.md)",
+            "- ADRs: [ADR-001](./adr/ADR-001-nextjs-semantic-dto-boundary.md), [ADR-002](./adr/ADR-002-nextjs-v1-contact-and-system-pages.md), [ADR-003](./adr/ADR-003-postgres-readiness-indexes.md), [ADR-004](./adr/ADR-004-flat-locale-routes-and-localized-navigation-labels.md), [ADR-005](./adr/ADR-005-repair-source-parent-integrity-before-postgres-cutover.md)",
             "- Postgres readiness SQL: [001_pages_lookup_indexes.sql](../backend/database/postgres-readiness/001_pages_lookup_indexes.sql), [002_tag_slug_indexes.sql](../backend/database/postgres-readiness/002_tag_slug_indexes.sql)",
             "",
             "## Next Plan",
             "",
-            "1. Keep `pageType`, `layoutVariant`, `templateId`, and `parentPage` localized until the source-alignment manifest is editorially reviewed.",
+            "1. Keep `pageType`, `layoutVariant`, `templateId`, and localized `parentPage` differences when the source-parent integrity check is clean.",
             "2. Resolve the SEO review queue and the remaining `Google Plus` social row before content freeze.",
             "3. Build the Next.js app against the DTO boundary only: locale-scoped navigation, flat locale routes, semantic page rendering, no maps in v1, and frontend-native `404`, `search-results`, and `sitemap` routes.",
             "4. Rehearse the PostgreSQL index rollout on a copy before any shared or production deployment.",
@@ -755,11 +852,13 @@ def main() -> int:
     menu_title_plan = load_optional_json(MENU_TITLE_PLAN_PATH)
     seo_review_manifest = load_optional_json(SEO_REVIEW_PATH)
     source_alignment_manifest = load_optional_json(SOURCE_ALIGNMENT_PATH)
+    parent_fix_plan = load_optional_json(PARENT_FIX_PLAN_PATH)
     contract_fix_plan = load_optional_json(CONTRACT_FIX_PLAN_PATH)
     batch_a_manifest = load_optional_json(PAGEBLOCKS_BATCH_A_PATH)
     batch_b_manifest = load_optional_json(PAGEBLOCKS_BATCH_B_PATH)
 
     pages = published_pages(connection)
+    parent_integrity_data = source_parent_integrity(transformed_resources, checkpoint, pages)
     field_counts = component_field_counts(connection)
     block_counts = page_block_component_counts(connection)
     live_menu_title_status = menu_title_status(connection, transformed_resources, checkpoint)
@@ -844,7 +943,8 @@ def main() -> int:
     )
     routing_navigation_score = score_routing_navigation(
         collision_count=len(slug_collisions(connection)),
-        structural_drift_counts=structural_counts,
+        parent_integrity_issue_count=int(parent_integrity_data["issueCount"]),
+        menu_mismatch_count=int(structural_counts.get("menuIndex", 0)),
         menu_title_status_data=live_menu_title_status,
     )
     localization_parity_score = score_localization_parity(
@@ -895,6 +995,9 @@ def main() -> int:
         "publishedSlugCollisionCount": len(slug_collisions(connection)),
         "structuralDriftDocuments": len(structural_manifest),
         "structuralDriftCounts": structural_counts,
+        "sourceParentIntegrityIssues": int(parent_integrity_data["issueCount"]),
+        "sourceParentIntegrityUnresolved": int(parent_integrity_data["unresolvedCount"]),
+        "parentFixPlannedCount": int((parent_fix_plan.get("summary") or {}).get("plannedCount") or 0),
         "legacyDuplicationLocalized": legacy_localized_hits,
         "legacyDuplicationCanonical": len(legacy_manifest),
         "legacyDuplicationByPageType": legacy_page_type_counts,
@@ -914,13 +1017,20 @@ def main() -> int:
         "contactDocumentId": CONTACT_DOCUMENT_ID,
     }
 
-    remaining_risks = [
+    remaining_risks = []
+    if int(parent_integrity_data["issueCount"]) > 0:
+        remaining_risks.append(
+            f"{int(parent_integrity_data['issueCount'])} published pages still have a non-root legacy parent but no matching Strapi parent relation."
+        )
+    remaining_risks.extend(
+        [
         f"{len(structural_manifest)} bilingual documents still drift on template, page type, layout, or parent linkage, even though {(source_alignment_manifest.get('summary') or {}).get('sourceAuthenticatedDocumentCount', 0)} are now authenticated against source.",
         f"{int((seo_review_manifest.get('summary') or {}).get('count') or 0)} localized pages still need editorial review because legacy longtitle adds SEO signal over the current seo.metaTitle.",
         f"{len(unresolved_social_rows)} published social link still cannot be mapped to a supported platform and should stay hidden in v1.",
         f"{len(clinic_issue_data['missingCoordinates'])} published clinic cards still lack coordinates, so map UI remains out of scope for v1.",
         "Route lookup and service listing queries still full-scan the current SQLite rehearsal DB until the Postgres index rollout is applied.",
-    ]
+        ]
+    )
 
     report = {
         "score": {
@@ -979,6 +1089,7 @@ def main() -> int:
                 "menuTitleBackfillPlan": menu_title_plan,
                 "seoReviewManifest": seo_review_manifest,
                 "sourceAlignmentManifest": source_alignment_manifest,
+                "parentFixPlan": parent_fix_plan,
                 "contractFixPlan": contract_fix_plan,
                 "pageBlocksCleanupBatchA": batch_a_manifest,
                 "pageBlocksCleanupBatchB": batch_b_manifest,
@@ -987,6 +1098,7 @@ def main() -> int:
                 "pages": current_page_indexes,
                 "tags": current_tag_indexes,
             },
+            "sourceParentIntegrity": parent_integrity_data,
         },
         "remainingRisks": remaining_risks,
         "artifacts": {
@@ -995,6 +1107,7 @@ def main() -> int:
             "menuTitleBackfillPlan": str(MENU_TITLE_PLAN_PATH.relative_to(ROOT)),
             "seoReviewManifest": str(SEO_REVIEW_PATH.relative_to(ROOT)),
             "sourceAlignmentManifest": str(SOURCE_ALIGNMENT_PATH.relative_to(ROOT)),
+            "parentFixPlan": str(PARENT_FIX_PLAN_PATH.relative_to(ROOT)),
             "contractFixPlan": str(CONTRACT_FIX_PLAN_PATH.relative_to(ROOT)),
             "pageBlocksCleanupBatchA": str(PAGEBLOCKS_BATCH_A_PATH.relative_to(ROOT)),
             "pageBlocksCleanupBatchB": str(PAGEBLOCKS_BATCH_B_PATH.relative_to(ROOT)),

@@ -1,0 +1,141 @@
+{
+  "summary": {
+    "auditedAt": "2026-04-25",
+    "source": "audit_nextjs_content_hygiene.py",
+    "potentialBrokenInternalLinks": 14,
+    "pageLinkOccurrences": 12,
+    "mediaReviewOccurrences": 2,
+    "status": "review-required-before-data-migration",
+    "note": "This manifest is durable planning input only. It does not mutate Strapi content."
+  },
+  "proposedRewrites": [
+    {
+      "from": "/facelift",
+      "to": "/facelifting",
+      "reason": "Published target slug exists; source href is a legacy alias."
+    },
+    {
+      "from": "/vlefaroplastiki",
+      "to": "/blepharoplasty",
+      "reason": "Published target slug exists; source href is a legacy alias."
+    },
+    {
+      "from": "/otoplastiki",
+      "to": "/otoplastika-v-athinah",
+      "reason": "Published target slug exists; source href is a legacy alias."
+    },
+    {
+      "from": "/anorthosi-laimou",
+      "to": "/necklift",
+      "reason": "Published target slug exists; source href is a legacy alias."
+    },
+    {
+      "from": "/diorthosi-loviou-aytiou",
+      "to": "/ear-lobe-repair",
+      "reason": "Published target slug exists; source href is a legacy alias."
+    },
+    {
+      "from": "/silhouette-soft",
+      "to": "/silhouette-soft-afini",
+      "reason": "Published target slug exists; source href is a legacy alias."
+    },
+    {
+      "from": "/page-380",
+      "to": "/blefaroplastika-plastika-glaz",
+      "reason": "Russian content links to a legacy numeric page path; target is the current published Russian parent page slug."
+    }
+  ],
+  "mediaReviewItems": [
+    {
+      "from": "files/images/diseases/hoarseness-of-voice/vocal cord nodule.jpg",
+      "action": "upload-media-review",
+      "reason": "Legacy image path is not a published Strapi upload URL. Confirm whether the file exists in uploads before rewriting."
+    }
+  ],
+  "occurrences": [
+    {
+      "source": "page:el:endoskopiki-facelift-browlift:bw2ac3p104jdjrr53cr9ew1r",
+      "field": "content",
+      "href": "/facelift",
+      "proposedTarget": "/facelifting"
+    },
+    {
+      "source": "page:el:endoskopiki-facelift-browlift:bw2ac3p104jdjrr53cr9ew1r",
+      "field": "content",
+      "href": "/vlefaroplastiki",
+      "proposedTarget": "/blepharoplasty"
+    },
+    {
+      "source": "page:el:facelifting:co5cdztycix2a73ev36nowjm",
+      "field": "content",
+      "href": "/vlefaroplastiki",
+      "proposedTarget": "/blepharoplasty"
+    },
+    {
+      "source": "page:el:epemvaseis:a113qd6vmow3krxzimy1rtut",
+      "field": "content",
+      "href": "/otoplastiki",
+      "proposedTarget": "/otoplastika-v-athinah"
+    },
+    {
+      "source": "page:el:epemvaseis:a113qd6vmow3krxzimy1rtut",
+      "field": "content",
+      "href": "/anorthosi-laimou",
+      "proposedTarget": "/necklift"
+    },
+    {
+      "source": "page:el:epemvaseis:a113qd6vmow3krxzimy1rtut",
+      "field": "content",
+      "href": "/otoplastiki",
+      "proposedTarget": "/otoplastika-v-athinah"
+    },
+    {
+      "source": "page:el:epemvaseis:a113qd6vmow3krxzimy1rtut",
+      "field": "content",
+      "href": "/diorthosi-loviou-aytiou",
+      "proposedTarget": "/ear-lobe-repair"
+    },
+    {
+      "source": "page:el:mi-epemvatiki-rinoplastiki:hfnflkry1geyp53cjrbh15mw",
+      "field": "content",
+      "href": "/silhouette-soft",
+      "proposedTarget": "/silhouette-soft-afini"
+    },
+    {
+      "source": "page:el:plasticheskaia-xeirourgia-otoplastika:qozcj7r2p75p6i7glfew2bey",
+      "field": "content",
+      "href": "/otoplastiki",
+      "proposedTarget": "/otoplastika-v-athinah"
+    },
+    {
+      "source": "page:el:yperesies:jdsakp5pldnhyiu5bv60mbii",
+      "field": "content",
+      "href": "/silhouette-soft",
+      "proposedTarget": "/silhouette-soft-afini"
+    },
+    {
+      "source": "page:el:yperesies:jdsakp5pldnhyiu5bv60mbii",
+      "field": "content",
+      "href": "/diorthosi-loviou-aytiou",
+      "proposedTarget": "/ear-lobe-repair"
+    },
+    {
+      "source": "page:ru:yperesies:jdsakp5pldnhyiu5bv60mbii",
+      "field": "content",
+      "href": "/page-380",
+      "proposedTarget": "/blefaroplastika-plastika-glaz"
+    },
+    {
+      "source": "component:components_items_accordion_items:223",
+      "field": "content",
+      "href": "files/images/diseases/hoarseness-of-voice/vocal cord nodule.jpg",
+      "proposedTarget": null
+    },
+    {
+      "source": "component:components_items_accordion_items:439",
+      "field": "content",
+      "href": "files/images/diseases/hoarseness-of-voice/vocal cord nodule.jpg",
+      "proposedTarget": null
+    }
+  ]
+}

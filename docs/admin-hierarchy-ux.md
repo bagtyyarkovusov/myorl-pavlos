@@ -105,8 +105,12 @@ slug. We do **not** use `WRAPPER` for page-backed nodes anymore so `el` and
 **Path and `uiRouterKey`:** each item’s `uiRouterKey` matches the Page `slug`
 when the slug is set (empty slug falls back to a title-derived ASCII key).
 The home page (`slug` `index`) uses **`path` `/`** while `uiRouterKey` stays
-`index` so the Page slug and router key stay identical. Paths are always a
-single segment (never `parent/child`).
+`index` so the Page slug and router key stay identical. Stored item paths are
+kept as leaf segments in the sync payload, but the Navigation plugin render
+endpoint may return breadcrumb-style nested display paths such as
+`/plastika-litsa/fillers`. Next.js must treat `uiRouterKey` or the related
+Page `slug` as the flat route key and must not use rendered navigation `path`
+as the public URL.
 
 **`menuAttached`:** only **top-level** rows under the navigation shell use
 `menuAttached: true`; deeper descendants use `false` so mega-menus do not mark
@@ -136,10 +140,11 @@ stores.
 
 1. `GET /api/navigation/{slug}` (or the admin REST payload for the navigation)
    and confirm each item’s stored `path` is a single segment (except home `/`).
-2. Open **Navigation** in the admin: the card header for a nested page should
-   show **`/` + that page’s slug** (leaf only), not `parent-slug/child-slug`.
+2. `GET /api/navigation/render/navigation?type=TREE&locale=ru` can show nested
+   display paths; this is acceptable for menu display but not for Next.js route
+   construction.
 3. Open **Content Manager → Page** for that row: the **slug** field should match
-   the segment after the leading `/` on the nav card.
+   the item `uiRouterKey` and the final segment of the rendered path.
 
 After **bulk slug renames** (MODX parity), run
 [`slug_parity_analyze.py`](../slug_parity_analyze.py) /

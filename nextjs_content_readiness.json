@@ -1,7 +1,10 @@
 {
   "score": {
     "total": 84,
-    "baselineBeforeThisPass": 78
+    "baselineBeforeThisPass": 78,
+    "uiStartTotal": 85,
+    "uiStartAdjustment": 1,
+    "uiStartAdjustmentReason": "RU Navigation plugin sync is complete; dry-run reports 8 current root(s) -> 8 desired root(s), and stale newly-parented nav items are 0."
   },
   "breakdown": {
     "contractApi": 30,
@@ -30,6 +33,8 @@
     "parentFixPlannedCount": 0,
     "legacyDuplicationLocalized": 0,
     "legacyDuplicationCanonical": 0,
+    "legacyPageBlocksStorageRows": 358,
+    "legacyPageBlocksPublishedRows": 0,
     "legacyDuplicationByPageType": {},
     "menuTitleBackfillApplied": 21,
     "menuTitleBackfillPending": 0,
@@ -79,7 +84,23 @@
         "layoutVariant": "sitemap"
       }
     ],
-    "contactDocumentId": "nbsun7tvpb5x9cewbhpkvs84"
+    "contactDocumentId": "nbsun7tvpb5x9cewbhpkvs84",
+    "contentHygiene": {
+      "extractedLinks": 1422,
+      "potentialBrokenInternalLinks": 14,
+      "legacyHtmlSources": 259,
+      "fontSources": 78,
+      "inlineStyleSources": 174,
+      "iframeSources": 122,
+      "unsafeHtmlSources": 0,
+      "emptyContentLeaves": 0,
+      "navigationRenderRoots": {
+        "el": 7,
+        "ru": 8
+      },
+      "auditScript": "audit_nextjs_content_hygiene.py",
+      "repairManifest": "nextjs_internal_link_repair_manifest.json"
+    }
   },
   "checks": {
     "coreFieldsComplete": true,

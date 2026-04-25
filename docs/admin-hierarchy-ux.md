@@ -112,6 +112,11 @@ endpoint may return breadcrumb-style nested display paths such as
 Page `slug` as the flat route key and must not use rendered navigation `path`
 as the public URL.
 
+The current Next.js scaffold enforces this in
+[`frontend/src/lib/cms/dto.ts`](../frontend/src/lib/cms/dto.ts): `hrefForPage`
+builds URLs from `Page.locale` + `Page.slug`, while Navigation output is only
+used as display hierarchy.
+
 **`menuAttached`:** only **top-level** rows under the navigation shell use
 `menuAttached: true`; deeper descendants use `false` so mega-menus do not mark
 every nested row as attached to the primary menu. Set

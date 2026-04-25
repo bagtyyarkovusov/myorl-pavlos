@@ -2,7 +2,7 @@
 
 ## Verdict
 
-- Decision: `CONDITIONAL GO` for a new Next.js App Router frontend.
+- Decision: `CONDITIONAL GO` for the new Next.js App Router frontend now scaffolded under `/Users/bagtyyar/Projects/gemini-export/frontend`.
 - Safe path: consume the semantic page contract only: `pageType`, `layoutVariant`, `pageSections` or the one named section field for that page type.
 - Not ready for a full parity cutover yet: localized structural drift remains by design, while the SEO review queue, content-link hygiene, social cleanup, and production database hardening still need closure.
 
@@ -119,6 +119,8 @@ Representative published payload summaries from the live document service:
   - `40/40` linked resources have `targetPage`
 - Structured content is present for FAQ, gallery, and contact pages without needing legacy `pageBlocks`.
 - Tags now expose a canonical `slug` in the public Tag API.
+- `Page.slug` is now required in the Strapi schema and remains localized for flat frontend routes.
+- `shared.seo` now includes canonical URL, OG image, robots, and sitemap controls used by Next metadata and sitemap generation.
 - Published pages whose legacy parent is non-root now all have a matching Strapi `parentPage` relation.
 - The RU Navigation plugin tree has been synced from `Page.parentPage`; the post-sync dry-run reports `8 current root(s) -> 8 desired root(s)`.
 
@@ -127,7 +129,7 @@ Representative published payload summaries from the live document service:
 - `menuTitle` is now part of the page contract and `21/21` legacy menu-label rows were backfilled into live Strapi.
 - Duplicate published `pageBlocks` have been removed from the semantic page types, so Next.js no longer needs any legacy block fallback for live rendering.
 - Old `pageBlocks` component-link rows still exist internally (`358` storage rows, `0` attached to published pages). This is migration-safety storage, not a frontend contract.
-- The content hygiene audit found `14` potential internal broken hrefs and `259` sources with legacy HTML markers. These should be handled by a reviewed link-repair data migration and a sanitized Next.js HTML renderer, not by broad manual edits.
+- The content hygiene audit now finds `2` potential internal broken hrefs and `259` sources with legacy HTML markers. The reviewed page-link rewrites were applied; the remaining findings are the same legacy media path and need upload/media review before rewrite.
 - `13` localized pages still need editorial SEO review because legacy `longtitle` adds signal over the current `seo.metaTitle`.
 - Social links still need a frontend normalization strategy: the current v1-safe path is to derive platform in Next.js and suppress the one remaining legacy `Google Plus` entry.
 - Clinic coordinates are still missing from all `6/6` published semantic clinic cards, so maps should remain out of scope for v1.
@@ -162,6 +164,7 @@ Next.js should treat the following fields as the supported contract:
 - `sources`
 - `popUpClose`
 - the one semantic section field required by that page type
+- SEO subfields: `metaTitle`, `metaDescription`, `canonicalUrl`, `ogImage`, `robotsNoindex`, `robotsNofollow`, `sitemapExclude`, `sitemapPriority`, `sitemapChangeFrequency`
 
 ### Backend-Only Fields
 
@@ -217,12 +220,15 @@ Internal document-service and migration scripts can still see these fields. The 
 - Added forward-only PostgreSQL hardening SQL under `/Users/bagtyyar/Projects/gemini-export/backend/database/postgres-readiness/`.
 - Added `/Users/bagtyyar/Projects/gemini-export/docs/adr/ADR-004-flat-locale-routes-and-localized-navigation-labels.md` to lock the flat route and localized navigation-label strategy.
 - Added `/Users/bagtyyar/Projects/gemini-export/audit_nextjs_content_hygiene.py` and `/Users/bagtyyar/Projects/gemini-export/nextjs_internal_link_repair_manifest.json` to make pre-Next.js HTML/link hygiene measurable and reviewable.
+- Added `/Users/bagtyyar/Projects/gemini-export/frontend` as the production Next.js App Router scaffold with DTO normalization, flat routes, metadata, sitemap/robots, sanitized CMS HTML rendering, and authenticated revalidation.
+- Added `/Users/bagtyyar/Projects/gemini-export/nextjs_readiness_gate.py` as the stable readiness gate and `/Users/bagtyyar/Projects/gemini-export/apply_nextjs_link_repair_manifest.py` as the dry-run-first link repair migration path.
+- Made `Page.slug` required, expanded `shared.seo`, and pinned Strapi CORS through `STRAPI_CORS_ORIGINS`.
 
 ## Architecture Recommendation
 
 ```mermaid
 flowchart LR
-  Next["Next.js App Router"] --> DTO["Page/Tag DTO Layer"]
+  Next["Next.js App Router\nfrontend/"] --> DTO["Page/Tag DTO Layer"]
   DTO --> REST["Strapi REST API"]
   REST --> Semantic["Semantic fields<br/>pageType + layoutVariant + named sections"]
   REST -. excludes .-> Legacy["templateId / pageBlocks / legacySourceResourceId"]
@@ -240,7 +246,7 @@ flowchart LR
 
 1. Fix bilingual structural drift before any de-localization project.
 2. Resolve the `13`-row SEO review manifest where legacy `longtitle` still improves metadata.
-3. Review and apply `nextjs_internal_link_repair_manifest.json` to clear the `14` potential internal broken hrefs.
+3. Review the remaining 2 legacy media-path findings, upload or map the asset, then rewrite those component links.
 4. Replace social-link `icon` with a `platform` field or derive platform from URL.
 5. Decide whether map UI is in v1. If yes, backfill clinic coordinates first.
 6. Review the remaining legacy `Google Plus` social entry and either replace it or keep it hidden in v1.

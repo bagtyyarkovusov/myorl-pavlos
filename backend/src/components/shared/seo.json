@@ -11,6 +11,44 @@
     },
     "metaDescription": {
       "type": "text"
+    },
+    "canonicalUrl": {
+      "type": "string"
+    },
+    "ogImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "robotsNoindex": {
+      "type": "boolean",
+      "default": false
+    },
+    "robotsNofollow": {
+      "type": "boolean",
+      "default": false
+    },
+    "sitemapExclude": {
+      "type": "boolean",
+      "default": false
+    },
+    "sitemapPriority": {
+      "type": "decimal"
+    },
+    "sitemapChangeFrequency": {
+      "type": "enumeration",
+      "enum": [
+        "always",
+        "hourly",
+        "daily",
+        "weekly",
+        "monthly",
+        "yearly",
+        "never"
+      ]
     }
   }
 }

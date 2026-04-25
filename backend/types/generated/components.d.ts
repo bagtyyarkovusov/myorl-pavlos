@@ -427,8 +427,19 @@ export interface SharedSeo extends Struct.ComponentSchema {
     displayName: 'SEO';
   };
   attributes: {
+    canonicalUrl: Schema.Attribute.String;
     metaDescription: Schema.Attribute.Text;
     metaTitle: Schema.Attribute.String;
+    ogImage: Schema.Attribute.Media<'images'>;
+    robotsNofollow: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    robotsNoindex: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    sitemapChangeFrequency: Schema.Attribute.Enumeration<
+      ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never']
+    >;
+    sitemapExclude: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    sitemapPriority: Schema.Attribute.Decimal;
   };
 }
 

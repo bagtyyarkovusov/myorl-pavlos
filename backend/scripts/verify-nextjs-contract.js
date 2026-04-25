@@ -6,10 +6,34 @@ const sqlite3 = require('better-sqlite3');
 const core = require('@strapi/core');
 
 const ROOT = path.resolve(__dirname, '..', '..');
+const BACKEND_ROOT = path.join(ROOT, 'backend');
 const DB_PATH = path.join(ROOT, 'backend', '.tmp', 'data.db');
 const PAGE_SCHEMA_PATH = path.join(ROOT, 'backend', 'src', 'api', 'page', 'content-types', 'page', 'schema.json');
 const TAG_SCHEMA_PATH = path.join(ROOT, 'backend', 'src', 'api', 'tag', 'content-types', 'tag', 'schema.json');
 const DTO_EXAMPLE_PATH = path.join(ROOT, 'examples', 'next_page_dto.ts');
+
+async function loadDotenv(filePath, { fillEmpty = false } = {}) {
+  const raw = await fs.readFile(filePath, 'utf8').catch(() => '');
+  if (!raw) {
+    return;
+  }
+
+  for (const line of raw.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) {
+      continue;
+    }
+    const [keyPart, ...valueParts] = trimmed.split('=');
+    const key = keyPart.trim();
+    const value = valueParts.join('=').trim().replace(/^['"]|['"]$/g, '');
+    if (!key) {
+      continue;
+    }
+    if (fillEmpty ? !process.env[key] : process.env[key] === undefined) {
+      process.env[key] = value;
+    }
+  }
+}
 
 function findPrivateKeys(value, hits = [], trail = '') {
   if (Array.isArray(value)) {
@@ -100,6 +124,10 @@ function legacyDuplicationCount(database) {
 }
 
 async function main() {
+  await loadDotenv(path.join(ROOT, '.env'));
+  await loadDotenv(path.join(BACKEND_ROOT, '.env'), { fillEmpty: true });
+  process.chdir(BACKEND_ROOT);
+
   const pageSchema = JSON.parse(await fs.readFile(PAGE_SCHEMA_PATH, 'utf8'));
   const tagSchema = JSON.parse(await fs.readFile(TAG_SCHEMA_PATH, 'utf8'));
   const database = sqlite3(DB_PATH, { readonly: true });

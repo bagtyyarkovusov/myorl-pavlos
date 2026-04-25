@@ -29,6 +29,7 @@ nav_sync_report.json
 dry_run_payloads.json
 parity_report.json
 page_model_migration*.json
+nextjs_internal_link_repair_apply_report.json
 
 # Local checkpoint backups (keep checkpoint.json tracked)
 checkpoint.json.bak-*

@@ -36,6 +36,7 @@
     "slug": {
       "type": "uid",
       "targetField": "title",
+      "required": true,
       "pluginOptions": {
         "i18n": {
           "localized": true

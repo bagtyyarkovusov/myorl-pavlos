@@ -10,7 +10,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 from collections import Counter
 from dataclasses import asdict, dataclass
@@ -18,13 +17,13 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
 
+from cms_audit import DEFAULT_SQLITE_DB_PATH, ROOT, connect_readonly, scalar
 from strapi_client import StrapiClient, StrapiError, load_strapi_env_from_dotenv
 
-ROOT = Path(__file__).resolve().parent
-DEFAULT_DB_PATH = ROOT / "backend" / ".tmp" / "data.db"
+DEFAULT_DB_PATH = DEFAULT_SQLITE_DB_PATH
 DEFAULT_REDIRECTS_PATH = ROOT / "slug_redirects_next.json"
 
-DEFAULT_ALLOWED_BROKEN_INTERNAL_LINKS = 14
+DEFAULT_ALLOWED_BROKEN_INTERNAL_LINKS = 2
 EXPECTED_NAVIGATION_ROOTS = {"el": 7, "ru": 8}
 INTERNAL_HOSTS = {
     "localhost",
@@ -84,21 +83,6 @@ class LegacyHtmlFinding:
     field: str
     markers: list[str]
     textLength: int
-
-
-def connect_readonly(db_path: Path) -> sqlite3.Connection:
-    uri = f"file:{db_path.resolve()}?mode=ro"
-    connection = sqlite3.connect(uri, uri=True)
-    connection.row_factory = sqlite3.Row
-    return connection
-
-
-def scalar(connection: sqlite3.Connection, sql: str, params: tuple[Any, ...] = ()) -> int:
-    row = connection.execute(sql, params).fetchone()
-    if row is None:
-        return 0
-    value = row[0]
-    return int(value or 0)
 
 
 def load_redirect_paths(path: Path) -> tuple[set[str], set[str]]:

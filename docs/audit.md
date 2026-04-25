@@ -11,28 +11,28 @@
 ### 1.1 Headline verdict
 
 - **Overall readiness:** `CONDITIONAL GO` for a bilingual, content-first Next.js App Router launch (no map UI in v1).
-- **Composite readiness score:** `85 / 100` for starting Next.js UI coding now; the machine-generated content score remains `84 / 100`. See §9 for the stricter production rubric.
+- **Composite readiness score:** `92 / 100` for continuing Next.js UI coding now; the machine-generated content score remains `84 / 100`. See §9 for the stricter production rubric.
 - **Migration landing:** solid. The semantic page model (`pageType` + `layoutVariant` + named sections) is populated and usable today. Legacy `pageBlocks` duplication is cleared from published pages (`0` docs, `0` localized rows), with `358` old storage rows retained internally for migration safety.
-- **Primary remaining blockers** for a production SEO launch are **operational and SEO-surface work**, not migration-level: Postgres rehearsal, revalidation, production CORS, richer SEO fields, and the small content-link hygiene queue.
+- **Primary remaining blockers** for a production SEO launch are **operational and content-freeze work**, not migration-level: Postgres rehearsal, Strapi webhook configuration, SEO editorial review, and the small content-link hygiene queue.
 
 ### 1.2 Top 5 items to close before production launch
 
-1. **Extend `shared.seo`** to cover canonical URL, Open Graph, Twitter, robots, and structured data (JSON-LD) — §4.1, Appendix C.
+1. **Finish SEO editorial policy** — canonical URL, OG image, robots, and sitemap controls now exist; Twitter fields and JSON-LD overrides remain optional follow-up work — §4.1, Appendix C.
 2. **Rehearse Postgres and apply lookup indexes** — local SQLite full-scans key queries today; forward-only Postgres index SQL already exists under `backend/database/postgres-readiness/` — §3, Appendix B.
-3. **Wire Strapi → Next.js revalidation** so ISR/on-demand revalidation has a real CMS trigger contract — §3.4, Appendix D.
+3. **Configure Strapi → Next.js revalidation webhooks** so the new Next `/api/revalidate` endpoint is called on publish/unpublish — §3.4, Appendix D.
 4. **Resolve the 13-doc SEO review queue** where legacy `longtitle` still adds signal over the current `seo.metaTitle` — §6, §7.
-5. **Close content hygiene before freeze**: repair the `14` potential internal hrefs from `nextjs_internal_link_repair_manifest.json`, keep the unresolved `Google Plus` row hidden/replaced, and sanitize legacy HTML in the Next.js renderer.
+5. **Close content hygiene before freeze**: review the `2` remaining legacy media hrefs from `nextjs_internal_link_repair_manifest.json`, keep the unresolved `Google Plus` row hidden/replaced, and keep sanitizing legacy HTML in the Next.js renderer.
 
 ### 1.3 Recommended launch path
 
-Start Next.js UI scaffolding now against the DTO boundary (ADR-001) and flat route policy (ADR-004). In parallel, run Week 0 hardening: content-link hygiene, Postgres rehearsal, revalidation webhook, and production CORS. SEO schema extensions can land before content freeze without blocking the first UI pass.
+Continue Next.js UI implementation inside `frontend/` against the DTO boundary (ADR-001) and flat route policy (ADR-004). In parallel, run Week 0 hardening: content-link hygiene, Postgres rehearsal, Strapi revalidation webhook configuration, and SEO editorial review.
 
 ### 1.4 Cross-links
 
 | Source | Purpose |
 |---|---|
 | [`docs/strapi-nextjs-audit.md`](./strapi-nextjs-audit.md) | Live payload audit, field-strategy table, rollout plan — still current. |
-| [`docs/nextjs-content-readiness.md`](./nextjs-content-readiness.md) | UI-start readiness (`85/100`) plus machine content score (`84/100`). |
+| [`docs/nextjs-content-readiness.md`](./nextjs-content-readiness.md) | UI-start readiness (`92/100`) plus machine content score (`84/100`). |
 | [`docs/adr/ADR-001-nextjs-semantic-dto-boundary.md`](./adr/ADR-001-nextjs-semantic-dto-boundary.md) | DTO boundary contract. |
 | [`docs/adr/ADR-002-nextjs-v1-contact-and-system-pages.md`](./adr/ADR-002-nextjs-v1-contact-and-system-pages.md) | v1 contact pages (no map), system pages frontend-native. |
 | [`docs/adr/ADR-003-postgres-readiness-indexes.md`](./adr/ADR-003-postgres-readiness-indexes.md) | Forward-only Postgres hardening. |
@@ -49,13 +49,14 @@ Start Next.js UI scaffolding now against the DTO boundary (ADR-001) and flat rou
 | Item | Value |
 |---|---|
 | Backend CMS | Strapi `5.42.1` |
+| Frontend | Next.js `16.2.4` App Router under `frontend/` |
 | Node runtime | `>=20 <=24` |
 | Live rehearsal DB | SQLite (`backend/.tmp/data.db`) |
 | Production DB target | PostgreSQL (Postgres index SQL already staged) |
 | REST pagination | `defaultLimit: 25`, `maxLimit: 100`, `withCount: true` |
 | Locales | `el` (default, source of truth) + `ru` |
 | Plugins | `@strapi/plugin-cloud`, `@strapi/plugin-users-permissions`, `strapi-plugin-navigation@^3.3.7` |
-| Versioned DB migrations | None yet (`backend/database/migrations/` empty) — schema changes rely on Strapi auto-sync |
+| Versioned DB migrations | None yet (`backend/database/migrations/` empty) — schema changes rely on Strapi auto-sync; production indexes are staged separately |
 
 ### 2.2 Content types
 
@@ -94,7 +95,7 @@ The `blocks/` set is now functionally dormant — `pageBlocks` is a `private: tr
 | Internal `pageBlocks` storage leftovers | 358 rows, 0 attached to published pages |
 | `menuTitle` backfill | 21 applied / 0 pending |
 | SEO review queue (legacy `longtitle` adds signal) | 13 |
-| Potential internal broken links | 14 |
+| Potential internal broken links | 2 |
 | Legacy HTML-marker sources | 259 |
 
 Source: `nextjs_content_readiness.json` (re-verified today).
@@ -108,7 +109,7 @@ Source: `python3 audit_nextjs_content_hygiene.py` against the local Strapi SQLit
 | Extracted links from page/component text | 1,422 |
 | Internal links | 830 |
 | External links | 561 |
-| Potential internal broken references | 14 |
+| Potential internal broken references | 2 |
 | Legacy HTML-marker sources | 259 |
 | `<font>` sources | 78 |
 | Inline `style=` sources | 174 |
@@ -117,7 +118,7 @@ Source: `python3 audit_nextjs_content_hygiene.py` against the local Strapi SQLit
 | Empty content leaf pages | 0 |
 | Strapi navigation render roots | el=7, ru=8 |
 
-The `14` potential internal broken references are planned in `nextjs_internal_link_repair_manifest.json`. Do not rewrite live content until that manifest has been reviewed and applied through a separate dry-run/snapshot/data-migration pass.
+The reviewed page-link rewrites from `nextjs_internal_link_repair_manifest.json` were applied through a dry-run/snapshot/data-migration pass. The 2 remaining findings are legacy media paths and should not be rewritten until the target upload/media asset is confirmed.
 
 ### 2.6 Relation map
 
@@ -160,11 +161,11 @@ Document expected query plans (EXPLAIN ANALYZE) once the rehearsal Postgres DB i
 
 ### 3.4 Revalidation / ISR gap
 
-Strapi is configured with only the default middlewares (`backend/config/middlewares.ts`) and **no webhooks or lifecycle hooks** that trigger Next.js on-demand revalidation on publish/unpublish. This is a silent blocker: Next.js ISR assumes the CMS can ping a revalidation endpoint, and that contract does not exist yet. See Appendix D for the recommended wiring.
+Next.js now exposes `POST /api/revalidate` with `STRAPI_REVALIDATE_SECRET` and tag-based invalidation for pages, navigation, tags, and sitemap. Strapi still needs webhook configuration on publish/unpublish so the CMS calls that endpoint automatically. See Appendix D for the recommended wiring.
 
 ### 3.5 CORS
 
-Default `strapi::cors` middleware only. For a Next.js frontend running on a different origin, CORS must be explicitly pinned to the production domain set before the frontend goes live. Not a blocker today (local dev passes) but should be in the Week-0 checklist.
+`strapi::cors` is now configured from `STRAPI_CORS_ORIGINS` with local Next.js origins as the development fallback. Production still needs the final frontend domains set in environment.
 
 ---
 
@@ -178,20 +179,16 @@ Every recommendation cites the file to edit and includes a before/after JSON dif
 
 **File:** `backend/src/components/shared/seo.json`
 
-**Current shape (verified today):** two fields — `metaTitle: string` and `metaDescription: text`. Nothing else.
+**Current shape:** `metaTitle`, `metaDescription`, `canonicalUrl`, `ogImage`, `robotsNoindex`, `robotsNofollow`, `sitemapExclude`, `sitemapPriority`, and `sitemapChangeFrequency`.
 
 **Gap for a modern SEO frontend:**
 
 | Missing field | Why it matters |
 |---|---|
-| `canonicalUrl` | Required whenever the same content is reachable from multiple URLs (hreflang alternates, legacy redirect targets, tag/category cross-links). |
-| `robots` | Per-page `noindex,nofollow` control — editors need it for system pages, thin content, appointment forms. |
-| `ogTitle`, `ogDescription`, `ogImage`, `ogType` | Open Graph is separate from `metaTitle/metaDescription` in practice; editors curate social previews independently. |
-| `twitterCard`, `twitterImage` | Same reason for Twitter/X. |
-| `keywords` | MODX `metaKeywords` was present on 272 legacy pages and is currently dropped by the importer. Adding an explicit field recovers that signal. |
-| `structuredData` (`json`) | Per-page JSON-LD override (Article, FAQPage, LocalBusiness, BreadcrumbList). Next.js will generate a default from `pageType`, but editors must be able to override. |
+| Optional Twitter fields | Useful if editors need Twitter/X previews separate from Open Graph. |
+| `structuredData` (`json`) | Per-page JSON-LD override can be added later if generated defaults are not enough. |
 
-Concrete schema shown in Appendix C. Because `shared.seo` is already attached to every localized page (via `Page.seo`), these fields inherit i18n automatically — no extra wiring.
+Because `shared.seo` is already attached to every localized page (via `Page.seo`), these fields inherit i18n automatically — no extra wiring.
 
 **Migration implication:** adding optional fields to a component is additive and does not require a data migration. Run the Strapi schema sync; existing rows will have the new fields as `null`.
 
@@ -222,9 +219,7 @@ Canonical slugs are still useful, but the live Strapi storage model has localize
 
 **File:** `backend/src/api/page/content-types/page/schema.json`
 
-`Page.slug` is `type: uid, targetField: title`, localized. Strapi's `uid` type is unique per locale at the DB layer; the live `publishedSlugCollisionCount` is `0`. **No schema change needed** — but document this guarantee explicitly in the audit so frontend routing can rely on it.
-
-The one thing worth adding is `required: true` so editors cannot save a page without a slug (today Strapi auto-fills from `title` on save, but the contract is looser than the frontend needs).
+`Page.slug` is `type: uid, targetField: title`, localized, and now `required: true`. Strapi's `uid` type is unique per locale at the DB layer; the live `publishedSlugCollisionCount` is `0`, so frontend routing can rely on `/{locale}/{slug}`.
 
 #### 4.4 hreflang — no schema change; derive in DTO
 
@@ -236,13 +231,7 @@ Strapi's REST API already returns `localizations` on every localized entity. The
 
 **File:** `backend/src/api/page/content-types/page/schema.json`
 
-Today there is no way for an editor to override sitemap behavior per page — `hideFromMenu` is the closest signal but it controls navigation, not sitemap inclusion. Recommendation: add two optional fields on `Page`:
-
-- `sitemapPriority` (`decimal`, `default: 0.5`) — 0.0…1.0
-- `sitemapChangeFrequency` (`enumeration`) — `always|hourly|daily|weekly|monthly|yearly|never`
-- `sitemapExclude` (`boolean`, `default: false`)
-
-Localized (same i18n setting as the rest of `Page`) so each locale can tune independently. Concrete JSON in Appendix C.
+Sitemap behavior now lives on `shared.seo`: `sitemapPriority`, `sitemapChangeFrequency`, and `sitemapExclude`. Next.js reads those fields in `frontend/src/app/sitemap.ts`.
 
 #### 4.6 Retire or quarantine `blocks/` components
 
@@ -436,12 +425,14 @@ Call this Week 0 of the Next.js project. Most items can run in parallel with the
 
 ### 8.1 Must-do (blocks production launch, not initial UI scaffolding)
 
-- [ ] Apply extended `shared.seo` schema (§4.1, Appendix C).
+- [x] Apply the v1 `shared.seo` schema fields used by Next metadata (§4.1, Appendix C).
 - [ ] Keep tag lookups/indexing on `(locale, slug)` and verify duplicate slugs only occur across locales (§4.2, Appendix E).
-- [ ] Add `required: true` to `Page.slug` (§4.3).
-- [ ] Stand up the revalidation webhook endpoint in Strapi config → Next.js (Appendix D).
+- [x] Add `required: true` to `Page.slug` (§4.3).
+- [x] Stand up the Next.js revalidation endpoint (Appendix D).
+- [ ] Configure Strapi webhooks to call the Next.js revalidation endpoint on publish/unpublish (Appendix D).
 - [ ] Run `python3 audit_nextjs_content_hygiene.py` and keep unsafe HTML findings and empty content leaf pages at `0`.
-- [ ] Review and apply the `14`-href repair plan in `nextjs_internal_link_repair_manifest.json` through a separate dry-run/snapshot/data-migration pass.
+- [x] Review and apply the page-href repair plan in `nextjs_internal_link_repair_manifest.json` through a separate dry-run/snapshot/data-migration pass.
+- [ ] Resolve the 2 remaining legacy media-path findings after upload/media review.
 - [ ] Run the Postgres rehearsal:
   - Dump SQLite to Postgres (Strapi `npm run strapi transfer`).
   - Apply `001_pages_lookup_indexes.sql` and `002_tag_slug_indexes.sql`.
@@ -449,11 +440,11 @@ Call this Week 0 of the Next.js project. Most items can run in parallel with the
 
 ### 8.2 Should-do (before v1 ship)
 
-- [ ] Apply sitemap fields on `Page` (§4.5, Appendix C).
+- [x] Apply sitemap controls on `shared.seo` (§4.5, Appendix C).
 - [ ] Close the 13-doc SEO review queue (§6.7).
 - [ ] Keep the unresolved `Google Plus` social row hidden in v1 or replace it with a supported current platform.
 - [ ] Decide whether `keywords` re-import from MODX `metaKeywords` is worth a one-off backfill (§4.1) — once the schema field exists, a 30-line script can backfill from the already-exported MODX snapshot.
-- [ ] Pin CORS to the production frontend origin in `backend/config/middlewares.ts`.
+- [x] Pin CORS through `STRAPI_CORS_ORIGINS` in `backend/config/middlewares.ts`; set production origins in env before launch.
 
 ### 8.3 Do-later (after v1 ship)
 
@@ -482,43 +473,43 @@ The 6-dimension rubric below inherits the same evidence but breaks **Contract/AP
 
 ### 9.2 Current score (today)
 
-For starting Next.js UI coding against the DTO boundary, the practical score is now `85/100`: the machine content score of `84/100` plus one routing/navigation point for the completed RU navigation sync (`8 -> 8` roots, stale newly-parented nav items `0`). The stricter production-readiness rubric below remains `65/100` because operational hardening and SEO surface work are still open.
+For continuing Next.js UI coding against the DTO boundary, the practical score is now `92/100`: the machine content score of `84/100` plus implemented frontend routing/DTO, CORS, revalidation endpoint, required slugs, v1 SEO schema controls, and applied page-link repairs. The stricter production-readiness rubric below is now `74/100` because Postgres rehearsal, Strapi webhook configuration, media-path review, and SEO editorial review are still open.
 
 | Dimension | Score | Justification |
 |---|---:|---|
-| D1. Schema completeness | `11/20` | `Page.slug`, `Tag.slug`, `menuTitle`, and semantic sections landed. `shared.seo` is minimal and sitemap fields absent → −9. |
+| D1. Schema completeness | `18/20` | `Page.slug`, `Tag.slug`, `menuTitle`, semantic sections, v1 `shared.seo`, and sitemap controls landed. Optional Twitter/JSON-LD fields remain → −2. |
 | D2. Contract stability | `15/15` | DTO contract exists, legacy fields are private, `pageBlocks` duplication is cleared, and source-parent integrity is clean. |
-| D3. i18n correctness | `12/15` | Page i18n clean and tag lookup is now locale-scoped; hreflang derivation is still not fully implemented in the frontend DTO → −3. |
-| D4. SEO surface completeness | `5/15` | Only `metaTitle + metaDescription` exist. Canonical, OG, Twitter, robots, structured data, keywords all missing → −10. |
+| D3. i18n correctness | `13/15` | Locale routes and tag lookup are locale-scoped; alternates currently expose the current locale only until bilingual alternate lookup is added → −2. |
+| D4. SEO surface completeness | `10/15` | Canonical, OG image, robots, and sitemap generation exist. Twitter fields, JSON-LD overrides, and editorial SEO review remain → −5. |
 | D5. Migration data quality | `15/15` | 37 authenticated drift docs, 0 source-parent integrity issues, 0 duplication, and the 13 editorial SEO queue is known. |
-| D6. Operational readiness | `6/20` | Forward-only SQL staged, but no Postgres cutover, no revalidation webhook, production CORS not pinned → −14. |
-| **Total** | **`65/100`** | Stricter rubric than the existing 5-dim score (84/100). |
+| D6. Operational readiness | `3/20` | Frontend revalidation endpoint and CORS exist, but no Postgres rehearsal, no Strapi webhook configuration, and no production query-plan proof → −17. |
+| **Total** | **`74/100`** | Stricter rubric than the existing 5-dim score (84/100). |
 
-The two scores are not inconsistent: 84/100 says "the current data and contract are usable today"; 65/100 says "the schema + ops surface a modern SEO Next.js frontend will pull against is not yet complete."
+The two scores are not inconsistent: 84/100 says "the current data and contract are usable today"; 74/100 says "the schema + ops surface a modern SEO Next.js frontend will pull against is closer, but still not production hardened."
 
-### 9.3 Projected score after P0 work (§4 P0 + §8.1)
+### 9.3 Projected score after remaining P0 work (§8.1)
 
 | Dimension | Projected |
 |---|---:|
-| D1. Schema completeness | `18/20` (+7) |
-| D2. Contract stability | `14/15` (unchanged) |
-| D3. i18n correctness | `14/15` (+3) |
-| D4. SEO surface completeness | `13/15` (+8) |
-| D5. Migration data quality | `13/15` (unchanged) |
-| D6. Operational readiness | `15/20` (+9) — post-Postgres + webhook |
-| **Projected total** | **`87/100`** |
+| D1. Schema completeness | `18/20` |
+| D2. Contract stability | `15/15` |
+| D3. i18n correctness | `14/15` (+1) |
+| D4. SEO surface completeness | `12/15` (+2) |
+| D5. Migration data quality | `15/15` |
+| D6. Operational readiness | `14/20` (+11) — post-Postgres + Strapi webhook |
+| **Projected total** | **`88/100`** |
 
 ### 9.4 Projected score after P1 work (§4 P1 + §8.2)
 
 | Dimension | Projected |
 |---|---:|
-| D1. Schema completeness | `20/20` (+2) — sitemap fields |
+| D1. Schema completeness | `19/20` (+1) — optional Twitter/JSON-LD decision |
 | D2. Contract stability | `15/15` (+1) |
 | D3. i18n correctness | `15/15` (+1) |
 | D4. SEO surface completeness | `15/15` (+2) |
 | D5. Migration data quality | `14/15` (+1) — orphan decision |
-| D6. Operational readiness | `18/20` (+3) — CORS pinned |
-| **Projected total** | **`97/100`** |
+| D6. Operational readiness | `18/20` (+4) |
+| **Projected total** | **`96/100`** |
 
 The remaining 3 points are `blocks/*` retirement + author content type + clinic coordinates — all explicit post-v1.
 
@@ -528,9 +519,9 @@ The remaining 3 points are `blocks/*` retirement + author content type + clinic 
 
 | Week | Focus | Exit criteria |
 |---|---|---|
-| Week 0 | Schema P0 (§4.1–4.4), revalidation webhook, Postgres rehearsal | `shared.seo` extended, `Tag.slug` locked, `/api/revalidate` wired, Postgres rehearsal DB green |
-| Week 1 | Finalize DTO for extended schema; freeze rendering matrix | `examples/next_page_dto.ts` updated to read new `seo.*`; rendering matrix §5 signed off |
-| Week 1–2 | Next.js scaffolding against DTO (ADR-001) | Locale router + one `ArticleTemplate` + `generateMetadata` producing all §6.1 tags |
+| Week 0 | Remaining production hardening: Strapi webhook, Postgres rehearsal, media-path review | `/api/revalidate` receives CMS events, Postgres rehearsal DB green, legacy media hrefs resolved |
+| Week 1 | Finalize DTO alternates + freeze rendering matrix | `frontend/src/lib/cms/*` returns bilingual alternates where live `documentId` pairs exist; rendering matrix §5 signed off |
+| Week 1–2 | Continue Next.js UI implementation against DTO (ADR-001) | Locale router + semantic templates + `generateMetadata` producing all §6.1 tags |
 | Week 2 | Templates per §5.1 rolled out | All 19 valid cells rendered; sitemap.ts producing output |
 | Week 3 | SEO polish + schema P1 (§4.5 sitemap fields) | Structured data validated in Rich Results Test; sitemap submitted |
 | Week 3+ | Editorial SEO review queue (§6.7) + Russian orphan decision (§7.1) | 13 SEO queue docs reviewed; orphan policy documented |
@@ -543,7 +534,7 @@ The remaining 3 points are `blocks/*` retirement + author content type + clinic 
 
 - `backend/src/api/page/content-types/page/schema.json`
 - `backend/src/api/tag/content-types/tag/schema.json`
-- `backend/src/components/shared/seo.json` *(to be edited, Appendix C)*
+- `backend/src/components/shared/seo.json`
 - `backend/src/components/shared/location.json`
 - `backend/src/components/sections/*.json` (10 files)
 - `backend/src/components/items/*.json` (11 files)
@@ -567,7 +558,8 @@ The remaining 3 points are `blocks/*` retirement + author content type + clinic 
 ### Existing audits & decisions
 
 - `docs/strapi-nextjs-audit.md` — live-state audit.
-- `docs/nextjs-content-readiness.md` — UI-start readiness (`85/100`) and machine 5-dim content score (`84/100`).
+- `docs/nextjs-content-readiness.md` — UI-start readiness (`92/100`) and machine 5-dim content score (`84/100`).
+- `frontend/` — current Next.js App Router scaffold.
 - `docs/adr/ADR-001-nextjs-semantic-dto-boundary.md`
 - `docs/adr/ADR-002-nextjs-v1-contact-and-system-pages.md`
 - `docs/adr/ADR-003-postgres-readiness-indexes.md`
@@ -618,7 +610,7 @@ EXPLAIN ANALYZE
 
 **File:** `backend/src/components/shared/seo.json`
 
-**Before (current):**
+**Before (previous):**
 
 ```json
 {
@@ -639,7 +631,7 @@ EXPLAIN ANALYZE
 }
 ```
 
-**After (recommended):**
+**Current v1 schema:**
 
 ```json
 {
@@ -651,86 +643,44 @@ EXPLAIN ANALYZE
   "options": {},
   "attributes": {
     "metaTitle": {
-      "type": "string",
-      "maxLength": 70
+      "type": "string"
     },
     "metaDescription": {
-      "type": "text",
-      "maxLength": 180
+      "type": "text"
     },
     "canonicalUrl": {
       "type": "string"
     },
-    "robots": {
-      "type": "enumeration",
-      "enum": [
-        "index,follow",
-        "noindex,follow",
-        "index,nofollow",
-        "noindex,nofollow"
-      ],
-      "default": "index,follow"
-    },
-    "keywords": {
-      "type": "text"
-    },
-    "ogTitle": {
-      "type": "string",
-      "maxLength": 70
-    },
-    "ogDescription": {
-      "type": "text",
-      "maxLength": 200
-    },
     "ogImage": {
       "type": "media",
       "multiple": false,
+      "required": false,
       "allowedTypes": ["images"]
     },
-    "ogType": {
+    "robotsNoindex": {
+      "type": "boolean",
+      "default": false
+    },
+    "robotsNofollow": {
+      "type": "boolean",
+      "default": false
+    },
+    "sitemapExclude": {
+      "type": "boolean",
+      "default": false
+    },
+    "sitemapPriority": {
+      "type": "decimal"
+    },
+    "sitemapChangeFrequency": {
       "type": "enumeration",
-      "enum": ["website", "article"],
-      "default": "website"
-    },
-    "twitterCard": {
-      "type": "enumeration",
-      "enum": ["summary", "summary_large_image"],
-      "default": "summary_large_image"
-    },
-    "twitterImage": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": ["images"]
-    },
-    "structuredData": {
-      "type": "json"
+      "enum": ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"]
     }
   }
 }
 ```
 
-**Sitemap fields on `Page`** — add to `backend/src/api/page/content-types/page/schema.json` inside `attributes`:
-
-```json
-"sitemapPriority": {
-  "type": "decimal",
-  "default": 0.5,
-  "min": 0,
-  "max": 1,
-  "pluginOptions": { "i18n": { "localized": true } }
-},
-"sitemapChangeFrequency": {
-  "type": "enumeration",
-  "enum": ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"],
-  "default": "monthly",
-  "pluginOptions": { "i18n": { "localized": true } }
-},
-"sitemapExclude": {
-  "type": "boolean",
-  "default": false,
-  "pluginOptions": { "i18n": { "localized": true } }
-}
-```
+Optional follow-up fields if the editorial team needs them: `twitterCard`, `twitterImage`, `structuredData`, and distinct `ogTitle`/`ogDescription`.
 
 ---
 
@@ -740,11 +690,11 @@ EXPLAIN ANALYZE
 
 Configure a webhook in `backend/config/server.ts` (or the admin UI → Settings → Webhooks) that fires on `entry.publish` and `entry.unpublish` for `api::page.page` and `api::tag.tag`. Point it at `${NEXT_PUBLIC_SITE_URL}/api/revalidate` and include a shared secret header.
 
-### Next.js side (reference only — outside the scope of this audit's deliverables)
+### Next.js side
 
-`/api/revalidate` verifies the secret, reads the payload, then calls `revalidatePath('/[locale]/[...slug]', 'page')` — or `revalidateTag('pages')` if tag-based revalidation is chosen.
+`frontend/src/app/api/revalidate/route.ts` verifies the secret, derives tags from page/navigation/tag payloads, then calls `revalidateTag(tag, { expire: 0 })`.
 
-The detail belongs to the Next.js scaffolding task. This appendix exists so that **Strapi's side of the contract** is nailed down in Week 0 before the frontend starts.
+The remaining task is Strapi-side webhook configuration.
 
 ---
 
@@ -786,7 +736,7 @@ This matches the current live data: translated tag rows intentionally share cano
 | §6 (SEO surface) | **net-new to this audit** — `docs/NEXTJS_SLUG_REDIRECTS_REMINDER.md` covers redirects only |
 | §7 (migration quality) | `docs/strapi-nextjs-audit.md`, `locale_pair_audit.md`, `strapi_injection_readiness.md` |
 | §8 (pre-Next.js checklist) | extends `docs/nextjs-content-readiness.md` → Next Plan |
-| §9 (readiness score) | extends `docs/nextjs-content-readiness.md` (`85/100` UI-start, `84/100` machine) with a 6-dim production rubric |
+| §9 (readiness score) | extends `docs/nextjs-content-readiness.md` (`92/100` UI-start, `84/100` machine) with a 6-dim production rubric |
 | §10 (roadmap) | extends `docs/strapi-nextjs-audit.md` → Rollout Plan |
 
 ---

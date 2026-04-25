@@ -38,6 +38,13 @@ export type RenderMode = 'cms' | 'frontend-native'
 export type SeoDTO = {
   metaTitle?: string | null
   metaDescription?: string | null
+  canonicalUrl?: string | null
+  ogImage?: MediaDTO | null
+  robotsNoindex?: boolean | null
+  robotsNofollow?: boolean | null
+  sitemapExclude?: boolean | null
+  sitemapPriority?: number | null
+  sitemapChangeFrequency?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' | null
 }
 
 export type MediaDTO = {
@@ -332,6 +339,8 @@ export function buildNavigationTree(pages: NavigationInput[], locale: Locale): N
 export type PageMetadataInput = {
   title: string
   description?: string | null
+  canonicalUrl?: string | null
+  openGraphImage?: MediaDTO | null
   robots?: {
     index: boolean
     follow: boolean
@@ -344,9 +353,11 @@ export function toPageMetadataInput(page: PageDTO): PageMetadataInput {
   return {
     title: page.seoTitle,
     description: normalizeOptionalText(page.seo.metaDescription),
+    canonicalUrl: normalizeOptionalText(page.seo.canonicalUrl),
+    openGraphImage: page.seo.ogImage ?? null,
     robots: {
-      index: !noIndex,
-      follow: !noIndex,
+      index: !noIndex && !page.seo.robotsNoindex,
+      follow: !noIndex && !page.seo.robotsNofollow,
     },
   }
 }

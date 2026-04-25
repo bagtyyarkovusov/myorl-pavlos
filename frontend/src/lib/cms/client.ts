@@ -1,7 +1,13 @@
 import "server-only";
 
 import { buildNavigationTree, toPageDTO } from "./dto";
-import type { Locale, NavigationNodeDTO, PageDTO, StrapiListResponse, StrapiPagePayload } from "./types";
+import type {
+  Locale,
+  NavigationNodeDTO,
+  PageDTO,
+  StrapiListResponse,
+  StrapiPagePayload,
+} from "./types";
 import { getCmsConfig } from "./env";
 
 const PAGE_REVALIDATE_SECONDS = 300;
@@ -78,7 +84,11 @@ async function fetchAllPages(locale: Locale | undefined, tags: string[]): Promis
   return pages;
 }
 
-async function fetchStrapi<T>(path: string, params: Record<string, unknown>, tags: string[]): Promise<T> {
+async function fetchStrapi<T>(
+  path: string,
+  params: Record<string, unknown>,
+  tags: string[],
+): Promise<T> {
   const config = getCmsConfig();
   const url = new URL(path, config.strapiUrl);
   appendSearchParams(url.searchParams, params);
@@ -95,13 +105,19 @@ async function fetchStrapi<T>(path: string, params: Record<string, unknown>, tag
   });
 
   if (!response.ok) {
-    throw new Error(`Strapi request failed: ${response.status} ${response.statusText} ${url.pathname}`);
+    throw new Error(
+      `Strapi request failed: ${response.status} ${response.statusText} ${url.pathname}`,
+    );
   }
 
   return response.json() as Promise<T>;
 }
 
-function appendSearchParams(params: URLSearchParams, value: Record<string, unknown>, prefix?: string): void {
+function appendSearchParams(
+  params: URLSearchParams,
+  value: Record<string, unknown>,
+  prefix?: string,
+): void {
   for (const [key, child] of Object.entries(value)) {
     if (child === undefined || child === null) {
       continue;

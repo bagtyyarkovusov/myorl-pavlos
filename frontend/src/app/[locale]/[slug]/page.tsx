@@ -41,7 +41,8 @@ export default async function CmsPage({ params }: CmsPageProps) {
 
 function toMetadata(page: PageDTO): Metadata {
   const config = getCmsConfig();
-  const isNoindexSystemPage = page.layoutVariant === "not-found" || page.layoutVariant === "search-results";
+  const isNoindexSystemPage =
+    page.layoutVariant === "not-found" || page.layoutVariant === "search-results";
   const canonical = page.seo.canonicalUrl ?? new URL(hrefForPage(page), config.siteUrl).toString();
 
   return {

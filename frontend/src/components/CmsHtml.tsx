@@ -12,5 +12,7 @@ export function CmsHtml({ html, className }: CmsHtmlProps) {
     return null;
   }
 
-  return <div className={className ?? "cms-html"} dangerouslySetInnerHTML={{ __html: sanitized }} />;
+  return (
+    <div className={className ?? "cms-html"} dangerouslySetInnerHTML={{ __html: sanitized }} />
+  );
 }

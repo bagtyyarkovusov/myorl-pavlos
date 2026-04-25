@@ -1,3 +1,7 @@
+import type { SectionDTO, StrapiSectionRaw } from "./sections";
+
+export type { SectionDTO } from "./sections";
+
 export const LOCALES = ["el", "ru"] as const;
 
 export type Locale = (typeof LOCALES)[number];
@@ -119,7 +123,7 @@ export type PageDTO = {
   articleAuthor?: string | null;
   sources?: string | null;
   popUpClose?: string | null;
-  sections?: unknown[];
+  sections: SectionDTO[];
   contact?: {
     details: ContactDetailDTO[];
     clinics: ContactClinicDTO[];
@@ -224,12 +228,14 @@ export type StrapiPagePayload = {
   articleAuthor?: string | null;
   sources?: string | null;
   popUpClose?: string | null;
-  pageSections?: unknown[] | null;
-  faqSection?: unknown | null;
-  accordionSection?: unknown | null;
-  tabsSection?: unknown | null;
-  gallerySection?: unknown | null;
+  pageSections?: StrapiSectionRaw[] | null;
+  faqSection?: StrapiSectionRaw | null;
+  accordionSection?: StrapiSectionRaw | null;
+  tabsSection?: StrapiSectionRaw | null;
+  gallerySection?: StrapiSectionRaw | null;
   contactSection?: {
+    heading?: string | null;
+    intro?: string | null;
     details?: StrapiContactDetail[] | null;
     clinics?: StrapiClinic[] | null;
   } | null;

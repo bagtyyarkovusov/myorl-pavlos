@@ -1,24 +1,51 @@
 import "server-only";
 
+import { z } from "zod";
+
 const DEFAULT_STRAPI_URL = "http://localhost:1337";
 const DEFAULT_SITE_URL = "http://localhost:3000";
 
-export type CmsConfig = {
-  strapiUrl: string;
-  strapiToken?: string;
-  siteUrl: string;
-  revalidateSecret?: string;
-};
+const optionalString = z
+  .string()
+  .trim()
+  .min(1)
+  .optional()
+  .transform((value) => (value ? value : undefined));
+
+const cmsConfigSchema = z.object({
+  strapiUrl: z.string().url(),
+  strapiToken: optionalString,
+  siteUrl: z.string().url(),
+  revalidateSecret: optionalString,
+});
+
+export type CmsConfig = z.infer<typeof cmsConfigSchema>;
+
+let cached: CmsConfig | null = null;
 
 function normalizeOrigin(value: string): string {
   return value.replace(/\/+$/, "");
 }
 
 export function getCmsConfig(): CmsConfig {
-  return {
+  if (cached) {
+    return cached;
+  }
+
+  const parsed = cmsConfigSchema.safeParse({
     strapiUrl: normalizeOrigin(process.env.STRAPI_URL || DEFAULT_STRAPI_URL),
-    strapiToken: process.env.STRAPI_TOKEN?.trim() || undefined,
+    strapiToken: process.env.STRAPI_TOKEN,
     siteUrl: normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL),
-    revalidateSecret: process.env.STRAPI_REVALIDATE_SECRET?.trim() || undefined,
-  };
+    revalidateSecret: process.env.STRAPI_REVALIDATE_SECRET,
+  });
+
+  if (!parsed.success) {
+    const issues = parsed.error.issues
+      .map((issue) => `  - ${issue.path.join(".") || "(root)"}: ${issue.message}`)
+      .join("\n");
+    throw new Error(`Invalid CMS environment configuration:\n${issues}`);
+  }
+
+  cached = parsed.data;
+  return cached;
 }

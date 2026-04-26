@@ -1,0 +1,13 @@
+---
+description: Use GitNexus for this repo before deep exploration, refactors, or impact questions
+alwaysApply: true
+---
+
+# GitNexus (this repository)
+
+**Indexed repo name:** `gemini-export` (not other projects on the same machine, e.g. `auto.tm-main`).
+
+1. **Start:** Fetch `gitnexus://repo/gemini-export/context` (or CLI `npx gitnexus list`). If missing or **clusters/processes look unrelated** to this Next.js/Strapi monorepo, run `npx gitnexus analyze` from the repo root and re-check.
+2. **Explore:** `query` (flows for a concept), `context` (symbol 360°), `impact` (blast radius). Pass **repo: `gemini-export`** if the tool takes a `repo` parameter.
+3. **Before merge / large edits:** `detect_changes` on the current diff when relevant.
+4. **Staleness:** Re-run `npx gitnexus analyze` after long gaps or very large refactors. Canonical pointer: [docs/ai-context.md](docs/ai-context.md).

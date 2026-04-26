@@ -33,7 +33,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="el" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html
+      lang="el"
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
       <body>{children}</body>
     </html>
   );

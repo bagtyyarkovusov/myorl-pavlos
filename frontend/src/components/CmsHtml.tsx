@@ -1,4 +1,5 @@
 import { sanitizeCmsHtml } from "@/lib/html";
+import { cn } from "@/lib/utils";
 
 type CmsHtmlProps = {
   html?: string | null;
@@ -13,6 +14,9 @@ export function CmsHtml({ html, className }: CmsHtmlProps) {
   }
 
   return (
-    <div className={className ?? "cms-html"} dangerouslySetInnerHTML={{ __html: sanitized }} />
+    <div
+      className={cn("cms-html prose-luxury", className)}
+      dangerouslySetInnerHTML={{ __html: sanitized }}
+    />
   );
 }

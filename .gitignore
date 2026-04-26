@@ -51,8 +51,12 @@ tag_id_map.prev.json
 import_log.json.bak-*
 import_log.prev.json
 
+# Obsidian (local app metadata when vault = docs/obsidian)
+docs/obsidian/.obsidian/
+
 # OS / editor
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
+.gitnexus

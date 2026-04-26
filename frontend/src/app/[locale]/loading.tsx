@@ -1,35 +1,11 @@
 export default function LocaleLoading() {
   return (
     <main className="home-shell" aria-busy="true" aria-live="polite">
-      <div className="container" style={{ padding: "clamp(48px, 8vw, 120px) 0" }}>
-        <p className="eyebrow">…</p>
-        <div
-          style={{
-            marginTop: 24,
-            height: 12,
-            maxWidth: 260,
-            borderRadius: 4,
-            background: "var(--color-bone-200)",
-          }}
-        />
-        <div
-          style={{
-            marginTop: 32,
-            height: 8,
-            maxWidth: "min(100%, 520px)",
-            borderRadius: 4,
-            background: "var(--color-bone-200)",
-          }}
-        />
-        <div
-          style={{
-            marginTop: 12,
-            height: 8,
-            maxWidth: "min(100%, 420px)",
-            borderRadius: 4,
-            background: "var(--color-bone-200)",
-          }}
-        />
+      <div className="container py-[clamp(48px,8vw,120px)]">
+        <p className="eyebrow">Loading…</p>
+        <div className="mt-6 h-3 max-w-[260px] rounded bg-gray-200 animate-pulse" />
+        <div className="mt-8 h-2 max-w-[min(100%,520px)] rounded bg-gray-200 animate-pulse" />
+        <div className="mt-3 h-2 max-w-[min(100%,420px)] rounded bg-gray-200 animate-pulse" />
       </div>
     </main>
   );

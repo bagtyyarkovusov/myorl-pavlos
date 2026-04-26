@@ -121,16 +121,25 @@ async function fetchStrapi<T>(
   const url = new URL(path, config.strapiUrl);
   appendSearchParams(url.searchParams, params);
 
-  const response = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-      ...(config.strapiToken ? { Authorization: `Bearer ${config.strapiToken}` } : {}),
-    },
-    next: {
-      revalidate: PAGE_REVALIDATE_SECONDS,
-      tags,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(url.toString(), {
+      headers: {
+        Accept: "application/json",
+        ...(config.strapiToken ? { Authorization: `Bearer ${config.strapiToken}` } : {}),
+      },
+      next: {
+        revalidate: PAGE_REVALIDATE_SECONDS,
+        tags,
+      },
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch (error) {
+    console.error(`[CMS] Network error fetching ${url.pathname}:`, error);
+    throw new Error(
+      `Failed to connect to CMS at ${config.strapiUrl}. Is the Strapi backend running?`,
+    );
+  }
 
   if (!response.ok) {
     throw new Error(

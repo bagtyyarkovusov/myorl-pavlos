@@ -34,8 +34,31 @@ export function SiteHeaderClient({
   const hours = settings?.hours ?? t.hours;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const [pillStyle, setPillStyle] = useState({ width: 0, left: 0, opacity: 0 });
   const openButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const activeId = hoveredId || openMenuId;
+
+  useEffect(() => {
+    if (!activeId || !navRef.current) {
+      setPillStyle((prev) => ({ ...prev, opacity: 0 }));
+      return;
+    }
+    const nav = navRef.current;
+    const el = nav.querySelector(`[data-id="${activeId}"]`) as HTMLElement | null;
+    if (el) {
+      setPillStyle({
+        width: el.offsetWidth,
+        left: el.offsetLeft,
+        opacity: 1,
+      });
+    } else {
+      setPillStyle((prev) => ({ ...prev, opacity: 0 }));
+    }
+  }, [activeId]);
 
   const activeMenu = useMemo(
     () => (openMenuId ? (navigation.find((n) => n.documentId === openMenuId) ?? null) : null),
@@ -99,12 +122,27 @@ export function SiteHeaderClient({
           </Link>
 
           <div className="megamenu-host" onMouseLeave={() => setOpenMenuId(null)}>
-            <nav className="desktop-nav" aria-label={t.primaryNavLabel}>
+            <nav
+              className="desktop-nav"
+              aria-label={t.primaryNavLabel}
+              ref={navRef}
+              onMouseLeave={() => setHoveredId(null)}
+            >
+              <div
+                className="nav-magnetic-pill"
+                style={{
+                  width: pillStyle.width,
+                  transform: `translateX(${pillStyle.left}px)`,
+                  opacity: pillStyle.opacity,
+                }}
+                aria-hidden="true"
+              />
               {navigation.map((item) => (
                 <DesktopNavigationItem
                   key={item.documentId}
                   item={item}
                   isOpen={openMenuId === item.documentId}
+                  onHover={() => setHoveredId(item.documentId)}
                   onActivate={() =>
                     setOpenMenuId(item.children.length > 0 ? item.documentId : null)
                   }
@@ -217,25 +255,36 @@ function DesktopNavigationItem({
   isOpen,
   onActivate,
   onClose,
+  onHover,
 }: {
   item: NavigationNodeDTO;
   isOpen: boolean;
   onActivate: () => void;
   onClose: () => void;
+  onHover: () => void;
 }) {
   if (item.children.length === 0) {
     return (
-      <NavigationAnchor
-        className="nav-link"
-        item={item}
-        onMouseEnter={onActivate}
-        onFocus={onActivate}
-      />
+      <div className="nav-item" data-id={item.documentId} onMouseEnter={onHover}>
+        <NavigationAnchor
+          className="nav-link"
+          item={item}
+          onMouseEnter={onActivate}
+          onFocus={onActivate}
+        />
+      </div>
     );
   }
 
   return (
-    <div className={`nav-item ${isOpen ? "is-open" : ""}`} onMouseEnter={onActivate}>
+    <div
+      className={`nav-item ${isOpen ? "is-open" : ""}`}
+      data-id={item.documentId}
+      onMouseEnter={() => {
+        onHover();
+        onActivate();
+      }}
+    >
       <button
         className="nav-trigger"
         type="button"
@@ -269,16 +318,25 @@ function MegaMenuContent({ item, locale }: { item: NavigationNodeDTO; locale: Lo
         <p>{featureBlurb}</p>
         <NavigationAnchor className="nav-panel__cta" item={item}>
           {t.sectionOverviewLink}
+          <span className="cta-arrow" aria-hidden="true">
+            →
+          </span>
         </NavigationAnchor>
       </div>
       <div className="nav-panel__links">
-        {item.children.slice(0, 12).map((child) => {
+        {item.children.slice(0, 12).map((child, index) => {
           const meta = leafMetaLabel(child, t);
           return (
-            <NavigationAnchor key={child.documentId} item={child}>
-              <span className="title">{child.navLabel}</span>
-              {meta ? <span className="meta">{meta}</span> : null}
-            </NavigationAnchor>
+            <div
+              key={child.documentId}
+              className="nav-panel__link-wrapper"
+              style={{ animationDelay: `${index * 0.03}s` }}
+            >
+              <NavigationAnchor item={child}>
+                <span className="title">{child.navLabel}</span>
+                {meta ? <span className="meta">{meta}</span> : null}
+              </NavigationAnchor>
+            </div>
           );
         })}
       </div>

@@ -1,7 +1,12 @@
 #!/usr/bin/env sh
-# Run lint-staged for files inside frontend/. Skips silently if the staged set
-# does not touch the frontend package.
 cd "$(dirname "$0")/.." || exit 0
+
+# GitNexus: detect impact of staged changes (non-blocking, warn only)
+if command -v npx >/dev/null 2>&1; then
+  npx gitnexus detect-changes --scope staged 2>/dev/null || true
+fi
+
+# Lint-staged for frontend/
 if git diff --cached --name-only | grep -q '^frontend/'; then
   npx lint-staged
 fi

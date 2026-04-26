@@ -27,3 +27,5 @@
 - [../ai-context.md](../ai-context.md) — **GitNexus** repo name `gemini-export` and re-indexing
 
 **Frontend detail:** [00-MOC-Frontend](00-MOC-Frontend.md)
+**Backend detail:** [00-MOC-Backend](00-MOC-Backend.md)
+**Tools and scripts:** [00-MOC-Tools](00-MOC-Tools.md)

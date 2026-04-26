@@ -15,6 +15,8 @@ You may get a `docs/obsidian/.obsidian` directory after first open (app settings
 
 - [00-MOC-Architecture](00-MOC-Architecture.md) — ADRs, migration entry points, monorepo layout
 - [00-MOC-Frontend](00-MOC-Frontend.md) — Next.js, CMS DTO layer, i18n, routes
+- [00-MOC-Backend](00-MOC-Backend.md) — Strapi CMS API, configuration, extensions
+- [00-MOC-Tools](00-MOC-Tools.md) — Python scripts for migration, audit, and readiness gates
 
 ## AI assistants
 

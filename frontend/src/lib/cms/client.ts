@@ -1,12 +1,16 @@
 import "server-only";
 
 import { buildNavigationTree, toPageDTO } from "./dto";
+import { normalizeOptionalText } from "./text";
 import type {
+  GlobalSettingsDTO,
   Locale,
   NavigationNodeDTO,
   PageDTO,
+  StrapiGlobalPayload,
   StrapiListResponse,
   StrapiPagePayload,
+  StrapiSingleResponse,
 } from "./types";
 import { getCmsConfig } from "./env";
 
@@ -47,6 +51,29 @@ export async function fetchPageBySlug(locale: Locale, slug: string): Promise<Pag
 export async function fetchNavigation(locale: Locale): Promise<NavigationNodeDTO[]> {
   const pages = await fetchAllPages(locale, [`navigation:${locale}`, "pages"]);
   return buildNavigationTree(pages, locale);
+}
+
+export async function fetchGlobalSettings(locale: Locale): Promise<GlobalSettingsDTO | null> {
+  try {
+    const response = await fetchStrapi<StrapiSingleResponse<StrapiGlobalPayload>>(
+      "/api/global",
+      { locale, status: "published" },
+      [`global:${locale}`, "global"],
+    );
+    if (!response.data) {
+      return null;
+    }
+    const entity = normalizeEntity(response.data);
+    return {
+      locale,
+      address: normalizeOptionalText(entity.address),
+      phoneTel: normalizeOptionalText(entity.phoneTel),
+      phoneDisplay: normalizeOptionalText(entity.phoneDisplay),
+      hours: normalizeOptionalText(entity.hours),
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchSitemapPages(): Promise<PageDTO[]> {

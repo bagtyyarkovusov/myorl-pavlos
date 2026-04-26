@@ -1,5 +1,6 @@
-import Link from "next/link";
-
+import { SiteHeaderClient } from "@/components/SiteHeaderClient";
+import { fetchGlobalSettings } from "@/lib/cms/client";
+import { findAppointmentHref } from "@/lib/navigation/appointment-href";
 import type { Locale, NavigationNodeDTO } from "@/lib/cms/types";
 
 type SiteHeaderProps = {
@@ -7,31 +8,16 @@ type SiteHeaderProps = {
   navigation: NavigationNodeDTO[];
 };
 
-export function SiteHeader({ locale, navigation }: SiteHeaderProps) {
+export async function SiteHeader({ locale, navigation }: SiteHeaderProps) {
+  const appointmentHref = findAppointmentHref(navigation, locale);
+  const settings = await fetchGlobalSettings(locale);
+
   return (
-    <header className="site-header">
-      <Link href={`/${locale}`} className="brand">
-        MyORL
-      </Link>
-      <nav aria-label="Primary navigation">
-        {navigation.map((item) => (
-          <NavigationLink key={item.documentId} item={item} />
-        ))}
-      </nav>
-    </header>
+    <SiteHeaderClient
+      appointmentHref={appointmentHref}
+      locale={locale}
+      navigation={navigation}
+      settings={settings}
+    />
   );
-}
-
-function NavigationLink({ item }: { item: NavigationNodeDTO }) {
-  const isExternal = /^https?:\/\//i.test(item.href);
-
-  if (isExternal) {
-    return (
-      <a href={item.href} target="_blank" rel="noreferrer">
-        {item.navLabel}
-      </a>
-    );
-  }
-
-  return <Link href={item.href}>{item.navLabel}</Link>;
 }

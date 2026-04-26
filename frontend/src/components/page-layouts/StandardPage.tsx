@@ -6,8 +6,10 @@ export function StandardPage({ page }: PageLayoutProps) {
     <main className="page-shell">
       <PageHeader page={page} />
       <CmsHtml html={page.content} />
-      <CmsHtml html={page.infoBlockBottom} className="cms-html note-block" />
-      <CmsHtml html={page.sources} className="cms-html sources-block" />
+      {page.infoBlockBottom ? (
+        <CmsHtml html={page.infoBlockBottom} className="cms-html note-block" />
+      ) : null}
+      {page.sources ? <CmsHtml html={page.sources} className="cms-html sources-block" /> : null}
     </main>
   );
 }

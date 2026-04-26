@@ -9,9 +9,11 @@ import type { PageDTO } from "@/lib/cms/types";
 
 type PageRendererProps = {
   page: PageDTO;
+  /** Resolved from navigation for home CTA; ignored for other layouts. */
+  appointmentHref?: string;
 };
 
-export function PageRenderer({ page }: PageRendererProps) {
+export function PageRenderer({ page, appointmentHref }: PageRendererProps) {
   if (page.renderMode === "frontend-native") {
     return <FrontendNativePage page={page} />;
   }
@@ -21,7 +23,7 @@ export function PageRenderer({ page }: PageRendererProps) {
   }
 
   if (page.pageType === "home") {
-    return <HomePage page={page} />;
+    return <HomePage page={page} appointmentHref={appointmentHref ?? `/${page.locale}`} />;
   }
 
   if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {

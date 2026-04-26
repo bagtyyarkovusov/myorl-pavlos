@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageRenderer } from "@/components/PageRenderer";
-import { fetchPageBySlug } from "@/lib/cms/client";
+import { fetchNavigation, fetchPageBySlug } from "@/lib/cms/client";
+import { findAppointmentHref } from "@/lib/navigation/appointment-href";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { isLocale } from "@/lib/cms/types";
 
@@ -28,10 +29,15 @@ export default async function LocaleHomePage({ params }: LocaleHomeProps) {
     notFound();
   }
 
-  const page = await fetchPageBySlug(locale, "index");
+  const [page, navigation] = await Promise.all([
+    fetchPageBySlug(locale, "index"),
+    fetchNavigation(locale),
+  ]);
   if (!page) {
     notFound();
   }
 
-  return <PageRenderer page={page} />;
+  const appointmentHref = findAppointmentHref(navigation, locale);
+
+  return <PageRenderer page={page} appointmentHref={appointmentHref} />;
 }

@@ -7,7 +7,7 @@ export function ContactPage({ page }: PageLayoutProps) {
       <PageHeader page={page} />
       <CmsHtml html={page.content} />
       {page.contact ? (
-        <>
+        <div className="contact-grid">
           <section className="card-list" aria-label="Contact details">
             {page.contact.details.map((detail, index) => (
               <article className="content-card" key={`${detail.type}-${index}`}>
@@ -26,7 +26,7 @@ export function ContactPage({ page }: PageLayoutProps) {
               </article>
             ))}
           </section>
-        </>
+        </div>
       ) : null}
     </main>
   );

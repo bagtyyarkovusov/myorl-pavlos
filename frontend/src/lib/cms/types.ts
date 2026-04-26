@@ -131,6 +131,29 @@ export type PageDTO = {
   };
 };
 
+export type GlobalSettingsDTO = {
+  locale: Locale;
+  address: string | null;
+  phoneTel: string | null;
+  phoneDisplay: string | null;
+  hours: string | null;
+};
+
+export type StrapiGlobalPayload = {
+  id?: number;
+  documentId?: string;
+  locale?: Locale | string | null;
+  address?: string | null;
+  phoneTel?: string | null;
+  phoneDisplay?: string | null;
+  hours?: string | null;
+};
+
+export type StrapiSingleResponse<T> = {
+  data: T | null;
+  meta?: unknown;
+};
+
 export type NavigationInput = Pick<
   PageDTO,
   | "documentId"
@@ -144,6 +167,7 @@ export type NavigationInput = Pick<
   | "parentPage"
   | "externalUrl"
   | "isFolder"
+  | "excerpt"
 >;
 
 export type NavigationNodeDTO = NavigationInput & {

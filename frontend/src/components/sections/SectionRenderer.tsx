@@ -6,13 +6,24 @@ import type { MediaDTO, SectionDTO } from "@/lib/cms/types";
 
 type SectionRendererProps = {
   section: SectionDTO;
+  /** Tighter home layout for social and contact. */
+  context?: "default" | "home";
 };
 
-export function SectionRenderer({ section }: SectionRendererProps) {
+export function SectionRenderer({ section, context = "default" }: SectionRendererProps) {
+  const isHome = context === "home";
+  const sectionClass = ["section-block", isHome ? "section-block--home" : null]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <section className="section-block" data-section={section.__component}>
+    <section
+      className={sectionClass}
+      data-section={section.__component}
+      data-page={isHome ? "home" : undefined}
+    >
       <SectionHeader heading={section.heading} intro={section.intro} />
-      {renderSectionBody(section)}
+      {isHome ? renderSectionBodyHome(section) : renderSectionBody(section)}
     </section>
   );
 }
@@ -28,6 +39,61 @@ function SectionHeader({ heading, intro }: { heading?: string | null; intro?: st
       {intro ? <CmsHtml className="cms-html section-intro" html={intro} /> : null}
     </header>
   );
+}
+
+function renderSectionBodyHome(section: SectionDTO) {
+  switch (section.__component) {
+    case "sections.social-links":
+      return (
+        <ul className="home-social" role="list" aria-label={section.heading ?? "Social media"}>
+          {section.links
+            .map(toSocialLinkDTO)
+            .filter((link): link is NonNullable<typeof link> => link !== null)
+            .map((link) => (
+              <li key={`${link.platform}-${link.url}`}>
+                <a href={link.url} rel="noreferrer" target="_blank" className="home-social__link">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+        </ul>
+      );
+    case "sections.contact":
+      return (
+        <div className="home-contact">
+          {section.details.length > 0 ? (
+            <div className="home-contact__meta">
+              {section.details.map((detail, index) => (
+                <div className="home-contact__row" key={`${detail.type}-${index}`}>
+                  <h3 className="home-contact__row-title">{detail.type}</h3>
+                  <CmsHtml className="cms-html" html={detail.valueHtml} />
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {section.clinics.length > 0 ? (
+            <ul className="home-contact__clinics" role="list">
+              {section.clinics.map((clinic) => (
+                <li className="home-contact__clinic" key={clinic.name}>
+                  <h3 className="home-contact__clinic-name">{clinic.name}</h3>
+                  <CmsHtml className="cms-html" html={clinic.addressHtml} />
+                  {clinic.phone ? <p className="home-contact__phone">{clinic.phone}</p> : null}
+                  {clinic.email ? (
+                    <p>
+                      <a className="u-link" href={`mailto:${clinic.email}`}>
+                        {clinic.email}
+                      </a>
+                    </p>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      );
+    default:
+      return renderSectionBody(section);
+  }
 }
 
 function renderSectionBody(section: SectionDTO) {

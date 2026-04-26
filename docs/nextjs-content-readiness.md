@@ -2,7 +2,7 @@
 
 ## Verdict
 
-- Practical UI-start readiness score: `92/100`.
+- Practical UI-start readiness score: `85/100`.
 - Machine-generated content score remains `84/100`; the +1 UI-start adjustment reflects the completed RU navigation sync and verified Strapi navigation render state.
 - Decision: `CONDITIONAL GO` for a bilingual, content-first Next.js App Router launch with `no map in v1`.
 - Production launch readiness is now about `74/100`: frontend contract, CORS, revalidation endpoint, SEO schema fields, and page-link repair exist, but Postgres rehearsal, Strapi webhook configuration, SEO editorial review, and media-path review still need closure.
@@ -74,23 +74,24 @@ flowchart LR
 
 ## Artifacts
 
-- Machine-readable readiness report: [nextjs_content_readiness.json](../nextjs_content_readiness.json)
-- Structural review manifest: [nextjs_structural_review_manifest.json](../nextjs_structural_review_manifest.json)
-- Legacy cleanup manifest: [nextjs_legacy_cleanup_manifest.json](../nextjs_legacy_cleanup_manifest.json)
-- Source alignment manifest: [nextjs_source_alignment_manifest.json](../nextjs_source_alignment_manifest.json)
-- Parent-fix plan: [nextjs_parent_fix_plan.json](../nextjs_parent_fix_plan.json)
-- Contract-fix plan: [nextjs_page_contract_fix_plan.json](../nextjs_page_contract_fix_plan.json)
-- `menuTitle` backfill plan: [nextjs_menu_title_backfill_plan.json](../nextjs_menu_title_backfill_plan.json)
-- SEO review manifest: [nextjs_seo_review_manifest.json](../nextjs_seo_review_manifest.json)
-- Content hygiene audit script: [audit_nextjs_content_hygiene.py](../audit_nextjs_content_hygiene.py)
-- Readiness gate: [nextjs_readiness_gate.py](../nextjs_readiness_gate.py)
-- Internal link repair manifest: [nextjs_internal_link_repair_manifest.json](../nextjs_internal_link_repair_manifest.json)
-- Link repair migration path: [apply_nextjs_link_repair_manifest.py](../apply_nextjs_link_repair_manifest.py)
+- Machine-readable readiness report: [nextjs_content_readiness.json](../artifacts/reports/nextjs_content_readiness.json)
+- Structural review manifest: [nextjs_structural_review_manifest.json](../data/manifests/nextjs_structural_review_manifest.json)
+- Legacy cleanup manifest: [nextjs_legacy_cleanup_manifest.json](../data/manifests/nextjs_legacy_cleanup_manifest.json)
+- Source alignment manifest: [nextjs_source_alignment_manifest.json](../data/manifests/nextjs_source_alignment_manifest.json)
+- Parent-fix plan: [nextjs_parent_fix_plan.json](../data/manifests/nextjs_parent_fix_plan.json)
+- Contract-fix plan: [nextjs_page_contract_fix_plan.json](../data/manifests/nextjs_page_contract_fix_plan.json)
+- `menuTitle` backfill plan: [nextjs_menu_title_backfill_plan.json](../data/manifests/nextjs_menu_title_backfill_plan.json)
+- SEO review manifest: [nextjs_seo_review_manifest.json](../data/manifests/nextjs_seo_review_manifest.json)
+- Content hygiene audit script: [audit_nextjs_content_hygiene.py](../tools/audit_nextjs_content_hygiene.py)
+- Readiness gate: [nextjs_readiness_gate.py](../tools/nextjs_readiness_gate.py)
+- Internal link repair manifest: [nextjs_internal_link_repair_manifest.json](../data/manifests/nextjs_internal_link_repair_manifest.json)
+- Link repair migration path: [apply_nextjs_link_repair_manifest.py](../tools/apply_nextjs_link_repair_manifest.py)
 - Next.js frontend scaffold: [frontend](../frontend)
-- PageBlocks cleanup batches: [nextjs_pageblocks_cleanup_batch_a.json](../nextjs_pageblocks_cleanup_batch_a.json), [nextjs_pageblocks_cleanup_batch_b.json](../nextjs_pageblocks_cleanup_batch_b.json)
+- PageBlocks cleanup batches: [nextjs_pageblocks_cleanup_batch_a.json](../data/manifests/nextjs_pageblocks_cleanup_batch_a.json), [nextjs_pageblocks_cleanup_batch_b.json](../data/manifests/nextjs_pageblocks_cleanup_batch_b.json)
 - Next DTO example: [next_page_dto.ts](../examples/next_page_dto.ts)
 - ADRs: [ADR-001](./adr/ADR-001-nextjs-semantic-dto-boundary.md), [ADR-002](./adr/ADR-002-nextjs-v1-contact-and-system-pages.md), [ADR-003](./adr/ADR-003-postgres-readiness-indexes.md), [ADR-004](./adr/ADR-004-flat-locale-routes-and-localized-navigation-labels.md), [ADR-005](./adr/ADR-005-repair-source-parent-integrity-before-postgres-cutover.md)
-- Postgres readiness SQL: [001_pages_lookup_indexes.sql](../backend/database/postgres-readiness/001_pages_lookup_indexes.sql), [002_tag_slug_indexes.sql](../backend/database/postgres-readiness/002_tag_slug_indexes.sql)
+- Postgres migrations: [pages lookup up](../backend/database/postgres-migrations/20260425_001_pages_lookup_indexes.up.sql), [tag slug up](../backend/database/postgres-migrations/20260425_002_tag_slug_indexes.up.sql)
+- Postgres rehearsal runbook: [postgres-rehearsal.md](./runbooks/postgres-rehearsal.md)
 
 ## Next Plan
 

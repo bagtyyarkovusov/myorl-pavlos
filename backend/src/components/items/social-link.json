@@ -10,7 +10,7 @@
       "type": "string"
     },
     "url": {
-      "type": "string"
+      "type": "text"
     },
     "icon": {
       "type": "string"

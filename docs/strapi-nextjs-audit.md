@@ -2,13 +2,13 @@
 
 ## Verdict
 
-- Decision: `CONDITIONAL GO` for the new Next.js App Router frontend now scaffolded under `/Users/bagtyyar/Projects/gemini-export/frontend`.
+- Decision: `CONDITIONAL GO` for the new Next.js App Router frontend now scaffolded under `../frontend`.
 - Safe path: consume the semantic page contract only: `pageType`, `layoutVariant`, `pageSections` or the one named section field for that page type.
 - Not ready for a full parity cutover yet: localized structural drift remains by design, while the SEO review queue, content-link hygiene, social cleanup, and production database hardening still need closure.
 
-This document is the current live-state source of truth for the populated Strapi system. The older `/Users/bagtyyar/Projects/gemini-export/strapi_injection_readiness.md` document remains useful as historical pre-injection context, but it no longer describes the current populated database.
+This document is the current live-state source of truth for the populated Strapi system. The older `docs/migration/strapi_injection_readiness.md` document remains useful as historical pre-injection context, but it no longer describes the current populated database.
 
-For the current rollout score, structural review manifest, and production-hardening plan, also see `/Users/bagtyyar/Projects/gemini-export/docs/nextjs-content-readiness.md`.
+For the current rollout score, structural review manifest, and production-hardening plan, also see `docs/nextjs-content-readiness.md`.
 
 ## Live Inventory
 
@@ -208,20 +208,20 @@ Internal document-service and migration scripts can still see these fields. The 
 - Backfilled `21/21` live localized rows that carried a distinct legacy `menutitle`.
 - Updated `strapi_importer.py` so future imported tags are created with the same slug contract.
 - Updated `strapi_importer.py` so future imported pages preserve legacy `menutitle` as `menuTitle`.
-- Added `/Users/bagtyyar/Projects/gemini-export/backfill_tag_slugs.py` for local SQLite slug reconciliation.
+- Added `tools/backfill_tag_slugs.py` for local SQLite slug reconciliation.
 - Gated bootstrap creation of the full-access migration token behind `STRAPI_ENABLE_MIGRATION_TOKEN_BOOTSTRAP=true`.
 - Updated Content Manager config so tags surface `slug` and page admin no longer centers legacy-only fields.
 - Patched the live contact page in both locales so placeholder email content, malformed Russian clinic duplicates, and legacy `<font>` wrappers are gone from the semantic payload.
-- Generated `/Users/bagtyyar/Projects/gemini-export/nextjs_page_contract_fix_plan.json` and confirmed there are `0` safe `pageType`/`layoutVariant` auto-fixes pending.
-- Generated `/Users/bagtyyar/Projects/gemini-export/nextjs_source_alignment_manifest.json` to document which live structural drifts are authenticated by source and which still need IA review.
+- Generated `data/manifests/nextjs_page_contract_fix_plan.json` and confirmed there are `0` safe `pageType`/`layoutVariant` auto-fixes pending.
+- Generated `data/manifests/nextjs_source_alignment_manifest.json` to document which live structural drifts are authenticated by source and which still need IA review.
 - Removed duplicate legacy `pageBlocks` from all published semantic page types in two verified cleanup batches.
-- Added `/Users/bagtyyar/Projects/gemini-export/docs/nextjs-content-readiness.md`, `/Users/bagtyyar/Projects/gemini-export/nextjs_content_readiness.json`, and the structural and legacy cleanup manifests for the next rollout phase.
-- Added `/Users/bagtyyar/Projects/gemini-export/examples/next_page_dto.ts` as the copy-ready DTO boundary for a future Next.js App Router frontend.
-- Added forward-only PostgreSQL hardening SQL under `/Users/bagtyyar/Projects/gemini-export/backend/database/postgres-readiness/`.
-- Added `/Users/bagtyyar/Projects/gemini-export/docs/adr/ADR-004-flat-locale-routes-and-localized-navigation-labels.md` to lock the flat route and localized navigation-label strategy.
-- Added `/Users/bagtyyar/Projects/gemini-export/audit_nextjs_content_hygiene.py` and `/Users/bagtyyar/Projects/gemini-export/nextjs_internal_link_repair_manifest.json` to make pre-Next.js HTML/link hygiene measurable and reviewable.
-- Added `/Users/bagtyyar/Projects/gemini-export/frontend` as the production Next.js App Router scaffold with DTO normalization, flat routes, metadata, sitemap/robots, sanitized CMS HTML rendering, and authenticated revalidation.
-- Added `/Users/bagtyyar/Projects/gemini-export/nextjs_readiness_gate.py` as the stable readiness gate and `/Users/bagtyyar/Projects/gemini-export/apply_nextjs_link_repair_manifest.py` as the dry-run-first link repair migration path.
+- Added `docs/nextjs-content-readiness.md`, `artifacts/reports/nextjs_content_readiness.json`, and the structural and legacy cleanup manifests for the next rollout phase.
+- Added `examples/next_page_dto.ts` as the copy-ready DTO boundary for a future Next.js App Router frontend.
+- Added forward-only PostgreSQL hardening SQL under `backend/database/postgres-migrations/`, with historical staged SQL preserved under `backend/database/postgres-readiness/`.
+- Added `docs/adr/ADR-004-flat-locale-routes-and-localized-navigation-labels.md` to lock the flat route and localized navigation-label strategy.
+- Added `tools/audit_nextjs_content_hygiene.py` and `data/manifests/nextjs_internal_link_repair_manifest.json` to make pre-Next.js HTML/link hygiene measurable and reviewable.
+- Added `../frontend` as the production Next.js App Router scaffold with DTO normalization, flat routes, metadata, sitemap/robots, sanitized CMS HTML rendering, and authenticated revalidation.
+- Added `tools/nextjs_readiness_gate.py` as the stable readiness gate and `tools/apply_nextjs_link_repair_manifest.py` as the dry-run-first link repair migration path.
 - Made `Page.slug` required, expanded `shared.seo`, and pinned Strapi CORS through `STRAPI_CORS_ORIGINS`.
 
 ## Architecture Recommendation

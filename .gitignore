@@ -30,6 +30,16 @@ dry_run_payloads.json
 parity_report.json
 page_model_migration*.json
 nextjs_internal_link_repair_apply_report.json
+backfill_page_content_report.json
+injection_readiness.json
+nextjs_content_readiness.json
+nextjs_parent_fix_apply_result.json
+artifacts/reports/*_report.json
+artifacts/reports/*_report.apply-results.json
+artifacts/reports/*_audit.json
+artifacts/reports/sync_navigation_report.json
+!artifacts/reports/.gitkeep
+!artifacts/reports/README.md
 
 # Local checkpoint backups (keep checkpoint.json tracked)
 checkpoint.json.bak-*

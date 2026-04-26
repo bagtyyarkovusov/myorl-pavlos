@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { CmsHtml } from "@/components/CmsHtml";
 import type { SectionDTO } from "@/lib/cms/types";
 import { PageHeader, type PageLayoutProps } from "./_shared";
@@ -14,8 +16,14 @@ export function GalleryPage({ page }: PageLayoutProps) {
           <article className="content-card" key={`${item.caption ?? "image"}-${index}`}>
             <h2>{item.caption || `Image ${index + 1}`}</h2>
             {item.imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.imageUrl} alt={item.alt ?? item.caption ?? ""} />
+              <Image
+                src={item.imageUrl}
+                alt={item.alt ?? item.caption ?? ""}
+                width={item.width ?? 800}
+                height={item.height ?? 600}
+                sizes="(min-width: 960px) 33vw, (min-width: 640px) 50vw, 100vw"
+                unoptimized
+              />
             ) : null}
           </article>
         ))}
@@ -24,9 +32,13 @@ export function GalleryPage({ page }: PageLayoutProps) {
   );
 }
 
-function extractGalleryItems(
-  sections: SectionDTO[],
-): Array<{ caption: string | null; imageUrl: string | null; alt: string | null }> {
+function extractGalleryItems(sections: SectionDTO[]): Array<{
+  caption: string | null;
+  imageUrl: string | null;
+  alt: string | null;
+  width: number | null;
+  height: number | null;
+}> {
   const first = sections.find((section) => section.__component === "sections.gallery");
   if (!first || first.__component !== "sections.gallery") {
     return [];
@@ -35,5 +47,7 @@ function extractGalleryItems(
     caption: item.caption ?? null,
     imageUrl: item.image?.url ?? null,
     alt: item.image?.alternativeText ?? null,
+    width: item.image?.width ?? null,
+    height: item.image?.height ?? null,
   }));
 }

@@ -31,7 +31,7 @@ export interface BlocksClinic extends Struct.ComponentSchema {
     displayName: 'Clinic';
   };
   attributes: {
-    address: Schema.Attribute.String;
+    address: Schema.Attribute.RichText;
     email: Schema.Attribute.Email;
     latitude: Schema.Attribute.Decimal;
     longitude: Schema.Attribute.Decimal;
@@ -95,7 +95,7 @@ export interface BlocksSocialLink extends Struct.ComponentSchema {
   attributes: {
     icon: Schema.Attribute.String;
     name: Schema.Attribute.String;
-    url: Schema.Attribute.String;
+    url: Schema.Attribute.Text;
   };
 }
 
@@ -244,7 +244,7 @@ export interface ItemsSocialLink extends Struct.ComponentSchema {
   attributes: {
     icon: Schema.Attribute.String;
     name: Schema.Attribute.String;
-    url: Schema.Attribute.String;
+    url: Schema.Attribute.Text;
   };
 }
 

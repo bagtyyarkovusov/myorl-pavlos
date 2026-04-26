@@ -1,0 +1,1008 @@
+{
+  "generated_at": "2026-04-22T08:09:51+00:00",
+  "source": "data/manifests/locale_pair_audit.json",
+  "audit_version": "1ce8c23979ef8491a59c2cf9d2ac183931d1f7c71dd3a3d136e17650f9a9d8b4",
+  "summary": {
+    "pairs": 136,
+    "strict_pairs": 123,
+    "auto_pairs": 3,
+    "manual_pairs": 10,
+    "web_singletons": 47,
+    "rus_singletons": 7,
+    "dead_babel_ignored": 16
+  },
+  "pairs": [
+    {
+      "web_id": 1,
+      "rus_id": 153,
+      "source": "strict"
+    },
+    {
+      "web_id": 2,
+      "rus_id": 209,
+      "source": "strict"
+    },
+    {
+      "web_id": 3,
+      "rus_id": 212,
+      "source": "strict"
+    },
+    {
+      "web_id": 4,
+      "rus_id": 255,
+      "source": "strict"
+    },
+    {
+      "web_id": 5,
+      "rus_id": 275,
+      "source": "strict"
+    },
+    {
+      "web_id": 7,
+      "rus_id": 307,
+      "source": "strict"
+    },
+    {
+      "web_id": 8,
+      "rus_id": 315,
+      "source": "strict"
+    },
+    {
+      "web_id": 9,
+      "rus_id": 317,
+      "source": "strict"
+    },
+    {
+      "web_id": 10,
+      "rus_id": 318,
+      "source": "strict"
+    },
+    {
+      "web_id": 13,
+      "rus_id": 213,
+      "source": "strict"
+    },
+    {
+      "web_id": 14,
+      "rus_id": 225,
+      "source": "strict"
+    },
+    {
+      "web_id": 15,
+      "rus_id": 230,
+      "source": "strict"
+    },
+    {
+      "web_id": 16,
+      "rus_id": 231,
+      "source": "strict"
+    },
+    {
+      "web_id": 17,
+      "rus_id": 224,
+      "source": "strict"
+    },
+    {
+      "web_id": 19,
+      "rus_id": 233,
+      "source": "strict"
+    },
+    {
+      "web_id": 20,
+      "rus_id": 232,
+      "source": "strict"
+    },
+    {
+      "web_id": 21,
+      "rus_id": 234,
+      "source": "strict"
+    },
+    {
+      "web_id": 22,
+      "rus_id": 226,
+      "source": "strict"
+    },
+    {
+      "web_id": 23,
+      "rus_id": 217,
+      "source": "strict"
+    },
+    {
+      "web_id": 24,
+      "rus_id": 235,
+      "source": "strict"
+    },
+    {
+      "web_id": 25,
+      "rus_id": 236,
+      "source": "strict"
+    },
+    {
+      "web_id": 26,
+      "rus_id": 237,
+      "source": "strict"
+    },
+    {
+      "web_id": 27,
+      "rus_id": 239,
+      "source": "strict"
+    },
+    {
+      "web_id": 28,
+      "rus_id": 240,
+      "source": "strict"
+    },
+    {
+      "web_id": 30,
+      "rus_id": 241,
+      "source": "strict"
+    },
+    {
+      "web_id": 31,
+      "rus_id": 242,
+      "source": "strict"
+    },
+    {
+      "web_id": 32,
+      "rus_id": 214,
+      "source": "strict"
+    },
+    {
+      "web_id": 33,
+      "rus_id": 243,
+      "source": "strict"
+    },
+    {
+      "web_id": 34,
+      "rus_id": 222,
+      "source": "strict"
+    },
+    {
+      "web_id": 36,
+      "rus_id": 244,
+      "source": "strict"
+    },
+    {
+      "web_id": 37,
+      "rus_id": 223,
+      "source": "strict"
+    },
+    {
+      "web_id": 38,
+      "rus_id": 216,
+      "source": "strict"
+    },
+    {
+      "web_id": 39,
+      "rus_id": 267,
+      "source": "strict"
+    },
+    {
+      "web_id": 41,
+      "rus_id": 265,
+      "source": "strict"
+    },
+    {
+      "web_id": 42,
+      "rus_id": 264,
+      "source": "strict"
+    },
+    {
+      "web_id": 43,
+      "rus_id": 269,
+      "source": "strict"
+    },
+    {
+      "web_id": 44,
+      "rus_id": 266,
+      "source": "strict"
+    },
+    {
+      "web_id": 45,
+      "rus_id": 270,
+      "source": "strict"
+    },
+    {
+      "web_id": 46,
+      "rus_id": 273,
+      "source": "strict"
+    },
+    {
+      "web_id": 47,
+      "rus_id": 271,
+      "source": "strict"
+    },
+    {
+      "web_id": 48,
+      "rus_id": 272,
+      "source": "strict"
+    },
+    {
+      "web_id": 49,
+      "rus_id": 263,
+      "source": "strict"
+    },
+    {
+      "web_id": 50,
+      "rus_id": 276,
+      "source": "strict"
+    },
+    {
+      "web_id": 51,
+      "rus_id": 277,
+      "source": "strict"
+    },
+    {
+      "web_id": 52,
+      "rus_id": 278,
+      "source": "strict"
+    },
+    {
+      "web_id": 53,
+      "rus_id": 279,
+      "source": "strict"
+    },
+    {
+      "web_id": 55,
+      "rus_id": 281,
+      "source": "strict"
+    },
+    {
+      "web_id": 59,
+      "rus_id": 284,
+      "source": "strict"
+    },
+    {
+      "web_id": 64,
+      "rus_id": 297,
+      "source": "strict"
+    },
+    {
+      "web_id": 66,
+      "rus_id": 299,
+      "source": "strict"
+    },
+    {
+      "web_id": 67,
+      "rus_id": 310,
+      "source": "strict"
+    },
+    {
+      "web_id": 68,
+      "rus_id": 308,
+      "source": "strict"
+    },
+    {
+      "web_id": 69,
+      "rus_id": 309,
+      "source": "strict"
+    },
+    {
+      "web_id": 70,
+      "rus_id": 311,
+      "source": "strict"
+    },
+    {
+      "web_id": 71,
+      "rus_id": 312,
+      "source": "strict"
+    },
+    {
+      "web_id": 72,
+      "rus_id": 313,
+      "source": "strict"
+    },
+    {
+      "web_id": 73,
+      "rus_id": 314,
+      "source": "strict"
+    },
+    {
+      "web_id": 74,
+      "rus_id": 182,
+      "source": "strict"
+    },
+    {
+      "web_id": 75,
+      "rus_id": 183,
+      "source": "strict"
+    },
+    {
+      "web_id": 76,
+      "rus_id": 184,
+      "source": "strict"
+    },
+    {
+      "web_id": 77,
+      "rus_id": 196,
+      "source": "strict"
+    },
+    {
+      "web_id": 78,
+      "rus_id": 203,
+      "source": "strict"
+    },
+    {
+      "web_id": 79,
+      "rus_id": 204,
+      "source": "strict"
+    },
+    {
+      "web_id": 81,
+      "rus_id": 185,
+      "source": "strict"
+    },
+    {
+      "web_id": 82,
+      "rus_id": 186,
+      "source": "strict"
+    },
+    {
+      "web_id": 83,
+      "rus_id": 187,
+      "source": "strict"
+    },
+    {
+      "web_id": 84,
+      "rus_id": 188,
+      "source": "strict"
+    },
+    {
+      "web_id": 85,
+      "rus_id": 189,
+      "source": "strict"
+    },
+    {
+      "web_id": 86,
+      "rus_id": 190,
+      "source": "strict"
+    },
+    {
+      "web_id": 87,
+      "rus_id": 191,
+      "source": "strict"
+    },
+    {
+      "web_id": 88,
+      "rus_id": 192,
+      "source": "strict"
+    },
+    {
+      "web_id": 89,
+      "rus_id": 193,
+      "source": "strict"
+    },
+    {
+      "web_id": 90,
+      "rus_id": 194,
+      "source": "strict"
+    },
+    {
+      "web_id": 91,
+      "rus_id": 198,
+      "source": "strict"
+    },
+    {
+      "web_id": 92,
+      "rus_id": 199,
+      "source": "strict"
+    },
+    {
+      "web_id": 93,
+      "rus_id": 200,
+      "source": "strict"
+    },
+    {
+      "web_id": 94,
+      "rus_id": 197,
+      "source": "strict"
+    },
+    {
+      "web_id": 95,
+      "rus_id": 201,
+      "source": "strict"
+    },
+    {
+      "web_id": 96,
+      "rus_id": 202,
+      "source": "strict"
+    },
+    {
+      "web_id": 97,
+      "rus_id": 205,
+      "source": "strict"
+    },
+    {
+      "web_id": 98,
+      "rus_id": 210,
+      "source": "strict"
+    },
+    {
+      "web_id": 99,
+      "rus_id": 211,
+      "source": "strict"
+    },
+    {
+      "web_id": 100,
+      "rus_id": 316,
+      "source": "strict"
+    },
+    {
+      "web_id": 102,
+      "rus_id": 206,
+      "source": "strict"
+    },
+    {
+      "web_id": 103,
+      "rus_id": 215,
+      "source": "strict"
+    },
+    {
+      "web_id": 104,
+      "rus_id": 268,
+      "source": "strict"
+    },
+    {
+      "web_id": 105,
+      "rus_id": 245,
+      "source": "strict"
+    },
+    {
+      "web_id": 106,
+      "rus_id": 300,
+      "source": "strict"
+    },
+    {
+      "web_id": 107,
+      "rus_id": 246,
+      "source": "strict"
+    },
+    {
+      "web_id": 109,
+      "rus_id": 258,
+      "source": "strict"
+    },
+    {
+      "web_id": 110,
+      "rus_id": 247,
+      "source": "strict"
+    },
+    {
+      "web_id": 111,
+      "rus_id": 259,
+      "source": "strict"
+    },
+    {
+      "web_id": 112,
+      "rus_id": 260,
+      "source": "strict"
+    },
+    {
+      "web_id": 113,
+      "rus_id": 261,
+      "source": "strict"
+    },
+    {
+      "web_id": 116,
+      "rus_id": 218,
+      "source": "strict"
+    },
+    {
+      "web_id": 117,
+      "rus_id": 219,
+      "source": "strict"
+    },
+    {
+      "web_id": 119,
+      "rus_id": 227,
+      "source": "strict"
+    },
+    {
+      "web_id": 120,
+      "rus_id": 228,
+      "source": "strict"
+    },
+    {
+      "web_id": 121,
+      "rus_id": 229,
+      "source": "strict"
+    },
+    {
+      "web_id": 122,
+      "rus_id": 285,
+      "source": "strict"
+    },
+    {
+      "web_id": 123,
+      "rus_id": 286,
+      "source": "strict"
+    },
+    {
+      "web_id": 124,
+      "rus_id": 287,
+      "source": "strict"
+    },
+    {
+      "web_id": 125,
+      "rus_id": 288,
+      "source": "strict"
+    },
+    {
+      "web_id": 126,
+      "rus_id": 289,
+      "source": "strict"
+    },
+    {
+      "web_id": 130,
+      "rus_id": 301,
+      "source": "strict"
+    },
+    {
+      "web_id": 131,
+      "rus_id": 302,
+      "source": "strict"
+    },
+    {
+      "web_id": 132,
+      "rus_id": 303,
+      "source": "strict"
+    },
+    {
+      "web_id": 133,
+      "rus_id": 304,
+      "source": "strict"
+    },
+    {
+      "web_id": 136,
+      "rus_id": 207,
+      "source": "strict"
+    },
+    {
+      "web_id": 137,
+      "rus_id": 305,
+      "source": "strict"
+    },
+    {
+      "web_id": 138,
+      "rus_id": 248,
+      "source": "strict"
+    },
+    {
+      "web_id": 140,
+      "rus_id": 220,
+      "source": "strict"
+    },
+    {
+      "web_id": 141,
+      "rus_id": 221,
+      "source": "strict"
+    },
+    {
+      "web_id": 142,
+      "rus_id": 195,
+      "source": "strict"
+    },
+    {
+      "web_id": 143,
+      "rus_id": 274,
+      "source": "strict"
+    },
+    {
+      "web_id": 145,
+      "rus_id": 249,
+      "source": "strict"
+    },
+    {
+      "web_id": 146,
+      "rus_id": 250,
+      "source": "strict"
+    },
+    {
+      "web_id": 147,
+      "rus_id": 251,
+      "source": "strict"
+    },
+    {
+      "web_id": 148,
+      "rus_id": 252,
+      "source": "strict"
+    },
+    {
+      "web_id": 149,
+      "rus_id": 253,
+      "source": "strict"
+    },
+    {
+      "web_id": 150,
+      "rus_id": 254,
+      "source": "strict"
+    },
+    {
+      "web_id": 151,
+      "rus_id": 282,
+      "source": "strict"
+    },
+    {
+      "web_id": 415,
+      "rus_id": 417,
+      "source": "strict"
+    },
+    {
+      "web_id": 364,
+      "rus_id": 238,
+      "source": "auto",
+      "reason": "alias exact match; shared asset paths: ['files/images/diseases/submandibular-gland/img1.jpg', 'files/images/diseases/submandibular-gland/img2.jpg', 'files/images/diseases/submandibular-gland/img6.jpg']"
+    },
+    {
+      "web_id": 54,
+      "rus_id": 325,
+      "source": "auto",
+      "reason": "alias exact match; shared asset paths: ['files/images/endoscopic-surgery/endoscopic-facelift/browlift-1.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/face-endoscopic-facelift.jpg', 'files/images/endoscopic-surgery/endoscopic-facelift/img2.png']; same template"
+    },
+    {
+      "web_id": 63,
+      "rus_id": 338,
+      "source": "auto",
+      "reason": "alias tokens nearly identical (1.00); shared asset paths: ['files/images/plastic-face/silhouette-soft/before-after.png', 'files/images/plastic-face/silhouette-soft/img1.jpg', 'files/images/plastic-face/silhouette-soft/img2.jpg']; same template; title token partial overlap (0.33)"
+    },
+    {
+      "web_id": 57,
+      "rus_id": 326,
+      "source": "manual",
+      "reason": "canonical facelift; shared asset facelifting.png"
+    },
+    {
+      "web_id": 58,
+      "rus_id": 327,
+      "source": "manual",
+      "reason": "3 shared blepharoplasty assets"
+    },
+    {
+      "web_id": 61,
+      "rus_id": 334,
+      "source": "manual",
+      "reason": "shared otoplastiki.jpg; overview pages"
+    },
+    {
+      "web_id": 62,
+      "rus_id": 337,
+      "source": "manual",
+      "reason": "3 shared ear-lobe assets"
+    },
+    {
+      "web_id": 80,
+      "rus_id": 387,
+      "source": "manual",
+      "reason": "alias exact + same template 12; wins over web 11 xml sitemap"
+    },
+    {
+      "web_id": 128,
+      "rus_id": 335,
+      "source": "manual",
+      "reason": "shared otoplastiki-andres.jpg; parent pair web 61/rus 334"
+    },
+    {
+      "web_id": 129,
+      "rus_id": 336,
+      "source": "manual",
+      "reason": "parent lineage via web 61/rus 334; overrides audit top-1 rus 262",
+      "overrides": {
+        "audit_top_1_rus": 262
+      }
+    },
+    {
+      "web_id": 358,
+      "rus_id": 373,
+      "source": "manual",
+      "reason": "3 shared otoplasty-no-incision assets"
+    },
+    {
+      "web_id": 377,
+      "rus_id": 381,
+      "source": "manual",
+      "reason": "3 shared laser-blepharoplasty assets"
+    },
+    {
+      "web_id": 402,
+      "rus_id": 398,
+      "source": "manual",
+      "reason": "3 shared necklift assets"
+    }
+  ],
+  "web_singletons": [
+    {
+      "id": 6,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 11,
+      "action": "skip",
+      "reason": "xml sitemap, template 0; not a CMS page"
+    },
+    {
+      "id": 18,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 101,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 144,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 319,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 321,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 359,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 360,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 362,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 363,
+      "action": "standalone",
+      "reason": "parotid overview; no rus partner"
+    },
+    {
+      "id": 365,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 366,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 367,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 368,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 369,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 370,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 371,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 374,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 375,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 376,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 378,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 379,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 382,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 383,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 384,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 385,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 386,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 388,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 389,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 390,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 391,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 392,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 393,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 394,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 395,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 396,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 397,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 403,
+      "action": "standalone",
+      "reason": "facelift duplicate; renumbering artifact"
+    },
+    {
+      "id": 404,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 405,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 406,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 407,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 408,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 409,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 413,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 414,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    }
+  ],
+  "rus_singletons": [
+    {
+      "id": 256,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 257,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 262,
+      "action": "standalone",
+      "reason": "general FAQ; web 114 dead; no live web partner"
+    },
+    {
+      "id": 298,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 323,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 348,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    },
+    {
+      "id": 380,
+      "action": "standalone",
+      "reason": "truly_unlocalized"
+    }
+  ],
+  "dead_babel_ignored": {
+    "web": [
+      6,
+      54,
+      57,
+      58,
+      61,
+      62,
+      63,
+      129,
+      144,
+      403
+    ],
+    "rus": [
+      238,
+      256,
+      257,
+      262,
+      298,
+      335
+    ]
+  }
+}

@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>myorl — Homepage design</title>
+<template id="__bundler_thumbnail" data-bg-color="#f5f1ea">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f5f1ea"/>
+    <circle cx="600" cy="360" r="140" fill="none" stroke="#c8846b" stroke-width="8"/>
+    <text x="600" y="410" font-family="Georgia, serif" font-style="italic" font-size="180" text-anchor="middle" fill="#1a1a1a">m</text>
+    <text x="600" y="560" font-family="Georgia, serif" font-size="42" text-anchor="middle" fill="#1a1a1a" letter-spacing="4">myorl</text>
+    <text x="600" y="610" font-family="monospace" font-size="18" text-anchor="middle" fill="#6b6b6b" letter-spacing="6">LOADING HOMEPAGE</text>
+  </svg>
+</template>
+<!--
+  ============================================================================
+  MODX → TAILWIND MAPPING CHEAT SHEET (reference for devs)
+  ============================================================================
+  LEGACY TEMPLATE               →  TAILWIND REPLACEMENT
+  -----------------------------------------------------------------------------
+  .container                    →  max-w-[1280px] mx-auto px-6
+  .row                          →  grid grid-cols-12 gap-6
+  .span12 / .span6 / .span3     →  col-span-12 / col-span-6 / col-span-3
+  .span9 / .span3 (1/4 cols)    →  md:grid-cols-[1fr_320px] OR md:col-span-9
+  .btn / .btn-inverse           →  rounded-full px-6 h-12 inline-flex (+bg-acc / bg-ink)
+  .btn-small                    →  rounded-full px-3 h-8 text-[13px]
+  .title-box                    →  flex items-end justify-between (+ mb-10)
+  h1/h2 .title                  →  font-display tracking-tightest leading-[1]
+  .latest-posts li              →  divide-y hr-line → hover:pl-2 transition-all
+  .work (.portfolio card)       →  group / aspect-[4/3] ph-stripe + title below
+  .filter-buttons               →  data-filter-group .filter-chip buttons
+  .tabs .nav-tabs-bottom        →  border-t hr-line flex (sub-article nav)
+  .accordion                    →  <details class="group"> <summary>
+  .carousel-box .carousel       →  overflow-x-auto snap-x (native scroll snap)
+  .full-width-video-box         →  bg-ink text-bone section
+  .btn.up                       →  fixed bottom-5 right-5 w-10 h-10 rounded-full
+
+  MODX PLACEHOLDERS YOU'LL WIRE IN LATER
+  -----------------------------------------------------------------------------
+  pdoResources &parents=0       →  CATEGORY grid (6 folder tiles)
+  pdoResources parents=articles →  ARTICLES grid (with &includeTVs=image,tags)
+  tagLister &tv=tags            →  .filter-chip buttons
+  getImageList &tv=migxResources→  TWO-COLUMN list block (interventions/services)
+  migxAccordion MIGX on article →  <details> FAQ accordion
+  migxGallery MIGX              →  grid image gallery on article pages
+  BabelLinks                    →  GR / EN / RU switcher in utility bar
+  ============================================================================
+-->
+<script src="tailwind-browser.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style type="text/tailwindcss">
+  @theme {
+    --font-sans: "Inter", ui-sans-serif, system-ui;
+    --font-display: "Instrument Serif", Georgia, serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --color-bone: #f6f8fb;
+    --color-bone-50: #fbfcfe;
+    --color-bone-100: #f6f8fb;
+    --color-bone-200: #eaeef5;
+    --color-bone-300: #d7dfeb;
+
+    --color-ink: #0f2a4a;
+    --color-ink-soft: #1b3a63;
+
+    --color-stone: #5a6b7e;
+    --color-stone-soft: #8594a6;
+    --color-stone-line: #d7dfeb;
+
+    --color-trust: #2563a8;
+    --color-trust-soft: #e4edf8;
+    --color-trust-ink: #17406f;
+
+    --color-teal: #0e7c7b;
+    --color-teal-soft: #e0f1f1;
+
+    --tracking-tightest: -0.04em;
+    --radius-xl2: 1.25rem;
+  }
+</style>
+
+<style>
+  html, body { background: #f6f8fb; color:#0f2a4a; }
+  /* subtle striped placeholder — cool blue tones */
+  .ph-stripe {
+    background:
+      repeating-linear-gradient(135deg, #eaeef5 0 10px, #dde4ef 10px 20px);
+  }
+  .ph-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing:.06em; text-transform:uppercase; color:#8594a6;
+  }
+  /* Hairline */
+  .hr-line { border-color:#d7dfeb; }
+  /* Marquee */
+  @keyframes marq { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+  .marq-track { animation: marq 45s linear infinite; }
+  /* Underline link */
+  .u-link { background-image: linear-gradient(currentColor,currentColor); background-size:100% 1px; background-repeat:no-repeat; background-position: 0 100%; padding-bottom:2px; }
+  .u-link:hover { background-size: 100% 2px; }
+  /* Density tweak */
+  [data-density="cozy"] section { padding-top:3.5rem; padding-bottom:3.5rem; }
+  [data-density="roomy"] section { padding-top:7rem; padding-bottom:7rem; }
+  /* Hero variant visibility */
+  [data-hero="editorial"] .hero-editorial{display:block} [data-hero="editorial"] .hero-split,[data-hero="editorial"] .hero-quiet{display:none}
+  [data-hero="split"] .hero-split{display:block} [data-hero="split"] .hero-editorial,[data-hero="split"] .hero-quiet{display:none}
+  [data-hero="quiet"] .hero-quiet{display:block} [data-hero="quiet"] .hero-editorial,[data-hero="quiet"] .hero-split{display:none}
+  /* Palette tweak overrides — medical/trust palettes */
+  [data-palette="trust"]   { --accent: #2563a8; --accent-soft: #e4edf8; }   /* Trust Blue */
+  [data-palette="teal"]    { --accent: #0e7c7b; --accent-soft: #e0f1f1; }   /* Medical Teal */
+  [data-palette="ink"]     { --accent: #0f2a4a; --accent-soft: #e4edf8; }   /* Clinical Navy */
+  [data-palette="emerald"] { --accent: #13694d; --accent-soft: #e3efea; }   /* Reassurance Green */
+  .acc { color: var(--accent, #2563a8); }
+  .bg-acc { background: var(--accent, #2563a8); color:#f6f8fb; }
+  .bg-acc-soft { background: var(--accent-soft, #e4edf8); }
+  .border-acc { border-color: var(--accent, #2563a8); }
+  /* Tweaks panel */
+  #tweaks { display:none; }
+  #tweaks.open { display:block; }
+</style>
+</head>
+
+<body class="font-sans" data-hero="editorial" data-palette="trust" data-density="default">
+
+<!-- ============ TOP UTILITY BAR ============ -->
+<div class="border-b hr-line bg-bone-50/80 backdrop-blur">
+  <div class="max-w-[1280px] mx-auto px-6 h-9 flex items-center justify-between text-[12px] text-stone">
+    <div class="flex items-center gap-5">
+      <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-teal"></span>Λεωφ. Αλεξάνδρας 201, Αθήνα</span>
+      <span class="hidden sm:inline">·</span>
+      <span class="hidden sm:inline">Mo–Fr 09:00–21:00</span>
+    </div>
+    <div class="flex items-center gap-5">
+      <a href="#" class="hover:text-ink">+30 210 6427 000</a>
+      <span class="opacity-40">|</span>
+      <div class="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider">
+        <a href="#" class="text-ink">GR</a>
+        <a href="#" class="text-stone-soft">EN</a>
+        <a href="#" class="text-stone-soft">RU</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="border-b hr-line">
+  <div class="max-w-[1280px] mx-auto px-6 h-20 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full border-acc border-2 flex items-center justify-center">
+        <span class="font-display text-xl leading-none acc">m</span>
+      </div>
+      <div class="leading-none">
+        <div class="font-display text-[22px] tracking-tightest">myorl</div>
+        <div class="text-[11px] font-mono uppercase tracking-wider text-stone-soft mt-0.5">ENT · Athens</div>
+      </div>
+    </a>
+    <nav class="hidden lg:flex items-center gap-8 text-[14px] text-ink-soft">
+      <a href="#" class="u-link">Doctor</a>
+      <a href="#" class="u-link">Interventions</a>
+      <a href="#" class="u-link">Services</a>
+      <a href="#" class="u-link">Articles</a>
+      <a href="#" class="u-link">Videos</a>
+      <a href="#" class="u-link">Contact</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="#" class="hidden sm:inline text-[14px] text-stone hover:text-ink">Online visit</a>
+      <a href="#" class="bg-acc text-[13px] font-medium px-4 h-10 inline-flex items-center rounded-full hover:opacity-90 transition">
+        Book appointment →
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================================= -->
+<!-- HERO — EDITORIAL VARIANT -->
+<!-- ============================================================================= -->
+<section class="hero-editorial">
+  <div class="max-w-[1280px] mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-28">
+    <div class="grid grid-cols-12 gap-6 items-end">
+      <div class="col-span-12 md:col-span-7">
+        <div class="ph-label mb-6">Δρ. Παύλος Τσολαρίδης, M.D. · Est. 1998</div>
+        <h1 class="font-display tracking-tightest text-[52px] md:text-[96px] leading-[0.95] text-ink">
+          Ear, nose &amp; throat<br>
+          care, <em class="italic acc">refined</em><br>
+          over 25 years.
+        </h1>
+        <p class="mt-8 text-[17px] md:text-[19px] text-stone max-w-[46ch] leading-[1.55]">
+          A small practice in the heart of Athens. Honest diagnostics, conservative
+          surgery when needed, and plain-language explanations — in Greek, English or Russian.
+        </p>
+        <div class="mt-10 flex flex-wrap items-center gap-4">
+          <a href="#" class="bg-ink text-bone rounded-full px-6 h-12 inline-flex items-center gap-2 text-[14px] font-medium">
+            Book a consultation
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg>
+          </a>
+          <a href="#" class="h-12 inline-flex items-center gap-2 text-[14px] text-ink u-link">
+            Or start with an online visit
+          </a>
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-5">
+        <div class="aspect-[4/5] ph-stripe rounded-sm relative overflow-hidden">
+          <div class="absolute inset-0 flex items-end p-5">
+            <div class="ph-label bg-bone/80 backdrop-blur px-2 py-1">image · portrait_of_doctor_4x5</div>
+          </div>
+        </div>
+        <div class="mt-4 grid grid-cols-3 gap-3 text-[12px] font-mono uppercase tracking-wider text-stone">
+          <div><div class="text-ink font-display text-[28px] font-normal normal-case tracking-tight">25+</div>years practice</div>
+          <div><div class="text-ink font-display text-[28px] font-normal normal-case tracking-tight">14k</div>consultations</div>
+          <div><div class="text-ink font-display text-[28px] font-normal normal-case tracking-tight">4.9</div>patient rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credentials marquee -->
+  <div class="border-y hr-line overflow-hidden bg-bone-50">
+    <div class="marq-track flex gap-14 whitespace-nowrap py-4 text-[13px] text-stone font-mono uppercase tracking-widest">
+      <span>— Hellenic ENT Society</span>
+      <span>— European Rhinologic Society</span>
+      <span>— European Academy of Facial Plastic Surgery</span>
+      <span>— AAO–HNS Fellow</span>
+      <span>— Athens Medical Association</span>
+      <span>— Hellenic ENT Society</span>
+      <span>— European Rhinologic Society</span>
+      <span>— European Academy of Facial Plastic Surgery</span>
+      <span>— AAO–HNS Fellow</span>
+      <span>— Athens Medical Association</span>
+    </div>
+  </div>
+</section>
+
+<!-- HERO — SPLIT VARIANT -->
+<section class="hero-split hidden">
+  <div class="grid md:grid-cols-2 border-b hr-line">
+    <div class="px-6 md:px-16 py-20 md:py-32 border-r hr-line">
+      <div class="ph-label mb-5">[ 01 / Homepage / ENT practice ]</div>
+      <h1 class="font-display tracking-tightest text-[64px] md:text-[88px] leading-[0.92] text-ink">
+        The quiet kind<br>of <em class="italic acc">medicine.</em>
+      </h1>
+      <p class="mt-8 text-[17px] text-stone max-w-[42ch] leading-[1.6]">
+        No waiting rooms full of televisions, no sales pitch. Just careful ENT
+        care with Dr. Pavlos Tsolaridis — trained in Athens, Paris and Vienna.
+      </p>
+      <div class="mt-10 flex items-center gap-4">
+        <a href="#" class="bg-acc rounded-full px-6 h-12 inline-flex items-center text-[14px] font-medium">Book appointment</a>
+        <a href="#" class="u-link text-[14px]">See all services →</a>
+      </div>
+    </div>
+    <div class="ph-stripe relative min-h-[520px]">
+      <div class="absolute inset-0 flex items-end p-6"><span class="ph-label bg-bone/80 px-2 py-1">image · exam_room_wide_1x1</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HERO — QUIET VARIANT -->
+<section class="hero-quiet hidden">
+  <div class="max-w-[980px] mx-auto px-6 pt-28 pb-24 text-center">
+    <div class="ph-label mb-6">Est. 1998 · Athens, Greece</div>
+    <h1 class="font-display tracking-tightest text-[64px] md:text-[112px] leading-[0.95]">
+      An ENT clinic<br>built on <em class="italic acc">listening.</em>
+    </h1>
+    <p class="mt-8 text-[19px] text-stone max-w-[56ch] mx-auto leading-[1.6]">
+      Dr. Pavlos Tsolaridis runs a private ENT practice serving patients in Greek,
+      English and Russian. Diagnostics, surgery, and second opinions.
+    </p>
+    <div class="mt-10 flex justify-center gap-4">
+      <a href="#" class="bg-ink text-bone rounded-full px-6 h-12 inline-flex items-center text-[14px]">Book appointment</a>
+      <a href="#" class="border border-ink/20 rounded-full px-6 h-12 inline-flex items-center text-[14px]">Call the clinic</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================= -->
+<!-- CATEGORIES — maps to top-level folders: Παθήσεις (3), Παιδο-ΩΡΛ (4),        -->
+<!-- Ενδοσκοπική (5), Πλαστική (6), Κλινικές (7). pdoResources &parents=0 &limit=6 -->
+<!-- ============================================================================= -->
+<section class="border-b hr-line">
+  <div class="max-w-[1280px] mx-auto px-6 py-20 md:py-28">
+    <div class="flex items-end justify-between gap-8 mb-14">
+      <div>
+        <div class="ph-label mb-3">01 — Κατηγορίες / Categories</div>
+        <h2 class="font-display tracking-tightest text-[44px] md:text-[64px] leading-[1] max-w-[20ch]">
+          Six areas of <em class="italic acc">focus.</em>
+        </h2>
+      </div>
+      <a href="#" class="hidden md:inline-flex u-link text-[14px] shrink-0">Sitemap of all topics →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 border-t border-l hr-line">
+      <!-- card = folder-level content row from modx_site_content (parent=0, isfolder=1) -->
+      <a href="#" class="group border-r border-b hr-line p-8 hover:bg-bone-200 transition">
+        <div class="flex items-start justify-between">
+          <span class="ph-label">01 · 32 articles</span>
+          <span class="text-stone group-hover:acc transition">→</span>
+        </div>
+        <h3 class="font-display text-[28px] leading-tight mt-10">Παθήσεις</h3>
+        <p class="text-[13px] font-mono uppercase tracking-wider text-stone-soft mt-1">Conditions &amp; diagnoses</p>
+        <p class="text-[14px] text-stone mt-4 leading-[1.55]">Nose, throat &amp; ear conditions explained — symptoms, tests, treatment options.</p>
+      </a>
+
+      <a href="#" class="group border-r border-b hr-line p-8 hover:bg-bone-200 transition">
+        <div class="flex items-start justify-between"><span class="ph-label">02 · 18 articles</span><span class="text-stone group-hover:acc">→</span></div>
+        <h3 class="font-display text-[28px] leading-tight mt-10">Παιδο-ΩΡΛ</h3>
+        <p class="text-[13px] font-mono uppercase tracking-wider text-stone-soft mt-1">Pediatric ENT</p>
+        <p class="text-[14px] text-stone mt-4 leading-[1.55]">Adenoids, tonsils, ear infections, allergies — explained for parents.</p>
+      </a>
+
+      <a href="#" class="group border-r border-b hr-line p-8 hover:bg-bone-200 transition">
+        <div class="flex items-start justify-between"><span class="ph-label">03 · 14 articles</span><span class="text-stone group-hover:acc">→</span></div>
+        <h3 class="font-display text-[28px] leading-tight mt-10">Ενδοσκοπική χειρουργική</h3>
+        <p class="text-[13px] font-mono uppercase tracking-wider text-stone-soft mt-1">Endoscopic surgery</p>
+        <p class="text-[14px] text-stone mt-4 leading-[1.55]">FESS, balloon sinuplasty, and microscopic ear procedures.</p>
+      </a>
+
+      <a href="#" class="group border-r border-b hr-line p-8 hover:bg-bone-200 transition">
+        <div class="flex items-start justify-between"><span class="ph-label">04 · 9 articles</span><span class="text-stone group-hover:acc">→</span></div>
+        <h3 class="font-display text-[28px] leading-tight mt-10">Πλαστική προσώπου</h3>
+        <p class="text-[13px] font-mono uppercase tracking-wider text-stone-soft mt-1">Facial plastic surgery</p>
+        <p class="text-[14px] text-stone mt-4 leading-[1.55]">Functional and aesthetic nose, scar revision, and otoplasty.</p>
+      </a>
+
+      <a href="#" class="group border-r border-b hr-line p-8 hover:bg-bone-200 transition">
+        <div class="flex items-start justify-between"><span class="ph-label">05 · 6 locations</span><span class="text-stone group-hover:acc">→</span></div>
+        <h3 class="font-display text-[28px] leading-tight mt-10">Κλινικές</h3>
+        <p class="text-[13px] font-mono uppercase tracking-wider text-stone-soft mt-1">Partner clinics</p>
+        <p class="text-[14px] text-stone mt-4 leading-[1.55]">Where surgeries are performed — six hospitals across Athens.</p>
+      </a>
+
+      <a href="#" class="group border-r border-b hr-line p-8 hover:bg-bone-200 transition">
+        <div class="flex items-start justify-between"><span class="ph-label">06 · 24 videos</span><span class="text-stone group-hover:acc">→</span></div>
+        <h3 class="font-display text-[28px] leading-tight mt-10">Βίντεο</h3>
+        <p class="text-[13px] font-mono uppercase tracking-wider text-stone-soft mt-1">Video library</p>
+        <p class="text-[14px] text-stone mt-4 leading-[1.55]">Consultation clips, surgery explainers, patient Q&amp;As.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================= -->
+<!-- ABOUT THE DOCTOR — editorial split -->
+<!-- ============================================================================= -->
+<section class="border-b hr-line bg-bone-200/50">
+  <div class="max-w-[1280px] mx-auto px-6 py-24 md:py-32">
+    <div class="grid grid-cols-12 gap-8">
+      <div class="col-span-12 md:col-span-5">
+        <div class="aspect-[4/5] ph-stripe relative">
+          <div class="absolute inset-0 flex items-end p-5"><span class="ph-label bg-bone/80 px-2 py-1">image · doctor_portrait_bw_4x5</span></div>
+        </div>
+      </div>
+      <div class="col-span-12 md:col-span-6 md:col-start-7">
+        <div class="ph-label mb-4">02 — About</div>
+        <h2 class="font-display text-[44px] md:text-[60px] leading-[1.02] tracking-tightest">
+          Trained in three cities. <em class="italic acc">Practicing in one.</em>
+        </h2>
+        <div class="mt-8 space-y-5 text-[16px] text-stone leading-[1.65] max-w-[56ch]">
+          <p>Dr. Tsolaridis completed his ENT residency at the University of Athens, followed by fellowships in rhinology in Paris and head &amp; neck surgery in Vienna.</p>
+          <p>Since 2003 he has led a private practice on Alexandras Avenue, alongside operating privileges at two Athens hospitals. He is a member of the Hellenic and European ENT societies.</p>
+        </div>
+
+        <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t hr-line">
+          <div><div class="font-display text-[32px] tracking-tight">1998</div><div class="ph-label mt-1">First practice</div></div>
+          <div><div class="font-display text-[32px] tracking-tight">3</div><div class="ph-label mt-1">Fellowships</div></div>
+          <div><div class="font-display text-[32px] tracking-tight">14k+</div><div class="ph-label mt-1">Consultations</div></div>
+          <div><div class="font-display text-[32px] tracking-tight">3</div><div class="ph-label mt-1">Languages</div></div>
+        </div>
+
+        <a href="#" class="mt-10 inline-flex items-center gap-2 u-link text-[14px]">Full CV &amp; publications →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================= -->
+<!-- TWO-COLUMN LIST — symptoms & services (mirrors MODX home structure) -->
+<!-- ============================================================================= -->
+<section class="border-b hr-line">
+  <div class="max-w-[1280px] mx-auto px-6 py-20 md:py-28">
+    <div class="grid md:grid-cols-2 gap-20">
+      <!-- Column 1: What's bothering you -->
+      <div>
+        <div class="flex items-end justify-between mb-8">
+          <div>
+            <div class="ph-label mb-2">03 — Symptoms</div>
+            <h3 class="font-display text-[38px] leading-tight tracking-tightest">What's bothering you?</h3>
+          </div>
+        </div>
+        <ul class="divide-y hr-line border-y hr-line">
+          <li><a href="#" class="group flex items-center justify-between py-5 hover:pl-2 transition-all">
+            <span class="text-[17px]">Sore throat that won't go away</span>
+            <span class="text-stone group-hover:acc">→</span>
+          </a></li>
+          <li><a href="#" class="group flex items-center justify-between py-5 hover:pl-2 transition-all">
+            <span class="text-[17px]">Blocked nose, chronic sinusitis</span>
+            <span class="text-stone group-hover:acc">→</span>
+          </a></li>
+          <li><a href="#" class="group flex items-center justify-between py-5 hover:pl-2 transition-all">
+            <span class="text-[17px]">Dizziness &amp; balance issues</span>
+            <span class="text-stone group-hover:acc">→</span>
+          </a></li>
+          <li><a href="#" class="group flex items-center justify-between py-5 hover:pl-2 transition-all">
+            <span class="text-[17px]">Hearing loss &amp; tinnitus</span>
+            <span class="text-stone group-hover:acc">→</span>
+          </a></li>
+          <li><a href="#" class="group flex items-center justify-between py-5 hover:pl-2 transition-all">
+            <span class="text-[17px]">Snoring, sleep apnea</span>
+            <span class="text-stone group-hover:acc">→</span>
+          </a></li>
+        </ul>
+        <a href="#" class="mt-6 inline-flex u-link text-[14px] acc">All 32 symptoms →</a>
+      </div>
+
+      <!-- Column 2: Services -->
+      <div>
+        <div class="flex items-end justify-between mb-8">
+          <div>
+            <div class="ph-label mb-2">04 — Services</div>
+            <h3 class="font-display text-[38px] leading-tight tracking-tightest">In-clinic services</h3>
+          </div>
+        </div>
+        <ul class="divide-y hr-line border-y hr-line">
+          <li><div class="py-5 flex items-start gap-5">
+            <span class="w-10 h-10 rounded-full bg-acc-soft flex items-center justify-center acc shrink-0 font-mono text-[12px]">A</span>
+            <div>
+              <div class="text-[17px]">Fiber-optic endoscopy</div>
+              <div class="text-[13px] text-stone mt-1">Nose, throat &amp; larynx · same-day results</div>
+            </div>
+          </div></li>
+          <li><div class="py-5 flex items-start gap-5">
+            <span class="w-10 h-10 rounded-full bg-acc-soft flex items-center justify-center acc shrink-0 font-mono text-[12px]">B</span>
+            <div>
+              <div class="text-[17px]">Audiometry &amp; tympanometry</div>
+              <div class="text-[13px] text-stone mt-1">Full hearing assessment in-house</div>
+            </div>
+          </div></li>
+          <li><div class="py-5 flex items-start gap-5">
+            <span class="w-10 h-10 rounded-full bg-acc-soft flex items-center justify-center acc shrink-0 font-mono text-[12px]">C</span>
+            <div>
+              <div class="text-[17px]">Allergy testing</div>
+              <div class="text-[13px] text-stone mt-1">Skin-prick panels and management plans</div>
+            </div>
+          </div></li>
+          <li><div class="py-5 flex items-start gap-5">
+            <span class="w-10 h-10 rounded-full bg-acc-soft flex items-center justify-center acc shrink-0 font-mono text-[12px]">D</span>
+            <div>
+              <div class="text-[17px]">Vestibular testing</div>
+              <div class="text-[13px] text-stone mt-1">For dizziness and BPPV</div>
+            </div>
+          </div></li>
+          <li><div class="py-5 flex items-start gap-5">
+            <span class="w-10 h-10 rounded-full bg-acc-soft flex items-center justify-center acc shrink-0 font-mono text-[12px]">E</span>
+            <div>
+              <div class="text-[17px]">Online second opinion</div>
+              <div class="text-[13px] text-stone mt-1">Upload your scans &amp; get a reply in 48h</div>
+            </div>
+          </div></li>
+        </ul>
+        <a href="#" class="mt-6 inline-flex u-link text-[14px] acc">All services →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================= -->
+<!-- FULL-BLEED VIDEO CTA (mirrors existing site's video block, reimagined) -->
+<!-- ============================================================================= -->
+<section class="bg-ink text-bone">
+  <div class="max-w-[1280px] mx-auto px-6 py-24 md:py-32">
+    <div class="grid md:grid-cols-12 gap-10 items-center">
+      <div class="md:col-span-7">
+        <div class="ph-label text-bone/60 mb-5">05 — A tour of the clinic</div>
+        <h2 class="font-display text-[48px] md:text-[72px] leading-[1] tracking-tightest">
+          See the practice<br><em class="italic acc">before you visit.</em>
+        </h2>
+        <p class="mt-6 text-[17px] text-bone/70 max-w-[52ch] leading-[1.6]">
+          A quick 90-second tour of the exam rooms, equipment, and the team.
+          The same space where your consultation will happen.
+        </p>
+        <a href="#" class="mt-8 inline-flex items-center gap-3 text-[14px] font-medium bg-bone text-ink rounded-full px-5 h-12">
+          <span class="w-5 h-5 rounded-full bg-acc flex items-center justify-center">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 0l6 4-6 4V0z" fill="currentColor" class="acc" stroke="none"/></svg>
+          </span>
+          Play tour · 1:34
+        </a>
+      </div>
+      <div class="md:col-span-5">
+        <div class="aspect-video ph-stripe rounded-sm relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-full bg-bone/90 flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M3 0l12 9-12 9V0z" fill="#1a1a1a"/></svg>
+            </div>
+          </div>
+          <div class="absolute top-4 left-4"><span class="ph-label bg-bone/80 px-2 py-1 text-ink">video · clinic_tour_16x9</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================= -->
+<!-- ARTICLES — mirrors /articles/ index: tag filter + card grid + featured -->
+<!-- Maps to: parent=Articles folder, pdoResources &tpl=ArticlesListItem       -->
+<!--         &includeTVs=`image,tags` + tagLister for filter chips             -->
+<!-- ============================================================================= -->
+<section class="border-b hr-line">
+  <div class="max-w-[1280px] mx-auto px-6 py-20 md:py-28">
+
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-10">
+      <div>
+        <div class="ph-label mb-3">06 — Journal / Άρθρα</div>
+        <h2 class="font-display text-[44px] md:text-[60px] leading-[1] tracking-tightest max-w-[20ch]">
+          Plain-language <em class="italic acc">articles</em>, by condition.
+        </h2>
+      </div>
+      <a href="#" class="u-link text-[14px] shrink-0">All articles →</a>
+    </div>
+
+    <!-- Tag filter — mirrors tagLister chips with "Όλα" active state -->
+    <div class="flex flex-wrap items-center gap-2 mb-14 text-[13px]" data-filter-group>
+      <button class="filter-chip h-9 px-4 rounded-full bg-ink text-bone" data-filter="*">Όλα · All</button>
+      <button class="filter-chip h-9 px-4 rounded-full border hr-line hover:border-acc" data-filter="nose">Nose &amp; sinus</button>
+      <button class="filter-chip h-9 px-4 rounded-full border hr-line hover:border-acc" data-filter="ear">Ear &amp; hearing</button>
+      <button class="filter-chip h-9 px-4 rounded-full border hr-line hover:border-acc" data-filter="throat">Throat</button>
+      <button class="filter-chip h-9 px-4 rounded-full border hr-line hover:border-acc" data-filter="pediatric">Παιδο-ΩΡΛ</button>
+      <button class="filter-chip h-9 px-4 rounded-full border hr-line hover:border-acc" data-filter="plastic">Πλαστική προσώπου</button>
+      <button class="filter-chip h-9 px-4 rounded-full border hr-line hover:border-acc" data-filter="endoscopy">Ενδοσκοπική</button>
+    </div>
+
+    <!-- Featured + card grid, mirrors ArticlesListItem span3 grid -->
+    <div class="grid grid-cols-12 gap-6">
+
+      <!-- Featured article (wide) -->
+      <a href="#" class="group col-span-12 md:col-span-6 row-span-2 block" data-tags="nose">
+        <div class="aspect-[4/3] ph-stripe relative overflow-hidden">
+          <div class="absolute inset-0 flex items-end p-5">
+            <span class="ph-label bg-bone/85 px-2 py-1">article · imageCenter_16x9</span>
+          </div>
+          <div class="absolute top-5 left-5 flex items-center gap-2">
+            <span class="ph-label bg-acc text-bone px-2 py-1">Featured</span>
+            <span class="ph-label bg-bone/85 px-2 py-1">nose, sinus</span>
+          </div>
+        </div>
+        <div class="mt-5">
+          <div class="flex items-center gap-3 text-[12px] font-mono uppercase text-stone mb-3">
+            <span>Surgery recovery</span>
+            <span class="w-1 h-1 rounded-full bg-stone-soft"></span>
+            <span>8 min read</span>
+            <span class="w-1 h-1 rounded-full bg-stone-soft"></span>
+            <span>Updated 12 Apr 2026</span>
+          </div>
+          <h3 class="font-display text-[32px] md:text-[38px] leading-[1.05] group-hover:acc transition max-w-[20ch]">
+            What to expect after septoplasty — week by week.
+          </h3>
+          <p class="mt-4 text-[15px] text-stone leading-[1.6] max-w-[56ch]">
+            A day-by-day recovery timeline from the operating theatre back to normal breathing — including when to worry, when to call, and when to travel.
+          </p>
+        </div>
+      </a>
+
+      <!-- Regular cards — mirrors .work card with image on top, title, tags below -->
+      <a href="#" class="group col-span-12 md:col-span-3 block" data-tags="pediatric throat">
+        <div class="aspect-[4/3] ph-stripe relative">
+          <div class="absolute inset-0 flex items-end p-3"><span class="ph-label bg-bone/85 px-2 py-1">370×270</span></div>
+        </div>
+        <div class="mt-4">
+          <div class="text-[11px] font-mono uppercase text-stone mb-2">Παιδο-ΩΡΛ · 5 min</div>
+          <h3 class="font-display text-[20px] leading-[1.15] group-hover:acc transition">When does your child actually need their tonsils out?</h3>
+          <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] font-mono uppercase text-stone-soft">
+            <span class="px-2 py-0.5 border hr-line rounded-full">pediatric</span>
+            <span class="px-2 py-0.5 border hr-line rounded-full">throat</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="group col-span-12 md:col-span-3 block" data-tags="ear">
+        <div class="aspect-[4/3] ph-stripe relative">
+          <div class="absolute inset-0 flex items-end p-3"><span class="ph-label bg-bone/85 px-2 py-1">370×270</span></div>
+        </div>
+        <div class="mt-4">
+          <div class="text-[11px] font-mono uppercase text-stone mb-2">Hearing · 6 min</div>
+          <h3 class="font-display text-[20px] leading-[1.15] group-hover:acc transition">Tinnitus: what's real, what's myth, what helps.</h3>
+          <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] font-mono uppercase text-stone-soft">
+            <span class="px-2 py-0.5 border hr-line rounded-full">ear</span>
+            <span class="px-2 py-0.5 border hr-line rounded-full">tinnitus</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="group col-span-12 md:col-span-3 block" data-tags="endoscopy nose">
+        <div class="aspect-[4/3] ph-stripe relative">
+          <div class="absolute inset-0 flex items-end p-3"><span class="ph-label bg-bone/85 px-2 py-1">370×270</span></div>
+        </div>
+        <div class="mt-4">
+          <div class="text-[11px] font-mono uppercase text-stone mb-2">Ενδοσκοπική · 7 min</div>
+          <h3 class="font-display text-[20px] leading-[1.15] group-hover:acc transition">FESS vs. traditional sinus surgery: how we decide.</h3>
+          <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] font-mono uppercase text-stone-soft">
+            <span class="px-2 py-0.5 border hr-line rounded-full">endoscopy</span>
+            <span class="px-2 py-0.5 border hr-line rounded-full">sinus</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="group col-span-12 md:col-span-3 block" data-tags="plastic nose">
+        <div class="aspect-[4/3] ph-stripe relative">
+          <div class="absolute inset-0 flex items-end p-3"><span class="ph-label bg-bone/85 px-2 py-1">370×270</span></div>
+        </div>
+        <div class="mt-4">
+          <div class="text-[11px] font-mono uppercase text-stone mb-2">Πλαστική · 9 min</div>
+          <h3 class="font-display text-[20px] leading-[1.15] group-hover:acc transition">Functional vs. cosmetic rhinoplasty — one procedure or two?</h3>
+          <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] font-mono uppercase text-stone-soft">
+            <span class="px-2 py-0.5 border hr-line rounded-full">plastic</span>
+            <span class="px-2 py-0.5 border hr-line rounded-full">nose</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- FAQ teaser — mirrors migxAccordion structure on articles -->
+    <div class="mt-20 pt-14 border-t hr-line grid md:grid-cols-12 gap-10">
+      <div class="md:col-span-4">
+        <div class="ph-label mb-3">From the article FAQs</div>
+        <h3 class="font-display text-[32px] leading-[1.05] tracking-tightest">
+          Most-asked, <em class="italic acc">straight-answered.</em>
+        </h3>
+        <p class="mt-4 text-stone text-[14px] leading-[1.6] max-w-[34ch]">
+          Pulled from the accordion section of our most-read articles.
+        </p>
+      </div>
+      <div class="md:col-span-8 divide-y hr-line border-y hr-line">
+        <details class="group py-5">
+          <summary class="flex items-start justify-between cursor-pointer list-none gap-6">
+            <span class="font-display text-[20px] leading-snug group-open:acc">Is septoplasty painful? How much time off work?</span>
+            <span class="text-stone mt-1 transition group-open:rotate-45 text-xl leading-none">+</span>
+          </summary>
+          <p class="mt-3 text-[15px] text-stone leading-[1.6] max-w-[60ch]">Most patients describe it as strong pressure rather than pain. Expect 3–5 days at home, and full exercise at two weeks.</p>
+        </details>
+        <details class="group py-5">
+          <summary class="flex items-start justify-between cursor-pointer list-none gap-6">
+            <span class="font-display text-[20px] leading-snug group-open:acc">My child snores loudly — when should we see an ENT?</span>
+            <span class="text-stone mt-1 transition group-open:rotate-45 text-xl leading-none">+</span>
+          </summary>
+          <p class="mt-3 text-[15px] text-stone leading-[1.6] max-w-[60ch]">If snoring is nightly, loud, or interrupted by pauses — or your child is tired in the day — it's worth a consultation.</p>
+        </details>
+        <details class="group py-5">
+          <summary class="flex items-start justify-between cursor-pointer list-none gap-6">
+            <span class="font-display text-[20px] leading-snug group-open:acc">Do you offer a second-opinion service on scans?</span>
+            <span class="text-stone mt-1 transition group-open:rotate-45 text-xl leading-none">+</span>
+          </summary>
+          <p class="mt-3 text-[15px] text-stone leading-[1.6] max-w-[60ch]">Yes — upload your CT/MRI and clinical notes via the Online Visit form and expect a written opinion within 48h.</p>
+        </details>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+// Tag filter — mirrors isotope filter behaviour
+document.querySelectorAll('[data-filter-group] .filter-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const f = btn.dataset.filter;
+    const group = btn.closest('[data-filter-group]');
+    group.querySelectorAll('.filter-chip').forEach(b => {
+      b.classList.remove('bg-ink','text-bone');
+      b.classList.add('border','hr-line');
+    });
+    btn.classList.add('bg-ink','text-bone'); btn.classList.remove('border','hr-line');
+    document.querySelectorAll('[data-tags]').forEach(card => {
+      const tags = (card.dataset.tags || '').split(/\s+/);
+      card.style.display = (f === '*' || tags.includes(f)) ? '' : 'none';
+    });
+  });
+});
+</script>
+
+<!-- ============================================================================= -->
+<!-- PATIENT VOICES -->
+<!-- ============================================================================= -->
+<section class="border-b hr-line bg-bone-200/40">
+  <div class="max-w-[1280px] mx-auto px-6 py-24">
+    <div class="ph-label mb-3">07 — Patient voices</div>
+    <h2 class="font-display text-[40px] md:text-[52px] leading-[1.05] tracking-tightest max-w-[22ch]">
+      <em class="italic acc">4.9 / 5</em> across 630+ public reviews.
+    </h2>
+    <div class="grid md:grid-cols-3 gap-10 mt-14">
+      <figure class="border-t hr-line pt-6">
+        <blockquote class="font-display text-[24px] leading-[1.3]">"Finally, a doctor who explains rather than rushes. Surgery was painless and I was back at work in four days."</blockquote>
+        <figcaption class="mt-5 ph-label">— Eleni K. · Septoplasty, 2025</figcaption>
+      </figure>
+      <figure class="border-t hr-line pt-6">
+        <blockquote class="font-display text-[24px] leading-[1.3]">"My son's chronic ear infections finally sorted after years. Thank you for the patience with a nervous 6-year-old."</blockquote>
+        <figcaption class="mt-5 ph-label">— Daria V. · Pediatric, 2024</figcaption>
+      </figure>
+      <figure class="border-t hr-line pt-6">
+        <blockquote class="font-display text-[24px] leading-[1.3]">"I came in for a second opinion and left with a clear plan. No upselling. That's rare."</blockquote>
+        <figcaption class="mt-5 ph-label">— Γιώργος Π. · Consult, 2025</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================= -->
+<!-- VISIT / CONTACT -->
+<!-- ============================================================================= -->
+<section class="border-b hr-line">
+  <div class="max-w-[1280px] mx-auto px-6 py-24 md:py-32">
+    <div class="grid md:grid-cols-12 gap-10">
+      <div class="md:col-span-5">
+        <div class="ph-label mb-3">08 — Visit</div>
+        <h2 class="font-display text-[44px] md:text-[56px] leading-[1] tracking-tightest">
+          Two ways to <em class="italic acc">meet.</em>
+        </h2>
+        <p class="mt-6 text-stone text-[16px] leading-[1.6] max-w-[44ch]">
+          In the clinic at Alexandras 201 — or online from anywhere. Both
+          paths are reviewed personally by Dr. Tsolaridis.
+        </p>
+      </div>
+
+      <div class="md:col-span-7 grid sm:grid-cols-2 gap-5">
+        <a href="#" class="border hr-line p-8 hover:border-acc hover:bg-bone-50 transition block">
+          <div class="flex items-center justify-between">
+            <span class="ph-label">In-clinic</span>
+            <span class="w-2 h-2 rounded-full bg-teal"></span>
+          </div>
+          <h3 class="font-display text-[30px] mt-8 leading-tight">Book an appointment</h3>
+          <p class="text-[14px] text-stone mt-3 leading-[1.55]">Usually available within 3–5 working days. Parking on site.</p>
+          <div class="mt-8 text-[14px] acc">Open calendar →</div>
+        </a>
+        <a href="#" class="border hr-line p-8 hover:border-acc hover:bg-bone-50 transition block">
+          <div class="flex items-center justify-between">
+            <span class="ph-label">Online</span>
+            <span class="w-2 h-2 rounded-full bg-teal"></span>
+          </div>
+          <h3 class="font-display text-[30px] mt-8 leading-tight">Online consultation</h3>
+          <p class="text-[14px] text-stone mt-3 leading-[1.55]">30-minute video visit. Send scans and photos in advance.</p>
+          <div class="mt-8 text-[14px] acc">Start online visit →</div>
+        </a>
+
+        <div class="border hr-line p-8 sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div>
+            <div class="ph-label">Address</div>
+            <div class="mt-3 text-[15px]">Λεωφ. Αλεξάνδρας 201<br>Αμπελόκηποι, Αθήνα 11523</div>
+          </div>
+          <div>
+            <div class="ph-label">Hours</div>
+            <div class="mt-3 text-[15px]">Mon–Fri · 09:00 – 21:00<br>Sat · 10:00 – 14:00</div>
+          </div>
+          <div>
+            <div class="ph-label">Direct</div>
+            <div class="mt-3 text-[15px]">+30 210 6427 000<br><a href="#" class="u-link">info@myorl.gr</a></div>
+          </div>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="sm:col-span-2 aspect-[21/9] ph-stripe relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-10 h-10 rounded-full bg-acc flex items-center justify-center">
+              <div class="w-2 h-2 bg-bone rounded-full"></div>
+            </div>
+          </div>
+          <div class="absolute top-4 left-4"><span class="ph-label bg-bone/80 px-2 py-1">map · google_maps_embed</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================= -->
+<!-- FOOTER -->
+<!-- ============================================================================= -->
+<footer class="bg-ink text-bone">
+  <div class="max-w-[1280px] mx-auto px-6 py-20">
+    <div class="grid md:grid-cols-12 gap-10">
+      <div class="md:col-span-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full border-2 border-bone flex items-center justify-center">
+            <span class="font-display text-xl leading-none">m</span>
+          </div>
+          <div class="font-display text-[24px] tracking-tightest">myorl</div>
+        </div>
+        <p class="mt-6 text-bone/60 text-[14px] leading-[1.65] max-w-[34ch]">
+          Private ENT practice of Dr. Pavlos Tsolaridis, M.D. Serving Athens
+          and international patients since 1998.
+        </p>
+      </div>
+
+      <div class="md:col-span-2">
+        <div class="ph-label text-bone/50">Practice</div>
+        <ul class="mt-4 space-y-2 text-[14px]">
+          <li><a href="#" class="hover:text-bone/100 text-bone/80">Doctor</a></li>
+          <li><a href="#" class="hover:text-bone/100 text-bone/80">Interventions</a></li>
+          <li><a href="#" class="hover:text-bone/100 text-bone/80">Services</a></li>
+          <li><a href="#" class="hover:text-bone/100 text-bone/80">Videos</a></li>
+        </ul>
+      </div>
+
+      <div class="md:col-span-2">
+        <div class="ph-label text-bone/50">Patients</div>
+        <ul class="mt-4 space-y-2 text-[14px]">
+          <li><a href="#" class="hover:text-bone/100 text-bone/80">Book online</a></li>
+          <li><a href="#" class="hover:text-bone/100 text-bone/80">Online visit</a></li>
+          <li><a href="#" class="hover:text-bone/100 text-bone/80">Articles</a></li>
+          <li><a href="#" class="hover:text-bone/100 text-bone/80">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="md:col-span-4">
+        <div class="ph-label text-bone/50">Contact</div>
+        <div class="mt-4 text-[14px] text-bone/80 leading-[1.7]">
+          Λεωφ. Αλεξάνδρας 201, Αθήνα 11523<br>
+          +30 210 6427 000 · info@myorl.gr
+        </div>
+        <div class="mt-5 flex gap-3">
+          <a href="#" class="w-9 h-9 rounded-full border border-bone/30 flex items-center justify-center text-[12px] hover:bg-bone hover:text-ink">fb</a>
+          <a href="#" class="w-9 h-9 rounded-full border border-bone/30 flex items-center justify-center text-[12px] hover:bg-bone hover:text-ink">ig</a>
+          <a href="#" class="w-9 h-9 rounded-full border border-bone/30 flex items-center justify-center text-[12px] hover:bg-bone hover:text-ink">yt</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-16 pt-6 border-t border-bone/15 flex flex-col sm:flex-row justify-between gap-4 text-[12px] font-mono uppercase tracking-wider text-bone/40">
+      <div>© 2026 myorl · Dr. Pavlos Tsolaridis M.D.</div>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-bone/80">Privacy</a>
+        <a href="#" class="hover:text-bone/80">Terms</a>
+        <a href="#" class="hover:text-bone/80">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================================= -->
+<!-- TWEAKS PANEL -->
+<!-- ============================================================================= -->
+<div id="tweaks" class="fixed right-5 bottom-5 z-50 bg-bone border hr-line shadow-2xl w-[300px] p-5 rounded-lg">
+  <div class="flex items-center justify-between mb-4">
+    <div class="font-display text-[20px]">Tweaks</div>
+    <button onclick="document.getElementById('tweaks').classList.remove('open')" class="text-stone hover:text-ink">×</button>
+  </div>
+
+  <div class="space-y-5 text-[13px]">
+    <div>
+      <div class="ph-label mb-2">Hero variant</div>
+      <div class="grid grid-cols-3 gap-1.5">
+        <button data-tweak="hero" data-val="editorial" class="tw-btn border hr-line rounded px-2 py-2">Editorial</button>
+        <button data-tweak="hero" data-val="split"     class="tw-btn border hr-line rounded px-2 py-2">Split</button>
+        <button data-tweak="hero" data-val="quiet"     class="tw-btn border hr-line rounded px-2 py-2">Quiet</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="ph-label mb-2">Accent palette</div>
+      <div class="grid grid-cols-4 gap-1.5">
+        <button data-tweak="palette" data-val="trust"   class="tw-btn border hr-line rounded py-2 flex items-center justify-center gap-1" title="Trust Blue"><span class="w-3 h-3 rounded-full" style="background:#2563a8"></span></button>
+        <button data-tweak="palette" data-val="teal"    class="tw-btn border hr-line rounded py-2 flex items-center justify-center gap-1" title="Medical Teal"><span class="w-3 h-3 rounded-full" style="background:#0e7c7b"></span></button>
+        <button data-tweak="palette" data-val="ink"     class="tw-btn border hr-line rounded py-2 flex items-center justify-center gap-1" title="Clinical Navy"><span class="w-3 h-3 rounded-full" style="background:#0f2a4a"></span></button>
+        <button data-tweak="palette" data-val="emerald" class="tw-btn border hr-line rounded py-2 flex items-center justify-center gap-1" title="Reassurance Green"><span class="w-3 h-3 rounded-full" style="background:#13694d"></span></button>
+      </div>
+    </div>
+
+    <div>
+      <div class="ph-label mb-2">Section density</div>
+      <div class="grid grid-cols-3 gap-1.5">
+        <button data-tweak="density" data-val="cozy"    class="tw-btn border hr-line rounded px-2 py-2">Cozy</button>
+        <button data-tweak="density" data-val="default" class="tw-btn border hr-line rounded px-2 py-2">Default</button>
+        <button data-tweak="density" data-val="roomy"   class="tw-btn border hr-line rounded px-2 py-2">Roomy</button>
+      </div>
+    </div>
+
+    <p class="text-[11px] text-stone leading-[1.5] pt-3 border-t hr-line">
+      Values persist to disk via editmode. Tokens live in the <code class="font-mono">tailwind.config</code> block at top of file — port straight to <code class="font-mono">tailwind.config.js</code>.
+    </p>
+  </div>
+</div>
+
+<script>
+// ---------- Tweaks wiring ----------
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "hero": "editorial",
+  "palette": "ink",
+  "density": "default"
+}/*EDITMODE-END*/;
+
+function applyTweaks(t) {
+  document.body.dataset.hero    = t.hero;
+  document.body.dataset.palette = t.palette;
+  document.body.dataset.density = t.density;
+  document.querySelectorAll('.tw-btn').forEach(b => {
+    const key = b.dataset.tweak, val = b.dataset.val;
+    const active = t[key] === val;
+    b.style.background = active ? '#1a1a1a' : '';
+    b.style.color      = active ? '#f7f4ee' : '';
+    b.style.borderColor= active ? '#1a1a1a' : '';
+  });
+}
+let current = {...TWEAK_DEFAULTS};
+applyTweaks(current);
+
+document.querySelectorAll('.tw-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    current[b.dataset.tweak] = b.dataset.val;
+    applyTweaks(current);
+    try { window.parent.postMessage({ type:'__edit_mode_set_keys', edits: current }, '*'); } catch(e) {}
+  });
+});
+
+window.addEventListener('message', (e) => {
+  if (!e.data || !e.data.type) return;
+  if (e.data.type === '__activate_edit_mode')   document.getElementById('tweaks').classList.add('open');
+  if (e.data.type === '__deactivate_edit_mode') document.getElementById('tweaks').classList.remove('open');
+});
+try { window.parent.postMessage({ type:'__edit_mode_available' }, '*'); } catch(e) {}
+</script>
+
+</body>
+</html>

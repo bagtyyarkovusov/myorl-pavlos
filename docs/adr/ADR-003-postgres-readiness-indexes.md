@@ -18,10 +18,12 @@ The rollout path is:
 3. rehearse on PostgreSQL with forward-only index migrations
 4. apply production changes only after query-plan verification
 
-The initial SQL artifacts cover:
+The initial SQL artifacts cover partial indexes over published pages plus the
+localized tag lookup:
 
-- `pages(locale, slug, published_at)`
-- `pages(locale, page_type, layout_variant, published_at, menu_index)`
+- `pages(locale, slug) WHERE published_at IS NOT NULL`
+- `pages(locale, menu_index, slug) WHERE published_at IS NOT NULL`
+- `pages(locale, page_type, layout_variant, menu_index, slug) WHERE published_at IS NOT NULL`
 - `tags(locale, slug)` because live tag rows are localized and `slug` alone has duplicate values across locales
 
 ## Alternatives Considered

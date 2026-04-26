@@ -15,6 +15,7 @@ const PAGE_REVALIDATE_SECONDS = 300;
 const pagePopulate = {
   seo: { populate: ["ogImage"] },
   parentPage: { fields: ["documentId", "slug", "title"] },
+  localizations: { fields: ["documentId", "locale", "slug", "title"] },
   tags: { fields: ["name", "slug"] },
   featuredImage: true,
   imageCenter: true,

@@ -1,0 +1,344 @@
+{
+  "meta": {
+    "generatedAt": "2026-04-23T12:35:43.341135+00:00",
+    "modxSource": "data/source/modx/published_resources_flat.json",
+    "reportPath": "artifacts/reports/slug_parity_report.json",
+    "basePathByLocale": {
+      "el": "/el",
+      "ru": "/ru"
+    }
+  },
+  "redirects": [
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/facelift",
+        "/el/facelift/"
+      ],
+      "toPath": "/el/facelifting",
+      "modxId": 57,
+      "documentId": "co5cdztycix2a73ev36nowjm",
+      "modxAlias": "facelift",
+      "strapiSlugAscii": "facelifting",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/vlefaroplastiki",
+        "/el/vlefaroplastiki/"
+      ],
+      "toPath": "/el/blefaroplastika-v-athinah",
+      "modxId": 58,
+      "documentId": "wolv96366knzp3t1bnotozkr",
+      "modxAlias": "vlefaroplastiki",
+      "strapiSlugAscii": "blefaroplastika-v-athinah",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/otoplastiki",
+        "/el/otoplastiki/"
+      ],
+      "toPath": "/el/otoplastika-v-athinah",
+      "modxId": 61,
+      "documentId": "aqbhriti77cnoithsrvowjh9",
+      "modxAlias": "otoplastiki",
+      "strapiSlugAscii": "otoplastika-v-athinah",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/diorthosi-loviou-aytiou",
+        "/el/diorthosi-loviou-aytiou/"
+      ],
+      "toPath": "/el/ear-lobe-repair",
+      "modxId": 62,
+      "documentId": "y7ze8grsx9a3zlwubgybmybl",
+      "modxAlias": "diorthosi-loviou-aytiou",
+      "strapiSlugAscii": "ear-lobe-repair",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/silhouette-soft",
+        "/el/silhouette-soft/"
+      ],
+      "toPath": "/el/silhouette-soft-afini",
+      "modxId": 63,
+      "documentId": "vfpz9232z2wy6olvyovzja8d",
+      "modxAlias": "silhouette-soft",
+      "strapiSlugAscii": "silhouette-soft-afini",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/xeileoplastiki",
+        "/el/xeileoplastiki/"
+      ],
+      "toPath": "/el/plastika-verhnei-gubi",
+      "modxId": 66,
+      "documentId": "py3oz7almmutvqh0hkuuchs7",
+      "modxAlias": "xeileoplastiki",
+      "strapiSlugAscii": "plastika-verhnei-gubi",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/otoplastiki-1",
+        "/el/otoplastiki-1/"
+      ],
+      "toPath": "/el/plasticheskaia-xeirourgia-otoplastika",
+      "modxId": 128,
+      "documentId": "qozcj7r2p75p6i7glfew2bey",
+      "modxAlias": "otoplastiki-1",
+      "strapiSlugAscii": "plasticheskaia-xeirourgia-otoplastika",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/syxnes-erwtiseis-apantiseis-2",
+        "/el/syxnes-erwtiseis-apantiseis-2/"
+      ],
+      "toPath": "/el/voprosi-otvei-otoplastika",
+      "modxId": 129,
+      "documentId": "wwo78i1j57lpjuc0ds4yv25x",
+      "modxAlias": "syxnes-erwtiseis-apantiseis-2",
+      "strapiSlugAscii": "voprosi-otvei-otoplastika",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "ru",
+      "fromPathVariants": [
+        "/ru/lor-operazii",
+        "/ru/lor-operazii/"
+      ],
+      "toPath": "/ru/epemvaseis",
+      "modxId": 183,
+      "documentId": "a113qd6vmow3krxzimy1rtut",
+      "modxAlias": "epemvaseis",
+      "strapiSlugAscii": "epemvaseis",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "ru",
+      "fromPathVariants": [
+        "/ru/пластика-лица",
+        "/ru/%D0%BF%D0%BB%D0%B0%D1%81%D1%82%D0%B8%D0%BA%D0%B0-%D0%BB%D0%B8%D1%86%D0%B0",
+        "/ru/пластика-лица/"
+      ],
+      "toPath": "/ru/plastika-litsa",
+      "modxId": 323,
+      "documentId": "zpkmxzdqwpf1q6wn27xa7x6a",
+      "modxAlias": "пластика-лица",
+      "strapiSlugAscii": "plastika-litsa",
+      "nonAsciiModxAlias": true,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/otoplastiki-xwris-tomi",
+        "/el/otoplastiki-xwris-tomi/"
+      ],
+      "toPath": "/el/novaia-otoplastika-bez-razrezov",
+      "modxId": 358,
+      "documentId": "olz696x126621ue29y6plkm4",
+      "modxAlias": "otoplastiki-xwris-tomi",
+      "strapiSlugAscii": "novaia-otoplastika-bez-razrezov",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/vlefaroplastiki-laser",
+        "/el/vlefaroplastiki-laser/"
+      ],
+      "toPath": "/el/lazernaia-blefaroplastika",
+      "modxId": 377,
+      "documentId": "b52sj2toic4uiq10n3dx973z",
+      "modxAlias": "vlefaroplastiki-laser",
+      "strapiSlugAscii": "lazernaia-blefaroplastika",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "ru",
+      "fromPathVariants": [
+        "/ru/блефаропластика-пластика-глаз",
+        "/ru/%D0%B1%D0%BB%D0%B5%D1%84%D0%B0%D1%80%D0%BE%D0%BF%D0%BB%D0%B0%D1%81%D1%82%D0%B8%D0%BA%D0%B0-%D0%BF%D0%BB%D0%B0%D1%81%D1%82%D0%B8%D0%BA%D0%B0-%D0%B3%D0%BB%D0%B0%D0%B7",
+        "/ru/блефаропластика-пластика-глаз/"
+      ],
+      "toPath": "/ru/blefaroplastika-plastika-glaz",
+      "modxId": 380,
+      "documentId": "mals56qxfw1ckzcm9jm3kq1j",
+      "modxAlias": "блефаропластика-пластика-глаз",
+      "strapiSlugAscii": "blefaroplastika-plastika-glaz",
+      "nonAsciiModxAlias": true,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "ru",
+      "fromPathVariants": [
+        "/ru/лазерная-блефаропластика",
+        "/ru/%D0%BB%D0%B0%D0%B7%D0%B5%D1%80%D0%BD%D0%B0%D1%8F-%D0%B1%D0%BB%D0%B5%D1%84%D0%B0%D1%80%D0%BE%D0%BF%D0%BB%D0%B0%D1%81%D1%82%D0%B8%D0%BA%D0%B0",
+        "/ru/лазерная-блефаропластика/"
+      ],
+      "toPath": "/ru/lazernaia-blefaroplastika",
+      "modxId": 381,
+      "documentId": "b52sj2toic4uiq10n3dx973z",
+      "modxAlias": "лазерная-блефаропластика",
+      "strapiSlugAscii": "lazernaia-blefaroplastika",
+      "nonAsciiModxAlias": true,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/anorthosi-laimou",
+        "/el/anorthosi-laimou/"
+      ],
+      "toPath": "/el/necklift",
+      "modxId": 402,
+      "documentId": "s5j629gs53u0a80nxtysv328",
+      "modxAlias": "anorthosi-laimou",
+      "strapiSlugAscii": "necklift",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/λίφτινγκ-προσώπου-2",
+        "/el/λίφτινγκ-προσώπου-2/"
+      ],
+      "toPath": "/el/lftynnk-prospou-2",
+      "modxId": 403,
+      "documentId": "ga146qjmuc4nzd2b96a7f726",
+      "modxAlias": "lftynnk-prospou-2",
+      "strapiSlugAscii": "lftynnk-prospou-2",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "el",
+      "fromPathVariants": [
+        "/el/privacy-policy",
+        "/el/privacy-policy/"
+      ],
+      "toPath": "/el/politike-aporretou",
+      "modxId": 415,
+      "documentId": "or75ksubaq5h2exns2uga6k0",
+      "modxAlias": "privacy-policy",
+      "strapiSlugAscii": "politike-aporretou",
+      "nonAsciiModxAlias": false,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    },
+    {
+      "locale": "ru",
+      "fromPathVariants": [
+        "/ru/πολιτική-απορρήτου",
+        "/ru/%CF%80%CE%BF%CE%BB%CE%B9%CF%84%CE%B9%CE%BA%CE%AE-%CE%B1%CF%80%CE%BF%CF%81%CF%81%CE%AE%CF%84%CE%BF%CF%85",
+        "/ru/πολιτική-απορρήτου/",
+        "/ru/privacy-policy",
+        "/ru/privacy-policy/"
+      ],
+      "toPath": "/ru/politike-aporretou",
+      "modxId": 417,
+      "documentId": "or75ksubaq5h2exns2uga6k0",
+      "modxAlias": "πολιτική-απορρήτου",
+      "strapiSlugAscii": "politike-aporretou",
+      "nonAsciiModxAlias": true,
+      "sources": [
+        "alias",
+        "uri",
+        "old_uri"
+      ]
+    }
+  ],
+  "optionalStagingSlugRedirects": []
+}

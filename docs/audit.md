@@ -11,17 +11,17 @@
 ### 1.1 Headline verdict
 
 - **Overall readiness:** `CONDITIONAL GO` for a bilingual, content-first Next.js App Router launch (no map UI in v1).
-- **Composite readiness score:** `92 / 100` for continuing Next.js UI coding now; the machine-generated content score remains `84 / 100`. See §9 for the stricter production rubric.
+- **Composite readiness score:** `85 / 100` for continuing Next.js UI coding now; the machine-generated content score remains `84 / 100`. See §9 for the stricter production rubric.
 - **Migration landing:** solid. The semantic page model (`pageType` + `layoutVariant` + named sections) is populated and usable today. Legacy `pageBlocks` duplication is cleared from published pages (`0` docs, `0` localized rows), with `358` old storage rows retained internally for migration safety.
 - **Primary remaining blockers** for a production SEO launch are **operational and content-freeze work**, not migration-level: Postgres rehearsal, Strapi webhook configuration, SEO editorial review, and the small content-link hygiene queue.
 
 ### 1.2 Top 5 items to close before production launch
 
 1. **Finish SEO editorial policy** — canonical URL, OG image, robots, and sitemap controls now exist; Twitter fields and JSON-LD overrides remain optional follow-up work — §4.1, Appendix C.
-2. **Rehearse Postgres and apply lookup indexes** — local SQLite full-scans key queries today; forward-only Postgres index SQL already exists under `backend/database/postgres-readiness/` — §3, Appendix B.
+2. **Rehearse Postgres and apply lookup indexes** — local SQLite full-scans key queries today; versioned forward-only Postgres index migrations already exist under `backend/database/postgres-migrations/` — §3, Appendix B.
 3. **Configure Strapi → Next.js revalidation webhooks** so the new Next `/api/revalidate` endpoint is called on publish/unpublish — §3.4, Appendix D.
 4. **Resolve the 13-doc SEO review queue** where legacy `longtitle` still adds signal over the current `seo.metaTitle` — §6, §7.
-5. **Close content hygiene before freeze**: review the `2` remaining legacy media hrefs from `nextjs_internal_link_repair_manifest.json`, keep the unresolved `Google Plus` row hidden/replaced, and keep sanitizing legacy HTML in the Next.js renderer.
+5. **Close content hygiene before freeze**: review the `2` remaining legacy media hrefs from [`nextjs_internal_link_repair_manifest.json`](../data/manifests/nextjs_internal_link_repair_manifest.json), keep the unresolved `Google Plus` row hidden/replaced, and keep sanitizing legacy HTML in the Next.js renderer.
 
 ### 1.3 Recommended launch path
 
@@ -32,7 +32,7 @@ Continue Next.js UI implementation inside `frontend/` against the DTO boundary (
 | Source | Purpose |
 |---|---|
 | [`docs/strapi-nextjs-audit.md`](./strapi-nextjs-audit.md) | Live payload audit, field-strategy table, rollout plan — still current. |
-| [`docs/nextjs-content-readiness.md`](./nextjs-content-readiness.md) | UI-start readiness (`92/100`) plus machine content score (`84/100`). |
+| [`docs/nextjs-content-readiness.md`](./nextjs-content-readiness.md) | UI-start readiness (`85/100`) plus machine content score (`84/100`). |
 | [`docs/adr/ADR-001-nextjs-semantic-dto-boundary.md`](./adr/ADR-001-nextjs-semantic-dto-boundary.md) | DTO boundary contract. |
 | [`docs/adr/ADR-002-nextjs-v1-contact-and-system-pages.md`](./adr/ADR-002-nextjs-v1-contact-and-system-pages.md) | v1 contact pages (no map), system pages frontend-native. |
 | [`docs/adr/ADR-003-postgres-readiness-indexes.md`](./adr/ADR-003-postgres-readiness-indexes.md) | Forward-only Postgres hardening. |
@@ -56,7 +56,7 @@ Continue Next.js UI implementation inside `frontend/` against the DTO boundary (
 | REST pagination | `defaultLimit: 25`, `maxLimit: 100`, `withCount: true` |
 | Locales | `el` (default, source of truth) + `ru` |
 | Plugins | `@strapi/plugin-cloud`, `@strapi/plugin-users-permissions`, `strapi-plugin-navigation@^3.3.7` |
-| Versioned DB migrations | None yet (`backend/database/migrations/` empty) — schema changes rely on Strapi auto-sync; production indexes are staged separately |
+| Versioned DB migrations | PostgreSQL index migration pairs now exist under `backend/database/postgres-migrations/`; schema changes still rely on Strapi schema sync |
 
 ### 2.2 Content types
 
@@ -74,7 +74,7 @@ Continue Next.js UI implementation inside `frontend/` against the DTO boundary (
 | `items/` | 11 | Repeatable row items consumed inside `sections/*` |
 | `blocks/` | 10 | Private legacy block variants (only referenced from the `private` `pageBlocks` dynamic zone) |
 
-The `blocks/` set is now functionally dormant — `pageBlocks` is a `private: true` dynamic zone on `Page`, and the legacy duplication count is `0 / 0` as of the last cleanup pass (see `nextjs_content_readiness.json`). `blocks/*` are kept for migration-safety but do not appear in any public REST payload.
+The `blocks/` set is now functionally dormant — `pageBlocks` is a `private: true` dynamic zone on `Page`, and the legacy duplication count is `0 / 0` as of the last cleanup pass (see [`nextjs_content_readiness.json`](../artifacts/reports/nextjs_content_readiness.json)). `blocks/*` are kept for migration-safety but do not appear in any public REST payload.
 
 ### 2.4 Scale
 
@@ -98,11 +98,11 @@ The `blocks/` set is now functionally dormant — `pageBlocks` is a `private: tr
 | Potential internal broken links | 2 |
 | Legacy HTML-marker sources | 259 |
 
-Source: `nextjs_content_readiness.json` (re-verified today).
+Source: [`nextjs_content_readiness.json`](../artifacts/reports/nextjs_content_readiness.json) (re-verified today).
 
 ### 2.5 Content hygiene snapshot
 
-Source: `python3 audit_nextjs_content_hygiene.py` against the local Strapi SQLite DB and live navigation render endpoint.
+Source: `python3 tools/audit_nextjs_content_hygiene.py` against the local Strapi SQLite DB and live navigation render endpoint.
 
 | Metric | Value |
 |---|---:|
@@ -118,7 +118,7 @@ Source: `python3 audit_nextjs_content_hygiene.py` against the local Strapi SQLit
 | Empty content leaf pages | 0 |
 | Strapi navigation render roots | el=7, ru=8 |
 
-The reviewed page-link rewrites from `nextjs_internal_link_repair_manifest.json` were applied through a dry-run/snapshot/data-migration pass. The 2 remaining findings are legacy media paths and should not be rewritten until the target upload/media asset is confirmed.
+The reviewed page-link rewrites from [`nextjs_internal_link_repair_manifest.json`](../data/manifests/nextjs_internal_link_repair_manifest.json) were applied through a dry-run/snapshot/data-migration pass. The 2 remaining findings are legacy media paths and should not be rewritten until the target upload/media asset is confirmed.
 
 ### 2.6 Relation map
 
@@ -139,25 +139,33 @@ items.promo-slide     ─manyToOne─▶ Page   (targetPage, nullable)
 
 Rehearsal runs on SQLite. Production target is PostgreSQL. The switch is non-trivial for two reasons:
 
-- **No versioned migrations.** The `backend/database/migrations/` folder is empty; Strapi has been syncing `schema.json` on boot. For production this means a cutover migration plan is required (see ADR-003) — not a simple `npm run build && start`.
-- **Index coverage diverges across drivers.** SQLite does not benefit from the Postgres `CREATE INDEX CONCURRENTLY` patterns prepared under `backend/database/postgres-readiness/`. Until the switch, route lookup (`/:locale/:slug`) and listing queries (`pageType` + `layoutVariant`) full-scan the page table. At 325 rows this is invisible; at the real write/read mix of a live SEO frontend it is not.
+- **No Strapi-managed migrations.** The `backend/database/migrations/` folder remains reserved for Strapi's migration runner; PostgreSQL-only index migrations live under `backend/database/postgres-migrations/` so local SQLite rehearsals do not execute Postgres DDL on boot. Strapi has still been syncing `schema.json` on boot, so production cutover needs a migration plan (see ADR-003) — not a simple `npm run build && start`.
+- **Index coverage diverges across drivers.** SQLite does not benefit from the Postgres `CREATE INDEX CONCURRENTLY` patterns prepared under `backend/database/postgres-migrations/`. Until the switch, route lookup (`/:locale/:slug`) and listing queries full-scan the page table. At 325 rows this is invisible; at the real write/read mix of a live SEO frontend it is not.
 
-### 3.2 Indexes already staged
+### 3.2 Indexes already staged and versioned
 
 | File | Indexes |
 |---|---|
-| [`backend/database/postgres-readiness/001_pages_lookup_indexes.sql`](../backend/database/postgres-readiness/001_pages_lookup_indexes.sql) | `pages (locale, slug, published_at)`, `pages (locale, page_type, layout_variant, published_at, menu_index)` |
-| [`backend/database/postgres-readiness/002_tag_slug_indexes.sql`](../backend/database/postgres-readiness/002_tag_slug_indexes.sql) | `tags (locale, slug)` |
+| [`backend/database/postgres-migrations/20260425_001_pages_lookup_indexes.up.sql`](../backend/database/postgres-migrations/20260425_001_pages_lookup_indexes.up.sql) | Partial published-page indexes for route lookup, navigation/sitemap listing, and type/layout listing |
+| [`backend/database/postgres-migrations/20260425_002_tag_slug_indexes.up.sql`](../backend/database/postgres-migrations/20260425_002_tag_slug_indexes.up.sql) | `tags (locale, slug)` |
+
+The versioned rehearsal/production migration pairs are:
+
+- [`20260425_001_pages_lookup_indexes.up.sql`](../backend/database/postgres-migrations/20260425_001_pages_lookup_indexes.up.sql)
+- [`20260425_001_pages_lookup_indexes.down.sql`](../backend/database/postgres-migrations/20260425_001_pages_lookup_indexes.down.sql)
+- [`20260425_002_tag_slug_indexes.up.sql`](../backend/database/postgres-migrations/20260425_002_tag_slug_indexes.up.sql)
+- [`20260425_002_tag_slug_indexes.down.sql`](../backend/database/postgres-migrations/20260425_002_tag_slug_indexes.down.sql)
 
 The tag index is locale-scoped because live tag rows are localized and reuse canonical slugs across `el` and `ru`.
 
 ### 3.3 Query hot paths to verify after Postgres cutover
 
-1. **Route resolution** — `WHERE locale = ? AND slug = ? AND published_at IS NOT NULL` → uses `idx_pages_locale_slug_published_at`.
-2. **Listing by type + layout** — e.g. article index pages querying siblings with the same `pageType + layoutVariant` → uses `idx_pages_locale_type_layout_published_menu`.
-3. **Tag filter** — `WHERE locale = ? AND slug = ?` on the taxonomy route → uses `idx_tags_locale_slug`.
+1. **Route resolution** — `WHERE locale = ? AND slug = ? AND published_at IS NOT NULL` → uses `idx_pages_published_locale_slug`.
+2. **Navigation/sitemap listing** — `WHERE published_at IS NOT NULL ORDER BY locale, menu_index, slug` → uses `idx_pages_published_locale_menu_slug`.
+3. **Listing by type + layout** — e.g. article index pages querying siblings with the same `pageType + layoutVariant` → uses `idx_pages_published_locale_type_layout_menu_slug`.
+4. **Tag filter** — `WHERE locale = ? AND slug = ?` on the taxonomy route → uses `idx_tags_locale_slug`.
 
-Document expected query plans (EXPLAIN ANALYZE) once the rehearsal Postgres DB is warmed.
+Document expected query plans (EXPLAIN ANALYZE) once the rehearsal Postgres DB is warmed. The 2026-04-25 rehearsal is captured in [`artifacts/reports/postgres_rehearsal_explain_report.json`](../artifacts/reports/postgres_rehearsal_explain_report.json) (PostgreSQL 16.13, 650 page rows / 325 published / 2 locales, 31 tag rows): all four hot paths reach their intended index. The `navigation-listing` query picks Seq Scan + Sort by default at this row count, which is the planner's correct cost-based choice; the report's forced `enable_seqscan = off` plan confirms `idx_pages_published_locale_menu_slug` is reachable. The rehearsal also surfaced one production blocker for `strapi import`: legacy `components_items_social_links.url` rows exceed the schema's `varchar(255)` (PostgreSQL enforces, SQLite did not) — see the report's `knownDataIssues` for remediation.
 
 ### 3.4 Revalidation / ISR gap
 
@@ -370,7 +378,7 @@ Always append a `BreadcrumbList` built from `parentPage` chain + localized `menu
 
 ### 6.5 Redirects
 
-- `slug_redirects_next.json` already provides 300+ source → target redirects (covers Cyrillic/Greek → ASCII transliteration and legacy nested URIs).
+- `data/manifests/slug_redirects_next.json` already provides source → target redirects (covers Cyrillic/Greek → ASCII transliteration and legacy nested URIs).
 - For Next.js: at this volume, put the list in `next.config.js` `redirects()`. Above ~1000 entries, move to middleware-based lookup against a precomputed Map to avoid config bloat.
 
 ### 6.6 Locale routing
@@ -381,7 +389,7 @@ Always append a `BreadcrumbList` built from `parentPage` chain + localized `menu
 
 ### 6.7 SEO review queue (outstanding editorial work)
 
-13 localized pages where legacy MODX `longtitle` adds signal over the current `seo.metaTitle` — see `nextjs_seo_review_manifest.json`. This is **editorial**, not technical. Should be reviewed before content freeze.
+13 localized pages where legacy MODX `longtitle` adds signal over the current `seo.metaTitle` — see [`nextjs_seo_review_manifest.json`](../data/manifests/nextjs_seo_review_manifest.json). This is **editorial**, not technical. Should be reviewed before content freeze.
 
 ---
 
@@ -391,7 +399,7 @@ Always append a `BreadcrumbList` built from `parentPage` chain + localized `menu
 
 - 123 strict source pairs from the MODX/Babel audit → 136 bilingual docs live in Strapi (strict pairs + later auto-links + manually linked reviews).
 - Published source-parent integrity issues are now `0`; the previous RU orphan navigation issue was repaired before PostgreSQL cutover.
-- Auto-linking decisions and collision analysis are in `locale_pair_audit.md`.
+- Auto-linking decisions and collision analysis are in [`locale_pair_audit.md`](./migration/locale_pair_audit.md).
 
 ### 7.2 Structural drift
 
@@ -415,7 +423,7 @@ Always append a `BreadcrumbList` built from `parentPage` chain + localized `menu
 
 ### 7.5 Verdict
 
-The migration is a solid foundation. Residual drift is editorial, not structural. The dropped fields are **known** drops (importer comments + `import_policy.md`), not silent data loss — which is exactly what you want from a migration.
+The migration is a solid foundation. Residual drift is editorial, not structural. The dropped fields are **known** drops (importer comments + [`import_policy.md`](./migration/import_policy.md)), not silent data loss — which is exactly what you want from a migration.
 
 ---
 
@@ -430,13 +438,14 @@ Call this Week 0 of the Next.js project. Most items can run in parallel with the
 - [x] Add `required: true` to `Page.slug` (§4.3).
 - [x] Stand up the Next.js revalidation endpoint (Appendix D).
 - [ ] Configure Strapi webhooks to call the Next.js revalidation endpoint on publish/unpublish (Appendix D).
-- [ ] Run `python3 audit_nextjs_content_hygiene.py` and keep unsafe HTML findings and empty content leaf pages at `0`.
-- [x] Review and apply the page-href repair plan in `nextjs_internal_link_repair_manifest.json` through a separate dry-run/snapshot/data-migration pass.
+- [ ] Run `python3 tools/audit_nextjs_content_hygiene.py` and keep unsafe HTML findings and empty content leaf pages at `0`.
+- [x] Review and apply the page-href repair plan in [`nextjs_internal_link_repair_manifest.json`](../data/manifests/nextjs_internal_link_repair_manifest.json) through a separate dry-run/snapshot/data-migration pass.
 - [ ] Resolve the 2 remaining legacy media-path findings after upload/media review.
-- [ ] Run the Postgres rehearsal:
-  - Dump SQLite to Postgres (Strapi `npm run strapi transfer`).
-  - Apply `001_pages_lookup_indexes.sql` and `002_tag_slug_indexes.sql`.
-  - Verify EXPLAIN ANALYZE for the three hot paths in §3.3.
+- [x] Run the Postgres rehearsal — see [`artifacts/reports/postgres_rehearsal_explain_report.json`](../artifacts/reports/postgres_rehearsal_explain_report.json) (run via `python3 tools/run_postgres_rehearsal.py`):
+  - [x] Dump SQLite to Postgres. *Caveat:* the canonical `strapi export` → `strapi import` path failed on the `components_items_social_links.url` overlength rows; the harness loaded `pages` + `tags` directly. Production cutover must fix the social-links length before relying on `strapi import`.
+  - [x] Apply the versioned `.up.sql` files in `backend/database/postgres-migrations/`.
+  - [x] Verify EXPLAIN ANALYZE for the hot paths in §3.3 — all four hot-path indexes reachable; navigation listing legitimately picks Seq Scan + Sort at 325-row scale and the forced plan confirms the index is wired correctly.
+  - Followed [`docs/runbooks/postgres-rehearsal.md`](./runbooks/postgres-rehearsal.md).
 
 ### 8.2 Should-do (before v1 ship)
 
@@ -473,7 +482,7 @@ The 6-dimension rubric below inherits the same evidence but breaks **Contract/AP
 
 ### 9.2 Current score (today)
 
-For continuing Next.js UI coding against the DTO boundary, the practical score is now `92/100`: the machine content score of `84/100` plus implemented frontend routing/DTO, CORS, revalidation endpoint, required slugs, v1 SEO schema controls, and applied page-link repairs. The stricter production-readiness rubric below is now `74/100` because Postgres rehearsal, Strapi webhook configuration, media-path review, and SEO editorial review are still open.
+For continuing Next.js UI coding against the DTO boundary, the practical score is now `85/100`: the machine content score of `84/100` plus the completed RU navigation sync adjustment. The stricter production-readiness rubric below is now `74/100` because Postgres rehearsal, Strapi webhook configuration, media-path review, and SEO editorial review are still open.
 
 | Dimension | Score | Justification |
 |---|---:|---|
@@ -558,7 +567,7 @@ The remaining 3 points are `blocks/*` retirement + author content type + clinic 
 ### Existing audits & decisions
 
 - `docs/strapi-nextjs-audit.md` — live-state audit.
-- `docs/nextjs-content-readiness.md` — UI-start readiness (`92/100`) and machine 5-dim content score (`84/100`).
+- `docs/nextjs-content-readiness.md` — UI-start readiness (`85/100`) and machine 5-dim content score (`84/100`).
 - `frontend/` — current Next.js App Router scaffold.
 - `docs/adr/ADR-001-nextjs-semantic-dto-boundary.md`
 - `docs/adr/ADR-002-nextjs-v1-contact-and-system-pages.md`
@@ -570,19 +579,19 @@ The remaining 3 points are `blocks/*` retirement + author content type + clinic 
 
 ### Manifests / reports
 
-- `nextjs_content_readiness.json`
-- `nextjs_structural_review_manifest.json`
-- `nextjs_legacy_cleanup_manifest.json`
-- `nextjs_source_alignment_manifest.json`
-- `nextjs_page_contract_fix_plan.json`
-- `nextjs_menu_title_backfill_plan.json`
-- `nextjs_seo_review_manifest.json`
-- `nextjs_pageblocks_cleanup_batch_a.json`, `nextjs_pageblocks_cleanup_batch_b.json`
-- `slug_redirects_next.json`
-- `slug_migration_verification_audit.json`
-- `sync_navigation_report.json`
-- `locale_pair_audit.md`, `locale_pair_audit.json`
-- `tag_plan.json`
+- [`nextjs_content_readiness.json`](../artifacts/reports/nextjs_content_readiness.json)
+- [nextjs_structural_review_manifest.json](../data/manifests/nextjs_structural_review_manifest.json)
+- [nextjs_legacy_cleanup_manifest.json](../data/manifests/nextjs_legacy_cleanup_manifest.json)
+- [nextjs_source_alignment_manifest.json](../data/manifests/nextjs_source_alignment_manifest.json)
+- [nextjs_page_contract_fix_plan.json](../data/manifests/nextjs_page_contract_fix_plan.json)
+- [nextjs_menu_title_backfill_plan.json](../data/manifests/nextjs_menu_title_backfill_plan.json)
+- [`nextjs_seo_review_manifest.json`](../data/manifests/nextjs_seo_review_manifest.json)
+- [nextjs_pageblocks_cleanup_batch_a.json](../data/manifests/nextjs_pageblocks_cleanup_batch_a.json), [nextjs_pageblocks_cleanup_batch_b.json](../data/manifests/nextjs_pageblocks_cleanup_batch_b.json)
+- `data/manifests/slug_redirects_next.json`
+- [slug_migration_verification_audit.json](../artifacts/reports/slug_migration_verification_audit.json)
+- [sync_navigation_report.json](../artifacts/reports/sync_navigation_report.json)
+- [`locale_pair_audit.md`](./migration/locale_pair_audit.md), [`locale_pair_audit.json`](../data/manifests/locale_pair_audit.json)
+- [tag_plan.json](../data/manifests/tag_plan.json)
 
 ---
 
@@ -590,10 +599,12 @@ The remaining 3 points are `blocks/*` retirement + author content type + clinic 
 
 Files:
 
-- `backend/database/postgres-readiness/001_pages_lookup_indexes.sql`
-- `backend/database/postgres-readiness/002_tag_slug_indexes.sql`
+- `backend/database/postgres-migrations/20260425_001_pages_lookup_indexes.up.sql`
+- `backend/database/postgres-migrations/20260425_002_tag_slug_indexes.up.sql`
 
-Applied verbatim on the production database after the cutover. Do not run inside a transaction block (the scripts rely on `CREATE INDEX CONCURRENTLY`). The tag lookup index is `tags(locale, slug)` because localized rows duplicate canonical slugs.
+Historical staged SQL is also preserved under `backend/database/postgres-readiness/`.
+
+Apply the versioned `.up.sql` files on the production database after the cutover rehearsal. Do not run inside a transaction block (the scripts rely on `CREATE INDEX CONCURRENTLY`). The tag lookup index is `tags(locale, slug)` because localized rows duplicate canonical slugs.
 
 Validation after application (per §3.3):
 
@@ -601,7 +612,7 @@ Validation after application (per §3.3):
 EXPLAIN ANALYZE
   SELECT id FROM pages
   WHERE locale = 'el' AND slug = 'epikoinonia' AND published_at IS NOT NULL;
--- expect: Index Scan using idx_pages_locale_slug_published_at
+-- expect: Index Scan using idx_pages_published_locale_slug
 ```
 
 ---
@@ -729,14 +740,14 @@ This matches the current live data: translated tag rows intentionally share cano
 
 | This audit § | Existing source |
 |---|---|
-| §2 (inventory) | `docs/strapi-nextjs-audit.md` (inventory table), `nextjs_content_readiness.json` (metrics) |
-| §3 (DB architecture) | ADR-003 (Postgres), `backend/database/postgres-readiness/*` (SQL) |
+| §2 (inventory) | `docs/strapi-nextjs-audit.md` (inventory table), [`nextjs_content_readiness.json`](../artifacts/reports/nextjs_content_readiness.json) (metrics) |
+| §3 (DB architecture) | ADR-003 (Postgres), `backend/database/postgres-migrations/*` (SQL) |
 | §4 (schema improvements) | **net-new to this audit** — no prior coverage |
 | §5 (template matrix) | **net-new to this audit** — `docs/strapi-nextjs-audit.md` has field strategy, not matrix |
 | §6 (SEO surface) | **net-new to this audit** — `docs/NEXTJS_SLUG_REDIRECTS_REMINDER.md` covers redirects only |
-| §7 (migration quality) | `docs/strapi-nextjs-audit.md`, `locale_pair_audit.md`, `strapi_injection_readiness.md` |
+| §7 (migration quality) | `docs/strapi-nextjs-audit.md`, [`locale_pair_audit.md`](./migration/locale_pair_audit.md), [`strapi_injection_readiness.md`](./migration/strapi_injection_readiness.md) |
 | §8 (pre-Next.js checklist) | extends `docs/nextjs-content-readiness.md` → Next Plan |
-| §9 (readiness score) | extends `docs/nextjs-content-readiness.md` (`92/100` UI-start, `84/100` machine) with a 6-dim production rubric |
+| §9 (readiness score) | extends `docs/nextjs-content-readiness.md` (`85/100` UI-start, `84/100` machine) with a 6-dim production rubric |
 | §10 (roadmap) | extends `docs/strapi-nextjs-audit.md` → Rollout Plan |
 
 ---

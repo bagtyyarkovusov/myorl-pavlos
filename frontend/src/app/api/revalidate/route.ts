@@ -10,12 +10,21 @@ type RevalidatePayload = {
   slug?: string;
   documentId?: string;
   tags?: string[];
+  event?: string;
+  model?: string;
+  uid?: string;
+  entry?: Record<string, unknown>;
+  media?: Record<string, unknown>;
 };
 
 export async function POST(request: NextRequest) {
   const config = getCmsConfig();
   const payload = await parsePayload(request);
-  const providedSecret = request.nextUrl.searchParams.get("secret") ?? payload.secret;
+  const providedSecret = resolveProvidedSecret(
+    payload,
+    request.nextUrl.searchParams.get("secret"),
+    request.headers.get("authorization"),
+  );
 
   if (!config.revalidateSecret) {
     return NextResponse.json(
@@ -44,9 +53,27 @@ async function parsePayload(request: NextRequest): Promise<RevalidatePayload> {
   }
 }
 
-function deriveTags(payload: RevalidatePayload): string[] {
+export function resolveProvidedSecret(
+  payload: RevalidatePayload,
+  querySecret: string | null,
+  authorizationHeader: string | null,
+): string | undefined {
+  return querySecret ?? payload.secret ?? readBearerSecret(authorizationHeader);
+}
+
+export function readBearerSecret(header: string | null): string | undefined {
+  const match = header?.match(/^Bearer\s+(.+)$/i);
+  return match?.[1]?.trim() || undefined;
+}
+
+export function deriveTags(payload: RevalidatePayload): string[] {
   if (Array.isArray(payload.tags) && payload.tags.length > 0) {
     return [...new Set(payload.tags.filter(Boolean))];
+  }
+
+  const strapiTags = deriveStrapiWebhookTags(payload);
+  if (strapiTags) {
+    return strapiTags;
   }
 
   const tags = new Set<string>(["pages"]);
@@ -73,4 +100,56 @@ function deriveTags(payload: RevalidatePayload): string[] {
   }
 
   return [...tags];
+}
+
+function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
+  if (!payload.event) {
+    return null;
+  }
+
+  if (payload.event.startsWith("media.")) {
+    return ["pages", "sitemap"];
+  }
+
+  if (!payload.event.startsWith("entry.")) {
+    return null;
+  }
+
+  const model = payload.model ?? payload.uid;
+  if (isPageModel(model)) {
+    const tags = new Set<string>(["pages", "sitemap"]);
+    const locale = stringValue(payload.entry?.locale);
+    const slug = stringValue(payload.entry?.slug);
+    const documentId = stringValue(payload.entry?.documentId);
+
+    if (locale) {
+      tags.add(`navigation:${locale}`);
+    }
+    if (locale && slug) {
+      tags.add(`page:${locale}:${slug}`);
+    }
+    if (documentId) {
+      tags.add(`page:${documentId}`);
+    }
+
+    return [...tags];
+  }
+
+  if (isTagModel(model)) {
+    return ["tags", "pages", "sitemap"];
+  }
+
+  return ["pages", "sitemap"];
+}
+
+function isPageModel(model: string | undefined): boolean {
+  return model === "api::page.page" || model === "page";
+}
+
+function isTagModel(model: string | undefined): boolean {
+  return model === "api::tag.tag" || model === "tag";
+}
+
+function stringValue(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim() ? value : undefined;
 }

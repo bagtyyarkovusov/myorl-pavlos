@@ -123,6 +123,7 @@ export type PageDTO = {
   articleAuthor?: string | null;
   sources?: string | null;
   popUpClose?: string | null;
+  alternateUrls: Partial<Record<Locale, string>>;
   sections: SectionDTO[];
   contact?: {
     details: ContactDetailDTO[];
@@ -181,6 +182,14 @@ export type StrapiTag = {
 
 export type StrapiPageRef = {
   documentId?: string | null;
+  locale?: Locale | string | null;
+  slug?: string | null;
+  title?: string | null;
+};
+
+export type StrapiLocalization = {
+  documentId?: string | null;
+  locale?: Locale | string | null;
   slug?: string | null;
   title?: string | null;
 };
@@ -239,6 +248,7 @@ export type StrapiPagePayload = {
     details?: StrapiContactDetail[] | null;
     clinics?: StrapiClinic[] | null;
   } | null;
+  localizations?: StrapiLocalization[] | null;
   templateId?: unknown;
   pageBlocks?: unknown;
   legacySourceResourceId?: unknown;

@@ -10,7 +10,7 @@
       "type": "string"
     },
     "address": {
-      "type": "string"
+      "type": "richtext"
     },
     "phone": {
       "type": "string"

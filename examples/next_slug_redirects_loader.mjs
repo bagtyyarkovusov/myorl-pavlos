@@ -1,7 +1,7 @@
 /**
- * Next.js App Router: load ``slug_redirects_next.json`` (repo root generator output)
+ * Next.js App Router: load ``slug_redirects_next.json`` (data/manifests generator output)
  * and resolve redirects in middleware. Adjust import path when you copy the JSON
- * into your Next app (e.g. ``import manifest from '../data/slug_redirects_next.json' assert { type: 'json' }``).
+ * into your Next app (e.g. ``import manifest from '../data/manifests/slug_redirects_next.json' assert { type: 'json' }``).
  *
  * Match keys with decoded paths: normalize request pathname (decodeURIComponent)
  * before lookup. Prefer 308 for permanent method-preserving redirects.

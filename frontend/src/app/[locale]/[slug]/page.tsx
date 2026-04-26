@@ -3,10 +3,8 @@ import { notFound } from "next/navigation";
 
 import { PageRenderer } from "@/components/PageRenderer";
 import { fetchPageBySlug } from "@/lib/cms/client";
-import { hrefForPage } from "@/lib/cms/dto";
-import { getCmsConfig } from "@/lib/cms/env";
+import { toPageMetadata } from "@/lib/cms/metadata";
 import { isLocale } from "@/lib/cms/types";
-import type { Locale, PageDTO } from "@/lib/cms/types";
 
 type CmsPageProps = {
   params: Promise<{
@@ -22,7 +20,7 @@ export async function generateMetadata({ params }: CmsPageProps): Promise<Metada
   }
 
   const page = await fetchPageBySlug(locale, slug);
-  return page ? toMetadata(page) : {};
+  return page ? toPageMetadata(page) : {};
 }
 
 export default async function CmsPage({ params }: CmsPageProps) {
@@ -37,36 +35,4 @@ export default async function CmsPage({ params }: CmsPageProps) {
   }
 
   return <PageRenderer page={page} />;
-}
-
-function toMetadata(page: PageDTO): Metadata {
-  const config = getCmsConfig();
-  const isNoindexSystemPage =
-    page.layoutVariant === "not-found" || page.layoutVariant === "search-results";
-  const canonical = page.seo.canonicalUrl ?? new URL(hrefForPage(page), config.siteUrl).toString();
-
-  return {
-    title: page.seoTitle,
-    description: page.seo.metaDescription ?? undefined,
-    alternates: {
-      canonical,
-      languages: languageAlternates(page.locale, page.slug, config.siteUrl),
-    },
-    openGraph: {
-      title: page.seoTitle,
-      description: page.seo.metaDescription ?? undefined,
-      url: canonical,
-      images: page.seo.ogImage ? [{ url: page.seo.ogImage.url }] : undefined,
-    },
-    robots: {
-      index: !page.seo.robotsNoindex && !isNoindexSystemPage,
-      follow: !page.seo.robotsNofollow && !isNoindexSystemPage,
-    },
-  };
-}
-
-function languageAlternates(locale: Locale, slug: string, siteUrl: string) {
-  return {
-    [locale]: new URL(slug === "index" ? `/${locale}` : `/${locale}/${slug}`, siteUrl).toString(),
-  };
 }

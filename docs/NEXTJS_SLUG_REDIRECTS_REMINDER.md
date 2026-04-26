@@ -4,11 +4,11 @@ Strapi `Page.slug` is a **`uid`** (ASCII only). MODX **`alias`** values that con
 
 ## Do not ship Next without these redirects
 
-1. Copy [`slug_redirects_next.json`](../slug_redirects_next.json) into your Next repo (or regenerate with [`emit_slug_redirects.py`](../emit_slug_redirects.py) after each slug parity run).
+1. Keep [`slug_redirects_next.json`](../data/manifests/slug_redirects_next.json) available to the Next app (or regenerate with [`emit_slug_redirects.py`](../tools/emit_slug_redirects.py) after each slug parity run).
 2. Wire middleware or `next.config` using the pattern in [`examples/next_slug_redirects_loader.mjs`](../examples/next_slug_redirects_loader.mjs) (`decodeURIComponent` on the request path before lookup).
-3. Re-run [`slug_migration_audit.py`](../slug_migration_audit.py) before release; `strict_verification_passed` must be **true**.
+3. Re-run [`slug_migration_audit.py`](../tools/slug_migration_audit.py) before release; `strict_verification_passed` must be **true**.
 
-## RU locale — four `non_ascii_modx_alias` rows (verify in `slug_parity_report.json`)
+## RU locale — four `non_ascii_modx_alias` rows (verify in [`slug_parity_report.json`](../artifacts/reports/slug_parity_report.json))
 
 | MODX id | Strapi `documentId` | MODX `alias` (Unicode) | Strapi slug (canonical) | `toPath` |
 |--------|---------------------|-------------------------|---------------------------|----------|
@@ -21,5 +21,5 @@ The last row is **not Cyrillic** but is still **non-ASCII** and must be included
 
 ## Related tooling
 
-- [`import_policy.md`](../import_policy.md) — full slug parity + redirect pipeline
-- [`slug_migration_verification_audit.json`](../slug_migration_verification_audit.json) — latest automated audit output
+- [`import_policy.md`](./migration/import_policy.md) — full slug parity + redirect pipeline
+- [`slug_migration_verification_audit.json`](../artifacts/reports/slug_migration_verification_audit.json) — latest automated audit output

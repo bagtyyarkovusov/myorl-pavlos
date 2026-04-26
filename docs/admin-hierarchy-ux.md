@@ -152,9 +152,9 @@ stores.
    the item `uiRouterKey` and the final segment of the rendered path.
 
 After **bulk slug renames** (MODX parity), run
-[`slug_parity_analyze.py`](../slug_parity_analyze.py) /
-[`slug_parity_apply.py`](../slug_parity_apply.py) per
-[`import_policy.md`](../import_policy.md), refresh internal links, then re-sync
+[`slug_parity_analyze.py`](../tools/slug_parity_analyze.py) /
+[`slug_parity_apply.py`](../tools/slug_parity_apply.py) per
+[`import_policy.md`](./migration/import_policy.md), refresh internal links, then re-sync
 navigation here so menu paths stay aligned with `Page.slug`.
 
 Dry-run first:

@@ -70,4 +70,18 @@ describe("toPageDTO sections", () => {
 
     expect(toPageDTO(page).sections).toEqual([]);
   });
+
+  it("builds absolute alternate URLs from localizations", () => {
+    const page: StrapiPagePayload = {
+      ...basePage,
+      locale: "el",
+      slug: "index",
+      localizations: [{ locale: "ru", slug: "glavnaia" }],
+    };
+
+    const dto = toPageDTO(page);
+
+    expect(dto.alternateUrls.el).toBe("http://localhost:3000/el");
+    expect(dto.alternateUrls.ru).toBe("http://localhost:3000/ru/glavnaia");
+  });
 });

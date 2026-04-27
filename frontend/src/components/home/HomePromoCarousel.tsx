@@ -2,10 +2,8 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { MediaFrame } from "@/components/design-system";
-import type { PromoSlideItemDTO } from "@/lib/cms/sections";
-import { cn } from "@/lib/utils";
+import type { PromoSlideItemDTO } from "@/lib/cms/types";
 
 type HomePromoCarouselProps = {
   title: string;

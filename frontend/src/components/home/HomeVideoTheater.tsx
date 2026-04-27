@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MediaFrame } from "@/components/design-system";
-import type { VideoItemDTO } from "@/lib/cms/sections";
+import type { VideoItemDTO } from "@/lib/cms/types";
 
 type HomeVideoTheaterProps = {
   title: string;

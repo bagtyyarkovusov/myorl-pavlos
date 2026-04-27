@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { LinkedResourceItemDTO } from "@/lib/cms/sections";
+import type { LinkedResourceItemDTO } from "@/lib/cms/types";
 
 type HomeMedicalLedgerProps = {
   title: string;

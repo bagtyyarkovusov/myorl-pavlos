@@ -14,7 +14,7 @@ import type {
   StrapiSectionRaw,
   TabItemDTO,
   VideoItemDTO,
-} from "./sections";
+} from "./types/sections";
 import type {
   ContactClinicDTO,
   StrapiClinic,

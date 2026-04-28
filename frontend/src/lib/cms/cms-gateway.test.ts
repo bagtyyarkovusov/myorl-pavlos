@@ -263,15 +263,13 @@ describe("fetchAll", () => {
   });
 
   it("stops pagination at maxPages", async () => {
-    const mockFetch = vi
-      .fn()
-      .mockResolvedValue(
-        mockFetchResponse(
-          strapiListResponse([mockStrapiEntity({ slug: "x" })], {
-            pagination: { page: 1, pageSize: 1, pageCount: 100, total: 100 },
-          }),
-        ),
-      );
+    const mockFetch = vi.fn().mockResolvedValue(
+      mockFetchResponse(
+        strapiListResponse([mockStrapiEntity({ slug: "x" })], {
+          pagination: { page: 1, pageSize: 1, pageCount: 100, total: 100 },
+        }),
+      ),
+    );
     const gateway = createTestGateway(mockFetch as unknown as typeof globalThis.fetch);
 
     const results = await gateway.fetchAll("/api/pages", testEntitySchema, {
@@ -284,15 +282,13 @@ describe("fetchAll", () => {
   });
 
   it("stops when batch smaller than pageSize", async () => {
-    const mockFetch = vi
-      .fn()
-      .mockResolvedValue(
-        mockFetchResponse(
-          strapiListResponse([mockStrapiEntity({ slug: "only" })], {
-            pagination: { page: 1, pageSize: 100, pageCount: 1, total: 1 },
-          }),
-        ),
-      );
+    const mockFetch = vi.fn().mockResolvedValue(
+      mockFetchResponse(
+        strapiListResponse([mockStrapiEntity({ slug: "only" })], {
+          pagination: { page: 1, pageSize: 100, pageCount: 1, total: 1 },
+        }),
+      ),
+    );
     const gateway = createTestGateway(mockFetch as unknown as typeof globalThis.fetch);
 
     const results = await gateway.fetchAll("/api/pages", testEntitySchema);
@@ -497,6 +493,21 @@ describe("pages.all", () => {
     expect(fetchCall[0]).toContain("sort%5B0%5D=slug%3Aasc");
     expect(fetchCall[0]).toContain("fields%5B0%5D=slug");
   });
+
+  it("passes populate options through to Strapi query params", async () => {
+    const fixture = loadFixture("navigation-pages.json");
+    const mockFetch = vi.fn().mockResolvedValue(mockFetchResponse(fixture));
+    const gateway = createTestGateway(mockFetch as unknown as typeof globalThis.fetch);
+
+    await gateway.pages.all({
+      locale: "el",
+      populate: { parentPage: { fields: ["documentId", "slug", "title"] } },
+    });
+
+    const fetchCall = mockFetch.mock.calls[0] as [string, RequestInit];
+    expect(fetchCall[0]).toContain("populate");
+    expect(fetchCall[0]).toContain("parentPage");
+  });
 });
 
 describe("pages.one", () => {
@@ -532,6 +543,20 @@ describe("pages.one", () => {
       slug: "index",
       title: "Home",
     });
+  });
+
+  it("passes populate options through to Strapi query params", async () => {
+    const mockFetch = vi.fn().mockResolvedValue(mockFetchResponse({ data: [], meta: {} }));
+    const gateway = createTestGateway(mockFetch as unknown as typeof globalThis.fetch);
+
+    await gateway.pages.one("about", {
+      locale: "el",
+      populate: { pageSections: { populate: "*" } },
+    });
+
+    const fetchCall = mockFetch.mock.calls[0] as [string, RequestInit];
+    expect(fetchCall[0]).toContain("populate");
+    expect(fetchCall[0]).toContain("pageSections");
   });
 
   it("returns null when page not found", async () => {

@@ -5,6 +5,7 @@ import type { CmsGateway } from "./cms-gateway";
 import { cms as productionGateway } from "./cms-gateway-setup";
 import { globalResponseSchema } from "./strapi-validators";
 import { buildNavigationTree } from "./navigation";
+import { NAVIGATION_POPULATE, PAGE_POPULATE, SITEMAP_POPULATE } from "./page-normalizer";
 import type { GlobalSettingsDTO, Locale, NavigationNodeDTO, PageDTO } from "./types";
 import { CmsError } from "./errors";
 
@@ -63,7 +64,7 @@ export async function getPageResult(locale: Locale, slug: string): Promise<PageR
   const gateway = getGateway();
 
   try {
-    const page = await gateway.pages.one(slug, { locale });
+    const page = await gateway.pages.one(slug, { locale, populate: PAGE_POPULATE });
     if (!page) {
       return {
         ok: false,
@@ -114,6 +115,8 @@ export async function getSite(locale: Locale): Promise<SiteContext> {
     .all({
       locale,
       sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
+      populate: NAVIGATION_POPULATE,
+      cacheTags: ["navigation:" + locale, "pages"],
     })
     .then((pages) => buildNavigationTree(pages, locale));
 
@@ -141,6 +144,7 @@ export async function getSitemapPages(): Promise<PageDTO[]> {
   const pages = await gateway.pages.all({
     locale: "all",
     sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
+    populate: SITEMAP_POPULATE,
   });
 
   return pages.filter((page) => !page.seo.sitemapExclude);

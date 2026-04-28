@@ -50,6 +50,16 @@ export const PAGE_POPULATE = {
   contactSection: { populate: { details: true, clinics: true } },
 } as const;
 
+export const NAVIGATION_POPULATE = {
+  parentPage: { fields: ["documentId", "slug", "title"] },
+} as const;
+
+export const SITEMAP_POPULATE = {
+  seo: { populate: ["ogImage"] },
+  parentPage: { fields: ["documentId", "slug", "title"] },
+  localizations: { fields: ["documentId", "locale", "slug", "title"] },
+} as const;
+
 export function normalizeOptionalText(value: string | null | undefined): string | null {
   const normalized = (value ?? "").trim();
   return normalized ? normalized : null;

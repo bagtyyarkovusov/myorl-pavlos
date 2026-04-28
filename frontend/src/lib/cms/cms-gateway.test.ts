@@ -62,6 +62,7 @@ function createTestGateway(
     token: "test-token",
     fetchFn: mockFn,
     timeoutMs: 5000,
+    maxRetries: 0,
   });
 }
 

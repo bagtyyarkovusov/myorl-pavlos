@@ -30,6 +30,8 @@ export interface CmsGatewayConfig {
   token?: string;
   fetchFn?: typeof globalThis.fetch;
   timeoutMs?: number;
+  maxRetries?: number;
+  retryBaseDelayMs?: number;
   cache?: CmsGatewayCacheConfig;
 }
 
@@ -146,6 +148,8 @@ export function createCmsGateway(config: CmsGatewayConfig): CmsGateway {
   const token = config.token;
   const fetchFn = config.fetchFn ?? globalThis.fetch;
   const timeoutMs = config.timeoutMs ?? 10000;
+  const maxRetries = config.maxRetries ?? 3;
+  const retryBaseDelayMs = config.retryBaseDelayMs ?? 500;
   const cache = config.cache ?? {};
 
   async function request(
@@ -161,38 +165,62 @@ export function createCmsGateway(config: CmsGatewayConfig): CmsGateway {
       headers.Authorization = "Bearer " + token;
     }
 
-    let fetchInit: RequestInit = {
-      headers,
-      signal: signal ?? AbortSignal.timeout(timeoutMs),
-    };
+    let lastError: unknown;
 
-    if (cache.fetchInit && cacheTags && cacheTags.length > 0) {
-      fetchInit = { ...fetchInit, ...cache.fetchInit(cacheTags) };
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      if (attempt > 0) {
+        const delay = retryBaseDelayMs * Math.pow(2, attempt - 1);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+
+      let fetchInit: RequestInit = {
+        headers,
+        signal: signal ?? AbortSignal.timeout(timeoutMs),
+      };
+
+      if (cache.fetchInit && cacheTags && cacheTags.length > 0) {
+        fetchInit = { ...fetchInit, ...cache.fetchInit(cacheTags) };
+      }
+
+      try {
+        const response = await fetchFn(url, fetchInit);
+
+        if (!response.ok) {
+          throw new CmsError(
+            response.status === 404 ? "not_found" : "server_error",
+            "Strapi request failed: " +
+              response.status +
+              " " +
+              response.statusText +
+              " " +
+              endpoint,
+            { status: response.status, url },
+          );
+        }
+
+        return response.json();
+      } catch (error) {
+        lastError = error;
+
+        if (error instanceof CmsError && error.kind !== "network" && error.kind !== "timeout") {
+          throw error;
+        }
+
+        if (attempt === maxRetries) {
+          if (error instanceof CmsError) throw error;
+          const isTimeout = error instanceof DOMException && error.name === "TimeoutError";
+          throw new CmsError(
+            isTimeout ? "timeout" : "network",
+            isTimeout
+              ? "Request to " + endpoint + " timed out after " + timeoutMs + "ms."
+              : "Failed to connect to CMS at " + baseUrl + ".",
+            { url, cause: error instanceof Error ? error : undefined },
+          );
+        }
+      }
     }
 
-    let response: Response;
-    try {
-      response = await fetchFn(url, fetchInit);
-    } catch (error) {
-      const isTimeout = error instanceof DOMException && error.name === "TimeoutError";
-      throw new CmsError(
-        isTimeout ? "timeout" : "network",
-        isTimeout
-          ? "Request to " + endpoint + " timed out after " + timeoutMs + "ms."
-          : "Failed to connect to CMS at " + baseUrl + ".",
-        { url, cause: error instanceof Error ? error : undefined },
-      );
-    }
-
-    if (!response.ok) {
-      throw new CmsError(
-        response.status === 404 ? "not_found" : "server_error",
-        "Strapi request failed: " + response.status + " " + response.statusText + " " + endpoint,
-        { status: response.status, url },
-      );
-    }
-
-    return response.json();
+    throw lastError;
   }
 
   const fetchOneImpl = async <T>(

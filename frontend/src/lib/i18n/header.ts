@@ -36,7 +36,7 @@ const STRINGS: Record<Locale, HeaderStrings> = {
     mobileNavInnerLabel: "Κύρια πλοήγηση κινητού",
     languageLabel: "Γλώσσα",
     overviewMobile: "Επισκόπηση ενότητας",
-    sectionOverviewLink: "Δες την ενότητα →",
+    sectionOverviewLink: "Δες την ενότητα",
     sectionOverviewBlurb: (sectionTitle) =>
       `Εξειδικευμένο κλινικό περιεχόμενο, διαδικασίες και οδηγίες ασθενών στην ενότητα «${sectionTitle}».`,
     topicsLabel: (count) => `${count} ${count === 1 ? "θέμα" : "θέματα"}`,
@@ -56,7 +56,7 @@ const STRINGS: Record<Locale, HeaderStrings> = {
     mobileNavInnerLabel: "Основное мобильное меню",
     languageLabel: "Язык",
     overviewMobile: "Обзор раздела",
-    sectionOverviewLink: "Открыть раздел →",
+    sectionOverviewLink: "Открыть раздел",
     sectionOverviewBlurb: (sectionTitle) =>
       `Профильные клинические материалы, процедуры и инструкции для пациентов в разделе «${sectionTitle}».`,
     topicsLabel: (count) => {

@@ -260,7 +260,8 @@ describe("pageResponseSchema", () => {
 
   it("returns a fully populated PageDTO from content-page fixture", () => {
     const fixture = loadFixture("content-page.json");
-    const dto = pageResponseSchema.parse(fixture);
+    const unwrapped = { ...fixture, data: flattenEntities(fixture) };
+    const dto = pageResponseSchema.parse(unwrapped);
 
     expect(dto).not.toBeNull();
     if (!dto) throw new Error("Expected non-null PageDTO");
@@ -281,7 +282,7 @@ describe("pageResponseSchema", () => {
 
   it("rejects a response with invalid locale", () => {
     const badFixture = {
-      data: [{ documentId: "x", locale: "fr", attributes: { slug: "x", title: "X" } }],
+      data: [{ documentId: "x", locale: "fr", slug: "x", title: "X" }],
       meta: {},
     };
 
@@ -301,7 +302,8 @@ describe("pageListSchema", () => {
 
   it("returns array of PageDTO from navigation-pages fixture", () => {
     const fixture = loadFixture("navigation-pages.json");
-    const dtos = pageListSchema.parse(fixture);
+    const unwrapped = { ...fixture, data: flattenEntities(fixture) };
+    const dtos = pageListSchema.parse(unwrapped);
 
     expect(Array.isArray(dtos)).toBe(true);
     expect(dtos).toHaveLength(2);
@@ -337,7 +339,8 @@ describe("parity — page schemas and toPageDTO produce consistent output", () =
     const payload = flattenEntity(fixture) as unknown as StrapiPagePayload;
 
     const fromDTO = toPageDTO(payload);
-    const fromSchema = pageResponseSchema.parse(fixture);
+    const unwrapped = { ...fixture, data: flattenEntities(fixture) };
+    const fromSchema = pageResponseSchema.parse(unwrapped);
 
     if (!fromSchema) throw new Error("Schema returned null");
 
@@ -360,7 +363,8 @@ describe("parity — page schemas and toPageDTO produce consistent output", () =
     const payloads = flattenEntities(fixture) as unknown as StrapiPagePayload[];
 
     const fromDTOs = payloads.map((p) => toPageDTO(p));
-    const fromSchema = pageListSchema.parse(fixture);
+    const unwrapped = { ...fixture, data: flattenEntities(fixture) };
+    const fromSchema = pageListSchema.parse(unwrapped);
 
     expect(fromDTOs).toHaveLength(fromSchema.length);
     for (let i = 0; i < fromDTOs.length; i++) {

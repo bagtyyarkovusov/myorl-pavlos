@@ -490,8 +490,11 @@ const zodLocalization = z.object({
   title: z.string().nullish(),
 });
 
-const zodPageAttributes = z
+const zodPageEntity = z
   .object({
+    id: z.number().optional(),
+    documentId: z.string(),
+    locale: z.enum(["el", "ru"]),
     slug: z.string(),
     title: z.string(),
     menuTitle: z.string().nullish(),
@@ -522,18 +525,6 @@ const zodPageAttributes = z
   })
   .passthrough();
 
-const zodPageEntity = z
-  .object({
-    id: z.number().optional(),
-    documentId: z.string(),
-    locale: z.enum(["el", "ru"]),
-    attributes: zodPageAttributes,
-  })
-  .transform((entity) => {
-    const { attributes, ...rest } = entity;
-    return { ...rest, ...attributes };
-  });
-
 export const pageResponseSchema = z
   .object({
     data: z.array(zodPageEntity),
@@ -544,6 +535,13 @@ export const pageResponseSchema = z
     if (!raw) return null;
     return toPageDTO(raw as StrapiPagePayload);
   });
+
+export const pageEntitiesResponseSchema = z
+  .object({
+    data: z.array(zodPageEntity),
+    meta: z.unknown().optional(),
+  })
+  .transform((response) => response.data);
 
 export const pageListSchema = z
   .object({

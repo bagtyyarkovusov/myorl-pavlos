@@ -9,24 +9,17 @@ const optionalStringTransform = z
     return trimmed.length > 0 ? trimmed : null;
   });
 
-const strapiGlobalAttributesSchema = z.object({
-  address: optionalStringTransform,
-  phoneTel: optionalStringTransform,
-  phoneDisplay: optionalStringTransform,
-  hours: optionalStringTransform,
-});
-
 const strapiGlobalEntitySchema = z
   .object({
     id: z.number().optional(),
     documentId: z.string(),
     locale: z.string(),
-    attributes: strapiGlobalAttributesSchema,
+    address: optionalStringTransform,
+    phoneTel: optionalStringTransform,
+    phoneDisplay: optionalStringTransform,
+    hours: optionalStringTransform,
   })
-  .transform((entity) => {
-    const { attributes, ...rest } = entity;
-    return { ...rest, ...attributes };
-  });
+  .passthrough();
 
 export const globalResponseSchema = z
   .object({

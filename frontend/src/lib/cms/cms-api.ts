@@ -1,38 +1,69 @@
 import "server-only";
 
 import { notFound } from "next/navigation";
-import { validatedFetch } from "./cms-fetch";
+import type { CmsGateway } from "./cms-gateway";
+import { cms as productionGateway } from "./cms-gateway-setup";
 import { globalResponseSchema } from "./strapi-validators";
-import { PAGE_POPULATE, pageListSchema, pageResponseSchema } from "./page-normalizer";
-import { getCmsConfig } from "./env";
 import { buildNavigationTree } from "./navigation";
 import type { GlobalSettingsDTO, Locale, NavigationNodeDTO, PageDTO } from "./types";
+import { CmsError } from "./errors";
+
+let _gateway: CmsGateway | null = null;
+
+function getGateway(): CmsGateway {
+  return _gateway ?? productionGateway;
+}
+
+export function injectCmsGatewayForTesting(gw: CmsGateway): void {
+  _gateway = gw;
+}
 
 export type CmsPageError =
   | { kind: "not_found"; locale: Locale; slug: string; message: string }
   | { kind: "network"; message: string; cause?: unknown }
   | { kind: "timeout"; message: string }
   | { kind: "server_error"; status: number; message: string }
-  | { kind: "validation"; issues: string[]; raw: unknown; message: string };
+  | {
+      kind: "validation";
+      issues?: { path: (string | number)[]; message: string }[];
+      raw?: unknown;
+      message: string;
+    };
 
 export type PageResult = { ok: true; page: PageDTO } | { ok: false; error: CmsPageError };
 
+function toCmsPageError(error: unknown, locale: Locale, slug: string): CmsPageError {
+  if (error instanceof CmsError) {
+    switch (error.kind) {
+      case "not_found":
+        return { kind: "not_found", locale, slug, message: error.message };
+      case "network":
+        return { kind: "network", message: error.message, cause: error.cause };
+      case "timeout":
+        return { kind: "timeout", message: error.message };
+      case "server_error":
+        return { kind: "server_error", status: error.status ?? 500, message: error.message };
+      case "validation":
+        return {
+          kind: "validation",
+          issues: error.issues,
+          raw: error.raw,
+          message: error.message,
+        };
+    }
+  }
+  return {
+    kind: "network",
+    message: error instanceof Error ? error.message : "Unknown CMS error",
+    cause: error,
+  };
+}
+
 export async function getPageResult(locale: Locale, slug: string): Promise<PageResult> {
-  const config = getCmsConfig();
+  const gateway = getGateway();
 
   try {
-    const page = await validatedFetch(
-      `${config.strapiUrl}/api/pages`,
-      {
-        locale,
-        status: "published",
-        "filters[slug][$eq]": slug,
-        "pagination[pageSize]": 1,
-        populate: PAGE_POPULATE,
-      },
-      pageResponseSchema,
-    );
-
+    const page = await gateway.pages.one(slug, { locale });
     if (!page) {
       return {
         ok: false,
@@ -40,25 +71,13 @@ export async function getPageResult(locale: Locale, slug: string): Promise<PageR
           kind: "not_found",
           locale,
           slug,
-          message: `Page not found: ${locale}/${slug}`,
+          message: "Page not found: " + locale + "/" + slug,
         },
       };
     }
-
     return { ok: true, page };
   } catch (error) {
-    if (error && typeof error === "object" && "kind" in error) {
-      return { ok: false, error: error as CmsPageError };
-    }
-
-    return {
-      ok: false,
-      error: {
-        kind: "network",
-        message: error instanceof Error ? error.message : "Unknown CMS error",
-        cause: error,
-      },
-    };
+    return { ok: false, error: toCmsPageError(error, locale, slug) };
   }
 }
 
@@ -78,105 +97,51 @@ export type SiteContext = {
   settings: GlobalSettingsDTO;
 };
 
+function buildFallbackSettings(locale: Locale): GlobalSettingsDTO {
+  return {
+    locale,
+    address: null,
+    phoneTel: null,
+    phoneDisplay: null,
+    hours: null,
+  };
+}
+
 export async function getSite(locale: Locale): Promise<SiteContext> {
-  const config = getCmsConfig();
-  const baseUrl = config.strapiUrl;
+  const gateway = getGateway();
 
-  const pagesPromise = (async (): Promise<NavigationNodeDTO[]> => {
-    const allPages: PageDTO[] = [];
-    let page = 1;
+  const pagesPromise = gateway.pages
+    .all({
+      locale,
+      sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
+    })
+    .then((pages) => buildNavigationTree(pages, locale));
 
-    while (true) {
-      const batch = await validatedFetch(
-        `${baseUrl}/api/pages`,
-        {
-          locale,
-          status: "published",
-          pagination: { page, pageSize: 100 },
-          sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
-          populate: PAGE_POPULATE,
-        },
-        pageListSchema,
-      );
+  const settingsPromise = gateway.fetchOne("/api/global", globalResponseSchema, {
+    locale,
+  });
 
-      if (!batch || batch.length === 0) break;
-      allPages.push(...batch);
-      if (batch.length < 100) break;
-      page += 1;
-    }
+  const [navigationResult, settingsResult] = await Promise.allSettled([
+    pagesPromise,
+    settingsPromise,
+  ]);
 
-    return buildNavigationTree(allPages, locale);
-  })();
-
-  const settingsPromise = (async (): Promise<GlobalSettingsDTO> => {
-    const settings = await validatedFetch(
-      `${baseUrl}/api/global`,
-      { locale, status: "published" },
-      globalResponseSchema,
-    );
-
-    if (!settings) {
-      throw { kind: "not_found", message: "Global settings not found" };
-    }
-
-    return settings;
-  })();
-
-  const [navigation, settingsResult] = await Promise.allSettled([pagesPromise, settingsPromise]);
-
-  const navigationResult = navigation.status === "fulfilled" ? navigation.value : [];
+  const navigation = navigationResult.status === "fulfilled" ? navigationResult.value : [];
   const settings =
-    settingsResult.status === "fulfilled"
+    settingsResult.status === "fulfilled" && settingsResult.value !== null
       ? settingsResult.value
-      : ({
-          locale,
-          address: null,
-          phoneTel: null,
-          phoneDisplay: null,
-          hours: null,
-        } as GlobalSettingsDTO);
+      : buildFallbackSettings(locale);
 
-  return { navigation: navigationResult, settings };
+  return { navigation, settings };
 }
 
 export async function getSitemapPages(): Promise<PageDTO[]> {
-  const config = getCmsConfig();
-  const baseUrl = config.strapiUrl;
-  const pages: PageDTO[] = [];
-  let page = 1;
+  const gateway = getGateway();
 
-  while (true) {
-    try {
-      const batch = await validatedFetch(
-        `${baseUrl}/api/pages`,
-        {
-          locale: "all",
-          status: "published",
-          pagination: { page, pageSize: 100 },
-          sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
-          populate: PAGE_POPULATE,
-        },
-        pageListSchema,
-      );
+  const pages = await gateway.pages.all({
+    locale: "all",
+    sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
+  });
 
-      if (!batch || batch.length === 0) break;
-
-      for (const item of batch) {
-        if (!item.seo.sitemapExclude) {
-          pages.push(item);
-        }
-      }
-
-      if (batch.length < 100) break;
-      page += 1;
-    } catch {
-      if (process.env.NODE_ENV === "development") {
-        console.warn("[getSitemapPages] batch failed, continuing");
-      }
-      if (page === 1) break;
-      page += 1;
-    }
-  }
-
-  return pages;
+  return pages.filter((page) => !page.seo.sitemapExclude);
 }

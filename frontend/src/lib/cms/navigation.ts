@@ -1,13 +1,10 @@
-import { getCmsConfig } from "./env";
 import { normalizeOptionalText } from "./text";
-import { isLocale } from "./types";
 import type {
   Locale,
   NavigationInput,
   NavigationNodeDTO,
   PageDTO,
   StrapiLocalization,
-  StrapiPagePayload,
 } from "./types";
 
 export function buildNavigationTree(pages: NavigationInput[], locale: Locale): NavigationNodeDTO[] {
@@ -28,7 +25,7 @@ export function buildNavigationTree(pages: NavigationInput[], locale: Locale): N
   for (const node of nodes.values()) {
     const parentDocumentId = node.parentPage?.documentId;
     const parent = parentDocumentId ? nodes.get(parentDocumentId) : undefined;
-    if (parent) {
+    if (parent && !wouldCreateCycle(nodes, node.documentId, parentDocumentId as string)) {
       parent.children.push(node);
     } else {
       roots.push(node);
@@ -55,25 +52,6 @@ export function hrefForLocaleSlug(locale: Locale, slug: string): string {
   return slug === "index" ? `/${locale}` : `/${locale}/${slug}`;
 }
 
-export function buildAlternateUrls(page: StrapiPagePayload): Partial<Record<Locale, string>> {
-  const urlByLocale = new Map<Locale, string>();
-  urlByLocale.set(page.locale, absoluteHref(page.locale, page.slug));
-
-  for (const localization of page.localizations ?? []) {
-    const locale = localization.locale;
-    const slug = localization.slug;
-    if (locale && isLocale(locale) && slug) {
-      urlByLocale.set(locale, absoluteHref(locale, slug));
-    }
-  }
-
-  return Object.fromEntries(urlByLocale) as Partial<Record<Locale, string>>;
-}
-
-function absoluteHref(locale: Locale, slug: string): string {
-  return new URL(hrefForLocaleSlug(locale, slug), getCmsConfig().siteUrl).toString();
-}
-
 function compareNavigationItems(left: NavigationInput, right: NavigationInput): number {
   return (
     left.menuIndex - right.menuIndex ||
@@ -89,4 +67,25 @@ export function toLocalizationList(value: unknown): StrapiLocalization[] {
   return value.filter(
     (item): item is StrapiLocalization => typeof item === "object" && item !== null,
   );
+}
+
+function wouldCreateCycle(
+  nodes: Map<string, NavigationNodeDTO>,
+  childId: string,
+  parentId: string,
+): boolean {
+  const visited = new Set<string>([childId]);
+  let current: NavigationNodeDTO | undefined = nodes.get(parentId);
+  while (current) {
+    if (visited.has(current.documentId)) {
+      return true;
+    }
+    visited.add(current.documentId);
+    const grandParentId = current.parentPage?.documentId;
+    if (!grandParentId) {
+      return false;
+    }
+    current = nodes.get(grandParentId);
+  }
+  return false;
 }

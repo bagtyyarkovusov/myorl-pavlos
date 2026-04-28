@@ -1,89 +1,32 @@
 import "server-only";
 
-import { buildNavigationTree, toPageDTO } from "./dto";
-import { normalizeOptionalText } from "./text";
+import { cache } from "react";
+import { buildNavigationTree } from "./dto";
+import { PAGE_POPULATE, toPageDTO } from "./page-normalizer";
 import type {
-  GlobalSettingsDTO,
   Locale,
   NavigationNodeDTO,
   PageDTO,
-  StrapiGlobalPayload,
   StrapiListResponse,
   StrapiPagePayload,
-  StrapiSingleResponse,
 } from "./types";
 import { getCmsConfig } from "./env";
+import { CmsError } from "./errors";
 
 const PAGE_REVALIDATE_SECONDS = 300;
 
-const pagePopulate = {
-  seo: { populate: ["ogImage"] },
-  parentPage: { fields: ["documentId", "slug", "title"] },
-  localizations: { fields: ["documentId", "locale", "slug", "title"] },
-  tags: { fields: ["name", "slug"] },
-  featuredImage: true,
-  imageCenter: true,
-  pageSections: { populate: "*" },
-  faqSection: { populate: { items: true } },
-  accordionSection: { populate: { items: true } },
-  tabsSection: { populate: { items: true } },
-  gallerySection: { populate: { items: { populate: ["image"] } } },
-  contactSection: { populate: { details: true, clinics: true } },
-} as const;
-
-export async function fetchPageBySlug(locale: Locale, slug: string): Promise<PageDTO | null> {
-  const response = await fetchStrapi<StrapiListResponse<StrapiPagePayload>>(
-    "/api/pages",
-    {
-      locale,
-      status: "published",
-      filters: { slug: { $eq: slug } },
-      pagination: { pageSize: 1 },
-      populate: pagePopulate,
-    },
-    [`page:${locale}:${slug}`, "pages", `navigation:${locale}`],
-  );
-
-  const page = response.data.at(0);
-  return page ? toPageDTO(normalizeEntity(page)) : null;
-}
-
-export async function fetchNavigation(locale: Locale): Promise<NavigationNodeDTO[]> {
-  const pages = await fetchAllPages(locale, [`navigation:${locale}`, "pages"]);
+export const fetchNavigation = cache(async (locale: Locale): Promise<NavigationNodeDTO[]> => {
+  const { pages } = await fetchAllPages(locale, [`navigation:${locale}`, "pages"]);
   return buildNavigationTree(pages, locale);
-}
+});
 
-export async function fetchGlobalSettings(locale: Locale): Promise<GlobalSettingsDTO | null> {
-  try {
-    const response = await fetchStrapi<StrapiSingleResponse<StrapiGlobalPayload>>(
-      "/api/global",
-      { locale, status: "published" },
-      [`global:${locale}`, "global"],
-    );
-    if (!response.data) {
-      return null;
-    }
-    const entity = normalizeEntity(response.data);
-    return {
-      locale,
-      address: normalizeOptionalText(entity.address),
-      phoneTel: normalizeOptionalText(entity.phoneTel),
-      phoneDisplay: normalizeOptionalText(entity.phoneDisplay),
-      hours: normalizeOptionalText(entity.hours),
-    };
-  } catch {
-    return null;
-  }
-}
-
-export async function fetchSitemapPages(): Promise<PageDTO[]> {
-  const pages = await fetchAllPages(undefined, ["pages", "sitemap"]);
-  return pages.filter((page) => !page.seo.sitemapExclude);
-}
-
-async function fetchAllPages(locale: Locale | undefined, tags: string[]): Promise<PageDTO[]> {
+async function fetchAllPages(
+  locale: Locale | undefined,
+  tags: string[],
+): Promise<{ pages: PageDTO[]; errors: number }> {
   const pages: PageDTO[] = [];
   let page = 1;
+  let errors = 0;
 
   while (true) {
     const response = await fetchStrapi<StrapiListResponse<StrapiPagePayload>>(
@@ -93,23 +36,38 @@ async function fetchAllPages(locale: Locale | undefined, tags: string[]): Promis
         status: "published",
         pagination: { page, pageSize: 100 },
         sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
-        populate: pagePopulate,
+        populate: PAGE_POPULATE,
       },
       tags,
     );
 
-    if (response.data.length === 0) {
+    if (!response.data || response.data.length === 0) {
       break;
     }
 
-    pages.push(...response.data.map((item) => toPageDTO(normalizeEntity(item))));
+    for (const item of response.data) {
+      try {
+        pages.push(toPageDTO(normalizeEntity(item)));
+      } catch {
+        errors += 1;
+        if (process.env.NODE_ENV === "development") {
+          console.warn(
+            "[fetchAllPages] skipped malformed page",
+            item && typeof item === "object"
+              ? (item as Record<string, unknown>).documentId
+              : undefined,
+          );
+        }
+      }
+    }
+
     if (response.data.length < 100) {
       break;
     }
     page += 1;
   }
 
-  return pages;
+  return { pages, errors };
 }
 
 async function fetchStrapi<T>(
@@ -135,15 +93,22 @@ async function fetchStrapi<T>(
       signal: AbortSignal.timeout(5000),
     });
   } catch (error) {
-    console.error(`[CMS] Network error fetching ${url.pathname}:`, error);
-    throw new Error(
-      `Failed to connect to CMS at ${config.strapiUrl}. Is the Strapi backend running?`,
+    const isAbort = error instanceof DOMException && error.name === "TimeoutError";
+    const errorType = isAbort ? "timeout" : "network";
+    throw new CmsError(
+      errorType,
+      isAbort
+        ? `Request to ${url.pathname} timed out after 5s.`
+        : `Failed to connect to CMS at ${config.strapiUrl}. Is the Strapi backend running?`,
+      { url: url.toString() },
     );
   }
 
   if (!response.ok) {
-    throw new Error(
+    throw new CmsError(
+      response.status === 404 ? "not_found" : "server_error",
       `Strapi request failed: ${response.status} ${response.statusText} ${url.pathname}`,
+      { status: response.status, url: url.toString() },
     );
   }
 

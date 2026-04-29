@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { CmsHtml } from "@/components/CmsHtml";
+import { PageSection } from "@/components/PageSection";
 import type { SectionDTO } from "@/lib/cms/types";
 
 type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
@@ -25,59 +26,46 @@ export function HomeAdvantagesSection({ section }: { section: AdvantagesSection 
   }
 
   return (
-    <section
-      className="bg-[var(--surface)] py-20 md:py-32"
-      aria-label={section.heading ?? undefined}
+    <PageSection
+      background="surface"
+      heading={{
+        title: section.heading ?? "",
+        intro: section.intro ?? undefined,
+      }}
+      label={section.heading ?? undefined}
     >
-      <div className="container mx-auto">
-        <header className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
-          {section.heading ? (
-            <h2 className="font-display text-4xl leading-tight text-[var(--ink)] md:text-5xl lg:text-6xl max-w-2xl">
-              {section.heading}
-            </h2>
-          ) : null}
-          {section.intro ? (
-            <CmsHtml className="max-w-xl text-lg text-[var(--muted)]" html={section.intro} />
-          ) : null}
-        </header>
+      <motion.ul
+        className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
+        role="list"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-100px" }}
+      >
+        {section.items.map((item, index) => (
+          <motion.li
+            variants={cardVariants}
+            className="group relative overflow-hidden rounded-3xl border border-stone-line bg-bone p-8 transition-shadow duration-500 hover:shadow-2xl hover:shadow-trust-soft/40 md:p-10"
+            key={`${item.title ?? "a"}-${index}`}
+          >
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-trust-soft/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-        <motion.ul
-          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
-          role="list"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          {section.items.map((item, index) => (
-            <motion.li
-              variants={cardVariants}
-              className="group relative overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--background)] p-8 transition-shadow duration-500 hover:shadow-2xl hover:shadow-[var(--trust-soft)]/40 md:p-10"
-              key={`${item.title ?? "a"}-${index}`}
-            >
-              {/* Subtle hover gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--trust-soft)]/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none" />
-
+            <div className="relative">
               {item.icon ? (
-                <div
-                  className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-2xl text-[var(--trust)] transition-transform duration-500 group-hover:scale-110"
-                  aria-hidden="true"
-                >
+                <span className="mb-4 inline-block font-mono text-sm uppercase tracking-[0.08em] text-trust">
                   {item.icon}
-                </div>
+                </span>
               ) : null}
               {item.title ? (
-                <h3 className="mb-4 font-display text-2xl text-[var(--ink)] md:text-3xl">
-                  {item.title}
-                </h3>
+                <h3 className="mb-2 font-display text-xl text-ink md:text-2xl">{item.title}</h3>
               ) : null}
               {item.description ? (
-                <CmsHtml className="relative z-10 text-[var(--muted)]" html={item.description} />
+                <CmsHtml className="text-stone leading-relaxed" html={item.description} />
               ) : null}
-            </motion.li>
-          ))}
-        </motion.ul>
-      </div>
-    </section>
+            </div>
+          </motion.li>
+        ))}
+      </motion.ul>
+    </PageSection>
   );
 }

@@ -1,16 +1,15 @@
 import { SiteHeaderClient } from "@/components/SiteHeaderClient";
-import { fetchGlobalSettings } from "@/lib/cms/client";
 import { findAppointmentHref } from "@/lib/navigation/appointment-href";
-import type { Locale, NavigationNodeDTO } from "@/lib/cms/types";
+import type { GlobalSettingsDTO, Locale, NavigationNodeDTO } from "@/lib/cms/types";
 
 type SiteHeaderProps = {
   locale: Locale;
   navigation: NavigationNodeDTO[];
+  settings: GlobalSettingsDTO;
 };
 
-export async function SiteHeader({ locale, navigation }: SiteHeaderProps) {
+export async function SiteHeader({ locale, navigation, settings }: SiteHeaderProps) {
   const appointmentHref = findAppointmentHref(navigation, locale);
-  const settings = await fetchGlobalSettings(locale);
 
   return (
     <SiteHeaderClient

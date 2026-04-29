@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { fetchSitemapPages } from "@/lib/cms/client";
+import { getSitemapPages } from "@/lib/cms/cms-api";
 import { hrefForPage } from "@/lib/cms/dto";
 import { getCmsConfig } from "@/lib/cms/env";
 
@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { siteUrl } = getCmsConfig();
 
   try {
-    const pages = await fetchSitemapPages();
+    const pages = await getSitemapPages();
     return pages.map((page) => ({
       url: new URL(hrefForPage(page), siteUrl).toString(),
       lastModified: new Date(),

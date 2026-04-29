@@ -95,12 +95,51 @@ function appendSearchParams(
   }
 }
 
-function normalizeEntity<T extends Record<string, unknown>>(entity: T): T {
-  const attributes = entity.attributes;
-  if (attributes && typeof attributes === "object") {
-    return { ...entity, ...(attributes as Record<string, unknown>) };
+function flattenAttributes(entity: Record<string, unknown>): Record<string, unknown> {
+  const attrs = entity.attributes;
+  if (attrs && typeof attrs === "object") {
+    return { ...entity, ...(attrs as Record<string, unknown>) };
   }
   return entity;
+}
+
+function deepUnwrapStrapiRelations(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(deepUnwrapStrapiRelations);
+  }
+
+  if (value && typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+
+    if ("data" in obj && obj.data != null) {
+      const data = obj.data;
+
+      if (Array.isArray(data)) {
+        return data.map((item: unknown) => {
+          if (item && typeof item === "object") {
+            return deepUnwrapStrapiRelations(flattenAttributes(item as Record<string, unknown>));
+          }
+          return item;
+        });
+      }
+
+      if (typeof data === "object") {
+        return deepUnwrapStrapiRelations(flattenAttributes(data as Record<string, unknown>));
+      }
+    }
+
+    const result: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(obj)) {
+      result[key] = deepUnwrapStrapiRelations(val);
+    }
+    return result;
+  }
+
+  return value;
+}
+
+function normalizeEntity<T extends Record<string, unknown>>(entity: T): T {
+  return deepUnwrapStrapiRelations(flattenAttributes(entity)) as T;
 }
 
 function unwrapStrapiData(data: unknown): unknown {

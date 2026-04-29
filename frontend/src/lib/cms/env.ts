@@ -2,7 +2,6 @@ import "server-only";
 
 import { z } from "zod";
 
-const DEFAULT_STRAPI_URL = "http://localhost:1337";
 const DEFAULT_SITE_URL = "http://localhost:3000";
 
 const optionalString = z
@@ -33,7 +32,7 @@ export function getCmsConfig(): CmsConfig {
   }
 
   const parsed = cmsConfigSchema.safeParse({
-    strapiUrl: normalizeOrigin(process.env.STRAPI_URL || DEFAULT_STRAPI_URL),
+    strapiUrl: normalizeOrigin(process.env.STRAPI_URL || ""),
     strapiToken: process.env.STRAPI_TOKEN,
     siteUrl: normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL),
     revalidateSecret: process.env.STRAPI_REVALIDATE_SECRET,

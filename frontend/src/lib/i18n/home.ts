@@ -2,6 +2,10 @@ import type { Locale } from "@/lib/cms/types";
 
 export type HomeStrings = {
   heroKicker: string;
+  heroTitle: string;
+  heroLead: string;
+  heroCtaLabel: string;
+  heroTrustItems: string[];
   /** Shown after CMS page title: italic word + rest of line */
   heroHighlightWord: string;
   heroTagline: string;
@@ -47,11 +51,21 @@ export type HomeStrings = {
   mediaLabelAbout: string;
   mediaLabelVideo: string;
   statTopicsFallback: string;
+  learnMore: string;
+  contactFooterTitle: string;
+  contactFooterBookLabel: string;
+  contactFooterCallLabel: string;
+  contactFooterCallHref: string;
 };
 
 const STRINGS: Record<Locale, HomeStrings> = {
   el: {
     heroKicker: "Δρ. Παύλος Τσολαρίδης, M.D. · Αθήνα",
+    heroTitle: "Σαφής ΩΡΛ διάγνωση και θεραπεία στην Αθήνα",
+    heroLead:
+      "Συνεδρίες για ενήλικες και παιδιά: εξέταση, διάγνωση και πλάνο θεραπείας χωρίς περιττή πολυπλοκότητα. Η επίσκεψη γίνεται με τον δρ. Παύλο Τσολαρίδη, M.D.",
+    heroCtaLabel: "Κλείστε ραντεβού",
+    heroTrustItems: ["ΩΡΛ εξέταση", "Διάγνωση", "Πλάνο θεραπείας", "Αθήνα"],
     heroHighlightWord: "Κλινική εμπειρία",
     heroTagline: "που εξελίσσεται επί 25+ χρόνια.",
     statYears: "Χρόνια πρακτικής",
@@ -106,9 +120,19 @@ const STRINGS: Record<Locale, HomeStrings> = {
     mediaLabelAbout: "Η πρακτική",
     mediaLabelVideo: "Βίντεο — κλινική",
     statTopicsFallback: "6+",
+    learnMore: "Μάθετε περισσότερα",
+    contactFooterTitle: "Έτοιμοι να αναπνεύσετε καλύτερα; Κλείστε τη συνεδρία σας.",
+    contactFooterBookLabel: "Ραντεβού",
+    contactFooterCallLabel: "Τηλέφωνο",
+    contactFooterCallHref: "tel:+302106427000",
   },
   ru: {
     heroKicker: "д-р Павлос Цоларидис, M.D. · Афины",
+    heroTitle: "Понятная ЛОР-диагностика и лечение в Афинах",
+    heroLead:
+      "Консультации для взрослых и детей: осмотр, диагностика и план лечения без лишней сложности. Приём ведёт д-р Павлос Цоларидис, M.D.",
+    heroCtaLabel: "Записаться на приём",
+    heroTrustItems: ["ЛОР-осмотр", "Диагностика", "План лечения", "Афины"],
     heroHighlightWord: "клиническая работа",
     heroTagline: "более 25 лет.",
     statYears: "лет практики",
@@ -162,6 +186,11 @@ const STRINGS: Record<Locale, HomeStrings> = {
     mediaLabelAbout: "Практика",
     mediaLabelVideo: "Видео — клиника",
     statTopicsFallback: "6+",
+    learnMore: "Узнать больше",
+    contactFooterTitle: "Готовы дышать свободнее? Запишитесь на консультацию.",
+    contactFooterBookLabel: "Записаться",
+    contactFooterCallLabel: "Позвонить",
+    contactFooterCallHref: "tel:+302106427000",
   },
 };
 

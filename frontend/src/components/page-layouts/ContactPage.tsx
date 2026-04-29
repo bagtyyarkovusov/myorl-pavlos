@@ -1,24 +1,26 @@
 import { CmsHtml } from "@/components/CmsHtml";
+import { PageSection } from "@/components/PageSection";
 import { PageHeader, type PageLayoutProps } from "./_shared";
+import styles from "./_shared.module.css";
 
 export function ContactPage({ page }: PageLayoutProps) {
   return (
-    <main className="page-shell">
+    <PageSection>
       <PageHeader page={page} />
       <CmsHtml html={page.content} />
       {page.contact ? (
-        <div className="contact-grid">
-          <section className="card-list" aria-label="Contact details">
+        <div className={styles["contact-grid"]}>
+          <section className={styles["card-list"]} aria-label="Contact details">
             {page.contact.details.map((detail, index) => (
-              <article className="content-card" key={`${detail.type}-${index}`}>
+              <article className={styles["content-card"]} key={`${detail.type}-${index}`}>
                 <h2>{detail.type}</h2>
                 <CmsHtml html={detail.valueHtml} />
               </article>
             ))}
           </section>
-          <section className="card-list" aria-label="Clinics">
+          <section className={styles["card-list"]} aria-label="Clinics">
             {page.contact.clinics.map((clinic) => (
-              <article className="content-card" key={clinic.name}>
+              <article className={styles["content-card"]} key={clinic.name}>
                 <h2>{clinic.name}</h2>
                 <CmsHtml html={clinic.addressHtml} />
                 {clinic.phone ? <p>{clinic.phone}</p> : null}
@@ -28,6 +30,6 @@ export function ContactPage({ page }: PageLayoutProps) {
           </section>
         </div>
       ) : null}
-    </main>
+    </PageSection>
   );
 }

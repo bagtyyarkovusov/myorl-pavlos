@@ -1,0 +1,14 @@
+{$CADDY_DOMAIN} {
+  handle /api/* {
+    reverse_proxy strapi:1337
+  }
+
+  handle {
+    reverse_proxy nextjs:3000
+  }
+
+  encode gzip
+  log {
+    output stdout
+  }
+}

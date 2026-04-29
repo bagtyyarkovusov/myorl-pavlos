@@ -13,7 +13,7 @@ the Greek nav and mirroring it into Russian, we want a clear picture of:
        *after* the copy-from-el step.
 
 Usage:
-    STRAPI_URL=http://localhost:1337 \
+    STRAPI_URL=$STRAPI_URL \
     STRAPI_TOKEN=...read-only api token... \
     python report_nav_locale_coverage.py [--json report.json]
 

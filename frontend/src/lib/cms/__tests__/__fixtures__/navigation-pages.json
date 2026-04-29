@@ -1,0 +1,42 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "home123",
+      "locale": "el",
+      "attributes": {
+        "slug": "index",
+        "title": "Home",
+        "menuTitle": "Home",
+        "pageType": "home",
+        "layoutVariant": "home",
+        "isFolder": false,
+        "hideFromMenu": false,
+        "menuIndex": 1,
+        "seo": { "robotsNoindex": false, "robotsNofollow": false, "sitemapExclude": false },
+        "localizations": []
+      }
+    },
+    {
+      "id": 2,
+      "documentId": "about123",
+      "locale": "el",
+      "attributes": {
+        "slug": "about",
+        "title": "About Us",
+        "menuTitle": "About",
+        "pageType": "content",
+        "layoutVariant": "standard",
+        "isFolder": false,
+        "hideFromMenu": false,
+        "menuIndex": 2,
+        "parentPage": { "documentId": "home123", "slug": "index", "title": "Home" },
+        "seo": { "robotsNoindex": false, "robotsNofollow": false, "sitemapExclude": false },
+        "localizations": []
+      }
+    }
+  ],
+  "meta": {
+    "pagination": { "page": 1, "pageSize": 100, "total": 2 }
+  }
+}

@@ -1,6 +1,8 @@
 import { CmsHtml } from "@/components/CmsHtml";
+import { PageSection } from "@/components/PageSection";
 import type { SectionDTO } from "@/lib/cms/types";
 import { PageHeader, type PageLayoutProps } from "./_shared";
+import styles from "./_shared.module.css";
 
 type QuestionEntry = { title: string; html: string | null };
 
@@ -8,18 +10,18 @@ export function QuestionListPage({ page }: PageLayoutProps) {
   const items = extractQuestionEntries(page.sections);
 
   return (
-    <main className="page-shell">
+    <PageSection>
       <PageHeader page={page} />
       <CmsHtml html={page.content} />
-      <div className="card-list">
+      <div className={styles["card-list"]}>
         {items.map((item, index) => (
-          <article className="content-card" key={`${item.title}-${index}`}>
+          <article className={styles["content-card"]} key={`${item.title}-${index}`}>
             <h2>{item.title || `Item ${index + 1}`}</h2>
             <CmsHtml html={item.html} />
           </article>
         ))}
       </div>
-    </main>
+    </PageSection>
   );
 }
 

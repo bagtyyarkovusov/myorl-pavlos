@@ -47,6 +47,35 @@ function loadSlugRedirects(): NextRedirect[] {
 }
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: process.env.STRAPI_URL?.startsWith("https") ? "https" : "http",
+        hostname: ((): string => {
+          try {
+            const strapiUrl = process.env.STRAPI_URL;
+            if (!strapiUrl) {
+              throw new Error("STRAPI_URL environment variable is required");
+            }
+            return new URL(strapiUrl).hostname;
+          } catch {
+            return "localhost";
+          }
+        })(),
+        port: ((): string => {
+          try {
+            const strapiUrl = process.env.STRAPI_URL;
+            if (!strapiUrl) return "";
+            return new URL(strapiUrl).port;
+          } catch {
+            return "";
+          }
+        })(),
+        pathname: "/uploads/**",
+        search: "",
+      },
+    ],
+  },
   async redirects() {
     return loadSlugRedirects();
   },

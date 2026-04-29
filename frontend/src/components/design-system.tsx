@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { MediaDTO } from "@/lib/cms/types";
+import { cn } from "@/lib/utils";
+
+import styles from "./design-system.module.css";
 
 type ButtonLinkProps = {
   href: string;
@@ -10,14 +13,17 @@ type ButtonLinkProps = {
   className?: string;
 };
 
+const BUTTON_LINK_BASE_CLASSES =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-5 text-sm font-semibold whitespace-nowrap transition-all duration-150 ease hover:-translate-y-px focus-visible:-translate-y-px";
+
+const BUTTON_LINK_VARIANT_CLASSES: Record<NonNullable<ButtonLinkProps["variant"]>, string> = {
+  primary: "border-transparent bg-ink text-bone-50 hover:bg-trust focus-visible:bg-trust",
+  secondary:
+    "border-ink/20 bg-transparent text-ink hover:border-trust hover:bg-trust-soft hover:text-trust-ink focus-visible:border-trust focus-visible:bg-trust-soft focus-visible:text-trust-ink",
+};
+
 export function ButtonLink({ href, children, variant = "primary", className }: ButtonLinkProps) {
-  const classes = [
-    "button-link",
-    variant === "secondary" ? "button-link--secondary" : "",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const classes = cn(BUTTON_LINK_BASE_CLASSES, BUTTON_LINK_VARIANT_CLASSES[variant], className);
 
   if (isExternalHref(href)) {
     return (
@@ -43,9 +49,9 @@ type SectionHeadingProps = {
 
 export function SectionHeading({ eyebrow, title, intro, action }: SectionHeadingProps) {
   return (
-    <div className="section-heading">
+    <div className={styles["section-heading"]}>
       <div>
-        {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
+        {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
         <h2>{title}</h2>
       </div>
       {action ?? (intro ? <p>{intro}</p> : null)}
@@ -58,7 +64,7 @@ type MediaFrameProps = {
   alt?: string;
   label?: string;
   variant?: "portrait" | "wide";
-  priority?: boolean;
+  eager?: boolean;
 };
 
 export function MediaFrame({
@@ -66,9 +72,9 @@ export function MediaFrame({
   alt = "",
   label,
   variant = "wide",
-  priority = false,
+  eager = false,
 }: MediaFrameProps) {
-  const className = `media-frame media-frame--${variant} ${media?.url ? "" : "ph-stripe"}`;
+  const className = `${styles["media-frame"]} ${styles[`media-frame--${variant}`]} ${media?.url ? "" : styles["ph-stripe"]}`;
 
   return (
     <div className={className}>
@@ -82,11 +88,14 @@ export function MediaFrame({
               ? "(min-width: 960px) 36vw, 100vw"
               : "(min-width: 960px) 44vw, 100vw"
           }
-          priority={priority}
+          loading={eager ? "eager" : undefined}
+          fetchPriority={eager ? "high" : undefined}
           unoptimized
         />
       ) : null}
-      {label ? <span className="media-frame__label ph-label">{label}</span> : null}
+      {label ? (
+        <span className={`${styles["media-frame__label"]} ${styles["ph-label"]}`}>{label}</span>
+      ) : null}
     </div>
   );
 }

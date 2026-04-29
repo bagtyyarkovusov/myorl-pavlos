@@ -633,27 +633,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    pageBlocks: Schema.Attribute.DynamicZone<
-      [
-        'blocks.accordion-item',
-        'blocks.faq-item',
-        'blocks.gallery-image',
-        'blocks.tab-item',
-        'blocks.video',
-        'blocks.clinic',
-        'blocks.social-link',
-        'blocks.promo-slide',
-        'blocks.contact-detail',
-        'blocks.advantage',
-        'shared.location',
-      ]
-    > &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     pageSections: Schema.Attribute.DynamicZone<
       [
         'sections.promo-slider',
@@ -734,34 +713,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         };
       }>;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    templateId: Schema.Attribute.Enumeration<
-      [
-        'template_0',
-        'template_1',
-        'template_2',
-        'template_3',
-        'template_5',
-        'template_6',
-        'template_7',
-        'template_8',
-        'template_10',
-        'template_11',
-        'template_12',
-        'template_13',
-        'template_14',
-        'template_15',
-        'template_16',
-        'template_17',
-        'template_18',
-        'template_20',
-      ]
-    > &
-      Schema.Attribute.Private &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

@@ -3,8 +3,6 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { createCmsGateway } from "../cms-gateway";
 
-const injectCmsGatewayForTesting: ((gw: ReturnType<typeof createCmsGateway>) => void) | null = null;
-
 const FIXTURES_DIR = path.resolve(__dirname, "__fixtures__");
 
 function loadFixture(filename: string): unknown {

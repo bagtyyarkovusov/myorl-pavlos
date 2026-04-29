@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "id": 42,
+      "documentId": "abc123xy",
+      "locale": "el",
+      "attributes": {
+        "slug": "about",
+        "title": "About Us",
+        "menuTitle": "About",
+        "pageType": "content",
+        "layoutVariant": "standard",
+        "content": "<p>We are a dental clinic.</p>",
+        "excerpt": "About our clinic",
+        "isFolder": false,
+        "hideFromMenu": false,
+        "menuIndex": 3,
+        "seo": {
+          "metaTitle": "About Us | Clinic",
+          "metaDescription": "Learn about our dental clinic",
+          "robotsNoindex": false,
+          "robotsNofollow": false,
+          "sitemapExclude": false,
+          "sitemapPriority": 0.8,
+          "sitemapChangeFrequency": "monthly"
+        },
+        "parentPage": {
+          "documentId": "home123",
+          "slug": "index",
+          "title": "Home"
+        },
+        "tags": [{ "name": "General", "slug": "general" }],
+        "localizations": [
+          {
+            "documentId": "abc123xy",
+            "locale": "ru",
+            "slug": "o-nas",
+            "title": "О нас"
+          }
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "pagination": { "page": 1, "pageSize": 100, "total": 1 }
+  }
+}

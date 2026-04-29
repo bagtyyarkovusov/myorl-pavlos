@@ -1,132 +1,5 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
-export interface BlocksAccordionItem extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_accordion_items';
-  info: {
-    description: '';
-    displayName: 'Accordion Item';
-  };
-  attributes: {
-    content: Schema.Attribute.RichText;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface BlocksAdvantage extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_advantages';
-  info: {
-    displayName: 'Advantage';
-  };
-  attributes: {
-    description: Schema.Attribute.Text;
-    icon: Schema.Attribute.String;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface BlocksClinic extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_clinics';
-  info: {
-    description: '';
-    displayName: 'Clinic';
-  };
-  attributes: {
-    address: Schema.Attribute.RichText;
-    email: Schema.Attribute.Email;
-    latitude: Schema.Attribute.Decimal;
-    longitude: Schema.Attribute.Decimal;
-    name: Schema.Attribute.String;
-    phone: Schema.Attribute.String;
-  };
-}
-
-export interface BlocksContactDetail extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_contact_details';
-  info: {
-    displayName: 'Contact Detail';
-  };
-  attributes: {
-    type: Schema.Attribute.String;
-    value: Schema.Attribute.String;
-  };
-}
-
-export interface BlocksFaqItem extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_faq_items';
-  info: {
-    description: '';
-    displayName: 'FAQ Item';
-  };
-  attributes: {
-    answer: Schema.Attribute.Text;
-    question: Schema.Attribute.String;
-  };
-}
-
-export interface BlocksGalleryImage extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_gallery_images';
-  info: {
-    description: '';
-    displayName: 'Gallery Image';
-  };
-  attributes: {
-    caption: Schema.Attribute.String;
-    image: Schema.Attribute.Media<'images'>;
-  };
-}
-
-export interface BlocksPromoSlide extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_promo_slides';
-  info: {
-    displayName: 'Promo Slide';
-  };
-  attributes: {
-    description: Schema.Attribute.Text;
-    image: Schema.Attribute.Media<'images'>;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface BlocksSocialLink extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_social_links';
-  info: {
-    displayName: 'Social Link';
-  };
-  attributes: {
-    icon: Schema.Attribute.String;
-    name: Schema.Attribute.String;
-    url: Schema.Attribute.Text;
-  };
-}
-
-export interface BlocksTabItem extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_tab_items';
-  info: {
-    description: '';
-    displayName: 'Tab Item';
-  };
-  attributes: {
-    content: Schema.Attribute.RichText;
-    link: Schema.Attribute.String;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface BlocksVideo extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_videos';
-  info: {
-    description: '';
-    displayName: 'Video';
-  };
-  attributes: {
-    thumbnail: Schema.Attribute.Media<'images'>;
-    title: Schema.Attribute.String;
-    videoMp4: Schema.Attribute.Media<'videos'>;
-    videoTags: Schema.Attribute.String;
-    videoWebm: Schema.Attribute.Media<'videos'>;
-  };
-}
-
 export interface ItemsAccordionItem extends Struct.ComponentSchema {
   collectionName: 'components_items_accordion_items';
   info: {
@@ -407,19 +280,6 @@ export interface SectionsVideo extends Struct.ComponentSchema {
   };
 }
 
-export interface SharedLocation extends Struct.ComponentSchema {
-  collectionName: 'components_shared_locations';
-  info: {
-    description: '';
-    displayName: 'Location';
-  };
-  attributes: {
-    address: Schema.Attribute.String;
-    latitude: Schema.Attribute.Decimal;
-    longitude: Schema.Attribute.Decimal;
-  };
-}
-
 export interface SharedSeo extends Struct.ComponentSchema {
   collectionName: 'components_shared_seos';
   info: {
@@ -446,16 +306,6 @@ export interface SharedSeo extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
-      'blocks.accordion-item': BlocksAccordionItem;
-      'blocks.advantage': BlocksAdvantage;
-      'blocks.clinic': BlocksClinic;
-      'blocks.contact-detail': BlocksContactDetail;
-      'blocks.faq-item': BlocksFaqItem;
-      'blocks.gallery-image': BlocksGalleryImage;
-      'blocks.promo-slide': BlocksPromoSlide;
-      'blocks.social-link': BlocksSocialLink;
-      'blocks.tab-item': BlocksTabItem;
-      'blocks.video': BlocksVideo;
       'items.accordion-item': ItemsAccordionItem;
       'items.advantage': ItemsAdvantage;
       'items.clinic': ItemsClinic;
@@ -477,7 +327,6 @@ declare module '@strapi/strapi' {
       'sections.social-links': SectionsSocialLinks;
       'sections.tabs': SectionsTabs;
       'sections.video': SectionsVideo;
-      'shared.location': SharedLocation;
       'shared.seo': SharedSeo;
     }
   }

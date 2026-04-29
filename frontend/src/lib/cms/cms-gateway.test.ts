@@ -2,12 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
-import {
-  createCmsGateway,
-  type CmsGateway,
-  type FetchAllOptions,
-  type FetchOneOptions,
-} from "./cms-gateway";
+import { createCmsGateway, type CmsGateway } from "./cms-gateway";
 import { CmsError } from "./errors";
 
 const FIXTURES_DIR = path.resolve(__dirname, "__tests__", "__fixtures__");

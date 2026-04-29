@@ -8,15 +8,9 @@ type MegaMenuProps = {
   item: NavigationNodeDTO;
   featureBlurb: string;
   overviewLinkLabel: string;
-  overviewLinkHref: string;
 };
 
-export function MegaMenu({
-  item,
-  featureBlurb,
-  overviewLinkLabel,
-  overviewLinkHref,
-}: MegaMenuProps) {
+export function MegaMenu({ item, featureBlurb, overviewLinkLabel }: MegaMenuProps) {
   return (
     <div className={styles["nav-panel__grid"]}>
       <div className={styles["nav-panel__feature"]}>

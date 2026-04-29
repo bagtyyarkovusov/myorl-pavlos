@@ -1,0 +1,17 @@
+node_modules
+dist
+.tmp
+.strapi
+.cache
+build
+exports
+public/uploads
+*.log
+.git
+.gitignore
+.env
+.env.example
+.env.local
+Dockerfile
+.dockerignore
+README.md

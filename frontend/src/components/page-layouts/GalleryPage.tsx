@@ -1,19 +1,21 @@
 import Image from "next/image";
 
 import { CmsHtml } from "@/components/CmsHtml";
+import { PageSection } from "@/components/PageSection";
 import type { SectionDTO } from "@/lib/cms/types";
 import { PageHeader, type PageLayoutProps } from "./_shared";
+import styles from "./_shared.module.css";
 
 export function GalleryPage({ page }: PageLayoutProps) {
   const items = extractGalleryItems(page.sections);
 
   return (
-    <main className="page-shell">
+    <PageSection>
       <PageHeader page={page} />
       <CmsHtml html={page.content} />
-      <div className="gallery-grid">
+      <div className={styles["gallery-grid"]}>
         {items.map((item, index) => (
-          <article className="content-card" key={`${item.caption ?? "image"}-${index}`}>
+          <article className={styles["content-card"]} key={`${item.caption ?? "image"}-${index}`}>
             <h2>{item.caption || `Image ${index + 1}`}</h2>
             {item.imageUrl ? (
               <Image
@@ -28,7 +30,7 @@ export function GalleryPage({ page }: PageLayoutProps) {
           </article>
         ))}
       </div>
-    </main>
+    </PageSection>
   );
 }
 

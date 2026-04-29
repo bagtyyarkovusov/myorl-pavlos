@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageRenderer } from "@/components/PageRenderer";
-import { fetchNavigation, fetchPageBySlug } from "@/lib/cms/client";
+import { fetchNavigation } from "@/lib/cms/client";
+import { getPage } from "@/lib/cms/cms-api";
 import { findAppointmentHref } from "@/lib/navigation/appointment-href";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { isLocale } from "@/lib/cms/types";
@@ -19,8 +20,12 @@ export async function generateMetadata({ params }: LocaleHomeProps): Promise<Met
     return {};
   }
 
-  const page = await fetchPageBySlug(locale, "index");
-  return page ? toPageMetadata(page) : {};
+  try {
+    const page = await getPage(locale, "index");
+    return toPageMetadata(page);
+  } catch {
+    return {};
+  }
 }
 
 export default async function LocaleHomePage({ params }: LocaleHomeProps) {
@@ -29,13 +34,7 @@ export default async function LocaleHomePage({ params }: LocaleHomeProps) {
     notFound();
   }
 
-  const [page, navigation] = await Promise.all([
-    fetchPageBySlug(locale, "index"),
-    fetchNavigation(locale),
-  ]);
-  if (!page) {
-    notFound();
-  }
+  const [page, navigation] = await Promise.all([getPage(locale, "index"), fetchNavigation(locale)]);
 
   const appointmentHref = findAppointmentHref(navigation, locale);
 

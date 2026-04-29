@@ -1,5 +1,6 @@
 # Secrets and local env
 .env
+.env.local
 backend/.env
 *.local.env
 
@@ -50,6 +51,9 @@ tag_id_map.json.bak-*
 tag_id_map.prev.json
 import_log.json.bak-*
 import_log.prev.json
+
+# Migration source data (archived externally)
+data/source/modx/
 
 # Obsidian (local app metadata when vault = docs/obsidian)
 docs/obsidian/.obsidian/

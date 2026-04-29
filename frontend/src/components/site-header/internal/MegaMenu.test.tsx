@@ -91,12 +91,7 @@ const mockItem: NavigationNodeDTO = {
 describe("MegaMenu", () => {
   it("renders navLabel heading", () => {
     render(
-      <MegaMenu
-        item={mockItem}
-        featureBlurb={mockItem.excerpt!}
-        overviewLinkLabel="Overview"
-        overviewLinkHref="/el/services"
-      />,
+      <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,
     );
 
     expect(screen.getByRole("heading", { name: "Services" })).toBeDefined();
@@ -108,7 +103,6 @@ describe("MegaMenu", () => {
         item={mockItem}
         featureBlurb="We offer a comprehensive range of medical services."
         overviewLinkLabel="Overview"
-        overviewLinkHref="/el/services"
       />,
     );
 
@@ -117,12 +111,7 @@ describe("MegaMenu", () => {
 
   it("renders child links with correct labels", () => {
     render(
-      <MegaMenu
-        item={mockItem}
-        featureBlurb={mockItem.excerpt!}
-        overviewLinkLabel="Overview"
-        overviewLinkHref="/el/services"
-      />,
+      <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,
     );
 
     // Only direct children render; grandchildren show as count meta
@@ -138,7 +127,6 @@ describe("MegaMenu", () => {
         item={mockItem}
         featureBlurb={mockItem.excerpt!}
         overviewLinkLabel="Section overview"
-        overviewLinkHref="/el/services"
       />,
     );
 
@@ -149,12 +137,7 @@ describe("MegaMenu", () => {
 
   it("renders child count meta label for parent children", () => {
     render(
-      <MegaMenu
-        item={mockItem}
-        featureBlurb={mockItem.excerpt!}
-        overviewLinkLabel="Overview"
-        overviewLinkHref="/el/services"
-      />,
+      <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,
     );
 
     // Surgery has 2 children, leafMetaLabel should show count
@@ -163,12 +146,7 @@ describe("MegaMenu", () => {
 
   it("renders excerpt meta text for leaf pages", () => {
     render(
-      <MegaMenu
-        item={mockItem}
-        featureBlurb={mockItem.excerpt!}
-        overviewLinkLabel="Overview"
-        overviewLinkHref="/el/services"
-      />,
+      <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,
     );
 
     // Consultation has excerpt
@@ -198,14 +176,7 @@ describe("MegaMenu", () => {
       ],
     };
 
-    render(
-      <MegaMenu
-        item={itemWithAltTitle}
-        featureBlurb=""
-        overviewLinkLabel="Overview"
-        overviewLinkHref="/el/test"
-      />,
-    );
+    render(<MegaMenu item={itemWithAltTitle} featureBlurb="" overviewLinkLabel="Overview" />);
 
     expect(screen.getByText("Longer Alternative Title")).toBeDefined();
   });
@@ -213,14 +184,7 @@ describe("MegaMenu", () => {
   it("handles null children gracefully", () => {
     const emptyItem: NavigationNodeDTO = { ...mockItem, children: [] };
 
-    render(
-      <MegaMenu
-        item={emptyItem}
-        featureBlurb=""
-        overviewLinkLabel="Overview"
-        overviewLinkHref="/el/test"
-      />,
-    );
+    render(<MegaMenu item={emptyItem} featureBlurb="" overviewLinkLabel="Overview" />);
 
     // Should not crash; overview link still renders
     expect(screen.getByText("Overview")).toBeDefined();

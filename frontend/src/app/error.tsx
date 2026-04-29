@@ -13,7 +13,11 @@ export default function ErrorPage({
     console.error("Application Error:", error);
   }, [error]);
 
-  const isTimeout = error.message.includes("aborted") || error.message.includes("timeout");
+  const isTimeout =
+    error.message.includes("aborted") ||
+    error.message.includes("timeout") ||
+    error.message.includes("[CMS] timeout") ||
+    error.message.includes("[CMS] network");
 
   return (
     <main className="page-shell">

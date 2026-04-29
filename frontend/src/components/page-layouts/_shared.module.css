@@ -1,0 +1,109 @@
+.page-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
+  gap: clamp(32px, 6vw, 72px);
+  align-items: end;
+  margin-bottom: clamp(42px, 6vw, 76px);
+}
+
+.page-hero--text-only {
+  grid-template-columns: minmax(0, 900px);
+}
+
+.page-hero h1 {
+  margin-top: 16px;
+  max-width: 940px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.1rem, 7vw, 6.3rem);
+  line-height: 0.97;
+  letter-spacing: 0;
+}
+
+.excerpt {
+  margin-top: 26px;
+  max-width: 760px;
+  color: var(--muted);
+  font-size: clamp(1.08rem, 1.8vw, 1.35rem);
+  line-height: 1.6;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+  list-style: none;
+}
+
+.tag-list li {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 6px 10px;
+  text-transform: uppercase;
+}
+
+.content-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(251, 252, 254, 0.82);
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.card-list {
+  display: grid;
+  gap: 24px;
+}
+
+.gallery-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.gallery-grid img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 36px;
+}
+
+.form-placeholder {
+  max-width: 720px;
+}
+
+.note-block {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(251, 252, 254, 0.82);
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.sources-block {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(251, 252, 254, 0.82);
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.home-remaining {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2vw, 16px);
+  padding-bottom: clamp(40px, 6vw, 80px);
+}
+
+@media (max-width: 920px) {
+  .page-hero,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -61,14 +61,12 @@ describe("fetchNavigation", () => {
   it("returns empty array when no pages present", async () => {
     const { fetchNavigation, injectFetchNavigationGatewayForTesting } = await import("../client");
 
-    const mockFetch = vi
-      .fn()
-      .mockResolvedValue(
-        mockStrapiResponse({
-          data: [],
-          meta: { pagination: { page: 1, pageSize: 100, total: 0 } },
-        }),
-      );
+    const mockFetch = vi.fn().mockResolvedValue(
+      mockStrapiResponse({
+        data: [],
+        meta: { pagination: { page: 1, pageSize: 100, total: 0 } },
+      }),
+    );
     const gateway = createTestGateway(mockFetch as unknown as typeof globalThis.fetch);
     injectFetchNavigationGatewayForTesting(gateway);
 

@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 
+import { LocaleLangSetter } from "@/components/LocaleLangSetter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { fetchNavigation } from "@/lib/cms/client";
+import { getSite } from "@/lib/cms/cms-api";
 import { isLocale } from "@/lib/cms/types";
 
 type LocaleLayoutProps = {
@@ -17,11 +18,12 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     notFound();
   }
 
-  const navigation = await fetchNavigation(locale);
+  const { navigation, settings } = await getSite(locale);
 
   return (
     <>
-      <SiteHeader locale={locale} navigation={navigation} />
+      <LocaleLangSetter lang={locale} />
+      <SiteHeader locale={locale} navigation={navigation} settings={settings} />
       {children}
     </>
   );

@@ -1,0 +1,112 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "home123",
+      "locale": "el",
+      "attributes": {
+        "slug": "index",
+        "title": "Home",
+        "menuTitle": null,
+        "pageType": "home",
+        "layoutVariant": "home",
+        "menuIndex": 1,
+        "isFolder": false,
+        "hideFromMenu": false,
+        "seo": {
+          "metaTitle": "Home",
+          "metaDescription": "Home page",
+          "robotsNoindex": false,
+          "robotsNofollow": false,
+          "sitemapExclude": false,
+          "sitemapPriority": 1,
+          "sitemapChangeFrequency": "daily"
+        },
+        "localizations": [
+          { "documentId": "home123", "locale": "ru", "slug": "index", "title": "Главная" }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "documentId": "about123",
+      "locale": "el",
+      "attributes": {
+        "slug": "about",
+        "title": "About Us",
+        "menuTitle": "About",
+        "pageType": "content",
+        "layoutVariant": "standard",
+        "menuIndex": 2,
+        "isFolder": false,
+        "hideFromMenu": false,
+        "seo": {
+          "metaTitle": "About",
+          "metaDescription": "About page",
+          "robotsNoindex": false,
+          "robotsNofollow": false,
+          "sitemapExclude": true,
+          "sitemapChangeFrequency": "monthly"
+        },
+        "localizations": []
+      }
+    },
+    {
+      "id": 3,
+      "documentId": "services123",
+      "locale": "el",
+      "attributes": {
+        "slug": "services",
+        "title": "Services",
+        "menuTitle": null,
+        "pageType": "content",
+        "layoutVariant": "standard",
+        "menuIndex": 3,
+        "isFolder": false,
+        "hideFromMenu": false,
+        "seo": {
+          "metaTitle": "Services",
+          "metaDescription": "Our services",
+          "robotsNoindex": false,
+          "robotsNofollow": false,
+          "sitemapExclude": false,
+          "sitemapPriority": 0.8,
+          "sitemapChangeFrequency": "weekly"
+        },
+        "localizations": [
+          { "documentId": "services123", "locale": "ru", "slug": "uslugi", "title": "Услуги" }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "documentId": "ru-home123",
+      "locale": "ru",
+      "attributes": {
+        "slug": "index",
+        "title": "Главная",
+        "menuTitle": null,
+        "pageType": "home",
+        "layoutVariant": "home",
+        "menuIndex": 1,
+        "isFolder": false,
+        "hideFromMenu": false,
+        "seo": {
+          "metaTitle": "Главная",
+          "metaDescription": "Главная страница",
+          "robotsNoindex": false,
+          "robotsNofollow": false,
+          "sitemapExclude": false,
+          "sitemapPriority": 1,
+          "sitemapChangeFrequency": "daily"
+        },
+        "localizations": [
+          { "documentId": "ru-home123", "locale": "el", "slug": "index", "title": "Home" }
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "pagination": { "page": 1, "pageSize": 100, "total": 4 }
+  }
+}

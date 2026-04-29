@@ -81,7 +81,11 @@ def build_steps(args: argparse.Namespace) -> list[GateStep]:
 
 
 def strapi_origin() -> str:
-    return (os.environ.get("STRAPI_URL") or "http://localhost:1337").rstrip("/")
+    value = os.environ.get("STRAPI_URL", "").strip()
+    if not value:
+        print("[FAIL] STRAPI_URL environment variable is required")
+        raise SystemExit(1)
+    return value.rstrip("/")
 
 
 def live_strapi_preflight() -> dict[str, object]:

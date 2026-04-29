@@ -1,43 +1,29 @@
 import Image from "next/image";
 
 import { CmsHtml } from "@/components/CmsHtml";
+import { PageSection } from "@/components/PageSection";
 import { toSocialLinkDTO } from "@/lib/cms/dto";
 import type { MediaDTO, SectionDTO } from "@/lib/cms/types";
 
+import styles from "./SectionRenderer.module.css";
+
 type SectionRendererProps = {
   section: SectionDTO;
-  /** Tighter home layout for social and contact. */
   context?: "default" | "home";
 };
 
 export function SectionRenderer({ section, context = "default" }: SectionRendererProps) {
   const isHome = context === "home";
-  const sectionClass = ["section-block", isHome ? "section-block--home" : null]
-    .filter(Boolean)
-    .join(" ");
+
+  const headingBlock =
+    section.heading || section.intro
+      ? { title: section.heading ?? "", intro: section.intro ?? undefined }
+      : undefined;
 
   return (
-    <section
-      className={sectionClass}
-      data-section={section.__component}
-      data-page={isHome ? "home" : undefined}
-    >
-      <SectionHeader heading={section.heading} intro={section.intro} />
+    <PageSection heading={headingBlock} rhythm={isHome ? "compact" : "standard"}>
       {isHome ? renderSectionBodyHome(section) : renderSectionBody(section)}
-    </section>
-  );
-}
-
-function SectionHeader({ heading, intro }: { heading?: string | null; intro?: string | null }) {
-  if (!heading && !intro) {
-    return null;
-  }
-
-  return (
-    <header className="section-header">
-      {heading ? <h2>{heading}</h2> : null}
-      {intro ? <CmsHtml className="cms-html section-intro" html={intro} /> : null}
-    </header>
+    </PageSection>
   );
 }
 
@@ -45,13 +31,22 @@ function renderSectionBodyHome(section: SectionDTO) {
   switch (section.__component) {
     case "sections.social-links":
       return (
-        <ul className="home-social" role="list" aria-label={section.heading ?? "Social media"}>
+        <ul
+          className={styles["home-social"]}
+          role="list"
+          aria-label={section.heading ?? "Social media"}
+        >
           {section.links
             .map(toSocialLinkDTO)
             .filter((link): link is NonNullable<typeof link> => link !== null)
             .map((link) => (
               <li key={`${link.platform}-${link.url}`}>
-                <a href={link.url} rel="noreferrer" target="_blank" className="home-social__link">
+                <a
+                  href={link.url}
+                  rel="noreferrer"
+                  target="_blank"
+                  className={styles["home-social__link"]}
+                >
                   {link.label}
                 </a>
               </li>
@@ -60,27 +55,29 @@ function renderSectionBodyHome(section: SectionDTO) {
       );
     case "sections.contact":
       return (
-        <div className="home-contact">
+        <div className={styles["home-contact"]}>
           {section.details.length > 0 ? (
-            <div className="home-contact__meta">
+            <div className={styles["home-contact__meta"]}>
               {section.details.map((detail, index) => (
-                <div className="home-contact__row" key={`${detail.type}-${index}`}>
-                  <h3 className="home-contact__row-title">{detail.type}</h3>
+                <div className={styles["home-contact__row"]} key={`${detail.type}-${index}`}>
+                  <h3 className={styles["home-contact__row-title"]}>{detail.type}</h3>
                   <CmsHtml className="cms-html" html={detail.valueHtml} />
                 </div>
               ))}
             </div>
           ) : null}
           {section.clinics.length > 0 ? (
-            <ul className="home-contact__clinics" role="list">
+            <ul className={styles["home-contact__clinics"]} role="list">
               {section.clinics.map((clinic) => (
-                <li className="home-contact__clinic" key={clinic.name}>
-                  <h3 className="home-contact__clinic-name">{clinic.name}</h3>
+                <li className={styles["home-contact__clinic"]} key={clinic.name}>
+                  <h3 className={styles["home-contact__clinic-name"]}>{clinic.name}</h3>
                   <CmsHtml className="cms-html" html={clinic.addressHtml} />
-                  {clinic.phone ? <p className="home-contact__phone">{clinic.phone}</p> : null}
+                  {clinic.phone ? (
+                    <p className={styles["home-contact__phone"]}>{clinic.phone}</p>
+                  ) : null}
                   {clinic.email ? (
                     <p>
-                      <a className="u-link" href={`mailto:${clinic.email}`}>
+                      <a className={styles["u-link"]} href={`mailto:${clinic.email}`}>
                         {clinic.email}
                       </a>
                     </p>
@@ -100,9 +97,12 @@ function renderSectionBody(section: SectionDTO) {
   switch (section.__component) {
     case "sections.promo-slider":
       return (
-        <div className="card-list feature-list">
+        <div className={`${styles["card-list"]} ${styles["feature-list"]}`}>
           {section.slides.map((slide, index) => (
-            <article className="content-card media-card" key={`${slide.title ?? "slide"}-${index}`}>
+            <article
+              className={`${styles["content-card"]} ${styles["media-card"]}`}
+              key={`${slide.title ?? "slide"}-${index}`}
+            >
               <ResponsiveImage media={slide.image} alt={slide.title ?? ""} />
               {slide.title ? <h3>{slide.title}</h3> : null}
               <CmsHtml html={slide.description} />
@@ -113,9 +113,12 @@ function renderSectionBody(section: SectionDTO) {
       );
     case "sections.linked-resources":
       return (
-        <div className="card-list">
+        <div className={styles["card-list"]}>
           {section.items.map((item, index) => (
-            <article className="content-card" key={`${item.title ?? "resource"}-${index}`}>
+            <article
+              className={styles["content-card"]}
+              key={`${item.title ?? "resource"}-${index}`}
+            >
               {item.title ? <h3>{item.title}</h3> : null}
               <CmsHtml html={item.description} />
               {item.targetUrl ? <a href={item.targetUrl}>Open</a> : null}
@@ -125,7 +128,7 @@ function renderSectionBody(section: SectionDTO) {
       );
     case "sections.social-links":
       return (
-        <ul className="inline-list">
+        <ul className={styles["inline-list"]}>
           {section.links
             .map(toSocialLinkDTO)
             .filter((link): link is NonNullable<typeof link> => link !== null)
@@ -138,9 +141,12 @@ function renderSectionBody(section: SectionDTO) {
       );
     case "sections.video":
       return (
-        <div className="card-list">
+        <div className={styles["card-list"]}>
           {section.videos.map((video, index) => (
-            <article className="content-card media-card" key={`${video.title ?? "video"}-${index}`}>
+            <article
+              className={`${styles["content-card"]} ${styles["media-card"]}`}
+              key={`${video.title ?? "video"}-${index}`}
+            >
               {video.title ? <h3>{video.title}</h3> : null}
               {video.videoMp4?.url || video.videoWebm?.url ? (
                 <video controls poster={video.thumbnail?.url ?? undefined}>
@@ -161,10 +167,17 @@ function renderSectionBody(section: SectionDTO) {
       );
     case "sections.advantages":
       return (
-        <div className="card-list">
+        <div className={styles["card-list"]}>
           {section.items.map((item, index) => (
-            <article className="content-card" key={`${item.title ?? "advantage"}-${index}`}>
-              {item.icon ? <p className="kicker">{item.icon}</p> : null}
+            <article
+              className={styles["content-card"]}
+              key={`${item.title ?? "advantage"}-${index}`}
+            >
+              {item.icon ? (
+                <p className="font-mono text-xs font-medium uppercase text-stone-soft">
+                  {item.icon}
+                </p>
+              ) : null}
               {item.title ? <h3>{item.title}</h3> : null}
               <CmsHtml html={item.description} />
             </article>
@@ -177,9 +190,9 @@ function renderSectionBody(section: SectionDTO) {
       return <DisclosureList items={section.items.map((item) => [item.question, item.answer])} />;
     case "sections.tabs":
       return (
-        <div className="card-list">
+        <div className={styles["card-list"]}>
           {section.items.map((item, index) => (
-            <article className="content-card" key={`${item.title ?? "tab"}-${index}`}>
+            <article className={styles["content-card"]} key={`${item.title ?? "tab"}-${index}`}>
               {item.title ? <h3>{item.title}</h3> : null}
               <CmsHtml html={item.content} />
               {item.link ? <a href={item.link}>Open</a> : null}
@@ -189,10 +202,10 @@ function renderSectionBody(section: SectionDTO) {
       );
     case "sections.gallery":
       return (
-        <div className="gallery-grid">
+        <div className={styles["gallery-grid"]}>
           {section.items.map((item, index) => (
             <article
-              className="content-card media-card"
+              className={`${styles["content-card"]} ${styles["media-card"]}`}
               key={`${item.caption ?? "image"}-${index}`}
             >
               <ResponsiveImage
@@ -206,23 +219,30 @@ function renderSectionBody(section: SectionDTO) {
       );
     case "sections.contact":
       return (
-        <div className="card-list">
+        <div className={styles["card-list"]}>
           {section.details.map((detail, index) => (
-            <article className="content-card" key={`${detail.type}-${index}`}>
+            <article className={styles["content-card"]} key={`${detail.type}-${index}`}>
               <h3>{detail.type}</h3>
-              <CmsHtml html={detail.valueHtml} />
+              <CmsHtml className="cms-html" html={detail.valueHtml} />
             </article>
           ))}
           {section.clinics.map((clinic) => (
-            <article className="content-card" key={clinic.name}>
+            <article className={styles["content-card"]} key={clinic.name}>
               <h3>{clinic.name}</h3>
-              <CmsHtml html={clinic.addressHtml} />
+              <CmsHtml className="cms-html" html={clinic.addressHtml} />
               {clinic.phone ? <p>{clinic.phone}</p> : null}
               {clinic.email ? <p>{clinic.email}</p> : null}
             </article>
           ))}
         </div>
       );
+    default:
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          `[SectionRenderer] unknown section component: ${(section as { __component?: string }).__component}`,
+        );
+      }
+      return null;
   }
 }
 
@@ -232,9 +252,9 @@ function DisclosureList({
   items: Array<[string | null | undefined, string | null | undefined]>;
 }) {
   return (
-    <div className="card-list">
+    <div className={styles["card-list"]}>
       {items.map(([title, content], index) => (
-        <details className="content-card" key={`${title ?? "item"}-${index}`}>
+        <details className={styles["content-card"]} key={`${title ?? "item"}-${index}`}>
           <summary>{title}</summary>
           <CmsHtml html={content} />
         </details>

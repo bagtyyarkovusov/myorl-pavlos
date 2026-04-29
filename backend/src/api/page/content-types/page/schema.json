@@ -128,35 +128,6 @@
         }
       }
     },
-    "templateId": {
-      "type": "enumeration",
-      "enum": [
-        "template_0",
-        "template_1",
-        "template_2",
-        "template_3",
-        "template_5",
-        "template_6",
-        "template_7",
-        "template_8",
-        "template_10",
-        "template_11",
-        "template_12",
-        "template_13",
-        "template_14",
-        "template_15",
-        "template_16",
-        "template_17",
-        "template_18",
-        "template_20"
-      ],
-      "private": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "pageType": {
       "type": "enumeration",
       "enum": [
@@ -405,28 +376,6 @@
           ]
         }
       },
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "pageBlocks": {
-      "type": "dynamiczone",
-      "private": true,
-      "components": [
-        "blocks.accordion-item",
-        "blocks.faq-item",
-        "blocks.gallery-image",
-        "blocks.tab-item",
-        "blocks.video",
-        "blocks.clinic",
-        "blocks.social-link",
-        "blocks.promo-slide",
-        "blocks.contact-detail",
-        "blocks.advantage",
-        "shared.location"
-      ],
       "pluginOptions": {
         "i18n": {
           "localized": true

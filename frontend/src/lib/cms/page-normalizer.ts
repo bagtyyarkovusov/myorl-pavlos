@@ -42,7 +42,46 @@ export const PAGE_POPULATE = {
   tags: { fields: ["name", "slug"] },
   featuredImage: true,
   imageCenter: true,
-  pageSections: { populate: "*" },
+  pageSections: {
+    on: {
+      "sections.promo-slider": {
+        populate: {
+          slides: { populate: ["image", "targetPage"] },
+        },
+      },
+      "sections.linked-resources": {
+        populate: {
+          items: { populate: ["targetPage"] },
+        },
+      },
+      "sections.social-links": {
+        populate: { links: true },
+      },
+      "sections.video": {
+        populate: {
+          videos: { populate: ["thumbnail", "videoMp4", "videoWebm"] },
+        },
+      },
+      "sections.advantages": {
+        populate: { items: true },
+      },
+      "sections.accordion": {
+        populate: { items: true },
+      },
+      "sections.faq": {
+        populate: { items: true },
+      },
+      "sections.tabs": {
+        populate: { items: true },
+      },
+      "sections.gallery": {
+        populate: { items: { populate: ["image"] } },
+      },
+      "sections.contact": {
+        populate: { details: true, clinics: true },
+      },
+    },
+  },
   faqSection: { populate: { items: true } },
   accordionSection: { populate: { items: true } },
   tabsSection: { populate: { items: true } },

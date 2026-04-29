@@ -1,0 +1,95 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: gemini-pg-prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-strapi}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-strapi}
+    volumes:
+      - pgdata-prod:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-strapi} -d ${POSTGRES_DB:-strapi}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  strapi:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gemini-strapi-prod
+    environment:
+      HOST: 0.0.0.0
+      PORT: 1337
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${POSTGRES_DB:-strapi}
+      DATABASE_USERNAME: ${POSTGRES_USER:-strapi}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_SSL: "false"
+      STRAPI_CORS_ORIGINS: ${STRAPI_CORS_ORIGINS}
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      JWT_SECRET: ${JWT_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/public/uploads
+    restart: unless-stopped
+    networks:
+      - internal
+
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gemini-nextjs-prod
+    environment:
+      STRAPI_URL: ${STRAPI_URL:-http://strapi:1337}
+      STRAPI_TOKEN: ${STRAPI_TOKEN}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+      STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET}
+    depends_on:
+      - strapi
+    restart: unless-stopped
+    networks:
+      - internal
+
+  caddy:
+    image: caddy:2
+    container_name: gemini-caddy-prod
+    environment:
+      CADDY_DOMAIN: ${CADDY_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - nextjs
+      - strapi
+    restart: unless-stopped
+    networks:
+      - internal
+
+volumes:
+  pgdata-prod:
+  uploads:
+  caddy-data:
+  caddy-config:
+
+networks:
+  internal:
+    driver: bridge

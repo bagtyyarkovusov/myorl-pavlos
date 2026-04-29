@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageRenderer } from "@/components/PageRenderer";
-import { fetchPageBySlug } from "@/lib/cms/client";
+import { getPage } from "@/lib/cms/cms-api";
+import { getSitemapPages } from "@/lib/cms/cms-api";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { isLocale } from "@/lib/cms/types";
 
@@ -13,14 +14,34 @@ type CmsPageProps = {
   }>;
 };
 
+export async function generateStaticParams() {
+  try {
+    const pages = await getSitemapPages();
+    return pages
+      .filter((p) => p.slug !== "index")
+      .map((page) => ({
+        locale: page.locale,
+        slug: page.slug,
+      }));
+  } catch {
+    return [];
+  }
+}
+
+export const dynamicParams = true;
+
 export async function generateMetadata({ params }: CmsPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) {
     return {};
   }
 
-  const page = await fetchPageBySlug(locale, slug);
-  return page ? toPageMetadata(page) : {};
+  try {
+    const page = await getPage(locale, slug);
+    return toPageMetadata(page);
+  } catch {
+    return {};
+  }
 }
 
 export default async function CmsPage({ params }: CmsPageProps) {
@@ -29,10 +50,7 @@ export default async function CmsPage({ params }: CmsPageProps) {
     notFound();
   }
 
-  const page = await fetchPageBySlug(locale, slug);
-  if (!page) {
-    notFound();
-  }
+  const page = await getPage(locale, slug);
 
   return <PageRenderer page={page} />;
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { PageSection } from "@/components/PageSection";
 import type { LinkedResourceItemDTO } from "@/lib/cms/types";
 
 type HomeMedicalLedgerProps = {
@@ -14,55 +15,46 @@ export function HomeMedicalLedger({ title, items, locale }: HomeMedicalLedgerPro
   if (items.length === 0) return null;
 
   return (
-    <section className="bg-[var(--bone-50)] py-24 md:py-32">
-      <div className="container mx-auto max-w-5xl">
-        <header className="mb-16 md:mb-24 text-center">
-          <h2 className="font-display text-4xl text-[var(--ink)] md:text-5xl lg:text-6xl">
-            {title}
-          </h2>
-        </header>
-        <ul className="flex flex-col border-t border-[var(--line)]" role="list">
-          {items.map((item, index) => {
-            const href =
-              item.targetUrl ??
-              (item.targetPage?.slug ? `/${locale}/${item.targetPage.slug}` : `/${locale}/sitemap`);
+    <PageSection background="surface" containerWidth="tight" heading={{ title }}>
+      <ul className="flex flex-col border-t border-stone-line" role="list">
+        {items.map((item, index) => {
+          const href =
+            item.targetUrl ??
+            (item.targetPage?.slug ? `/${locale}/${item.targetPage.slug}` : `/${locale}/sitemap`);
 
-            return (
-              <motion.li
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
-                className="group border-b border-[var(--line)]"
+          return (
+            <motion.li
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
+              className="group border-b border-stone-line"
+            >
+              <Link
+                href={href}
+                className="-mx-8 flex items-center justify-between rounded-2xl py-8 transition-colors hover:bg-bone-200 sm:mx-0 sm:px-8"
               >
-                <Link
-                  href={href}
-                  className="flex items-center justify-between py-8 transition-colors hover:bg-[var(--surface-soft)] sm:px-8 -mx-8 sm:mx-0 rounded-2xl"
-                >
-                  <div className="flex flex-col gap-2 max-w-2xl px-8 sm:px-0">
-                    <h3 className="font-display text-2xl text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors md:text-3xl">
-                      {item.title}
-                    </h3>
-                    {item.description ? (
-                      <p className="text-lg text-[var(--muted)] leading-relaxed">
-                        {item.description}
-                      </p>
-                    ) : null}
+                <div className="flex max-w-2xl flex-col gap-2 px-8 sm:px-0">
+                  <h3 className="font-display text-2xl text-ink transition-colors group-hover:text-trust md:text-3xl">
+                    {item.title}
+                  </h3>
+                  {item.description ? (
+                    <p className="text-lg leading-relaxed text-stone">{item.description}</p>
+                  ) : null}
+                </div>
+                <div className="pr-8 sm:pr-0">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-stone-line bg-bone-50 text-ink transition-all duration-300 group-hover:-rotate-45 group-hover:border-trust group-hover:bg-trust group-hover:text-bone-50">
+                    <span className="text-xl leading-none" aria-hidden="true">
+                      →
+                    </span>
                   </div>
-                  <div className="pr-8 sm:pr-0">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--line)] bg-white text-[var(--ink)] transition-all duration-300 group-hover:border-[var(--accent)] group-hover:bg-[var(--accent)] group-hover:text-white group-hover:-rotate-45">
-                      <span className="text-xl leading-none" aria-hidden="true">
-                        →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.li>
-            );
-          })}
-        </ul>
-      </div>
-    </section>
+                </div>
+              </Link>
+            </motion.li>
+          );
+        })}
+      </ul>
+    </PageSection>
   );
 }

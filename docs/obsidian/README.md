@@ -17,6 +17,9 @@ You may get a `docs/obsidian/.obsidian` directory after first open (app settings
 - [00-MOC-Frontend](00-MOC-Frontend.md) — Next.js, CMS DTO layer, i18n, routes
 - [00-MOC-Backend](00-MOC-Backend.md) — Strapi CMS API, configuration, extensions
 - [00-MOC-Tools](00-MOC-Tools.md) — Python scripts for migration, audit, and readiness gates
+- [00-MOC-CodeIntelligence](00-MOC-CodeIntelligence.md) — graph-derived module + process wikis (GitNexus)
+- [gitnexus-state](gitnexus-state.md) — current state of the GitNexus index
+- [audits/](audits/) — dated codebase audits (latest: [2026-04-30](audits/audit-2026-04-30.md))
 
 ## AI assistants
 

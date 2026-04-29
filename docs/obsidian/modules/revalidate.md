@@ -1,59 +1,52 @@
 ---
 module: Revalidate
-symbols: 9
-cohesion: 74%
-source: gitnexus://repo/gemini-export/cluster/Revalidate
-route: /api/revalidate
+symbols: 9 (5 + 4)
+cohesion: 73%–86%
+source: gitnexus_cypher (cluster="Revalidate")
 ---
 
 # Module: Revalidate — `/api/revalidate` route handler
 
-> Single Next.js route file decomposed into 9 named helpers. Receives Strapi webhooks, authenticates, derives Next.js cache tags, calls `revalidateTag`.
+> The ISR (Incremental Static Regeneration) webhook endpoint. Strapi calls this route on content change; it invalidates Next.js cached pages.
 
 ## Code location
 
-- [../../../frontend/src/app/api/revalidate/route.ts](../../../frontend/src/app/api/revalidate/route.ts)
+- `frontend/src/app/api/revalidate/route.ts` — all members live here
 
 ## Members (9)
 
-All in `route.ts`:
+| Symbol | Kind | Purpose |
+| --- | --- | --- |
+| `POST` | Function | Route handler entry point |
+| `parsePayload` | Function | Parses and validates the Strapi webhook body |
+| `deriveTags` | Function | Maps Strapi model + entry to Next.js cache tags |
+| `deriveStrapiWebhookTags` | Function | Derives tags from Strapi webhook event |
+| `readBearerSecret` | Function | Extracts bearer token from Authorization header |
+| `resolveProvidedSecret` | Function | Validates the bearer token against env |
+| `isPageModel` | Function | Checks if the webhook body is a page model |
+| `isTagModel` | Function | Checks if the webhook body is a tag model |
+| `stringValue` | Function | Casts unknown value to string safely |
 
-| Symbol | Role |
-| --- | --- |
-| `POST` | HTTP entry — only public export besides defaults |
-| `parsePayload` | Parses Strapi webhook body |
-| `resolveProvidedSecret`, `readBearerSecret` | Inline auth (no middleware) |
-| `deriveTags`, `deriveStrapiWebhookTags` | Map model + locale → cache tags |
-| `isPageModel`, `isTagModel` | Model-name guards |
-| `stringValue` | Defensive string coercion |
+## Indexed flows
 
-## Indexed flows (6)
+| Process | Steps | Type |
+| --- | --- | --- |
+| `POST → _build_url` | 4 | cross_community |
+| `POST → NormalizeOrigin` | 3 | cross_community |
+| `POST → ReadBearerSecret` | 3 | cross_community |
 
-From `gitnexus_route_map`:
-
-- `POST → IsPageModel`
-- `POST → StringValue`
-- `POST → Add`
-- `POST → IsTagModel`
-- `POST → NormalizeOrigin`
-- `POST → ReadBearerSecret`
-
-See [[../processes/revalidate-webhook]] for the full trace.
+The flow: `POST` → `parsePayload` → `resolveProvidedSecret` (auth) → `deriveTags` (cache tag computation) → `revalidateTag()` (Next.js ISR).
 
 ## Auth model
 
-There is **no middleware** wrapping this route. Bearer-secret auth is handled inline by `resolveProvidedSecret` + `readBearerSecret`. If you ever introduce shared `withAuth`/`withRateLimit` wrappers, this is the natural first migration target.
+Bearer token auth via `REVALIDATE_SECRET` env var. The handler reads `Authorization: Bearer <token>`, extracts and validates it inline — no middleware wrapper. The audit previously flagged this as an opportunity for a `withAuth` wrapper pattern.
 
 ## Consumers
 
-`route_map` reports 0 internal consumers — driven externally by the Strapi revalidation webhook configured in [../../../tools/setup_strapi_revalidation_webhook.py](../../../tools/setup_strapi_revalidation_webhook.py).
-
-## Cohesion: 74%
-
-Leaks are mostly edges into `Cms` (`getCmsConfig` to read the secret + origin) and Next.js `revalidateTag` import.
+Zero internal consumers — this is an externally-driven endpoint. Strapi's admin panel posts to it via webhook configuration (`setup_strapi_revalidation_webhook.py`).
 
 ## Related
 
-- [[cms]] — `getCmsConfig` consumed for auth + origin
-- [[tools]] — `setup_strapi_revalidation_webhook.py` configures the producer
-- [[../processes/revalidate-webhook]]
+- [[cms]] — gateway layer consumed to derive tags
+- [[../processes/revalidate-webhook]] — detailed flow trace
+- [[00-MOC-Frontend]] — frontend entry points

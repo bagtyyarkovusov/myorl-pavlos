@@ -4,7 +4,6 @@
 
 ## Core import pipeline
 
-- [../../strapi_importer.py](../../strapi_importer.py) — Main Strapi data importer
 - [../../strapi_client.py](../../strapi_client.py) — Strapi REST API client
 - [../../tools/parse.py](../../tools/parse.py) — MODX source data parser
 - [../../tools/transform_data.py](../../tools/transform_data.py) — Data transformation
@@ -16,13 +15,13 @@
 ## Quality and audit
 
 - [../../tools/audit_nextjs_content_hygiene.py](../../tools/audit_nextjs_content_hygiene.py) — Content quality checks
-- [../../tools/nextjs_content_readiness.py](../../tools/nextjs_content_readiness.py) — Content readiness report
+- [../../tools/nextjs_readiness_gate.py](../../tools/nextjs_readiness_gate.py) — Content readiness report
 - [../../tools/injection_readiness.py](../../tools/injection_readiness.py) — Pre-import validation
-- [../../tools/slug_parity_analyze.py](../../tools/slug_parity_analyze.py) — Slug consistency
-- [../../tools/slug_parity_apply.py](../../tools/slug_parity_apply.py) — Slug repair
-- [../../tools/audit_locale_pairs.py](../../tools/audit_locale_pairs.py) — Locale pair audit
+- [../../tools/slug_uid_utils.py](../../tools/slug_uid_utils.py) — Slug UID utilities
 - [../../tools/full_ready_check.py](../../tools/full_ready_check.py) — Full readiness gate
 - [../../tools/production_readiness_gate.py](../../tools/production_readiness_gate.py) — Production gate
+- [../../tools/report_nav_locale_coverage.py](../../tools/report_nav_locale_coverage.py) — Nav locale coverage
+- [../../tools/env-validate.py](../../tools/env-validate.py) — Environment validation
 
 ## PostgreSQL rehearsal
 
@@ -38,21 +37,25 @@
 - [../../tools/recover_homepage_links.py](../../tools/recover_homepage_links.py)
 - [../../tools/emit_slug_redirects.py](../../tools/emit_slug_redirects.py)
 
-## Ad-hoc / support
+## Webhook and CMS
 
-- [../../tools/html_cleanup.py](../../tools/html_cleanup.py)
-- [../../tools/backfill_page_content.py](../../tools/backfill_page_content.py)
-- [../../tools/backfill_tag_slugs.py](../../tools/backfill_tag_slugs.py)
 - [../../tools/setup_strapi_revalidation_webhook.py](../../tools/setup_strapi_revalidation_webhook.py)
 - [../../tools/cms_audit/](../../tools/cms_audit/) — CMS audit module (`db.py`, `io.py`, `paths.py`)
 
-## New tools (root level)
+## Archived
 
-- [../../append_home_css.py](../../append_home_css.py)
-- [../../apply_ui_changes.py](../../apply_ui_changes.py)
+`tools/_archived/` contains 40 legacy MODX → Strapi migration scripts. **Excluded from the GitNexus index** via `.gitnexusignore`. Kept on disk for historical reference only.
+
+## Graph-derived docs
+
+| Doc | Content |
+| --- | --- |
+| [[modules/tools]] | Full module overview: 75 symbols, 9 sub-clusters |
+| [[modules/cms-audit]] | Shared JSON I/O package (`cms_audit/io.py`) |
+| [[modules/examples]] | Reference DTO examples + redirect loader |
 
 ## Related
 
-- [00-MOC-Architecture](00-MOC-Architecture.md) — ADRs, migration docs
-- [00-MOC-Backend](00-MOC-Backend.md) — Strapi API and schema
-- [00-MOC-Frontend](00-MOC-Frontend.md) — Next.js, CMS DTO contract
+- [[00-MOC-Architecture]] — ADRs, migration docs
+- [[00-MOC-Backend]] — Strapi API and schema
+- [[00-MOC-Frontend]] — Next.js, CMS DTO contract

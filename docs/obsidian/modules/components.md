@@ -1,39 +1,51 @@
 ---
 module: Components
-symbols: 9
-cohesion: 89%
-source: gitnexus://repo/gemini-export/cluster/Components
+symbols: 10 (6 + 4)
+cohesion: 86%–92%
+source: gitnexus_cypher (cluster="Components")
 ---
 
 # Module: Components — design system + HTML sanitization
 
-> Shared visual primitives and the `CmsHtml` sanitizer used wherever Strapi-authored HTML is rendered.
+> Shared UI primitives used across all page types plus the CMS HTML rendering/sanitization pipeline.
 
-## Members (9)
+## Code location
+
+| Directory | Contents |
+| --- | --- |
+| `frontend/src/components/` | `CmsHtml.tsx`, `PageSection.tsx`, `design-system.tsx` |
+| `frontend/src/components/site-header/internal/` | `CTAButton.tsx`, `NavigationAnchor.tsx` |
+| `frontend/src/lib/` | `html.ts`, `utils.ts` |
+
+## Members (10)
+
+### Design system (6)
 
 | Symbol | File | Purpose |
 | --- | --- | --- |
-| `cn` | `frontend/src/lib/utils.ts` | `clsx`/`tailwind-merge` helper |
-| `isExternalHref` | `frontend/src/components/design-system.tsx` | URL classifier |
-| `ButtonLink` | `frontend/src/components/design-system.tsx` | Themed link/button |
-| `PageSection` | `frontend/src/components/PageSection.tsx` | Section wrapper |
-| `CmsHtml` | `frontend/src/components/CmsHtml.tsx` | Renders sanitized CMS HTML |
-| `sanitizeCmsHtml` | `frontend/src/lib/html.ts` | DOMPurify-style sanitiser |
-| `isAllowedIframeSrc` | `frontend/src/lib/html.ts` | Iframe allowlist (YouTube etc.) |
-| `registerHooks` | `frontend/src/lib/html.ts` | Sanitiser hook setup |
-| `NavigationAnchor` | `frontend/src/components/site-header/internal/NavigationAnchor.tsx` | Anchor with internal/external split |
+| `CmsHtml` | `frontend/src/components/CmsHtml.tsx` | Renders sanitized CMS HTML with iframe allow-listing |
+| `PageSection` | `frontend/src/components/PageSection.tsx` | Layout wrapper with background/rhythm/container classes |
+| `ButtonLink` | `frontend/src/components/design-system.tsx` | Link styled as a button with variant support |
+| `isExternalHref` | `frontend/src/components/design-system.tsx` | External link detection |
+| `CTAButton` | `frontend/src/components/site-header/internal/CTAButton.tsx` | "Make an appointment" button |
+| `NavigationAnchor` | `frontend/src/components/site-header/internal/NavigationAnchor.tsx` | Styled nav link with active state |
 
-## Active risk (2026-04-30)
+### HTML utilities (4)
 
-`ButtonLink`, `SectionHeading`, `MediaFrame`, `isExternalHref`, `SECONDARY_CLASSES`, `variantClass`, `classes` in `design-system.tsx` are touched — design-system rewrite in progress.
+| Symbol | File | Purpose |
+| --- | --- | --- |
+| `sanitizeCmsHtml` | `frontend/src/lib/html.ts` | DOMPurify-based HTML sanitization |
+| `isAllowedIframeSrc` | `frontend/src/lib/html.ts` | Iframe src allow-list (`youtube.com`, `maps.google.com`) |
+| `registerHooks` | `frontend/src/lib/html.ts` | DOMPurify hook registration |
+| `cn` | `frontend/src/lib/utils.ts` | Tailwind class-name merge utility |
 
-## Notes
+## Cohesion: 86–92%
 
-- `CmsHtml` + `sanitizeCmsHtml` together gate every block of Strapi-authored markup. Treat changes here as security-sensitive (XSS surface).
-- `NavigationAnchor` was clustered with `Components` rather than [[internal]]; the indexer tracks edges, not folders.
+The `CmsHtml → isAllowedIframeSrc` call chain creates a 4-step trace (`CmsHtml → IsAllowedIframeSrc`). The design-system components share `cn` and Tailwind variant classes.
 
 ## Related
 
-- [[cms]] — produces the HTML this module sanitises
-- [[internal]] — uses `cn`, `ButtonLink`
-- [[page-layouts]] — uses `PageSection`, `CmsHtml`
+- [[sections]] — SectionRenderer which delegates to these components
+- [[page-layouts]] — page-shape components consuming design-system primitives
+- [[i18n]] — homepage layout using `CmsHtml` and `PageSection`
+- [[00-MOC-Frontend]] — frontend entry points

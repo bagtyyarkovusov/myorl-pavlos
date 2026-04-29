@@ -1,46 +1,66 @@
 ---
 module: Tools
-symbols: 90
-cohesion: 91%
-source: gitnexus://repo/gemini-export/cluster/Tools
+symbols: ~75 (9 sub-clusters)
+cohesion: 86%–100%
+source: gitnexus_cypher (cluster="Tools")
 ---
 
 # Module: Tools — Python migration + readiness gates
 
-> Active Python tooling under `tools/`. The `_archived/` subtree (246 symbols) is excluded from this cluster — see [[../audits/audit-2026-04-30#3 Module landscape]].
+> The Python toolchain for CMS auditing, content hygiene, PostgreSQL readiness, and production deployment gates. The largest module by symbol count (~75 across 9 sub-clusters).
 
 ## Code location
 
-- [../../../tools/](../../../tools/) — active scripts
-- [../../../tools/_archived/](../../../tools/_archived/) — legacy MODX→Strapi migration code
+| Directory | Contents |
+| --- | --- |
+| `tools/` | 14 active scripts |
+| `cms_audit/` | Shared DB/IO/path utilities |
+
+## Sub-clusters
+
+| Sub-cluster | Size | Cohesion | Contents |
+| --- | --- | --- | --- |
+| Content audit | 13 | 96% | `audit_nextjs_content_hygiene.py` — HTML markers, internal links, pageblocks summary |
+| Tools core | 12 | 97% | General-purpose tooling (shared utilities) |
+| Readiness gates | 10 | 96% | Production readiness checks |
+| PostgreSQL | 10 | 96% | PostgreSQL rehearsal scripts |
+| Slug/link repair | 7 | 100% | Slug utilities and redirect tools |
+| Strapi client | 6 | 92% | `strapi_client.py` + helpers |
+| Report generation | 6 | 100% | Report paths and formatting |
+| Smaller tools | 5–6 | 89–100% | Navigation sync, locale coverage, env validation |
 
 ## Live entry points (sample)
 
-| Symbol | File | Role |
-| --- | --- | --- |
-| `main` | `tools/setup_strapi_revalidation_webhook.py` | Configures Strapi → Next.js webhook |
-| `upsert_sqlite`, `upsert_postgres`, `webhook_headers` | same | DB-specific upsert |
-| `main`, `run_step` | `tools/production_readiness_gate.py` | Aggregate readiness gate |
-| `main`, `strapi_origin` | `tools/nextjs_readiness_gate.py` | Next.js readiness gate |
-| `main`, `_print_human`, `_build_report` | `tools/report_nav_locale_coverage.py` | Locale coverage report |
-| `main`, `basic_contract_summary` | `tools/audit_nextjs_content_hygiene.py` | Hygiene audit |
-| `main`, `ms_epoch_to_iso`, `to_csv_value`, `postgres_counts`, `source_counts` | `tools/run_postgres_rehearsal.py`, `check_postgres_rehearsal_report.py` | PG rehearsal pipeline |
-| `parse_dotenv`, `normalize_url` | `tools/env-validate.py` | Env-file validator |
-| `_read_dotenv_fill_empty_keys`, `post`, `get`, `load_strapi_env_from_dotenv` | `tools/strapi_client.py` | Shared Strapi client |
+| Script | Purpose |
+| --- | --- |
+| `audit_nextjs_content_hygiene.py` | Full content quality audit (HTML, links, pageblocks) |
+| `nextjs_readiness_gate.py` | Next.js content readiness check |
+| `production_readiness_gate.py` | Full production deployment gate |
+| `injection_readiness.py` | Pre-import validation |
+| `run_postgres_rehearsal.py` | PostgreSQL migration rehearsal |
+| `audit_postgres_strictness.py` | PostgreSQL strict-mode audit |
+| `check_postgres_rehearsal_report.py` | Rehearsal report validation |
+| `report_nav_locale_coverage.py` | Navigation locale coverage report |
+| `setup_strapi_revalidation_webhook.py` | Strapi webhook configuration |
+| `slug_uid_utils.py` | Slug UID utilities |
+| `env-validate.py` | Environment variable validation |
+| `strapi_client.py` | Strapi REST API client |
 
-For the full link list including `cms_audit/` and other helpers, see the existing [[../00-MOC-Tools]].
+## Cohesion patterns
 
-## Cohesion: 91%
+Tools have the highest overall cohesion in the codebase (86–100%). Each script is self-contained with dedicated helpers, sharing only the `cms_audit/` package for I/O and the `strapi_client.py` for API access.
 
-High — these scripts mostly compose around `tools/strapi_client.py` and `_read_dotenv_fill_empty_keys`. Cross-script imports are rare.
+## Note on `_archived`
 
-## Active risk (2026-04-30)
+The `tools/_archived/` directory (40 legacy migration scripts) is **excluded from the index** via `.gitnexusignore`:
+```
+tools/_archived/
+```
 
-- `strapi_origin` in `tools/nextjs_readiness_gate.py` is touched in the working tree.
-- A few helper Python files at repo root (`append_home_css.py`, `apply_ui_changes.py`, `audit_nextjs_content_hygiene.py`) are **deleted** — they were referenced from [[../00-MOC-Tools]] and that doc will break-link until updated.
+These are historical MODX → Strapi migration tools that are no longer needed for active development. They remain on disk for reference but do not pollute the knowledge graph.
 
 ## Related
 
-- [[scripts]] — Node.js equivalent under `backend/scripts/`
-- [[revalidate]] — `setup_strapi_revalidation_webhook.py` is the producer side
-- [[../00-MOC-Tools]] — link-only entry index (needs refresh after current commits)
+- [[cms-audit]] — shared I/O package consumed by tools
+- [[00-MOC-Tools]] — tools entry points
+- [[00-MOC-Architecture]] — ADRs and migration docs

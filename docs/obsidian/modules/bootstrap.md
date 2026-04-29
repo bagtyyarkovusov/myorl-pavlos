@@ -1,41 +1,52 @@
 ---
 module: Bootstrap
-symbols: 13
-cohesion: 67%
-source: gitnexus://repo/gemini-export/cluster/Bootstrap
+symbols: 13 (7 + 6)
+cohesion: 56%–91%
+source: gitnexus_cypher (cluster="Bootstrap")
 ---
 
-# Module: Bootstrap — Strapi seeders
+# Module: Bootstrap — Strapi seeders + misclassified symbols
 
-> Code that runs at Strapi boot to seed permissions and content-manager configuration. Lower cohesion (67%) because the indexer pulled in unrelated symbols by name collision.
+> Strapi lifecycle seed scripts for content-manager config, navigation plugin, and navigation permissions. Contains cluster noise from misclassified `navigation.ts` symbols.
 
 ## Code location
 
-- [../../../backend/src/bootstrap/](../../../backend/src/bootstrap/)
+| File | Purpose |
+| --- | --- |
+| `backend/src/bootstrap/content-manager-config.ts` | Seeds content-manager list/edit layouts and field metadata |
+| `backend/src/bootstrap/navigation-config.ts` | Seeds the navigation plugin configuration |
+| `backend/src/bootstrap/navigation-permissions.ts` | Seeds navigation plugin permissions |
 
-## Members (relevant)
+## Members
 
-| Symbol | File | Role |
+### Seed scripts (9)
+
+| Symbol | File | Purpose |
 | --- | --- | --- |
-| `seedNavigationPermissions` | `navigation-permissions.ts` | Sets default API perms for navigation plugin |
-| `seedNavigationConfig`, `shouldRestoreConfig` | `navigation-config.ts` | Restores nav config on boot |
-| `seedContentManagerConfig` | `content-manager-config.ts` | Pins admin layout to repo defaults |
-| `mergeMetadatas`, `sanitizeListLayout`, `sanitizeEditLayout`, `getFallbackListLayout`, `buildSeedConfig` | `content-manager-config.ts` | Helpers for the above |
+| `seedContentManagerConfig` | `content-manager-config.ts` | Entry: seeds CM config on bootstrap |
+| `buildSeedConfig` | `content-manager-config.ts` | Builds seed payload from content type schema |
+| `getFallbackListLayout` | `content-manager-config.ts` | Generates list-layout if none configured |
+| `mergeMetadatas` | `content-manager-config.ts` | Merges default + custom field metadata |
+| `sanitizeEditLayout` | `content-manager-config.ts` | Strips invalid edit-layout entries |
+| `sanitizeListLayout` | `content-manager-config.ts` | Strips invalid list-layout entries |
+| `seedNavigationConfig` | `navigation-config.ts` | Seeds navigation plugin config |
+| `shouldRestoreConfig` | `navigation-config.ts` | Checks if config restoration is needed |
+| `seedNavigationPermissions` | `navigation-permissions.ts` | Seeds navigation permissions |
 
-## Members (cluster noise)
+### Cluster noise (4 — misclassified from other modules)
 
-The community detector also pulled in symbols that **logically don't belong**:
+| Symbol | File | Actual module |
+| --- | --- | --- |
+| `buildNavigationTree` | `examples/next_page_dto.ts` | [[examples]] |
+| `buildNavigationTree` | `frontend/src/lib/cms/navigation.ts` | [[cms]] |
+| `wouldCreateCycle` | `frontend/src/lib/cms/navigation.ts` | [[cms]] |
+| `get` | `tools/strapi_client.py` | [[tools]] |
 
-- `u`, `has` from `artifacts/design-references/claude-design/tailwind-browser.js` — minified vendor JS, see [[../audits/audit-2026-04-30#headline]]
-- `toItemArray`, `toSectionDTO` from `frontend/src/lib/cms/page-normalizer.ts` — these belong to [[cms]]; they probably ended up here because they share short helper names with bootstrap symbols and have low fan-out.
+## Cohesion: 56% (core)
 
-This is why cohesion is 67%, not 90%+.
-
-## Active risk (2026-04-30)
-
-None of the actual bootstrap files are touched in the current diff.
+The core seeder group (content-manager + navigation configs) has high internal cohesion but the cluster is polluted by 4 misclassified symbols that drag cohesion down to 56%. After the re-index removed `artifacts/design-references/` noise, the `Claude-design` symbols no longer bleed into this cluster.
 
 ## Related
 
-- [[../00-MOC-Backend]] — Strapi entry points
-- [[scripts]] — `backend/scripts/*.js` ad-hoc cleanup tasks
+- [[scripts]] — backend JS cleanup scripts
+- [[00-MOC-Backend]] — Strapi entry points

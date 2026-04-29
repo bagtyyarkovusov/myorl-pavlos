@@ -1,50 +1,74 @@
 ---
-process: CmsPage entry trace
+process: Page rendering
 type: cross_community
-source: gitnexus_query + cypher
+source: gitnexus_cypher + context (CmsPage, LocaleHomePage)
 ---
 
-# Process: page rendering — `CmsPage → One`
+# Process: Page rendering — `CmsPage` and `LocaleHomePage`
 
-> Canonical entry trace for a content page request. From the App Router page component down to the Strapi gateway.
+> Two entry points for fetching and rendering CMS content into page components. Both follow identical patterns but serve different route segments.
 
-## Steps
+## Entry points
 
-| Step | Symbol | File | Role |
-| --- | --- | --- | --- |
-| 1 | `CmsPage` | `frontend/src/app/[locale]/[slug]/page.tsx` | Server component for `/{locale}/{slug}` |
-| 2 | `getPage` | `frontend/src/lib/cms/cms-api.ts` | High-level CMS read by slug |
-| 3 | `getPageResult` | `frontend/src/lib/cms/cms-api.ts` | Wraps result + error handling |
-| 4 | `one` | `frontend/src/lib/cms/cms-gateway.ts` | Single-entity Strapi fetch |
+| Symbol | File | Route |
+| --- | --- | --- |
+| `CmsPage` | `frontend/src/app/[locale]/[slug]/page.tsx` | `/[locale]/{slug}` — dynamic CMS pages |
+| `LocaleHomePage` | `frontend/src/app/[locale]/page.tsx` | `/[locale]` — homepage |
 
-## Sibling flows from the same entry
+## Steps (`CmsPage → One` / `LocaleHomePage → One`)
 
-`CmsPage` originates 3 indexed flows:
-- `CmsPage → GetGateway`
-- `CmsPage → One` (this one)
-- `CmsPage → ToCmsPageError`
+| Step | Symbol | Role |
+| --- | --- | --- |
+| 1 | `CmsPage` or `LocaleHomePage` | Entry — Next.js page component |
+| 2 | `getGateway` | Obtains CMS gateway instance |
+| 3 | `getPage` or `getSite` | High-level fetch |
+| 4 | `one` (gateway) | Single-entity fetch via Strapi REST |
 
-After step 4 (`one`), execution continues into the [[cms-gateway-pipeline|normalization pipeline]] (`unwrapStrapiData → normalizeEntity → deepUnwrapStrapiRelations → flattenAttributes`). GitNexus splits this into a separate process because it crosses an internal helper boundary.
+## Indexed flows
 
-## Locale-home variant
+| Flow | Steps | Type |
+| --- | --- | --- |
+| `CmsPage → GetGateway` | 4 | cross_community |
+| `CmsPage → One` | 4 | cross_community |
+| `CmsPage → ToCmsPageError` | 4 | cross_community |
+| `LocaleHomePage → GetGateway` | 4 | cross_community |
+| `LocaleHomePage → One` | 4 | cross_community |
+| `LocaleHomePage → ToCmsPageError` | 4 | cross_community |
 
-The locale homepage uses a parallel chain rooted at `LocaleHomePage` (`frontend/src/app/[locale]/page.tsx`):
+## Rendering pipeline
 
-- `LocaleHomePage → GetGateway`
-- `LocaleHomePage → One`
-- `LocaleHomePage → ToCmsPageError`
-- `LocaleHomePage → FindInTree` (navigation tree lookup)
+```
+Page component (CmsPage / LocaleHomePage)
+  → getGateway() or getPageResult(slug, locale)
+    → getPage(slug, locale)
+      → one(locale, slug, "page", populate)
+        → fetchOneImpl
+          → unwrapStrapiData → normalizeEntity → deepUnwrapStrapiRelations → flattenAttributes
+    → toPageDTO(raw) → PageDTO
+  → Map sections to components:
+    → SectionRenderer (dispatcher)
+      → renderSectionBody / renderSectionBodyHome
+        → Home sections (hero, promo, ledger, etc.) or standard sections
+  → Wrap in PageRenderer (loading + error boundaries)
+```
 
-## Metadata variant
+## Error handling
 
-`generateMetadata` runs in parallel with `CmsPage` for the same request and originates 6 flows of its own (and 6 more for the `[locale]` variant) — `→ GetGateway`, `→ One`, `→ ToCmsPageError`, `→ NormalizeOrigin`, `→ NormalizeOptionalText`, `→ HrefForLocaleSlug`.
+Both page components handle CMS errors via `toCmsPageError` which maps gateway failures to typed `CmsError` instances. The `error.tsx` boundaries in `[locale]/` and root catch these and render `LocaleErrorPage` or `ErrorPage`, with special handling for timeout errors.
 
-## Active risk (2026-04-30)
+## Dependencies
 
-Step 1 (`CmsPage`, `LocaleHomePage`, both `generateMetadata`) is touched. See [[../audits/audit-2026-04-30#1 Uncommitted change risk CRITICAL]].
+- `createCmsGateway` → `getCmsConfig` (CRITICAL chokepoint)
+- `getPage`, `getSite`, `getSitemapPages` (CMS API)
+- `toPageDTO`, `toSectionDTO`, `toContactDTO` (DTO layer)
+- `SectionRenderer` (dynamic dispatcher)
+- `PageRenderer` (error/loading wrapper)
+- All page-layout components (`HomePage`, `StandardPage`, etc.)
 
 ## Related
 
-- [[cms-gateway-pipeline]] — what happens after step 4
-- [[../modules/navigation]] — page entry symbols
-- [[../modules/cms]] — gateway internals
+- [[cms-gateway-pipeline]] — normalization chain
+- [[generate-metadata]] — metadata generation (runs in parallel)
+- [[locale-layout]] — parent layout
+- [[../modules/cms]] — module overview
+- [[../modules/page-layouts]] — page shape components

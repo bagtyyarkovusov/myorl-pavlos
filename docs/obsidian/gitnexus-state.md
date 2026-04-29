@@ -1,6 +1,6 @@
 # GitNexus index state
 
-> Snapshot of what GitNexus currently knows about this repo. Captured **2026-04-30** against working copy `e5da5d6`.
+> Snapshot of what GitNexus currently knows about this repo. Captured **2026-04-30** against HEAD `94d7996`.
 >
 > If a tool warns the index is stale, run `npx gitnexus analyze` from the repo root.
 
@@ -10,21 +10,28 @@
 | --- | --- |
 | Repo name (in GitNexus) | `gemini-export` |
 | Path | `/Users/bagtyyar/Projects/gemini-export` |
-| Last indexed | 2026-04-29T16:23:43Z |
-| Last commit indexed | `e5da5d6` (`fix: remove duplicate gray title in mega menu, make navLabel accent blue`) |
-| Files | 338 |
-| Symbols (nodes) | 5243 |
-| Relationships (edges) | 8139 |
-| Communities (clusters) | 151 |
-| Processes (execution flows) | 238 |
+| Last indexed | 2026-04-29T18:31:31Z |
+| Last commit indexed | `94d7996` (`feat: Docker deployment, frontend header/section refactor, component tests, docs, and tool cleanup`) |
+| Files | 311 |
+| Symbols (nodes) | 2,702 |
+| Relationships (edges) | 4,053 |
+| Communities (clusters) | 73 |
+| Processes (execution flows) | 121 |
 | Embeddings | **0** |
+
+## Index hygiene (2026-04-30 cleanup)
+
+| Action | Result |
+| --- | --- |
+| Excluded `tools/_archived/` via `.gitnexusignore` | Dropped ~246 dead symbols (largest cluster removed) |
+| Excluded `artifacts/design-references/` via `.gitnexusignore` | Dropped ~267 noise symbols from minified `tailwind-browser.js` |
+| Re-indexed with `--force` | Index now matches HEAD exactly; 0 uncommitted changes detected |
 
 ## Known gaps in the index
 
-- **No embeddings.** `query` falls back to BM25 keyword ranking only — semantic similarity is disabled. Phrase your queries with concrete keywords, not vague concepts. To enable, re-run analyze with embeddings configured.
-- **Indexing minified output.** `artifacts/design-references/claude-design/tailwind-browser.js` contributes **267 symbols** (single-letter names like `K`, `Z`, `j`) that dominate the top-callers ranking and inflate the `Claude-design` cluster (151 symbols, 48% cohesion). Consider adding it to the GitNexus ignore list.
-- **Working tree drift.** As of 2026-04-30 the working copy has **84 uncommitted symbol changes across 47 files** (CRITICAL risk per `detect_changes`). Impact analysis on changed symbols reflects pre-edit state until those commits land + index is refreshed. See [[audits/audit-2026-04-30|2026-04-30 audit]].
-- **`_archived` is still in the graph.** The `_archived` cluster is the **largest** (246 symbols), composed entirely of legacy MODX → Strapi migration scripts under `tools/_archived/`. Many are being deleted in the current WIP. Re-index after that lands to drop them from query/impact results.
+- **No embeddings.** `query` falls back to BM25 keyword ranking only — semantic similarity is disabled. Phrase your queries with concrete keywords. To enable, re-run analyze with `--embeddings`.
+- **Working tree is clean.** `gitnexus_detect_changes` reports only 2 auto-updated symbols (AGENTS.md, CLAUDE.md snippets from the analyzer itself) with 0 affected processes. Index matches HEAD exactly.
+- **Strapi backend routes are not indexed as `Route` nodes.** The Next.js `Route` detector only crawls `frontend/src/app/` — the actual CMS API surface (3 collections: `page`, `global`, `tag`) lives in the Strapi backend and does not appear in `gitnexus_route_map`.
 
 ## Tooling reference
 
@@ -39,8 +46,6 @@
 | `gitnexus_rename` | Multi-file coordinated rename (do not find-and-replace) |
 
 ## Resources reference
-
-Lightweight reads (~100–500 tokens) for navigation:
 
 - `gitnexus://repo/gemini-export/context` — stats + staleness check
 - `gitnexus://repo/gemini-export/clusters` — all functional areas
@@ -57,5 +62,5 @@ Lightweight reads (~100–500 tokens) for navigation:
 ## Related vault notes
 
 - [[00-MOC-CodeIntelligence]] — index of graph-derived docs
-- [[audits/audit-2026-04-30]] — current codebase audit
+- [[audits/audit-2026-05-01]] — current codebase audit
 - [[00-MOC-Architecture]] — ADRs and code boundaries

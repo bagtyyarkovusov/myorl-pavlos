@@ -1,46 +1,47 @@
 ---
 module: Internal
-symbols: 10
-cohesion: 94%
-source: gitnexus://repo/gemini-export/cluster/Internal
+symbols: 8 (5 + 3)
+cohesion: 89%–100%
+source: gitnexus_cypher (cluster="Internal")
 ---
 
 # Module: Internal — site-header internals
 
-> The mega-menu, drawer, and presentation hooks that live behind `SiteHeader`. Highest cohesion in the codebase (94%) — almost no leakage outside the cluster.
+> MegaMenu, drawer, scroll-state hooks, and i18n header strings. Tightly self-contained with high cohesion.
 
 ## Code location
 
-- [../../../frontend/src/components/site-header/internal/](../../../frontend/src/components/site-header/internal/)
-- [../../../frontend/src/components/SiteHeaderClient.tsx](../../../frontend/src/components/SiteHeaderClient.tsx) — top-level client wrapper
-- [../../../frontend/src/lib/i18n/header.ts](../../../frontend/src/lib/i18n/header.ts) — header strings
+| Directory | Contents |
+| --- | --- |
+| `frontend/src/components/site-header/internal/` | MegaMenu, hooks, leaf meta label |
+| `frontend/src/components/SiteHeaderClient.tsx` | Client-side shell (container) |
+| `frontend/src/lib/i18n/header.ts` | Header-specific locale strings |
 
-## Members (10)
+## Members (8)
 
-| Symbol | File | Type |
+| Symbol | File | Purpose |
 | --- | --- | --- |
-| `SiteHeaderClient` | `SiteHeaderClient.tsx` | Top-level client component |
-| `MegaMenu` | `internal/MegaMenu.tsx` | Desktop mega-menu |
-| `CTAButton`, `isExternal` | `internal/CTAButton.tsx` | Header CTA |
-| `NavigationAnchor` | `internal/NavigationAnchor.tsx` | (in `Components` module per indexer) |
-| `useDrawer` | `internal/useDrawer.ts` | Mobile drawer state hook |
-| `usePill` | `internal/usePill.ts` | Active-tab pill animation hook |
-| `useNavigationState` | `internal/useNavigationState.ts` | Shared navigation state hook |
-| `leafMetaLabel`, `topicsLabel` | `internal/leafMetaLabel.ts` (+ `.test.ts`) | Label utilities |
-| `getHeaderStrings` | `lib/i18n/header.ts` | Localized strings |
+| `SiteHeaderClient` | `frontend/src/components/SiteHeaderClient.tsx` | Client shell: hydration wrapper around server-rendered header |
+| `MegaMenu` | `frontend/src/components/site-header/internal/MegaMenu.tsx` | Desktop mega-dropdown with two-level navigation |
+| `useDrawer` | `frontend/src/components/site-header/internal/useDrawer.ts` | Mobile drawer open/close state + animation |
+| `useNavigationState` | `frontend/src/components/site-header/internal/useNavigationState.ts` | Active section tracking for scroll-spy |
+| `usePill` | `frontend/src/components/site-header/internal/usePill.ts` | Active-pill indicator for navigation |
+| `leafMetaLabel` | `frontend/src/components/site-header/internal/leafMetaLabel.ts` | Derives label text for leaf nav items |
+| `topicsLabel` | `frontend/src/components/site-header/internal/leafMetaLabel.test.ts` | Test helper (clustered by coincidence) |
+| `getHeaderStrings` | `frontend/src/lib/i18n/header.ts` | Locale-specific header copy |
 
-## Why cohesion is 94%
+## Test coverage
 
-The internal/ directory is intentionally walled off — only `SiteHeader` (in [[navigation]]) and `SiteHeaderClient` import from it. Test files reference internals directly, which is fine.
+Every component and hook has a co-located test file (14 tests). See [[../testing-strategy]].
 
-## Active risk (2026-04-30)
+## Cohesion: 89–94%
 
-`MegaMenu`, `SiteHeaderClient`, `MegaMenu.test.tsx`'s `itemWithAltTitle` are touched. The recent commits (`e5da5d6`, `03c4339`) already adjusted mega-menu visuals and mobile drawer; the current diff is iterating on those.
-
-Process flows touched: `MegaMenu → TopicsLabel`, `SiteHeaderClient → Set`.
+The strong cohesion comes from the tight coupling between `SiteHeaderClient` ↔ `MegaMenu` ↔ hooks. The only leak is `getHeaderStrings` in `lib/i18n/header.ts`, which imports from outside the component tree.
 
 ## Related
 
-- [[navigation]] — the public side of the header
-- [[components]] — design-system primitives (`ButtonLink`, `cn`) used here
-- [[../audits/audit-2026-04-30]]
+- [[cms]] — parent community (absorbed the old `Navigation` cluster)
+- [[navigation]] — historical cluster, now merged
+- [[components]] — design-system primitives used by header components
+- [[../processes/site-header]] — rendering flow
+- [[00-MOC-Frontend]] — frontend entry points

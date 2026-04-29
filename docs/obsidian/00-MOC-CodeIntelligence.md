@@ -4,41 +4,68 @@
 
 ## State of the index
 
-- [[gitnexus-state]] — current stats, known gaps, schema cheat sheet
+- [[gitnexus-state]] — current stats, known gaps, index hygiene, schema cheat sheet
 
 ## Audits
 
-- [[audits/audit-2026-04-30]] — codebase audit (CRITICAL working tree, module landscape, routes)
+- [[audits/audit-2026-05-01]] — codebase audit (fresh index, clean working tree)
 
-## Modules (from `gitnexus://repo/gemini-export/clusters`)
+## Modules (from GitNexus graph)
 
-Frontend:
-- [[modules/cms]] — Strapi gateway + DTO layer (62 symbols, 76% cohesion)
-- [[modules/navigation]] — page entry points + site header (10 symbols, 81%)
-- [[modules/internal]] — site-header internals: MegaMenu, drawer, hooks (10 symbols, 94%)
-- [[modules/components]] — design system + HTML sanitization (9 symbols, 89%)
-- [[modules/page-layouts]] — page-shape components (6 symbols clustered, 100% — but see audit)
-- [[modules/revalidate]] — `/api/revalidate` route handler (9 symbols, 74%)
+### Frontend
 
-Backend:
-- [[modules/bootstrap]] — Strapi seeders for nav permissions + content-manager config (13 symbols, 67%)
-- [[modules/scripts]] — `backend/scripts/*.js` cleanup tasks (42 symbols, 86%)
+| Module | Symbols | Cohesion | Note |
+| --- | --- | --- | --- |
+| [[modules/cms]] | ~68 | 56–98% | Strapi gateway + DTO layer + routes. Largest module (7 sub-clusters). |
+| [[modules/components]] | 10 | 86–92% | Design system (CmsHtml, PageSection, ButtonLink) + HTML sanitization |
+| [[modules/internal]] | 8 | 89–100% | Site-header internals: MegaMenu, drawer hooks, i18n header strings |
+| [[modules/page-layouts]] | 6 | 100% | GalleryPage, QuestionListPage, _shared (other layouts absorbed by Cms) |
+| [[modules/revalidate]] | 9 | 73–86% | `/api/revalidate` route handler + auth + tag derivation |
+| [[modules/i18n]] | 3 | 100% | Homepage layout + useHomeSections + getHomeStrings |
+| [[modules/sections]] | 3 | 100% | SectionRenderer + renderSectionBody + renderSectionBodyHome |
+| [[modules/navigation]] | subsumed | N/A | Previously 10 symbols. Route entry points now live in [[modules/cms|Cms]] cluster |
 
-Tools:
-- [[modules/tools]] — Python migration / readiness gates (90 symbols, 91%)
-- `_archived` (246 symbols) — dead, see [[audits/audit-2026-04-30#3 Module landscape]]
-- `Claude-design` (151 symbols) — minified vendor JS noise, see audit
+### Backend
 
-## Key processes (from `gitnexus://repo/gemini-export/processes`)
+| Module | Symbols | Cohesion | Note |
+| --- | --- | --- | --- |
+| [[modules/bootstrap]] | 13 | 56–91% | Strapi seeders + misclassified navigation/tools symbols |
+| [[modules/scripts]] | ~38 | 73–100% | `backend/scripts/*.js` one-shot cleanup + verification scripts |
 
-- [[processes/page-rendering]] — `CmsPage → getPage → getPageResult → one`
-- [[processes/cms-gateway-pipeline]] — `fetchAllImpl/fetchOneImpl → unwrapStrapiData → normalizeEntity → deepUnwrapStrapiRelations → flattenAttributes`
-- [[processes/revalidate-webhook]] — `POST /api/revalidate` flows
+### Tools
+
+| Module | Symbols | Cohesion | Note |
+| --- | --- | --- | --- |
+| [[modules/tools]] | ~75 | 86–100% | Python migration + readiness gates. Largest module. |
+| [[modules/cms-audit]] | 2 | 100% | Shared JSON I/O (`cms_audit/io.py`) |
+| [[modules/examples]] | 14 | ~94% | Reference DTO examples + redirect loader |
+
+## Key processes (from GitNexus graph)
+
+| Process | Steps | Note |
+| --- | --- | --- |
+| [[processes/locale-layout]] | 7 max | Root layout wrapper for every `/[locale]` route |
+| [[processes/page-rendering]] | 4 | `CmsPage` + `LocaleHomePage` data fetching |
+| [[processes/cms-gateway-pipeline]] | 5 | Strapi normalization chain (intra_community) |
+| [[processes/generate-metadata]] | 4 (×12) | SEO metadata generation (both locale variants) |
+| [[processes/revalidate-webhook]] | 4 | `POST /api/revalidate` ISR invalidation |
+| [[processes/site-header]] | 5 | Navigation rendering through server/client split |
+
+## Deep dives
+
+| Doc | Content |
+| --- | --- |
+| [[deep-dives/site-header-internals]] | Full component tree: MegaMenu, DesktopNav, MobileDrawer, 3 hooks, 12 files, 14 tests |
+| [[deep-dives/home-sections]] | 8 homepage section components: hero, carousel, grid, ledger, video, contact |
+| [[deep-dives/backend-api]] | Strapi API: 3 collections (page, global, tag), controllers, services, routes |
+| [[deep-dives/strapi-components]] | 22 Strapi component schemas: 11 items, 10 sections, 1 shared |
+| [[deep-dives/docker]] | Docker infrastructure: dev + prod compose, networking, volumes, env vars |
+| [[deep-dives/testing-strategy]] | 28 test files, co-location pattern, fixtures, coverage gaps |
 
 ## How to use these notes
 
 - Open the graph view in Obsidian — module/process notes link bidirectionally with each other and with the audit.
-- Every code reference uses **relative markdown paths** (`../../frontend/...`) so links resolve in GitHub/IDEs too.
+- Every code reference uses **relative markdown paths** so links resolve in GitHub/IDEs too.
 - Treat these as **derived artifacts**: regenerate after re-indexing if the codebase shifts. Do not hand-edit symbol counts.
 
 ## Related

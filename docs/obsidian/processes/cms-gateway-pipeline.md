@@ -1,31 +1,36 @@
 ---
 process: Strapi response normalization
 type: intra_community
-source: gitnexus_query + cypher (process="FetchAllImpl → FlattenAttributes")
+source: gitnexus_cypher + context (process="FetchAllImpl → FlattenAttributes")
 ---
 
 # Process: CMS gateway normalization pipeline
 
 > The shared 5-step chain that every Strapi read goes through to produce a clean DTO. Lives entirely inside `frontend/src/lib/cms/cms-gateway.ts`.
 
-## Steps (`FetchAllImpl → FlattenAttributes`)
+## Steps (`FetchAllImpl → FlattenAttributes` / `FetchOneImpl → FlattenAttributes`)
 
 | Step | Symbol | Role |
 | --- | --- | --- |
-| 1 | `fetchAllImpl` | Entry — fetches a list from Strapi REST |
+| 1 | `fetchAllImpl` / `fetchOneImpl` | Entry — fetches list or single entity from Strapi REST |
 | 2 | `unwrapStrapiData` | Strips top-level `{data, meta}` envelope |
-| 3 | `normalizeEntity` | Per-entity shaping |
+| 3 | `normalizeEntity` | Per-entity shaping (recursive relation unwrap) |
 | 4 | `deepUnwrapStrapiRelations` | Recursively unwraps `{data: ...}` relation wrappers |
 | 5 | `flattenAttributes` | Flattens `{id, attributes: {...}}` → `{id, ...attrs}` |
 
 All five symbols are in `frontend/src/lib/cms/cms-gateway.ts`.
 
-## Sibling flows
+## Indexed flows
 
-The same tail (steps 2–5) is reused by two more indexed processes:
-
-- `FetchOneImpl → FlattenAttributes` — single-entity fetch (used by [[page-rendering]] step 4)
-- `CreateCmsGateway → FlattenAttributes` — gateway construction triggers eager normalization on a probe response
+| Process | Steps | Type |
+| --- | --- | --- |
+| `FetchAllImpl → FlattenAttributes` | 5 | intra_community |
+| `FetchOneImpl → FlattenAttributes` | 5 | intra_community |
+| `CreateCmsGateway → AppendSearchParams` | 5 | intra_community |
+| `CreateCmsGateway → FlattenAttributes` | 5 | intra_community |
+| `CreateCmsGateway → NormalizeOrigin` | 4 | intra_community |
+| `CreateCmsGateway → CmsError` | 4 | intra_community |
+| `CreateCmsGateway → BuildQueryParams` | 3 | intra_community |
 
 ## Why this matters
 
@@ -36,14 +41,17 @@ Breaking any one of these steps:
 - Cascades into `generateMetadata`, `sitemap`, `robots`, every page render
 - Cannot be caught by TypeScript alone — most edges run on `any`-shaped Strapi data
 
-## Active risk (2026-04-30)
+## Current state (HEAD `94d7996`)
 
-**All four downstream symbols** (`unwrapStrapiData`, `normalizeEntity`, `deepUnwrapStrapiRelations`, `flattenAttributes`) are simultaneously touched in the working tree. This is the single most dangerous part of the WIP — see [[../audits/audit-2026-04-30#1 Uncommitted change risk CRITICAL]] and the `flattenAttributes` impact note in [[../audits/audit-2026-04-30#High-impact symbols]].
+Index matches HEAD. Working tree is clean — no active modifications to the normalization pipeline.
 
-Recommendation: write a fixture-based integration test (real Strapi response → expected DTO) that locks the input/output before merging.
+## Recommendation
+
+Write a fixture-based integration test (real Strapi response → expected DTO) that locks the input/output contract. Fixtures exist in `frontend/src/lib/cms/__tests__/__fixtures__/` for this purpose.
 
 ## Related
 
-- [[page-rendering]] — upstream caller
+- [[page-rendering]] — primary consumer
+- [[generate-metadata]] — secondary consumer
 - [[revalidate-webhook]] — also depends on the gateway
 - [[../modules/cms]] — module overview

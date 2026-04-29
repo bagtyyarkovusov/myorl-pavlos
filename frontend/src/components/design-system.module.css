@@ -26,9 +26,9 @@
   position: absolute;
   bottom: 16px;
   left: 16px;
-  border: 1px solid rgba(15, 42, 74, 0.1);
+  border: 1px solid var(--media-frame-label-border);
   border-radius: 4px;
-  background: rgba(251, 252, 254, 0.82);
+  background: var(--surface-glass);
   padding: 5px 7px;
   backdrop-filter: blur(10px);
 }
@@ -47,7 +47,8 @@
 
 .ph-stripe {
   background:
-    repeating-linear-gradient(135deg, #eaeef5 0 10px, #dde4ef 10px 20px), var(--surface-soft);
+    repeating-linear-gradient(135deg, var(--color-bone-200) 0 10px, var(--stripe-alt) 10px 20px),
+    var(--surface-soft);
 }
 
 .section-heading {

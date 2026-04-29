@@ -23,6 +23,13 @@ Semantic aliases live in `:root` and are reserved for CSS Modules, global styles
 - `--background`, `--foreground`, `--muted`, `--line`
 - `--accent`, `--accent-soft`, `--accent-ink`
 - `--surface`, `--surface-soft`
+- `--surface-glass`, `--surface-glass-header`, `--surface-glass-nav`, `--surface-glass-megamenu`
+- `--overlay-backdrop`, `--shadow-accent`, `--shadow-ink-soft`
+- `--highlight-glass`, `--line-glass`
+- `--grid-line`, `--grid-line-soft`
+- `--media-frame-label-border`
+- `--stripe-alt`
+- `--hero-glow`
 
 ## Ownership rules
 

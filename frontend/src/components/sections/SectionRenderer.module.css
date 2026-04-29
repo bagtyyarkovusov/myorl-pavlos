@@ -32,7 +32,7 @@
 .content-card {
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(251, 252, 254, 0.82);
+  background: var(--surface-glass);
   padding: clamp(22px, 3vw, 34px);
 }
 

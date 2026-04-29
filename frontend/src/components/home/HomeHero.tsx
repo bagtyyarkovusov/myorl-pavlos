@@ -44,7 +44,7 @@ export function HomeHero({
       ariaLabelledBy="home-hero-title"
       className="relative overflow-hidden border-b border-stone-line pt-[clamp(76px,9vw,132px)] pb-0"
     >
-      <div className="pointer-events-none absolute right-[-10%] top-[-18%] z-0 h-[56vw] max-h-[560px] w-[56vw] max-w-[560px] rounded-full bg-[radial-gradient(circle_at_45%_45%,rgba(37,99,168,0.055)_0%,rgba(37,99,168,0)_66%)]" />
+      <div className="pointer-events-none absolute right-[-10%] top-[-18%] z-0 h-[56vw] max-h-[560px] w-[56vw] max-w-[560px] rounded-full bg-[radial-gradient(circle_at_45%_45%,var(--hero-glow)_0%,transparent_66%)]" />
 
       <motion.div
         className="relative z-10 grid grid-cols-1 items-end gap-12 pb-[clamp(42px,6vw,78px)] lg:grid-cols-[1.08fr_0.92fr] lg:gap-20"

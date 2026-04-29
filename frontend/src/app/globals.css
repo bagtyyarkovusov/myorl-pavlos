@@ -31,6 +31,21 @@
   --accent-ink: var(--color-trust-ink);
   --surface: var(--color-bone-50);
   --surface-soft: var(--color-bone-200);
+
+  --surface-glass: rgba(251, 252, 254, 0.82);
+  --surface-glass-header: rgba(251, 252, 254, 0.88);
+  --surface-glass-nav: rgba(246, 248, 251, 0.94);
+  --surface-glass-megamenu: rgba(251, 252, 254, 0.96);
+  --overlay-backdrop: rgba(15, 42, 74, 0.38);
+  --shadow-accent: rgba(37, 99, 168, 0.2);
+  --shadow-ink-soft: rgba(15, 42, 74, 0.08);
+  --highlight-glass: rgba(255, 255, 255, 0.6);
+  --grid-line-soft: rgba(15, 42, 74, 0.025);
+  --grid-line: rgba(15, 42, 74, 0.035);
+  --line-glass: rgba(215, 223, 235, 0.7);
+  --media-frame-label-border: rgba(15, 42, 74, 0.1);
+  --hero-glow: rgba(37, 99, 168, 0.055);
+  --stripe-alt: #dde4ef;
 }
 
 html {
@@ -48,8 +63,8 @@ body {
   min-height: 100%;
   color: var(--foreground);
   background:
-    linear-gradient(90deg, rgba(15, 42, 74, 0.035) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(15, 42, 74, 0.025) 1px, transparent 1px), var(--background);
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(180deg, var(--grid-line-soft) 1px, transparent 1px), var(--background);
   background-size:
     44px 44px,
     44px 44px,

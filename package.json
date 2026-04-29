@@ -15,6 +15,10 @@
     "db:provision": "python3 tools/run_postgres_rehearsal.py",
     "gate:readiness": "python3 tools/production_readiness_gate.py",
     "gate:nextjs": "python3 tools/nextjs_readiness_gate.py",
-    "audit:content": "python3 tools/audit_nextjs_content_hygiene.py"
+    "audit:content": "python3 tools/audit_nextjs_content_hygiene.py",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
   }
 }

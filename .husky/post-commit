@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+# Re-index GitNexus after every commit so impact analysis stays fresh.
+# Runs in the background; tail .git/gitnexus-reindex.log to see output.
+
+echo "[husky/post-commit] gitnexus analyze (backgrounded)"
+nohup npx gitnexus analyze >.git/gitnexus-reindex.log 2>&1 </dev/null &

@@ -1,7 +1,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **gemini-export** (2842 symbols, 4191 relationships, 121 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **gemini-export** (2843 symbols, 4191 relationships, 121 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
@@ -41,3 +41,16 @@ This project is indexed by GitNexus as **gemini-export** (2842 symbols, 4191 rel
 | Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
 
 <!-- gitnexus:end -->
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues on `bagtyyarkovusov/gemini-export`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Canonical defaults: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context — ADRs at `docs/adr/`, CONTEXT.md at root (not yet created). See `docs/agents/domain.md`.

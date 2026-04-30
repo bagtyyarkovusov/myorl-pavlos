@@ -1,10 +1,4 @@
 import type { Locale, MediaDTO, PageRefDTO } from "./common";
-import type {
-  ContactClinicDTO,
-  ContactDetailDTO,
-  StrapiClinic,
-  StrapiContactDetail,
-} from "./contact";
 import type { SectionDTO, StrapiSectionRaw } from "./sections";
 import type { SeoDTO, StrapiMedia, StrapiSeo } from "./seo";
 import type { TagDTO, StrapiTag } from "./tag";
@@ -70,10 +64,6 @@ export type PageDTO = {
   popUpClose?: string | null;
   alternateUrls: Partial<Record<Locale, string>>;
   sections: SectionDTO[];
-  contact?: {
-    details: ContactDetailDTO[];
-    clinics: ContactClinicDTO[];
-  };
 };
 
 export interface NavigationInput {
@@ -145,16 +135,6 @@ export type StrapiPagePayload = {
   sources?: string | null;
   popUpClose?: string | null;
   pageSections?: StrapiSectionRaw[] | null;
-  faqSection?: StrapiSectionRaw | null;
-  accordionSection?: StrapiSectionRaw | null;
-  tabsSection?: StrapiSectionRaw | null;
-  gallerySection?: StrapiSectionRaw | null;
-  contactSection?: {
-    heading?: string | null;
-    intro?: string | null;
-    details?: StrapiContactDetail[] | null;
-    clinics?: StrapiClinic[] | null;
-  } | null;
   localizations?: StrapiLocalization[] | null;
   legacySourceResourceId?: unknown;
   relatedPages?: unknown;

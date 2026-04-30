@@ -500,12 +500,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    accordionSection: Schema.Attribute.Component<'sections.accordion', false> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     articleAuthor: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -513,12 +507,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         };
       }>;
     childrenPages: Schema.Attribute.Relation<'oneToMany', 'api::page.page'> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    contactSection: Schema.Attribute.Component<'sections.contact', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -545,21 +533,9 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    faqSection: Schema.Attribute.Component<'sections.faq', false> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     featuredImage: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    gallerySection: Schema.Attribute.Component<'sections.gallery', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -641,6 +617,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'sections.video',
         'sections.advantages',
         'sections.accordion',
+        'sections.faq',
         'sections.tabs',
         'sections.gallery',
         'sections.contact',
@@ -701,12 +678,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         };
       }>;
     sources: Schema.Attribute.RichText &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    tabsSection: Schema.Attribute.Component<'sections.tabs', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

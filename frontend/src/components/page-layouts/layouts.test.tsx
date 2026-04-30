@@ -70,6 +70,23 @@ describe("StandardPage", () => {
     const { container } = render(<StandardPage page={BASE_PAGE} />);
     expect(container.querySelector("section")).toBeTruthy();
   });
+
+  it("renders page sections through SectionRenderer", () => {
+    const sectionPage: PageDTO = {
+      ...BASE_PAGE,
+      title: "Standard with Sections",
+      sections: [
+        {
+          __component: "sections.faq",
+          heading: "FAQ",
+          items: [{ question: "Common Q", answer: "Common A" }],
+        },
+      ],
+    };
+
+    render(<StandardPage page={sectionPage} />);
+    expect(screen.getByText("Common Q")).toBeDefined();
+  });
 });
 
 describe("HomePage", () => {
@@ -98,19 +115,43 @@ describe("HomePage", () => {
 
     expect(screen.getByRole("main").getAttribute("data-locale")).toBe("el");
   });
+
+  it("renders home sections through SectionRenderer with context=home", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.social-links",
+          heading: "Follow Us",
+          links: [{ name: "Facebook", url: "https://fb.com", icon: null }],
+        },
+      ],
+    };
+
+    render(<HomePage page={homePage} appointmentHref="/el/appointment" />);
+    expect(screen.getByText("Follow Us")).toBeDefined();
+  });
 });
 
 describe("ContactPage", () => {
-  it("renders without crashing", () => {
+  it("renders contact from sections array", () => {
     const contactPage: PageDTO = {
       ...BASE_PAGE,
       pageType: "contact",
       layoutVariant: "contact",
       title: "Contact Us",
-      contact: {
-        details: [{ type: "phone", valueHtml: "<p>+30 210 123 4567</p>" }],
-        clinics: [{ name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null }],
-      },
+      sections: [
+        {
+          __component: "sections.contact" as const,
+          heading: "Get in Touch",
+          intro: null,
+          details: [{ type: "phone", valueHtml: "<p>+30 210 123 4567</p>" }],
+          clinics: [{ name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null }],
+        },
+      ],
     };
 
     render(<ContactPage page={contactPage} />);
@@ -136,10 +177,34 @@ describe("GalleryPage", () => {
     render(<GalleryPage page={galleryPage} />);
     expect(screen.getByText("Photo 1")).toBeDefined();
   });
+
+  it("renders multiple gallery items through SectionRenderer", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Gallery",
+      sections: [
+        {
+          __component: "sections.gallery",
+          heading: "Our Work",
+          items: [
+            { caption: "Photo A", image: null },
+            { caption: "Photo B", image: null },
+          ],
+        },
+      ],
+    };
+
+    render(<GalleryPage page={galleryPage} />);
+    expect(screen.getByText("Photo A")).toBeDefined();
+    expect(screen.getByText("Photo B")).toBeDefined();
+    expect(screen.getByText("Our Work")).toBeDefined();
+  });
 });
 
 describe("QuestionListPage", () => {
-  it("renders FAQ items", () => {
+  it("renders FAQ items through SectionRenderer", () => {
     const faqPage: PageDTO = {
       ...BASE_PAGE,
       pageType: "faq",
@@ -155,6 +220,31 @@ describe("QuestionListPage", () => {
 
     render(<QuestionListPage page={faqPage} />);
     expect(screen.getByText("What is ORL?")).toBeDefined();
+  });
+
+  it("renders multiple section types through SectionRenderer", () => {
+    const faqPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "content",
+      layoutVariant: "standard",
+      title: "Mixed Content",
+      sections: [
+        {
+          __component: "sections.faq",
+          heading: "FAQ",
+          items: [{ question: "Q1", answer: "A1" }],
+        },
+        {
+          __component: "sections.accordion",
+          heading: "Details",
+          items: [{ title: "Topic", content: "Body" }],
+        },
+      ],
+    };
+
+    render(<QuestionListPage page={faqPage} />);
+    expect(screen.getByText("Q1")).toBeDefined();
+    expect(screen.getByText("Topic")).toBeDefined();
   });
 });
 
@@ -181,5 +271,23 @@ describe("AppointmentPage", () => {
 
     render(<AppointmentPage page={apptPage} />);
     expect(screen.getByRole("heading", { name: "Appointment" })).toBeDefined();
+  });
+
+  it("renders sections through SectionRenderer", () => {
+    const apptPage: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "appointment-form",
+      title: "Appointment",
+      sections: [
+        {
+          __component: "sections.faq",
+          heading: "Before Your Visit",
+          items: [{ question: "What to bring?", answer: "ID and insurance card" }],
+        },
+      ],
+    };
+
+    render(<AppointmentPage page={apptPage} />);
+    expect(screen.getByText("What to bring?")).toBeDefined();
   });
 });

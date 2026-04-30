@@ -82,11 +82,6 @@ export const PAGE_POPULATE = {
       },
     },
   },
-  faqSection: { populate: { items: true } },
-  accordionSection: { populate: { items: true } },
-  tabsSection: { populate: { items: true } },
-  gallerySection: { populate: { items: { populate: ["image"] } } },
-  contactSection: { populate: { details: true, clinics: true } },
 } as const;
 
 export const NAVIGATION_POPULATE = {
@@ -216,22 +211,10 @@ const KNOWN_SECTION_COMPONENTS: ReadonlySet<SectionComponent> = new Set<SectionC
 ]);
 
 export function toSemanticSections(page: StrapiPagePayload): SectionDTO[] {
-  const collected: Array<StrapiSectionRaw & { __component?: string | null }> = [];
-
-  if (page.pageType === "home" && Array.isArray(page.pageSections)) {
-    collected.push(...page.pageSections);
+  if (!Array.isArray(page.pageSections)) {
+    return [];
   }
-
-  pushIfPresent(collected, page.faqSection, "sections.faq");
-  pushIfPresent(collected, page.accordionSection, "sections.accordion");
-  pushIfPresent(collected, page.tabsSection, "sections.tabs");
-  pushIfPresent(collected, page.gallerySection, "sections.gallery");
-
-  if (page.contactSection) {
-    collected.push({ ...page.contactSection, __component: "sections.contact" });
-  }
-
-  return collected.map(toSectionDTO).filter((value): value is SectionDTO => value !== null);
+  return page.pageSections.map(toSectionDTO).filter((value): value is SectionDTO => value !== null);
 }
 
 export function toContactDetailDTO(detail: StrapiContactDetail) {
@@ -253,15 +236,6 @@ export function toContactClinicDTO(clinic: StrapiClinic): ContactClinicDTO | nul
     phone: clinic.phone ?? null,
     email: clinic.email ?? null,
   };
-}
-
-function pushIfPresent(
-  acc: Array<StrapiSectionRaw & { __component?: string | null }>,
-  raw: StrapiSectionRaw | null | undefined,
-  fallbackComponent: SectionComponent,
-): void {
-  if (!raw) return;
-  acc.push({ ...raw, __component: raw.__component ?? fallbackComponent });
 }
 
 function toSectionDTO(raw: StrapiSectionRaw): SectionDTO | null {
@@ -431,17 +405,6 @@ function toGalleryItem(raw: Record<string, unknown>): GalleryItemDTO {
   };
 }
 
-function toContactDTO(section: StrapiPagePayload["contactSection"]): PageDTO["contact"] {
-  if (!section) return undefined;
-
-  return {
-    details: (section.details ?? []).map(toContactDetailDTO),
-    clinics: (section.clinics ?? [])
-      .map(toContactClinicDTO)
-      .filter((value): value is ContactClinicDTO => value !== null),
-  };
-}
-
 export function toPageDTO(page: StrapiPagePayload, config?: CmsConfig): PageDTO {
   const renderMode =
     page.pageType === "system" && isFrontendNativeSystemLayout(page.layoutVariant)
@@ -482,7 +445,6 @@ export function toPageDTO(page: StrapiPagePayload, config?: CmsConfig): PageDTO 
     popUpClose: page.popUpClose ?? null,
     alternateUrls: buildAlternateUrls(page, effective.siteUrl),
     sections: toSemanticSections(page),
-    contact: toContactDTO(page.contactSection),
   };
 }
 
@@ -565,11 +527,6 @@ const zodPageEntity = z
     sources: z.string().nullish(),
     popUpClose: z.string().nullish(),
     pageSections: z.array(z.unknown()).nullish(),
-    faqSection: z.unknown().nullish(),
-    accordionSection: z.unknown().nullish(),
-    tabsSection: z.unknown().nullish(),
-    gallerySection: z.unknown().nullish(),
-    contactSection: z.unknown().nullish(),
     localizations: z.array(zodLocalization).nullish(),
   })
   .passthrough();

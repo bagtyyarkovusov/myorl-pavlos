@@ -47,19 +47,49 @@ describe("toSemanticSections", () => {
     expect(result[0]!).toBeDefined();
   });
 
-  it("ignores pageSections when pageType is not home", () => {
-    const section = makeSectionRaw("sections.faq");
+  it("extracts pageSections for non-home pageType (content)", () => {
+    const section = makeSectionRaw("sections.faq", {
+      items: [{ question: "Q1", answer: "<p>A1</p>" }],
+    });
     const page = makePage({ pageType: "content", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
+    expect(result).toHaveLength(1);
+    expect(result[0]!).toBeDefined();
+  });
+
+  it("extracts multiple pageSections from non-home pageType", () => {
+    const faqSection = makeSectionRaw("sections.faq", {
+      items: [{ question: "Q1", answer: "<p>A1</p>" }],
+    });
+    const gallerySection = makeSectionRaw("sections.gallery", {
+      items: [{ caption: "Photo" }],
+    });
+    const page = makePage({ pageType: "content", pageSections: [faqSection, gallerySection] });
+
+    const result = mod.toSemanticSections(page);
+    expect(result).toHaveLength(2);
+  });
+
+  it("ignores dedicated section fields (reads only pageSections)", () => {
+    const page = makePage({ pageType: "faq", pageSections: [] });
+
+    const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(0);
+  });
+
+  it("returns empty array when pageSections is null", () => {
+    const page = makePage({ pageType: "content", pageSections: null });
+
+    const result = mod.toSemanticSections(page);
+    expect(result).toEqual([]);
   });
 
   it("extracts faqSection when pageType is faq", () => {
     const section = makeSectionRaw("sections.faq", {
       items: [{ question: "Q1", answer: "<p>A1</p>" }],
     });
-    const page = makePage({ pageType: "faq", faqSection: section });
+    const page = makePage({ pageType: "faq", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -70,7 +100,7 @@ describe("toSemanticSections", () => {
     const section = makeSectionRaw("sections.accordion", {
       items: [{ title: "Item 1", content: "<p>Content</p>" }],
     });
-    const page = makePage({ pageType: "accordion", accordionSection: section });
+    const page = makePage({ pageType: "accordion", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -81,7 +111,7 @@ describe("toSemanticSections", () => {
     const section = makeSectionRaw("sections.tabs", {
       items: [{ title: "Tab 1", content: "<p>Content</p>", link: "/page" }],
     });
-    const page = makePage({ pageType: "tabs", tabsSection: section });
+    const page = makePage({ pageType: "tabs", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -92,7 +122,7 @@ describe("toSemanticSections", () => {
     const section = makeSectionRaw("sections.gallery", {
       items: [{ caption: "Photo 1", image: { url: "/uploads/img.jpg" } }],
     });
-    const page = makePage({ pageType: "gallery", gallerySection: section });
+    const page = makePage({ pageType: "gallery", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -100,15 +130,14 @@ describe("toSemanticSections", () => {
   });
 
   it("extracts contactSection when pageType is contact", () => {
-    const page = makePage({
-      pageType: "contact",
-      contactSection: {
-        heading: "Contact Us",
-        intro: null,
-        details: [{ type: "Phone", value: "<p>123</p>" }],
-        clinics: [{ name: "Clinic A", address: "<p>Address</p>", phone: "123", email: "a@b.com" }],
-      },
-    });
+    const section = {
+      __component: "sections.contact",
+      heading: "Contact Us",
+      intro: null,
+      details: [{ type: "Phone", value: "<p>123</p>" }],
+      clinics: [{ name: "Clinic A", address: "<p>Address</p>", phone: "123", email: "a@b.com" }],
+    };
+    const page = makePage({ pageType: "contact", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -121,11 +150,7 @@ describe("toSemanticSections", () => {
   });
 
   it("ignores null sections", () => {
-    const page = makePage({
-      pageType: "faq",
-      faqSection: null,
-      accordionSection: undefined,
-    });
+    const page = makePage({ pageType: "faq", pageSections: null });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(0);
@@ -156,7 +181,7 @@ describe("toSemanticSections", () => {
 
   it("handles items: null gracefully (Strapi empty repeatable)", () => {
     const section = makeSectionRaw("sections.faq", { items: null });
-    const page = makePage({ pageType: "faq", faqSection: section });
+    const page = makePage({ pageType: "faq", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -261,7 +286,7 @@ describe("toSemanticSections", () => {
     const section = makeSectionRaw("sections.accordion", {
       items: [{ title: "Item 1", content: "<p>Body</p>" }],
     });
-    const page = makePage({ pageType: "accordion", accordionSection: section });
+    const page = makePage({ pageType: "accordion", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -276,7 +301,7 @@ describe("toSemanticSections", () => {
     const section = makeSectionRaw("sections.faq", {
       items: [{ question: "Q1", answer: "<p>A1</p>" }],
     });
-    const page = makePage({ pageType: "faq", faqSection: section });
+    const page = makePage({ pageType: "faq", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -291,7 +316,7 @@ describe("toSemanticSections", () => {
     const section = makeSectionRaw("sections.tabs", {
       items: [{ title: "Tab 1", content: "<p>Body</p>", link: "/page" }],
     });
-    const page = makePage({ pageType: "tabs", tabsSection: section });
+    const page = makePage({ pageType: "tabs", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -306,7 +331,7 @@ describe("toSemanticSections", () => {
     const section = makeSectionRaw("sections.gallery", {
       items: [{ caption: "Photo", image: { url: "/uploads/photo.jpg" } }],
     });
-    const page = makePage({ pageType: "gallery", gallerySection: section });
+    const page = makePage({ pageType: "gallery", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);
@@ -321,7 +346,7 @@ describe("toSemanticSections", () => {
     const section = makeSectionRaw("sections.gallery", {
       items: [{ caption: "No Image" }],
     });
-    const page = makePage({ pageType: "gallery", gallerySection: section });
+    const page = makePage({ pageType: "gallery", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
     expect(result).toHaveLength(1);

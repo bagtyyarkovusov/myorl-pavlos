@@ -1,6 +1,7 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { ButtonLink } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
+import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import styles from "./_shared.module.css";
 
@@ -17,6 +18,9 @@ export function AppointmentPage({ page }: PageLayoutProps) {
         </p>
         <ButtonLink href={`/${page.locale}/epikoinonia`}>Use contact details →</ButtonLink>
       </section>
+      {page.sections.map((section) => (
+        <SectionRenderer key={section.__component} section={section} />
+      ))}
     </PageSection>
   );
 }

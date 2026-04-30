@@ -17,7 +17,7 @@ type AnyStrapi = {
   contentTypes: Record<string, any>;
 };
 
-const SEED_VERSION = 'v5';
+const SEED_VERSION = 'v6';
 const MARKER_KEY = 'hierarchy_ui_seed_version';
 
 type EditRow = Array<{ name: string; size: number }>;
@@ -181,63 +181,13 @@ const pageConfig: CMConfigOverride = {
     },
     pageSections: {
       edit: {
-        label: 'Home sections',
-        description: 'Ordered flexible sections for the home page model',
+        label: 'Page sections',
+        description: 'Ordered flexible sections rendered on this page',
         placeholder: '',
         visible: true,
         editable: true,
       },
-      list: { label: 'Home sections', searchable: false, sortable: false },
-    },
-    faqSection: {
-      edit: {
-        label: 'FAQ section',
-        description: 'Structured FAQ content shown only for FAQ pages',
-        placeholder: '',
-        visible: true,
-        editable: true,
-      },
-      list: { label: 'FAQ section', searchable: false, sortable: false },
-    },
-    accordionSection: {
-      edit: {
-        label: 'Accordion section',
-        description: 'Structured accordion content shown only for accordion pages',
-        placeholder: '',
-        visible: true,
-        editable: true,
-      },
-      list: { label: 'Accordion section', searchable: false, sortable: false },
-    },
-    tabsSection: {
-      edit: {
-        label: 'Tabs section',
-        description: 'Structured tabs content shown only for tabbed pages',
-        placeholder: '',
-        visible: true,
-        editable: true,
-      },
-      list: { label: 'Tabs section', searchable: false, sortable: false },
-    },
-    gallerySection: {
-      edit: {
-        label: 'Gallery section',
-        description: 'Structured gallery content shown only for gallery pages',
-        placeholder: '',
-        visible: true,
-        editable: true,
-      },
-      list: { label: 'Gallery section', searchable: false, sortable: false },
-    },
-    contactSection: {
-      edit: {
-        label: 'Contact section',
-        description: 'Structured contact details and clinic locations shown only for contact pages',
-        placeholder: '',
-        visible: true,
-        editable: true,
-      },
-      list: { label: 'Contact section', searchable: false, sortable: false },
+      list: { label: 'Sections', searchable: false, sortable: false },
     },
   },
   layouts: {
@@ -257,11 +207,6 @@ const pageConfig: CMConfigOverride = {
       [{ name: 'articleAuthor', size: 6 }, { name: 'featuredImage', size: 6 }],
       [{ name: 'imageCenter', size: 6 }, { name: 'seo', size: 6 }],
       [{ name: 'content', size: 12 }],
-      [{ name: 'faqSection', size: 12 }],
-      [{ name: 'accordionSection', size: 12 }],
-      [{ name: 'tabsSection', size: 12 }],
-      [{ name: 'gallerySection', size: 12 }],
-      [{ name: 'contactSection', size: 12 }],
       [{ name: 'pageSections', size: 12 }],
       [{ name: 'infoBlockBottom', size: 12 }],
       [{ name: 'sources', size: 12 }],

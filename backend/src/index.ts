@@ -1,5 +1,6 @@
 // import type { Core } from '@strapi/strapi';
 import { seedContentManagerConfig } from './bootstrap/content-manager-config';
+import { migrateSections } from './bootstrap/migrate-sections';
 import { seedNavigationConfig } from './bootstrap/navigation-config';
 import { seedNavigationPermissions } from './bootstrap/navigation-permissions';
 
@@ -52,6 +53,12 @@ export default {
       strapi.log.info(
         'Skipping migration token bootstrap; set STRAPI_ENABLE_MIGRATION_TOKEN_BOOTSTRAP=true to enable it.',
       );
+    }
+
+    try {
+      await migrateSections(strapi);
+    } catch (err) {
+      strapi.log.error('Failed to migrate dedicated section fields to DynamicZone', err);
     }
 
     try {

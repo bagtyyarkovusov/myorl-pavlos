@@ -1,18 +1,25 @@
 import Image from "next/image";
 
 import { CmsHtml } from "@/components/CmsHtml";
+import { HomeAdvantagesSection } from "@/components/home/HomeAdvantagesSection";
+import { HomeMedicalGrid } from "@/components/home/HomeMedicalGrid";
+import { HomeMedicalLedger } from "@/components/home/HomeMedicalLedger";
+import { HomePromoCarousel } from "@/components/home/HomePromoCarousel";
+import { HomeVideoTheater } from "@/components/home/HomeVideoTheater";
 import { PageSection } from "@/components/PageSection";
+import { getHomeStrings } from "@/lib/i18n/home";
 import { toSocialLinkDTO } from "@/lib/cms/dto";
-import type { MediaDTO, SectionDTO } from "@/lib/cms/types";
+import type { Locale, MediaDTO, SectionDTO } from "@/lib/cms/types";
 
 import styles from "./SectionRenderer.module.css";
 
 type SectionRendererProps = {
   section: SectionDTO;
   context?: "default" | "home";
+  locale?: Locale;
 };
 
-export function SectionRenderer({ section, context = "default" }: SectionRendererProps) {
+export function SectionRenderer({ section, context = "default", locale = "el" }: SectionRendererProps) {
   const isHome = context === "home";
 
   const headingBlock =
@@ -22,13 +29,52 @@ export function SectionRenderer({ section, context = "default" }: SectionRendere
 
   return (
     <PageSection heading={headingBlock} rhythm={isHome ? "compact" : "standard"}>
-      {isHome ? renderSectionBodyHome(section) : renderSectionBody(section)}
+      {isHome ? renderSectionBodyHome(section, locale) : renderSectionBody(section)}
     </PageSection>
   );
 }
 
-function renderSectionBodyHome(section: SectionDTO) {
+function renderSectionBodyHome(section: SectionDTO, locale: Locale) {
+  const t = getHomeStrings(locale);
+
   switch (section.__component) {
+    case "sections.promo-slider":
+      return (
+        <HomePromoCarousel
+          title={section.heading || t.categoriesEyebrow}
+          intro={section.intro}
+          slides={section.slides}
+          locale={locale}
+          learnMoreLabel={t.learnMore}
+        />
+      );
+    case "sections.advantages":
+      return <HomeAdvantagesSection section={section} />;
+    case "sections.linked-resources":
+      return (
+        <>
+          <HomeMedicalLedger
+            title={section.heading || t.journalTitleLine1}
+            items={section.items}
+            locale={locale}
+          />
+          <HomeMedicalGrid
+            title={section.heading ? `${section.heading} (grid)` : t.journalTitleLine1}
+            items={section.items}
+            locale={locale}
+          />
+        </>
+      );
+    case "sections.video":
+      return (
+        <HomeVideoTheater
+          title={section.heading || t.videoTitleLine1}
+          intro={section.intro || t.videoBody}
+          videos={section.videos}
+          ctaLabel={t.videoCta}
+          ctaHref={`/${locale}/video`}
+        />
+      );
     case "sections.social-links":
       return (
         <ul

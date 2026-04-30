@@ -57,9 +57,8 @@ describe("PAGE_POPULATE", () => {
     expect(PAGE_POPULATE).toHaveProperty("localizations");
     expect(PAGE_POPULATE).toHaveProperty("tags");
     expect(PAGE_POPULATE).toHaveProperty("pageSections");
-    expect(PAGE_POPULATE).toHaveProperty("contactSection");
-    expect(PAGE_POPULATE).toHaveProperty("gallerySection");
-    expect(PAGE_POPULATE.contactSection).toEqual({ populate: { details: true, clinics: true } });
+    expect(PAGE_POPULATE.pageSections).toHaveProperty("on");
+    expect(PAGE_POPULATE.pageSections.on).toHaveProperty("sections.faq");
   });
 });
 
@@ -124,36 +123,39 @@ describe("toPageDTO", () => {
     expect(Array.isArray(dto.sections)).toBe(true);
   });
 
-  it("populates contact (from contactSection)", () => {
+  it("does not expose contact field on PageDTO", () => {
     const contactPayload: StrapiPagePayload = {
       ...contentPayload,
-      contactSection: {
+      pageSections: [{
+        __component: "sections.contact",
         heading: "Contact",
         details: [{ type: "Phone", value: "<p>123</p>" }],
         clinics: [{ name: "Main", address: "<p>123 St</p>", phone: "555", email: "a@b.com" }],
-      },
+      }],
     };
 
     const dto = toPageDTO(contactPayload);
-
-    expect(dto.contact).toBeDefined();
-    expect(dto.contact?.details).toHaveLength(1);
-    expect(dto.contact?.clinics).toHaveLength(1);
-    if (dto.contact) {
-      expect(dto.contact.details[0]!.type).toBe("Phone");
-      expect(dto.contact.clinics[0]!.name).toBe("Main");
-    }
+    expect((dto as Record<string, unknown>).contact).toBeUndefined();
   });
 
-  it("returns contact undefined when contactSection is missing", () => {
-    const noContactPayload: StrapiPagePayload = {
+  it("contact data is in sections array from pageSections", () => {
+    const contactPayload: StrapiPagePayload = {
       ...contentPayload,
-      contactSection: undefined,
+      pageSections: [{
+        __component: "sections.contact",
+        heading: "Contact",
+        details: [{ type: "Phone", value: "<p>123</p>" }],
+        clinics: [{ name: "Main", address: "<p>123 St</p>", phone: "555", email: "a@b.com" }],
+      }],
     };
 
-    const dto = toPageDTO(noContactPayload);
-
-    expect(dto.contact).toBeUndefined();
+    const dto = toPageDTO(contactPayload);
+    const contactSection = dto.sections.find((s) => s.__component === "sections.contact");
+    expect(contactSection).toBeDefined();
+    if (contactSection?.__component === "sections.contact") {
+      expect(contactSection.details).toHaveLength(1);
+      expect(contactSection.clinics).toHaveLength(1);
+    }
   });
 
   it("populates seo fields correctly", () => {

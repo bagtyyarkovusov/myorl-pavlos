@@ -47,6 +47,10 @@ function loadSlugRedirects(): NextRedirect[] {
 }
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // @ts-expect-error turbopackLocalPostcssConfig added in Next 15.x — TS types lag
+    turbopackLocalPostcssConfig: true,
+  },
   images: {
     remotePatterns: [
       {

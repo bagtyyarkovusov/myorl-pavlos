@@ -16,8 +16,9 @@ type RedirectManifest = {
   }>;
 };
 
+const frontendRoot = path.dirname(fileURLToPath(import.meta.url));
+
 function loadSlugRedirects(): NextRedirect[] {
-  const frontendRoot = path.dirname(fileURLToPath(import.meta.url));
   const manifestPath = path.resolve(
     frontendRoot,
     "..",
@@ -47,9 +48,8 @@ function loadSlugRedirects(): NextRedirect[] {
 }
 
 const nextConfig: NextConfig = {
-  experimental: {
-    // @ts-expect-error turbopackLocalPostcssConfig added in Next 15.x — TS types lag
-    turbopackLocalPostcssConfig: true,
+  turbopack: {
+    root: frontendRoot,
   },
   images: {
     remotePatterns: [

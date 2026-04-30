@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import { ButtonLink, isExternalHref } from "./design-system";
+import { ButtonLink, isExternalHref, MediaFrame } from "./design-system";
 
 describe("ButtonLink", () => {
   it("renders internal links with the primary variant by default", () => {
@@ -47,6 +47,65 @@ describe("ButtonLink", () => {
     expect(link.className).toContain("bg-trust");
     expect(link.className).not.toContain("px-5");
     expect(link.className).not.toContain("bg-ink");
+  });
+});
+
+describe("MediaFrame", () => {
+  it("renders with wide variant class by default", () => {
+    const { container } = render(
+      <MediaFrame media={{ url: "/test.jpg", width: 800, height: 600, alternativeText: null }} alt="test" />,
+    );
+    const frame = container.firstElementChild as HTMLElement;
+    expect(frame.className).toContain("media-frame");
+    expect(frame.className).toContain("media-frame--wide");
+  });
+
+  it("renders with portrait variant class", () => {
+    const { container } = render(
+      <MediaFrame
+        media={{ url: "/test.jpg", width: 600, height: 800, alternativeText: null }}
+        alt="test"
+        variant="portrait"
+      />,
+    );
+    const frame = container.firstElementChild as HTMLElement;
+    expect(frame.className).toContain("media-frame");
+    expect(frame.className).toContain("media-frame--portrait");
+  });
+
+  it("renders ph-stripe class when media has no url", () => {
+    const { container } = render(
+      <MediaFrame media={null} alt="no image" />,
+    );
+    const frame = container.firstElementChild as HTMLElement;
+    expect(frame.className).toContain("ph-stripe");
+  });
+
+  it("does not render ph-stripe class when media url is present", () => {
+    const { container } = render(
+      <MediaFrame media={{ url: "/test.jpg", width: 800, height: 600, alternativeText: null }} alt="test" />,
+    );
+    const frame = container.firstElementChild as HTMLElement;
+    expect(frame.className).not.toContain("ph-stripe");
+  });
+
+  it("renders label", () => {
+    render(
+      <MediaFrame media={null} alt="test" label="Slide 1" />,
+    );
+    expect(screen.getByText("Slide 1")).toBeDefined();
+  });
+
+  it("merges caller className", () => {
+    const { container } = render(
+      <MediaFrame
+        media={{ url: "/test.jpg", width: 800, height: 600, alternativeText: null }}
+        alt="test"
+        className="custom-class"
+      />,
+    );
+    const frame = container.firstElementChild as HTMLElement;
+    expect(frame.className).toContain("custom-class");
   });
 });
 

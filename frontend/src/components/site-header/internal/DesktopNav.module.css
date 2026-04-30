@@ -1,0 +1,93 @@
+.megamenu-host {
+  display: flex;
+  flex: 1;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-trigger,
+.nav-link {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  font-size: 0.88rem;
+  padding-inline: clamp(8px, 0.9vw, 14px);
+  white-space: nowrap;
+  font-feature-settings: "ss01", "tnum";
+  transition:
+    color 150ms ease,
+    background 150ms ease;
+}
+
+.nav-trigger:hover,
+.nav-trigger:focus-visible,
+.nav-trigger[aria-expanded="true"],
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--accent);
+}
+
+.nav-chevron {
+  font-size: 0.75rem;
+  transform: translateY(-1px);
+  transition: transform 150ms ease;
+}
+
+.nav-trigger[aria-expanded="true"] .nav-chevron {
+  transform: rotate(180deg) translateY(1px);
+}
+
+.nav-magnetic-pill {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  background: var(--accent-soft);
+  border-radius: 999px;
+  pointer-events: none;
+  transition:
+    transform 250ms cubic-bezier(0.2, 0, 0, 1),
+    width 250ms cubic-bezier(0.2, 0, 0, 1),
+    opacity 200ms ease;
+  z-index: 0;
+}
+
+.desktop-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(0px, 0.4vw, 8px);
+}
+
+.desktop-nav .nav-item {
+  position: relative;
+  z-index: 1;
+}
+
+/* Locale-specific typographic adjustments */
+[data-locale="ru"] .nav-trigger,
+[data-locale="ru"] .nav-link {
+  font-size: 0.84rem;
+  letter-spacing: -0.005em;
+  padding-inline: clamp(7px, 0.75vw, 12px);
+}
+
+@media (max-width: 1280px) {
+  [data-locale="ru"] .nav-chevron {
+    display: none;
+  }
+}
+
+/* Responsive: hide megamenu on smaller screens */
+@media (max-width: 1180px) {
+  .megamenu-host,
+  .desktop-nav {
+    display: none;
+  }
+}

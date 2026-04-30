@@ -6,12 +6,7 @@ import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { PromoSlideItemDTO } from "@/lib/cms/types";
 
-import {
-  HOME_CARD_SHELL,
-  HOME_INDEX_BADGE,
-  HOME_LINK_TEXT,
-  HOME_MEDIA_SURFACE,
-} from "./style-classes";
+import styles from "./home.module.css";
 
 type HomePromoGridProps = {
   title: string;
@@ -59,8 +54,8 @@ export function HomePromoGrid({
           const isLink = Boolean(href);
 
           const cardContent = (
-            <div className={HOME_CARD_SHELL}>
-              <div className={HOME_MEDIA_SURFACE}>
+            <div className="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-stone-line bg-bone-50 shadow-lg shadow-stone-line/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-trust-soft/40">
+              <div className={styles["media-surface"]}>
                 {slide.image ? (
                   <MediaFrame media={slide.image} alt={slide.title || "Procedure"} variant="wide" />
                 ) : (
@@ -71,7 +66,7 @@ export function HomePromoGrid({
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                <div className={HOME_INDEX_BADGE}>{String(index + 1).padStart(2, "0")}</div>
+                <div className={styles["index-badge"]}>{String(index + 1).padStart(2, "0")}</div>
               </div>
               <div className="flex flex-1 flex-col p-6 md:p-8">
                 <h3 className="mb-3 font-display text-xl leading-tight text-ink transition-colors group-hover:text-trust md:text-2xl">
@@ -81,7 +76,7 @@ export function HomePromoGrid({
                   <p className="mb-6 text-sm leading-relaxed text-stone">{slide.description}</p>
                 ) : null}
                 {isLink ? (
-                  <span className={`mt-auto inline-flex items-center gap-2 ${HOME_LINK_TEXT}`}>
+                  <span className={`mt-auto inline-flex items-center gap-2 ${styles["link-text"]}`}>
                     {learnMoreLabel}
                     <span
                       className="text-lg leading-none transition-transform duration-300 group-hover:translate-x-1"

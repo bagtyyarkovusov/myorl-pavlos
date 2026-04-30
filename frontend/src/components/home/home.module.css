@@ -1,0 +1,11 @@
+.media-surface {
+  @apply relative aspect-[16/9] w-full overflow-hidden bg-bone-200;
+}
+
+.index-badge {
+  @apply absolute top-4 left-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-bone-50/90 text-xs font-mono font-semibold text-stone shadow-sm backdrop-blur-sm;
+}
+
+.link-text {
+  @apply font-semibold text-sm text-trust tracking-wide;
+}

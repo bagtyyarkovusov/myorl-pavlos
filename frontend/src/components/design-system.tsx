@@ -65,6 +65,7 @@ type MediaFrameProps = {
   label?: string;
   variant?: "portrait" | "wide";
   eager?: boolean;
+  className?: string;
 };
 
 export function MediaFrame({
@@ -73,11 +74,17 @@ export function MediaFrame({
   label,
   variant = "wide",
   eager = false,
+  className,
 }: MediaFrameProps) {
-  const className = `${styles["media-frame"]} ${styles[`media-frame--${variant}`]} ${media?.url ? "" : styles["ph-stripe"]}`;
+  const frameClass = cn(
+    styles["media-frame"],
+    styles[`media-frame--${variant}`],
+    !media?.url && styles["ph-stripe"],
+    className,
+  );
 
   return (
-    <div className={className}>
+    <div className={frameClass}>
       {media?.url ? (
         <Image
           src={media.url}
@@ -94,7 +101,7 @@ export function MediaFrame({
         />
       ) : null}
       {label ? (
-        <span className={`${styles["media-frame__label"]} ${styles["ph-label"]}`}>{label}</span>
+        <span className={cn(styles["media-frame__label"], styles["ph-label"])}>{label}</span>
       ) : null}
     </div>
   );

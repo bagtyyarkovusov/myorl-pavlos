@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { PageSection } from "@/components/PageSection";
 import type { LinkedResourceItemDTO } from "@/lib/cms/types";
 
-import { HOME_LINK_TEXT, HOME_META_TEXT, HOME_PLAIN_CARD_SHELL } from "./style-classes";
+import styles from "./home.module.css";
 
 type HomeMedicalGridProps = {
   title: string;
@@ -47,16 +47,16 @@ export function HomeMedicalGrid({ title, items, locale }: HomeMedicalGridProps) 
             <Link key={index} href={href} className="block h-full">
               <motion.article
                 variants={cardVariants}
-                className={`${HOME_PLAIN_CARD_SHELL} p-6 md:p-8`}
+                className="group flex h-full flex-col rounded-[2rem] border border-stone-line bg-bone-50 shadow-lg shadow-stone-line/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-trust-soft/40 p-6 md:p-8"
               >
-                <div className={`mb-4 ${HOME_META_TEXT}`}>{String(index + 1).padStart(2, "0")}</div>
+                <div className="mb-4 font-mono text-xs uppercase tracking-[0.08em] text-stone-soft">{String(index + 1).padStart(2, "0")}</div>
                 <h3 className="mb-3 font-display text-xl leading-tight text-ink transition-colors group-hover:text-trust md:text-2xl">
                   {item.title}
                 </h3>
                 {item.description ? (
                   <p className="mt-auto text-sm leading-relaxed text-stone">{item.description}</p>
                 ) : null}
-                <div className={`mt-6 flex items-center gap-2 ${HOME_LINK_TEXT}`}>
+                <div className={`mt-6 flex items-center gap-2 ${styles["link-text"]}`}>
                   <span
                     className="text-lg leading-none transition-transform duration-300 group-hover:translate-x-1"
                     aria-hidden="true"

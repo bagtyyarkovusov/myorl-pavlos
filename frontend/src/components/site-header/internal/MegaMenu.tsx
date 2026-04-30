@@ -2,7 +2,7 @@ import type { NavigationNodeDTO } from "@/lib/cms/types";
 
 import { NavigationAnchor } from "./NavigationAnchor";
 import { leafMetaLabel } from "./leafMetaLabel";
-import styles from "../../SiteHeaderClient.module.css";
+import styles from "./MegaMenu.module.css";
 
 type MegaMenuProps = {
   item: NavigationNodeDTO;

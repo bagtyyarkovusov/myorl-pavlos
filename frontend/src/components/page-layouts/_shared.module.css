@@ -47,21 +47,20 @@
 }
 
 .content-card {
-  border: 1px solid var(--line);
+  composes: content-card from "../sections/shared-layout.module.css";
+}
+
+.gallery-grid img {
+  width: 100%;
   border-radius: 8px;
-  background: var(--surface-glass);
-  padding: clamp(22px, 3vw, 34px);
 }
 
 .card-list {
-  display: grid;
-  gap: 24px;
+  composes: card-list from "../sections/shared-layout.module.css";
 }
 
 .gallery-grid {
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  composes: gallery-grid from "../sections/shared-layout.module.css";
 }
 
 .gallery-grid img {

@@ -7,7 +7,7 @@ import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { PromoSlideItemDTO } from "@/lib/cms/types";
 
-import { HOME_INDEX_BADGE, HOME_MEDIA_SURFACE } from "./style-classes";
+import styles from "./home.module.css";
 
 type HomePromoCarouselProps = {
   title: string;
@@ -101,7 +101,7 @@ export function HomePromoCarousel({
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col md:grid md:grid-cols-[1fr_1fr]"
             >
-              <div className={`${HOME_MEDIA_SURFACE} md:aspect-auto`}>
+              <div className={`${styles["media-surface"]} md:aspect-auto`}>
                 {currentSlide.image ? (
                   <MediaFrame
                     media={currentSlide.image}
@@ -115,7 +115,7 @@ export function HomePromoCarousel({
                     </span>
                   </div>
                 )}
-                <div className={HOME_INDEX_BADGE}>{String(currentIndex + 1).padStart(2, "0")}</div>
+                <div className={styles["index-badge"]}>{String(currentIndex + 1).padStart(2, "0")}</div>
               </div>
 
               <div className="flex flex-col justify-center p-6 md:p-10 lg:p-12">

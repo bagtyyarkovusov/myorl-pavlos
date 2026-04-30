@@ -5,7 +5,17 @@ import Link from "next/link";
 import type { Locale, NavigationNodeDTO } from "@/lib/cms/types";
 
 import { MobileMenu } from "./MobileMenu";
-import styles from "../../SiteHeaderClient.module.css";
+import drawerStyles from "./MobileDrawer.module.css";
+import sharedStyles from "../../SiteHeaderClient.module.css";
+
+const styles = new Proxy(
+  {} as Record<string, string>,
+  {
+    get(_, key: string) {
+      return drawerStyles[key] ?? sharedStyles[key];
+    },
+  },
+);
 
 const LOGO_SRC = "/logo-myorl.png";
 

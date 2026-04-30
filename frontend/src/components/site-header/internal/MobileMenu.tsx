@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 
 import { NavigationAnchor } from "./NavigationAnchor";
-import styles from "../../SiteHeaderClient.module.css";
+import styles from "./MobileDrawer.module.css";
 
 type MobileMenuProps = {
   items: NavigationNodeDTO[];

@@ -17,7 +17,7 @@ type AnyStrapi = {
   contentTypes: Record<string, any>;
 };
 
-const SEED_VERSION = 'v6';
+const SEED_VERSION = 'v7';
 const MARKER_KEY = 'hierarchy_ui_seed_version';
 
 type EditRow = Array<{ name: string; size: number }>;
@@ -292,6 +292,22 @@ function mergeMetadatas(
   return merged;
 }
 
+function removeStaleMetadatas(
+  metadatas: Record<string, FieldMetadata>,
+  contentType: any,
+): Record<string, FieldMetadata> {
+  const validFields = new Set(Object.keys(contentType?.attributes ?? {}));
+  const cleaned: Record<string, FieldMetadata> = {};
+
+  for (const [name, metadata] of Object.entries(metadatas)) {
+    if (validFields.has(name)) {
+      cleaned[name] = metadata;
+    }
+  }
+
+  return cleaned;
+}
+
 function sanitizeListLayout(
   layout: string[] | undefined,
   contentType: any,
@@ -329,7 +345,10 @@ function getFallbackListLayout(contentType: any, metadatas: Record<string, Field
 }
 
 function buildSeedConfig(currentConfig: CMConfig, override: CMConfigOverride, contentType: any): CMConfig {
-  const metadatas = mergeMetadatas(currentConfig.metadatas, override.metadatas);
+  const metadatas = removeStaleMetadatas(
+    mergeMetadatas(currentConfig.metadatas, override.metadatas),
+    contentType,
+  );
   const requestedListLayout = override.layouts?.list ?? currentConfig.layouts?.list;
   const requestedEditLayout = override.layouts?.edit ?? currentConfig.layouts?.edit;
   const listLayout = sanitizeListLayout(requestedListLayout, contentType, metadatas);

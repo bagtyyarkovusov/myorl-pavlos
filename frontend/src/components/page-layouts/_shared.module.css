@@ -47,7 +47,7 @@
 }
 
 .content-card {
-  composes: content-card from "../sections/shared-layout.module.css";
+  composes: content-card from "../shared-layout.module.css";
 }
 
 .gallery-grid img {
@@ -56,11 +56,11 @@
 }
 
 .card-list {
-  composes: card-list from "../sections/shared-layout.module.css";
+  composes: card-list from "../shared-layout.module.css";
 }
 
 .gallery-grid {
-  composes: gallery-grid from "../sections/shared-layout.module.css";
+  composes: gallery-grid from "../shared-layout.module.css";
 }
 
 .gallery-grid img {

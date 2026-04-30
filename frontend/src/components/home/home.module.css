@@ -1,11 +1,35 @@
 .media-surface {
-  @apply relative aspect-[16/9] w-full overflow-hidden bg-bone-200;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-bone-200);
 }
 
 .index-badge {
-  @apply absolute top-4 left-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-bone-50/90 text-xs font-mono font-semibold text-stone shadow-sm backdrop-blur-sm;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgb(from var(--color-bone-50) r g b / 0.9);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-stone);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  backdrop-filter: blur(4px);
 }
 
 .link-text {
-  @apply font-semibold text-sm text-trust tracking-wide;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--color-trust);
+  letter-spacing: 0.025em;
 }

@@ -45,11 +45,10 @@ Page component (CmsPage / LocaleHomePage)
         → fetchOneImpl
           → unwrapStrapiData → normalizeEntity → deepUnwrapStrapiRelations → flattenAttributes
     → toPageDTO(raw) → PageDTO
-  → Map sections to components:
-    → SectionRenderer (dispatcher)
-      → renderSectionBody / renderSectionBodyHome
-        → Home sections (hero, promo, ledger, etc.) or standard sections
-  → Wrap in PageRenderer (loading + error boundaries)
+  → PageRenderer dispatches to page layout
+    → All page layouts iterate page.sections through SectionRenderer
+      → renderSectionBody / renderSectionBodyHome (context: "default" | "home")
+        → Home-specific components (HomePromoCarousel, HomeAdvantagesSection, etc.) or standard sections
 ```
 
 ## Error handling
@@ -60,7 +59,7 @@ Both page components handle CMS errors via `toCmsPageError` which maps gateway f
 
 - `createCmsGateway` → `getCmsConfig` (CRITICAL chokepoint)
 - `getPage`, `getSite`, `getSitemapPages` (CMS API)
-- `toPageDTO`, `toSectionDTO`, `toContactDTO` (DTO layer)
+- `toPageDTO`, `toSemanticSections` (DTO layer)
 - `SectionRenderer` (dynamic dispatcher)
 - `PageRenderer` (error/loading wrapper)
 - All page-layout components (`HomePage`, `StandardPage`, etc.)

@@ -25,7 +25,7 @@ source: gitnexus_cypher (cluster="Examples")
 | `toPageMetadataInput` | `examples/next_page_dto.ts` | Reference metadata input shape |
 | `toPageRefDTO` | `examples/next_page_dto.ts` | Reference page-ref DTO |
 | `toMediaDTO` | `examples/next_page_dto.ts` | Reference media DTO |
-| `toContactDTO` | `examples/next_page_dto.ts` | Reference contact DTO |
+| `toContactDTO` | `examples/next_page_dto.ts` | Reference contact DTO (removed from production in section pipeline unification) |
 | `toSemanticSections` | `examples/next_page_dto.ts` | Reference section grouping |
 | `toSocialLinkDTO` | `examples/next_page_dto.ts` | Reference social-link DTO |
 | `deriveSeoTitle` | `examples/next_page_dto.ts` | Reference SEO title derivation |

@@ -1,26 +1,24 @@
 ---
 module: Home sections
-source: code reading (frontend/src/components/home/)
+source: code reading (frontend/src/components/home/, frontend/src/components/sections/SectionRenderer.tsx)
 ---
 
 # Deep dive: Home sections
 
-> Eight specialized homepage section components that render below the hero on the homepage. Each maps to a Strapi section type in the CMS.
+> Eight specialized homepage section components. `HomeHero` and `HomeContactFooter` are rendered directly in `HomePage.tsx` (i18n-driven, not section-driven). The remaining six are dispatched by `renderSectionBodyHome` inside `SectionRenderer.tsx`.
 
 ## Architecture
 
 ```
 HomePage (layout)
-  └─ SectionRenderer (isHome: true)
-      └─ renderSectionBodyHome (dispatcher)
-          ├─ HomeHero (hero banner + CTA)
-          ├─ HomeAdvantagesSection (icon-grid of advantages)
-          ├─ HomeMedicalLedger (medical services ledger)
-          ├─ HomeMedicalGrid (medical services grid)
-          ├─ HomePromoGrid (promotional card grid)
-          ├─ HomePromoCarousel (swipeable promo carousel)
-          ├─ HomeVideoTheater (embedded video section)
-          └─ HomeContactFooter (contact info footer)
+  ├─ HomeHero (hero banner + CTA)                       ← rendered directly
+  ├─ SectionRenderer (context="home")                   ← iterates page.sections
+  │   └─ renderSectionBodyHome (dispatcher)
+  │       ├─ HomePromoCarousel (sections.promo-slider)
+  │       ├─ HomeAdvantagesSection (sections.advantages)
+  │       ├─ HomeMedicalLedger + HomeMedicalGrid (sections.linked-resources)
+  │       └─ HomeVideoTheater (sections.video)
+  └─ HomeContactFooter (contact info footer)            ← rendered directly
 ```
 
 ## Component inventory

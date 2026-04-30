@@ -16,6 +16,7 @@ source: gitnexus_cypher (cluster="Bootstrap")
 | `backend/src/bootstrap/content-manager-config.ts` | Seeds content-manager list/edit layouts and field metadata |
 | `backend/src/bootstrap/navigation-config.ts` | Seeds the navigation plugin configuration |
 | `backend/src/bootstrap/navigation-permissions.ts` | Seeds navigation plugin permissions |
+| `backend/src/bootstrap/migrate-sections.ts` | Migrates dedicated section fields into unified `pageSections` DynamicZone |
 
 ## Members
 

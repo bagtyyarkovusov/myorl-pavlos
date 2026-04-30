@@ -21,8 +21,8 @@
 | [[modules/internal]] | 8 | 89–100% | Site-header internals: MegaMenu, drawer hooks, i18n header strings |
 | [[modules/page-layouts]] | 6 | 100% | GalleryPage, QuestionListPage, _shared (other layouts absorbed by Cms) |
 | [[modules/revalidate]] | 9 | 73–86% | `/api/revalidate` route handler + auth + tag derivation |
-| [[modules/i18n]] | 3 | 100% | Homepage layout + useHomeSections + getHomeStrings |
-| [[modules/sections]] | 3 | 100% | SectionRenderer + renderSectionBody + renderSectionBodyHome |
+| [[modules/i18n]] | 2 | 100% | Homepage layout + getHomeStrings |
+| [[modules/sections]] | 5 | 100% | SectionRenderer + body renderers + DisclosureList + ResponsiveImage |
 | [[modules/navigation]] | subsumed | N/A | Previously 10 symbols. Route entry points now live in [[modules/cms|Cms]] cluster |
 
 ### Backend

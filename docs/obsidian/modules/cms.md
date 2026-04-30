@@ -23,7 +23,7 @@ source: gitnexus_cypher (cluster="Cms")
 | `createCmsGateway` | `cms-gateway.ts` | Factory: returns `{ one, all, fetchOne, fetchAll }` over Strapi REST |
 | `getCmsConfig` | `env.ts` | Resolves Strapi origin + token from env |
 | `getPage`, `getSite`, `getPageResult`, `getSitemapPages` | `cms-api.ts` | High-level reads consumed by route handlers |
-| `toPageDTO`, `toMediaDTO`, `toContactDTO`, `toSectionDTO`, `toSeoDTO`, `toTagDTO` | `page-normalizer.ts` | Strapi → DTO flattening |
+| `toPageDTO`, `toMediaDTO`, `toSemanticSections`, `toSeoDTO`, `toTagDTO` | `page-normalizer.ts` | Strapi → DTO flattening |
 | `toPageMetadata` | `metadata.ts` | DTO → Next.js `Metadata` |
 | `hrefForPage`, `hrefForLocaleSlug` | `navigation.ts` | URL builders |
 | `deriveSocialPlatform`, `toSocialLinkDTO` | `social.ts` | Social-link handling |

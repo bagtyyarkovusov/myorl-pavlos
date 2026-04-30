@@ -47,7 +47,7 @@ Every component and hook in `site-header/internal/` has a co-located `.test.tsx`
 | `cms-api.test.ts` | `getPage`, `getSite`, `getPageResult`, `getSitemapPages` |
 | `cms-gateway.test.ts` | `createCmsGateway`, `one`, `all`, `fetchOne`, `fetchAll` |
 | `navigation.test.ts` | `hrefForPage`, `hrefForLocaleSlug`, `buildNavigationTree` |
-| `page-normalizer.test.ts` | `toPageDTO`, `toSectionDTO`, `toContactDTO`, item-level DTOs |
+| `page-normalizer.test.ts` | `toPageDTO`, `toSemanticSections`, item-level DTOs, `PAGE_POPULATE`, Zod schemas |
 | `section-normalizers.test.ts` | Section-type dispatch, auto-drafting |
 
 ### Test fixtures
@@ -84,8 +84,7 @@ Every component and hook in `site-header/internal/` has a co-located `.test.tsx`
 
 ## Coverage gaps
 
-- **Home sections** (8 components) have no dedicated tests — they are implicitly covered by layout snapshot tests
-- **Backend bootstrap scripts** have no tests
+- **Backend bootstrap scripts** have no tests (migration script included)
 - **Python tools** have no test suite (they are operational scripts)
 
 ## Related

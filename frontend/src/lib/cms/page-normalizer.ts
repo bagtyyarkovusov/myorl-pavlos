@@ -46,12 +46,24 @@ export const PAGE_POPULATE = {
     on: {
       "sections.promo-slider": {
         populate: {
-          slides: { populate: ["image", "targetPage"] },
+          slides: {
+            populate: {
+              image: true,
+              targetPage: { fields: ["documentId", "slug", "title", "excerpt"] },
+            },
+          },
         },
       },
       "sections.linked-resources": {
         populate: {
-          items: { populate: ["targetPage"] },
+          items: {
+            populate: {
+              targetPage: {
+                fields: ["documentId", "slug", "title"],
+                populate: ["imageCenter", "featuredImage"],
+              },
+            },
+          },
         },
       },
       "sections.social-links": {
@@ -332,9 +344,12 @@ function toItemArray<T>(value: unknown, mapItem: (item: Record<string, unknown>)
 }
 
 function toPromoSlideItem(raw: Record<string, unknown>): PromoSlideItemDTO {
+  const targetPage = raw.targetPage as Record<string, unknown> | null | undefined;
+
   return {
     title: optionalString(raw.title),
     description: optionalString(raw.description),
+    targetPageExcerpt: optionalString(targetPage?.excerpt),
     image: toMediaDTO(raw.image as StrapiMedia | null | undefined),
     targetPage: toPageRefDTO(raw.targetPage as StrapiPageRef | null | undefined),
     targetUrl: optionalString(raw.targetUrl),
@@ -342,9 +357,14 @@ function toPromoSlideItem(raw: Record<string, unknown>): PromoSlideItemDTO {
 }
 
 function toLinkedResourceItem(raw: Record<string, unknown>): LinkedResourceItemDTO {
+  const targetPage = raw.targetPage as Record<string, unknown> | null | undefined;
+
   return {
     title: optionalString(raw.title),
     description: optionalString(raw.description),
+    image:
+      toMediaDTO(targetPage?.imageCenter as StrapiMedia | null | undefined) ??
+      toMediaDTO(targetPage?.featuredImage as StrapiMedia | null | undefined),
     targetPage: toPageRefDTO(raw.targetPage as StrapiPageRef | null | undefined),
     targetUrl: optionalString(raw.targetUrl),
   };

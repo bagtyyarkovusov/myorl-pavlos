@@ -200,4 +200,16 @@ describe("SectionRenderer", () => {
     const { container } = render(<SectionRenderer section={section} context="home" />);
     expect(container.querySelector("section")).toBeTruthy();
   });
+
+  it("delegates omitted home sections without adding an outer section wrapper", () => {
+    const section = makeSection({
+      __component: "sections.social-links",
+      heading: "Follow Us",
+      links: [{ name: "Facebook", url: "https://fb.com", icon: null }],
+    } as SectionDTO);
+
+    const { container } = render(<SectionRenderer section={section} context="home" />);
+
+    expect(container.querySelectorAll("section")).toHaveLength(0);
+  });
 });

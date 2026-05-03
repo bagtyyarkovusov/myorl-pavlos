@@ -16,6 +16,9 @@
     "gate:readiness": "python3 tools/production_readiness_gate.py",
     "gate:nextjs": "python3 tools/nextjs_readiness_gate.py",
     "audit:content": "python3 tools/audit_nextjs_content_hygiene.py",
+    "e2e": "npm run e2e --prefix frontend",
+    "e2e:ui": "npm run e2e:ui --prefix frontend",
+    "e2e:report": "npm run e2e:report --prefix frontend",
     "prepare": "husky"
   },
   "devDependencies": {

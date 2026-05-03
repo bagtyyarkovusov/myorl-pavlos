@@ -1,7 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { sanitizeCmsHtml } from "./html";
 
 describe("sanitizeCmsHtml", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("strips <script> tags", () => {
     const input = '<p>safe</p><script>alert("xss")</script>';
     expect(sanitizeCmsHtml(input)).toBe("<p>safe</p>");
@@ -34,5 +38,13 @@ describe("sanitizeCmsHtml", () => {
   it("returns empty string for null/undefined", () => {
     expect(sanitizeCmsHtml(null)).toBe("");
     expect(sanitizeCmsHtml(undefined)).toBe("");
+  });
+
+  it("does not require the browser Element global", () => {
+    vi.stubGlobal("Element", undefined);
+
+    expect(sanitizeCmsHtml('<a href="https://example.com" target="_blank">link</a>')).toContain(
+      'rel="noopener noreferrer"',
+    );
   });
 });

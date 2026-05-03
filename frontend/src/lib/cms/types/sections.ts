@@ -21,6 +21,7 @@ type SectionBase = {
 export type PromoSlideItemDTO = {
   title?: string | null;
   description?: string | null;
+  targetPageExcerpt?: string | null;
   image?: MediaDTO | null;
   targetPage?: PageRefDTO | null;
   targetUrl?: string | null;
@@ -29,6 +30,7 @@ export type PromoSlideItemDTO = {
 export type LinkedResourceItemDTO = {
   title?: string | null;
   description?: string | null;
+  image?: MediaDTO | null;
   targetPage?: PageRefDTO | null;
   targetUrl?: string | null;
 };

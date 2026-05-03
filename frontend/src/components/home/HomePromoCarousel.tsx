@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { CmsHtml } from "@/components/CmsHtml";
 import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { PromoSlideItemDTO } from "@/lib/cms/types";
@@ -16,6 +17,9 @@ type HomePromoCarouselProps = {
   locale: string;
   learnMoreLabel: string;
 };
+
+const AUTOPLAY_INTERVAL_MS = 6500;
+const MANUAL_PAUSE_MS = 10000;
 
 const slideTransition = {
   enter: (direction: number) => ({
@@ -32,157 +36,287 @@ const slideTransition = {
   }),
 };
 
+const reducedSlideTransition = {
+  enter: { opacity: 0 },
+  center: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
 export function HomePromoCarousel({
   title,
-  intro,
   slides,
   locale,
   learnMoreLabel,
 }: HomePromoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const dragStartRef = useRef<{ x: number; y: number } | null>(null);
+  const isPausedRef = useRef(false);
+  const pauseUntilRef = useRef(0);
+  const tabRefs = useRef<Array<HTMLElement | null>>([]);
+  const shouldReduceMotion = useReducedMotion();
 
   const totalSlides = slides.length;
 
+  const pauseAfterManualInteraction = useCallback(() => {
+    pauseUntilRef.current = Date.now() + MANUAL_PAUSE_MS;
+  }, []);
+
   const goTo = useCallback(
     (index: number) => {
+      if (index === currentIndex || totalSlides === 0) return;
+      pauseAfterManualInteraction();
       setDirection(index > currentIndex ? 1 : -1);
       setCurrentIndex(index);
     },
-    [currentIndex],
+    [currentIndex, pauseAfterManualInteraction, totalSlides],
   );
 
   const goNext = useCallback(() => {
+    if (totalSlides <= 1) return;
+    pauseAfterManualInteraction();
     setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
-  }, [totalSlides]);
+  }, [pauseAfterManualInteraction, totalSlides]);
 
   const goPrev = useCallback(() => {
+    if (totalSlides <= 1) return;
+    pauseAfterManualInteraction();
     setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-  }, [totalSlides]);
+  }, [pauseAfterManualInteraction, totalSlides]);
 
   useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "ArrowLeft") {
-        goPrev();
-      } else if (e.key === "ArrowRight") {
-        goNext();
-      }
+    if (totalSlides <= 1 || shouldReduceMotion) return;
+
+    const intervalId = window.setInterval(() => {
+      if (isPausedRef.current || Date.now() < pauseUntilRef.current) return;
+
+      setDirection(1);
+      setCurrentIndex((prev) => (prev + 1) % totalSlides);
+    }, AUTOPLAY_INTERVAL_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [shouldReduceMotion, totalSlides]);
+
+  useEffect(() => {
+    const currentTab = tabRefs.current[currentIndex];
+    if (typeof currentTab?.scrollIntoView !== "function") return;
+
+    currentTab.scrollIntoView({
+      block: "nearest",
+      inline: "center",
+      behavior: shouldReduceMotion ? "auto" : "smooth",
+    });
+  }, [currentIndex, shouldReduceMotion]);
+
+  function handleCarouselKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      goPrev();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      goNext();
     }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [goNext, goPrev]);
+  }
+
+  function handlePointerDown(event: React.PointerEvent<HTMLElement>) {
+    if (totalSlides <= 1 || event.pointerType === "mouse") return;
+    isPausedRef.current = true;
+    dragStartRef.current = { x: event.clientX, y: event.clientY };
+  }
+
+  function handlePointerUp(event: React.PointerEvent<HTMLElement>) {
+    const start = dragStartRef.current;
+    dragStartRef.current = null;
+    isPausedRef.current = false;
+    if (!start) return;
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.35) return;
+
+    if (deltaX < 0) {
+      goNext();
+    } else {
+      goPrev();
+    }
+  }
+
+  function handlePointerCancel() {
+    dragStartRef.current = null;
+    isPausedRef.current = false;
+  }
+
+  function handleCarouselBlur(event: React.FocusEvent<HTMLDivElement>) {
+    if (event.currentTarget.contains(event.relatedTarget)) return;
+    isPausedRef.current = false;
+  }
 
   if (totalSlides === 0) return null;
 
   const currentSlide = slides[currentIndex]!;
-  const href =
-    currentSlide.targetUrl ??
-    (currentSlide.targetPage?.slug ? `/${locale}/${currentSlide.targetPage.slug}` : null);
+  const currentDescription = currentSlide.description ?? currentSlide.targetPageExcerpt ?? null;
+  const mosaicSlides = slides.map((slide, index) => ({ slide, index }));
+  const visibleMosaicSlides = mosaicSlides.slice(0, 16);
+  const mosaicClassName =
+    mosaicSlides.length > 0
+      ? styles["topic-mosaic"]
+      : `${styles["topic-mosaic"]} ${styles["topic-mosaic--solo"]}`;
+  const href = getSlideHref(currentSlide, locale);
 
   return (
-    <PageSection heading={{ title, intro: intro ?? undefined }}>
+    <PageSection className={styles["topic-section"]} header={null}>
       <div
-        className="mx-auto max-w-5xl"
+        className={styles["topic-directory"]}
         role="region"
         aria-label={title}
         aria-roledescription="carousel"
+        onKeyDown={handleCarouselKeyDown}
+        onMouseEnter={() => {
+          isPausedRef.current = true;
+        }}
+        onMouseLeave={() => {
+          isPausedRef.current = false;
+        }}
+        onFocusCapture={() => {
+          isPausedRef.current = true;
+        }}
+        onBlurCapture={handleCarouselBlur}
       >
-        <div className="relative overflow-hidden rounded-[2rem] border border-stone-line bg-bone-50 shadow-lg shadow-stone-line/20">
-          <AnimatePresence custom={direction} mode="wait">
-            <motion.div
-              key={currentIndex}
-              custom={direction}
-              variants={slideTransition}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col md:grid md:grid-cols-[1fr_1fr]"
-            >
-              <div className={`${styles["media-surface"]} md:aspect-auto`}>
-                {currentSlide.image ? (
-                  <MediaFrame
-                    media={currentSlide.image}
-                    alt={currentSlide.title || "Procedure"}
-                    variant="wide"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center">
-                    <span className="font-mono text-xs uppercase tracking-widest text-stone-soft">
-                      Image
-                    </span>
+        <div className={mosaicClassName}>
+          <div
+            className={styles["topic-feature"]}
+            onPointerCancel={handlePointerCancel}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+          >
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.article
+                id="home-topic-panel"
+                key={currentIndex}
+                custom={direction}
+                variants={shouldReduceMotion ? reducedSlideTransition : slideTransition}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  duration: shouldReduceMotion ? 0.16 : 0.35,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className={styles["topic-feature__inner"]}
+                role="tabpanel"
+                aria-labelledby={totalSlides > 1 ? `home-topic-tab-${currentIndex}` : undefined}
+                aria-live="polite"
+              >
+                <div className={styles["topic-feature__media"]}>
+                  {currentSlide.image ? (
+                    <MediaFrame
+                      media={currentSlide.image}
+                      alt={currentSlide.title || "Procedure"}
+                      variant="wide"
+                      className={styles["topic-feature__frame"]}
+                    />
+                  ) : (
+                    <div className={styles["media-placeholder"]}>
+                      <span>Topic image</span>
+                    </div>
+                  )}
+                  <div className={styles["index-badge"]}>
+                    {String(currentIndex + 1).padStart(2, "0")}
                   </div>
-                )}
-                <div className={styles["index-badge"]}>{String(currentIndex + 1).padStart(2, "0")}</div>
-              </div>
+                </div>
 
-              <div className="flex flex-col justify-center p-6 md:p-10 lg:p-12">
-                {currentSlide.title ? (
-                  <h3 className="mb-4 font-display text-xl leading-tight text-ink md:text-2xl lg:text-3xl">
-                    {currentSlide.title}
-                  </h3>
-                ) : null}
-
-                {currentSlide.description ? (
-                  <p className="mb-6 line-clamp-5 text-sm leading-relaxed text-stone md:text-base">
-                    {currentSlide.description}
+                <div className={styles["topic-feature__copy"]}>
+                  <p className={styles["topic-count"]}>
+                    {String(currentIndex + 1).padStart(2, "0")} /{" "}
+                    {String(totalSlides).padStart(2, "0")}
                   </p>
-                ) : null}
+                  {currentSlide.title ? <h3>{currentSlide.title}</h3> : null}
+                  <CmsHtml className={styles["topic-description"]} html={currentDescription} />
+                  {href ? (
+                    <Link href={href} className={styles["text-link"]}>
+                      {learnMoreLabel}
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  ) : null}
+                </div>
+              </motion.article>
+            </AnimatePresence>
+          </div>
 
-                {href ? (
-                  <Link
-                    href={href}
-                    className="mt-2 inline-flex items-center gap-2 self-start text-sm font-semibold tracking-wide text-trust transition-colors hover:text-trust-ink"
-                  >
-                    {learnMoreLabel}
-                    <span
-                      aria-hidden="true"
-                      className="text-lg leading-none transition-transform duration-300 group-hover:translate-x-1"
-                    >
-                      →
-                    </span>
-                  </Link>
-                ) : null}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          {visibleMosaicSlides.length > 0 ? (
+            <div className={styles["topic-tile-grid"]} aria-label="Promo topics">
+              {visibleMosaicSlides.map(({ slide, index }) => (
+                <PromoTile
+                  key={`${slide.title ?? "slide"}-${index}`}
+                  index={index}
+                  slide={slide}
+                  href={getSlideHref(slide, locale)}
+                  isActive={index === currentIndex}
+                  onClick={() => goTo(index)}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
 
         {totalSlides > 1 ? (
-          <div className="mt-8 flex items-center justify-center gap-3 md:gap-4">
+          <div className={styles["topic-controls"]}>
             <button
               type="button"
               onClick={goPrev}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-line bg-bone-50 text-stone transition-all hover:border-trust hover:text-trust focus:outline-none focus-visible:ring-2 focus-visible:ring-trust/30"
+              className={styles["round-button"]}
               aria-label="Previous slide"
             >
               <ChevronLeftIcon />
             </button>
 
-            <div className="flex items-center gap-2" role="tablist" aria-label="Slide navigation">
+            <div className={styles["topic-rail"]} role="tablist" aria-label="Slide navigation">
               {slides.map((_, index) => {
                 const isActive = index === currentIndex;
+                const slide = slides[index]!;
+                const slideHref = getSlideHref(slide, locale);
                 return (
-                  <button
+                  <article
                     key={index}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    aria-label={`Slide ${index + 1}`}
-                    onClick={() => goTo(index)}
-                    className={`
-                      relative flex h-9 w-9 items-center justify-center rounded-full font-mono text-xs font-semibold tracking-wider transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-trust/30
-                      ${
-                        isActive
-                          ? "bg-trust text-bone-50 shadow-md"
-                          : "bg-transparent text-stone-soft hover:bg-bone-200 hover:text-ink"
-                      }
-                    `}
+                    className={isActive ? styles["topic-tab--active"] : styles["topic-tab"]}
+                    ref={(node) => {
+                      tabRefs.current[index] = node;
+                    }}
                   >
-                    {String(index + 1).padStart(2, "0")}
-                  </button>
+                    <button
+                      id={`home-topic-tab-${index}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls="home-topic-panel"
+                      aria-label={`Slide ${index + 1}: ${slide.title ?? "Untitled topic"}`}
+                      onClick={() => goTo(index)}
+                      className={styles["topic-tab__select"]}
+                    >
+                      {slide.image ? (
+                        <MediaFrame
+                          media={slide.image}
+                          alt=""
+                          variant="wide"
+                          className={styles["topic-tab__frame"]}
+                        />
+                      ) : (
+                        <span className={styles["topic-tab__placeholder"]} aria-hidden="true" />
+                      )}
+                    </button>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    {slideHref ? (
+                      <Link href={slideHref} className={styles["topic-tab__title-link"]}>
+                        {slide.title ?? "Untitled topic"}
+                      </Link>
+                    ) : (
+                      <strong>{slide.title ?? "Untitled topic"}</strong>
+                    )}
+                  </article>
                 );
               })}
             </div>
@@ -190,11 +324,31 @@ export function HomePromoCarousel({
             <button
               type="button"
               onClick={goNext}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-line bg-bone-50 text-stone transition-all hover:border-trust hover:text-trust focus:outline-none focus-visible:ring-2 focus-visible:ring-trust/30"
+              className={styles["round-button"]}
               aria-label="Next slide"
             >
               <ChevronRightIcon />
             </button>
+          </div>
+        ) : null}
+
+        {totalSlides > 1 ? (
+          <div className={styles["topic-progress"]}>
+            {slides.map((slide, index) => (
+              <button
+                key={`${slide.title ?? "progress"}-${index}`}
+                type="button"
+                aria-current={index === currentIndex ? "true" : undefined}
+                aria-label={`Go to slide ${index + 1}: ${slide.title ?? "Untitled topic"}`}
+                className={
+                  index === currentIndex
+                    ? styles["topic-progress__bar--active"]
+                    : styles["topic-progress__bar"]
+                }
+                onClick={() => goTo(index)}
+                tabIndex={-1}
+              />
+            ))}
           </div>
         ) : null}
       </div>
@@ -202,11 +356,70 @@ export function HomePromoCarousel({
   );
 }
 
+function PromoTile({
+  index,
+  slide,
+  href,
+  isActive,
+  onClick,
+}: {
+  index: number;
+  slide: PromoSlideItemDTO;
+  href: string | null;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const label = `View slide ${index + 1}: ${slide.title ?? "Untitled topic"}`;
+  const tileClassName = isActive
+    ? `${styles["topic-tile"]} ${styles["topic-tile--active"]}`
+    : styles["topic-tile"];
+
+  return (
+    <div className={tileClassName}>
+      <button
+        type="button"
+        className={styles["topic-tile__button"]}
+        onClick={onClick}
+        aria-controls="home-topic-panel"
+        aria-current={isActive ? "true" : undefined}
+        aria-label={label}
+      >
+        {slide.image ? (
+          <MediaFrame
+            media={slide.image}
+            alt=""
+            variant="wide"
+            className={styles["topic-tile__frame"]}
+          />
+        ) : (
+          <div className={styles["media-placeholder"]}>
+            <span>Topic image</span>
+          </div>
+        )}
+      </button>
+      <span className={styles["topic-tile__ribbon"]}>
+        <span>{String(index + 1).padStart(2, "0")}</span>
+        {href ? (
+          <Link className={styles["topic-tile__title-link"]} href={href}>
+            {slide.title ?? "Untitled topic"}
+          </Link>
+        ) : (
+          <strong>{slide.title ?? "Untitled topic"}</strong>
+        )}
+      </span>
+    </div>
+  );
+}
+
+function getSlideHref(slide: PromoSlideItemDTO, locale: string): string | null {
+  return slide.targetUrl ?? (slide.targetPage?.slug ? `/${locale}/${slide.targetPage.slug}` : null);
+}
+
 function ChevronLeftIcon() {
   return (
     <svg
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -223,8 +436,8 @@ function ChevronLeftIcon() {
 function ChevronRightIcon() {
   return (
     <svg
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

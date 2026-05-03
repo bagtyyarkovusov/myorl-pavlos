@@ -1,7 +1,6 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { CmsHtml } from "@/components/CmsHtml";
+import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { LinkedResourceItemDTO } from "@/lib/cms/types";
 
@@ -9,66 +8,108 @@ import styles from "./home.module.css";
 
 type HomeMedicalGridProps = {
   title: string;
+  intro?: string | null;
   items: LinkedResourceItemDTO[];
   locale: string;
+  learnMoreLabel: string;
 };
 
-const gridVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } },
-};
-
-export function HomeMedicalGrid({ title, items, locale }: HomeMedicalGridProps) {
+export function HomeMedicalGrid({
+  items,
+  locale,
+  learnMoreLabel,
+}: HomeMedicalGridProps) {
   if (items.length === 0) return null;
 
-  return (
-    <PageSection background="surface" containerWidth="tight" heading={{ title }}>
-      <motion.div
-        className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6"
-        variants={gridVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-50px" }}
-      >
-        {items.map((item, index) => {
-          const href =
-            item.targetUrl ??
-            (item.targetPage?.slug ? `/${locale}/${item.targetPage.slug}` : `/${locale}/sitemap`);
+  const [primaryItem, ...secondaryItems] = items;
 
-          return (
-            <Link key={index} href={href} className="block h-full">
-              <motion.article
-                variants={cardVariants}
-                className="group flex h-full flex-col rounded-[2rem] border border-stone-line bg-bone-50 shadow-lg shadow-stone-line/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-trust-soft/40 p-6 md:p-8"
-              >
-                <div className="mb-4 font-mono text-xs uppercase tracking-[0.08em] text-stone-soft">{String(index + 1).padStart(2, "0")}</div>
-                <h3 className="mb-3 font-display text-xl leading-tight text-ink transition-colors group-hover:text-trust md:text-2xl">
-                  {item.title}
-                </h3>
-                {item.description ? (
-                  <p className="mt-auto text-sm leading-relaxed text-stone">{item.description}</p>
-                ) : null}
-                <div className={`mt-6 flex items-center gap-2 ${styles["link-text"]}`}>
-                  <span
-                    className="text-lg leading-none transition-transform duration-300 group-hover:translate-x-1"
-                    aria-hidden="true"
-                  >
+  return (
+    <PageSection className={styles["resource-section"]} header={null}>
+      <div className={styles["resource-digest"]}>
+        {primaryItem ? (
+          <ResourceFeature
+            item={primaryItem}
+            href={resolveResourceHref(primaryItem, locale)}
+            learnMoreLabel={learnMoreLabel}
+          />
+        ) : null}
+
+        <ol className={styles["resource-list"]}>
+          {secondaryItems.map((item, index) => {
+            const href = resolveResourceHref(item, locale);
+
+            return (
+              <li className={styles["resource-row"]} key={`${item.title ?? "resource"}-${index}`}>
+                <Link href={href}>
+                  <span className={styles["resource-row__media"]} aria-hidden="true">
+                    {item.image ? (
+                      <MediaFrame
+                        media={item.image}
+                        alt=""
+                        variant="wide"
+                        className={styles["resource-row__frame"]}
+                      />
+                    ) : (
+                      <span className={styles["resource-row__placeholder"]} />
+                    )}
+                  </span>
+                  <span className={styles["resource-row__index"]}>
+                    {String(index + 2).padStart(2, "0")}
+                  </span>
+                  <div className={styles["resource-row__body"]}>
+                    <strong>{item.title ?? "Clinical resource"}</strong>
+                    <CmsHtml className={styles["resource-row__text"]} html={item.description} />
+                  </div>
+                  <span className={styles["resource-row__arrow"]} aria-hidden="true">
                     →
                   </span>
-                </div>
-              </motion.article>
-            </Link>
-          );
-        })}
-      </motion.div>
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
     </PageSection>
+  );
+}
+
+function ResourceFeature({
+  item,
+  href,
+  learnMoreLabel,
+}: {
+  item: LinkedResourceItemDTO;
+  href: string;
+  learnMoreLabel: string;
+}) {
+  return (
+    <Link href={href} className={styles["resource-feature"]}>
+      {item.image ? (
+        <span className={styles["resource-feature__media"]} aria-hidden="true">
+          <MediaFrame
+            media={item.image}
+            alt=""
+            variant="wide"
+            className={styles["resource-feature__frame"]}
+          />
+        </span>
+      ) : null}
+      <p className={styles["resource-feature__eyebrow"]}>01</p>
+      <div className={styles["resource-feature__body"]}>
+        <h3>{item.title ?? "Clinical resource"}</h3>
+        <CmsHtml className={styles["resource-feature__text"]} html={item.description} />
+      </div>
+      <span className={styles["resource-feature__cta"]}>
+        {learnMoreLabel}
+        <span aria-hidden="true">→</span>
+      </span>
+    </Link>
+  );
+}
+
+function resolveResourceHref(item: LinkedResourceItemDTO, locale: string): string {
+  return (
+    item.targetUrl ??
+    (item.targetPage?.slug ? `/${locale}/${item.targetPage.slug}` : `/${locale}/sitemap`)
   );
 }

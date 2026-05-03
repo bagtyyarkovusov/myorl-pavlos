@@ -5,15 +5,17 @@ import { GalleryPage } from "@/components/page-layouts/GalleryPage";
 import { HomePage } from "@/components/page-layouts/HomePage";
 import { QuestionListPage } from "@/components/page-layouts/QuestionListPage";
 import { StandardPage } from "@/components/page-layouts/StandardPage";
-import type { PageDTO } from "@/lib/cms/types";
+import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
 
 type PageRendererProps = {
   page: PageDTO;
   /** Resolved from navigation for home CTA; ignored for other layouts. */
   appointmentHref?: string;
+  /** Server-fetched navigation used by home-only entry components. */
+  navigation?: NavigationNodeDTO[];
 };
 
-export function PageRenderer({ page, appointmentHref }: PageRendererProps) {
+export function PageRenderer({ page, appointmentHref, navigation = [] }: PageRendererProps) {
   if (page.renderMode === "frontend-native") {
     return <FrontendNativePage page={page} />;
   }
@@ -23,7 +25,13 @@ export function PageRenderer({ page, appointmentHref }: PageRendererProps) {
   }
 
   if (page.pageType === "home") {
-    return <HomePage page={page} appointmentHref={appointmentHref ?? `/${page.locale}`} />;
+    return (
+      <HomePage
+        page={page}
+        appointmentHref={appointmentHref ?? `/${page.locale}`}
+        navigation={navigation}
+      />
+    );
   }
 
   if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {

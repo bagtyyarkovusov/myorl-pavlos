@@ -8,7 +8,7 @@ import { ContactPage } from "./ContactPage";
 import { GalleryPage } from "./GalleryPage";
 import { QuestionListPage } from "./QuestionListPage";
 import { FrontendNativePage } from "./FrontendNativePage";
-import type { PageDTO } from "@/lib/cms/types";
+import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
 
 const BASE_PAGE: PageDTO = {
   documentId: "test-1",
@@ -49,6 +49,25 @@ const BASE_PAGE: PageDTO = {
   alternateUrls: {},
   sections: [],
 };
+
+function makeNav(slug: string, label: string, index = 0): NavigationNodeDTO {
+  return {
+    documentId: `nav-${slug}`,
+    locale: "el",
+    slug,
+    title: label,
+    menuTitle: null,
+    navLabel: label,
+    menuIndex: index,
+    hideFromMenu: false,
+    parentPage: null,
+    externalUrl: null,
+    isFolder: false,
+    excerpt: null,
+    href: `/el/${slug}`,
+    children: [],
+  };
+}
 
 describe("StandardPage", () => {
   it("renders title and excerpt", () => {
@@ -98,7 +117,7 @@ describe("HomePage", () => {
       title: "Home",
     };
 
-    render(<HomePage page={homePage} appointmentHref="/el/appointment" />);
+    render(<HomePage page={homePage} appointmentHref="/el/appointment" navigation={[]} />);
 
     expect(screen.getByRole("main")).toBeDefined();
   });
@@ -111,12 +130,12 @@ describe("HomePage", () => {
       title: "Home",
     };
 
-    render(<HomePage page={homePage} appointmentHref="/el/appointment" />);
+    render(<HomePage page={homePage} appointmentHref="/el/appointment" navigation={[]} />);
 
     expect(screen.getByRole("main").getAttribute("data-locale")).toBe("el");
   });
 
-  it("renders home sections through SectionRenderer with context=home", () => {
+  it("suppresses social sections in the home flow", () => {
     const homePage: PageDTO = {
       ...BASE_PAGE,
       pageType: "home",
@@ -131,8 +150,51 @@ describe("HomePage", () => {
       ],
     };
 
-    render(<HomePage page={homePage} appointmentHref="/el/appointment" />);
-    expect(screen.getByText("Follow Us")).toBeDefined();
+    render(<HomePage page={homePage} appointmentHref="/el/appointment" navigation={[]} />);
+    expect(screen.queryByText("Follow Us")).toBeNull();
+  });
+
+  it("renders six primary menu links after the first promo slider", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.promo-slider",
+          heading: "Topics",
+          slides: [
+            {
+              title: "Slide",
+              description: null,
+              targetPageExcerpt: null,
+              image: null,
+              targetPage: null,
+              targetUrl: null,
+            },
+          ],
+        },
+      ],
+    };
+    const navigation = [
+      makeNav("yperesies", "Services", 1),
+      makeNav("epemvaseis", "Operations", 2),
+      makeNav("diagnosi", "Diagnostics", 3),
+      makeNav("klinikes", "Hospitals", 4),
+      makeNav("timokatalogos", "Prices", 5),
+      makeNav("video", "Video", 6),
+    ];
+
+    render(
+      <HomePage page={homePage} appointmentHref="/el/appointment" navigation={navigation} />,
+    );
+
+    expect(screen.getByRole("link", { name: /Services/ })).toHaveAttribute(
+      "href",
+      "/el/yperesies",
+    );
+    expect(screen.getByRole("link", { name: /Video/ })).toHaveAttribute("href", "/el/video");
   });
 });
 

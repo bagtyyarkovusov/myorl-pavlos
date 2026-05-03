@@ -7,6 +7,8 @@ import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { VideoItemDTO } from "@/lib/cms/types";
 
+import styles from "./home.module.css";
+
 type HomeVideoTheaterProps = {
   title: string;
   intro: string;
@@ -41,13 +43,15 @@ export function HomeVideoTheater({
   return (
     <PageSection
       background="ink-dark"
+      rhythm="compact"
+      className={`${styles["video-teaser-section"]} ${styles["video-section"]}`}
       heading={{
         title,
         intro,
         action: (
           <Link
             href={ctaHref}
-            className="group inline-flex items-center gap-2 border-b border-bone-300 pb-2 font-mono text-sm tracking-widest text-bone-50 uppercase transition-colors hover:border-teal-soft hover:text-teal-soft"
+            className="group inline-flex items-center gap-2 border-b border-bone-300 pb-2 font-mono text-sm text-bone-50 uppercase transition-colors hover:border-teal-soft hover:text-teal-soft"
           >
             {ctaLabel}{" "}
             <span
@@ -60,7 +64,7 @@ export function HomeVideoTheater({
         ),
       }}
     >
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[2fr_1fr] lg:gap-12">
+      <div className={styles["video-teaser"]}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -69,8 +73,8 @@ export function HomeVideoTheater({
           onViewportEnter={autoPlayVideo}
         >
           {primaryVideo && (
-            <Link href={ctaHref} className="block">
-              <div className="group relative aspect-video overflow-hidden rounded-3xl bg-ink-soft shadow-2xl">
+            <Link href={ctaHref} className={styles["video-card"]}>
+              <div className={styles["video-card__media"]}>
                 {hasVideoSource ? (
                   <video
                     ref={videoRef}
@@ -79,7 +83,6 @@ export function HomeVideoTheater({
                     playsInline
                     preload="metadata"
                     poster={primaryVideo.thumbnail?.url ?? undefined}
-                    className="absolute inset-0 h-full w-full object-cover"
                   >
                     {primaryVideo.videoMp4?.url ? (
                       <source src={primaryVideo.videoMp4.url} type="video/mp4" />
@@ -93,15 +96,12 @@ export function HomeVideoTheater({
                     media={primaryVideo.thumbnail}
                     alt={primaryVideo.title ?? "Video thumbnail"}
                     variant="wide"
+                    className={styles["video-card__frame"]}
                   />
                 )}
-                <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/10" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-transform duration-500 group-hover:scale-110">
-                    <span className="ml-2 text-2xl" aria-hidden="true">
-                      ▶
-                    </span>
-                  </div>
+                <div className={styles["video-card__overlay"]} />
+                <div className={styles["video-card__play"]}>
+                  <span aria-hidden="true">▶</span>
                 </div>
               </div>
             </Link>

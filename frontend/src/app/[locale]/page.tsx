@@ -38,5 +38,5 @@ export default async function LocaleHomePage({ params }: LocaleHomeProps) {
 
   const appointmentHref = findAppointmentHref(navigation, locale);
 
-  return <PageRenderer page={page} appointmentHref={appointmentHref} />;
+  return <PageRenderer page={page} appointmentHref={appointmentHref} navigation={navigation} />;
 }

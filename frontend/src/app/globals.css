@@ -134,11 +134,11 @@ img {
 }
 
 .cms-html h2 {
-  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-size: 2rem;
 }
 
 .cms-html h3 {
-  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-size: 1.5rem;
 }
 
 .cms-html ul,
@@ -151,6 +151,63 @@ img {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
+}
+
+.cms-html table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  border-spacing: 0;
+  background: var(--surface);
+  -webkit-overflow-scrolling: touch;
+}
+
+.cms-html caption {
+  padding: 12px 14px;
+  color: var(--color-stone-soft);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.cms-html th,
+.cms-html td {
+  min-width: 9rem;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cms-html th {
+  background: var(--color-bone-100);
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.cms-html tr:last-child td {
+  border-bottom: 0;
+}
+
+.cms-html th:last-child,
+.cms-html td:last-child {
+  border-right: 0;
+}
+
+@media (min-width: 768px) {
+  .cms-html h2 {
+    font-size: 3rem;
+  }
+
+  .cms-html h3 {
+    font-size: 2.1rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

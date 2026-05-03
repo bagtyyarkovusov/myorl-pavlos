@@ -194,7 +194,12 @@ describe("toSemanticSections", () => {
           title: "Slide 1",
           description: "<p>Desc</p>",
           image: { url: "/uploads/slide.jpg", width: 800, height: 600 },
-          targetPage: { documentId: "page-2", slug: "target", title: "Target" },
+          targetPage: {
+            documentId: "page-2",
+            slug: "target",
+            title: "Target",
+            excerpt: "<p>Target excerpt</p>",
+          },
           targetUrl: "https://external.com",
         },
       ],
@@ -209,13 +214,27 @@ describe("toSemanticSections", () => {
       expect(sec.slides[0]!.title).toBe("Slide 1");
       expect(sec.slides[0]!.image?.url).toContain("/uploads/slide.jpg");
       expect(sec.slides[0]!.targetPage?.documentId).toBe("page-2");
+      expect(sec.slides[0]!.targetPageExcerpt).toBe("<p>Target excerpt</p>");
       expect(sec.slides[0]!.targetUrl).toBe("https://external.com");
     }
   });
 
   it("normalizes linked-resources section", () => {
     const section = makeSectionRaw("sections.linked-resources", {
-      items: [{ title: "Resource 1", description: "<p>Text</p>", targetUrl: "/page" }],
+      items: [
+        {
+          title: "Resource 1",
+          description: "<p>Text</p>",
+          targetUrl: "/page",
+          targetPage: {
+            documentId: "page-2",
+            slug: "target",
+            title: "Target",
+            imageCenter: { url: "/uploads/center.jpg", width: 900, height: 600 },
+            featuredImage: { url: "/uploads/featured.jpg", width: 900, height: 600 },
+          },
+        },
+      ],
     });
     const page = makePage({ pageType: "home", pageSections: [section] });
 
@@ -225,6 +244,7 @@ describe("toSemanticSections", () => {
     if (sec.__component === "sections.linked-resources") {
       expect(sec.items).toHaveLength(1);
       expect(sec.items[0]!.title).toBe("Resource 1");
+      expect(sec.items[0]!.image?.url).toContain("/uploads/center.jpg");
     }
   });
 

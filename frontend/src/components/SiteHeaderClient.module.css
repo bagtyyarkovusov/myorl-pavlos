@@ -88,7 +88,7 @@
 }
 
 .header-spacer__main {
-  min-height: 80px;
+  min-height: 88px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -101,7 +101,7 @@
 .site-header__inner {
   position: relative;
   display: flex;
-  min-height: 80px;
+  min-height: 88px;
   align-items: center;
   justify-content: space-between;
   gap: clamp(14px, 1.6vw, 24px);
@@ -117,14 +117,14 @@
 
 .brand-logo {
   display: block;
-  height: clamp(34px, 3.4vw, 42px);
+  height: clamp(42px, 4.2vw, 56px);
   width: auto;
-  max-width: 200px;
+  max-width: 260px;
   object-fit: contain;
 }
 
 .brand-logo--mobile {
-  height: 40px;
+  height: 46px;
 }
 
 .brand-mark {
@@ -168,16 +168,20 @@
   display: inline-flex;
   flex-shrink: 0;
   min-height: 44px;
+  min-width: max-content;
+  max-width: 100%;
   align-items: center;
   justify-content: center;
   gap: 8px;
   border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0 clamp(14px, 1.4vw, 22px);
+  padding: 0 clamp(18px, 1.8vw, 30px);
   background: var(--accent);
   color: var(--surface);
   font-size: 0.875rem;
   font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
   white-space: nowrap;
   transition:
     background 150ms ease,
@@ -194,6 +198,60 @@
   display: none;
 }
 
+.hamburger {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    border-color 300ms ease,
+    background 300ms ease;
+}
+
+.hamburger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.hamburger__line {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--foreground);
+  transform-origin: center;
+  transition:
+    transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 200ms ease;
+}
+
+.hamburger.is-active .hamburger__line:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.hamburger.is-active .hamburger__line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger.is-active .hamburger__line:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+.hamburger.is-active {
+  border-color: var(--accent-soft);
+  background: var(--accent-soft);
+}
+
 @media (max-width: 1320px) {
   [data-locale="ru"] .cta-book__full {
     display: none;
@@ -206,7 +264,7 @@
 /* Mobile header responsive adjustments */
 @media (max-width: 680px) {
   .brand-logo {
-    height: 32px;
+    height: 42px;
   }
 
   .site-utility__inner {
@@ -222,11 +280,25 @@
     gap: 6px 10px;
   }
 
+  .header-spacer__utility {
+    min-height: 68px;
+  }
+
   .site-header__inner {
-    min-height: 70px;
+    min-height: 78px;
+  }
+
+  .header-spacer__main {
+    min-height: 78px;
   }
 
   .brand-meta {
+    display: none;
+  }
+}
+
+@media (min-width: 1181px) {
+  .hamburger {
     display: none;
   }
 }

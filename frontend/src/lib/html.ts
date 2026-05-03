@@ -101,21 +101,35 @@ const ALLOWED_IFRAME_HOSTS = new Set([
 
 let hooksRegistered = false;
 
+function isElementNode(node: unknown): node is Element {
+  return (
+    typeof node === "object" &&
+    node !== null &&
+    (node as { nodeType?: number }).nodeType === 1 &&
+    typeof (node as { getAttribute?: unknown }).getAttribute === "function"
+  );
+}
+
 function registerHooks(): void {
   if (hooksRegistered) {
     return;
   }
+  DOMPurify.removeHooks("uponSanitizeElement");
+  DOMPurify.removeHooks("afterSanitizeAttributes");
   DOMPurify.addHook("uponSanitizeElement", (node, data) => {
     if (data.tagName !== "iframe") {
       return;
     }
-    const src = (node as Element).getAttribute("src") ?? "";
+    if (!isElementNode(node)) {
+      return;
+    }
+    const src = node.getAttribute("src") ?? "";
     if (!isAllowedIframeSrc(src)) {
-      (node as Element).remove();
+      node.remove();
     }
   });
   DOMPurify.addHook("afterSanitizeAttributes", (node) => {
-    if (!(node instanceof Element)) {
+    if (!isElementNode(node)) {
       return;
     }
     if (node.tagName === "A" && node.getAttribute("target") === "_blank") {

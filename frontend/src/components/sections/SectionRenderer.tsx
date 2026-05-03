@@ -9,8 +9,14 @@ type SectionRendererProps = {
   locale?: Locale;
 };
 
-export function SectionRenderer({ section, context = "default", locale = "el" }: SectionRendererProps) {
-  const isHome = context === "home";
+export function SectionRenderer({
+  section,
+  context = "default",
+  locale = "el",
+}: SectionRendererProps) {
+  if (context === "home") {
+    return <HomeSectionRenderer section={section} locale={locale} />;
+  }
 
   const headingBlock =
     section.heading || section.intro
@@ -18,12 +24,8 @@ export function SectionRenderer({ section, context = "default", locale = "el" }:
       : undefined;
 
   return (
-    <PageSection heading={headingBlock} rhythm={isHome ? "compact" : "standard"}>
-      {isHome ? (
-        <HomeSectionRenderer section={section} locale={locale} />
-      ) : (
-        <DefaultSectionRenderer section={section} />
-      )}
+    <PageSection heading={headingBlock} rhythm="standard">
+      <DefaultSectionRenderer section={section} />
     </PageSection>
   );
 }

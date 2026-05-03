@@ -17,9 +17,9 @@ const BUTTON_LINK_BASE_CLASSES =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-5 text-sm font-semibold whitespace-nowrap transition-all duration-150 ease hover:-translate-y-px focus-visible:-translate-y-px";
 
 const BUTTON_LINK_VARIANT_CLASSES: Record<NonNullable<ButtonLinkProps["variant"]>, string> = {
-  primary: "border-transparent bg-ink text-bone-50 hover:bg-trust focus-visible:bg-trust",
+  primary: "border-transparent bg-ink !text-bone-50 hover:bg-trust focus-visible:bg-trust",
   secondary:
-    "border-ink/20 bg-transparent text-ink hover:border-trust hover:bg-trust-soft hover:text-trust-ink focus-visible:border-trust focus-visible:bg-trust-soft focus-visible:text-trust-ink",
+    "border-ink/20 bg-transparent !text-ink hover:border-trust hover:bg-trust-soft hover:!text-trust-ink focus-visible:border-trust focus-visible:bg-trust-soft focus-visible:!text-trust-ink",
 };
 
 export function ButtonLink({ href, children, variant = "primary", className }: ButtonLinkProps) {

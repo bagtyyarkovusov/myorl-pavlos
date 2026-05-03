@@ -52,6 +52,7 @@ export type HomeStrings = {
   mediaLabelVideo: string;
   statTopicsFallback: string;
   learnMore: string;
+  viewAll: string;
   contactFooterTitle: string;
   contactFooterBookLabel: string;
   contactFooterCallLabel: string;
@@ -121,6 +122,7 @@ const STRINGS: Record<Locale, HomeStrings> = {
     mediaLabelVideo: "Βίντεο — κλινική",
     statTopicsFallback: "6+",
     learnMore: "Μάθετε περισσότερα",
+    viewAll: "Δείτε όλες τις υπηρεσίες",
     contactFooterTitle: "Έτοιμοι να αναπνεύσετε καλύτερα; Κλείστε τη συνεδρία σας.",
     contactFooterBookLabel: "Ραντεβού",
     contactFooterCallLabel: "Τηλέφωνο",
@@ -187,6 +189,7 @@ const STRINGS: Record<Locale, HomeStrings> = {
     mediaLabelVideo: "Видео — клиника",
     statTopicsFallback: "6+",
     learnMore: "Узнать больше",
+    viewAll: "Все услуги",
     contactFooterTitle: "Готовы дышать свободнее? Запишитесь на консультацию.",
     contactFooterBookLabel: "Записаться",
     contactFooterCallLabel: "Позвонить",

@@ -33,6 +33,7 @@ export function HomeSectionRenderer({ section, locale }: { section: SectionDTO; 
           items={section.items}
           locale={locale}
           learnMoreLabel={t.learnMore}
+          viewAllLabel={t.viewAll}
         />
       );
     case "sections.video":

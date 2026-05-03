@@ -168,7 +168,7 @@ export function HomePromoCarousel({
   const href = getSlideHref(currentSlide, locale);
 
   return (
-    <PageSection className={styles["topic-section"]} header={null}>
+    <PageSection rhythm="compact" className={styles["topic-section"]} header={null}>
       <div
         className={styles["topic-directory"]}
         role="region"

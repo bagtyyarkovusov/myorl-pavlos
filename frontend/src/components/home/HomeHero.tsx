@@ -39,7 +39,7 @@ export function HomeHero({ kicker, title, excerpt, media, ctaHref, ctaLabel }: H
   const heroMedia = media ?? FALLBACK_HERO_MEDIA;
 
   return (
-    <PageSection ariaLabelledBy="home-hero-title" className={styles["hero-section"]}>
+    <PageSection ariaLabelledBy="home-hero-title" rhythm="hero" className={styles["hero-section"]}>
       <motion.div
         className={styles["hero-grid"]}
         variants={containerVariants}

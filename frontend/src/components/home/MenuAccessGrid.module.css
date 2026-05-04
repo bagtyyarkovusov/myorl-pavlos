@@ -1,6 +1,9 @@
+/* ── Menu Access section ── */
+
 .menu-access-section {
   background: transparent;
   padding: 32px 0 48px;
+  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
 @media (min-width: 768px) {
@@ -9,10 +12,13 @@
   }
 }
 
+/* ── Liney grid: hairline-bordered cells ── */
+
 .menu-access-grid {
   display: grid;
-  gap: 12px;
+  gap: 0;
   grid-template-columns: 1fr;
+  border-top: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
 .menu-access-card {
@@ -22,11 +28,13 @@
   grid-template-columns: 48px minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
-  border-radius: 12px;
-  background: rgba(251, 252, 254, 0.5);
+  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
+  background: transparent;
   padding: 14px 16px;
   text-decoration: none;
-  transition: background 200ms ease;
+  transition:
+    background 200ms ease,
+    padding-left 200ms ease;
 }
 
 .menu-access-card__accent {
@@ -36,7 +44,8 @@
 .menu-access-card:hover,
 .menu-access-card:focus-visible {
   outline: none;
-  background: rgba(251, 252, 254, 0.9);
+  background: rgba(228, 237, 248, 0.26);
+  padding-left: 22px;
 }
 
 .menu-access-card__icon {
@@ -44,8 +53,9 @@
   width: 48px;
   height: 48px;
   place-items: center;
-  border-radius: 12px;
-  background: rgba(228, 237, 248, 0.7);
+  border-radius: 999px;
+  border: 1px solid var(--color-stone-line, #d7dfeb);
+  background: transparent;
   color: var(--accent-ink);
 }
 
@@ -86,9 +96,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: rgba(228, 237, 248, 0.62);
-  color: var(--accent);
-  transition: transform 220ms ease;
+  background: transparent;
+  color: var(--color-stone, #5a6b7e);
+  transition:
+    transform 220ms ease,
+    color 220ms ease;
 }
 
 .menu-access-card__arrow svg {
@@ -99,12 +111,18 @@
 .menu-access-card:hover .menu-access-card__arrow,
 .menu-access-card:focus-visible .menu-access-card__arrow {
   transform: translateX(3px);
+  color: var(--accent);
 }
 
+/* ── 560px: 2-column with vertical border between columns ── */
 @media (min-width: 560px) {
   .menu-access-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    border-left: 1px solid var(--color-stone-line, #d7dfeb);
+  }
+
+  .menu-access-card {
+    border-right: 1px solid var(--color-stone-line, #d7dfeb);
   }
 }
 
@@ -148,6 +166,5 @@
 @media (min-width: 1160px) {
   .menu-access-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
   }
 }

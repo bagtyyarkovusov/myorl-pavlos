@@ -8,29 +8,38 @@
   text-wrap: balance;
 }
 
+/* ── Liney grid: hairline-bordered cells ── */
+
 .credibility-band {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 0;
   padding: 0;
   list-style: none;
+  border-top: 1px solid var(--color-stone-line, #d7dfeb);
+  border-left: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
 .credibility-card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  border-radius: 10px;
+  gap: 4px;
+  border-right: 1px solid var(--color-stone-line, #d7dfeb);
+  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
+  background: transparent;
+  padding: 14px 12px;
+  transition: background 200ms ease;
+}
+
+.credibility-card:hover {
   background: rgba(228, 237, 248, 0.32);
-  padding: 18px 20px;
 }
 
 .credibility-card h3 {
   margin: 0;
   color: var(--foreground);
   font-family: var(--font-display);
-  font-size: 1.18rem;
+  font-size: 1rem;
   font-weight: 500;
   line-height: 1.18;
   letter-spacing: -0.005em;
@@ -40,8 +49,8 @@
 .credibility-card__text {
   margin: 0;
   color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.55;
+  font-size: 0.78rem;
+  line-height: 1.48;
   text-wrap: pretty;
 }
 
@@ -49,10 +58,10 @@
   margin: 0;
 }
 
+/* 720px — 4-column grid on larger screens */
 @media (min-width: 720px) {
   .credibility-band {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
   }
 
   .credibility-card {
@@ -64,6 +73,11 @@
   .credibility-card h3 {
     font-size: 1.28rem;
   }
+
+  .credibility-card__text {
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
 }
 
 @media (min-width: 860px) {
@@ -73,10 +87,6 @@
 }
 
 @media (min-width: 1024px) {
-  .credibility-band {
-    gap: 20px;
-  }
-
   .credibility-card {
     padding: 28px 24px;
   }

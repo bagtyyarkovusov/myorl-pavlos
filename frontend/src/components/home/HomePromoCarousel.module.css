@@ -16,7 +16,7 @@
 .topic-section {
   position: relative;
   overflow: hidden;
-  border-block: 0;
+  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
   background: transparent;
   padding: 48px 0;
 }

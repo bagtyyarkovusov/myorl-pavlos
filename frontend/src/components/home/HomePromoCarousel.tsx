@@ -8,7 +8,7 @@ import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { PromoSlideItemDTO } from "@/lib/cms/types";
 
-import styles from "./home.module.css";
+import styles from "./HomePromoCarousel.module.css";
 
 type HomePromoCarouselProps = {
   title: string;

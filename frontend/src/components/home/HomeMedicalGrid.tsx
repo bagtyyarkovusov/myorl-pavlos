@@ -4,7 +4,7 @@ import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { LinkedResourceItemDTO } from "@/lib/cms/types";
 
-import styles from "./home.module.css";
+import styles from "./HomeMedicalGrid.module.css";
 
 type HomeMedicalGridProps = {
   title: string;

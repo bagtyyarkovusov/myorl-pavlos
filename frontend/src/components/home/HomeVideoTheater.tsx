@@ -5,7 +5,7 @@ import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { VideoItemDTO } from "@/lib/cms/types";
 
-import styles from "./home.module.css";
+import styles from "./HomeVideoTheater.module.css";
 
 type HomeVideoTheaterProps = {
   title: string;

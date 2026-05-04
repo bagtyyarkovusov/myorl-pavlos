@@ -1,0 +1,90 @@
+.appointment-cta-section {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  padding: clamp(80px, 10vw, 160px) 0;
+}
+
+.appointment-section {
+  border-top: 0;
+}
+
+.appointment-cta {
+  display: grid;
+  gap: 28px;
+  align-items: end;
+  border-radius: 8px;
+  background: rgba(251, 252, 254, 0.52);
+  padding: clamp(24px, 5vw, 56px);
+  text-align: left;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 18px 48px rgba(15, 42, 74, 0.06);
+}
+
+.appointment-cta__copy {
+  min-width: 0;
+}
+
+.appointment-cta p {
+  color: var(--color-stone-soft);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.appointment-cta h2 {
+  max-width: 52rem;
+  margin-top: 14px;
+  overflow-wrap: anywhere;
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2.85rem;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.appointment-cta__actions {
+  display: grid;
+  width: 100%;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.appointment-cta__actions :global(a) {
+  width: 100%;
+}
+
+@media (min-width: 560px) {
+  .appointment-cta__actions {
+    width: auto;
+    grid-template-columns: repeat(2, minmax(12rem, auto));
+  }
+
+  .appointment-cta__actions :global(a) {
+    width: auto;
+  }
+}
+
+@media (min-width: 720px) {
+  .appointment-cta h2 {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 860px) {
+  .appointment-cta {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, auto);
+    gap: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .appointment-cta h2 {
+    font-size: 5.25rem;
+    line-height: 0.96;
+  }
+}

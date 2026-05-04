@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
-import styles from "./home.module.css";
+import styles from "./MenuAccessGrid.module.css";
 
 type MenuAccessGridProps = {
   navigation: NavigationNodeDTO[];

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ButtonLink } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { MediaDTO } from "@/lib/cms/types";
-import styles from "./home.module.css";
+import styles from "./HomeHero.module.css";
 
 type HomeHeroProps = {
   kicker: string;

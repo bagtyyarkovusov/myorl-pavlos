@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 
-import styles from "./home.module.css";
+import styles from "./HomeContactFooter.module.css";
 
 type HomeContactFooterProps = {
   title: string;

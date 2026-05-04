@@ -2,7 +2,7 @@ import { CmsHtml } from "@/components/CmsHtml";
 import { PageSection } from "@/components/PageSection";
 import type { SectionDTO } from "@/lib/cms/types";
 
-import styles from "./home.module.css";
+import styles from "./HomeAdvantagesSection.module.css";
 
 type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
 

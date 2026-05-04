@@ -64,7 +64,6 @@ export function HomeVideoTheater({
               )}
               <div className={styles["video-card__overlay"]} />
               <div className={styles["video-card__copy"]}>
-                <p>{primaryVideo.videoTags ?? "MyORL Athens"}</p>
                 <h2>{title}</h2>
                 <span>{intro}</span>
                 <strong>

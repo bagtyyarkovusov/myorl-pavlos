@@ -1,22 +1,25 @@
 import { Fragment } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAdvantagesSection } from "@/components/home/HomeAdvantagesSection";
+import { HomeTestimonialsTeaser } from "@/components/home/HomeTestimonialsTeaser";
 import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getHomeStrings } from "@/lib/i18n/home";
 import type { GlobalSettingsDTO, NavigationNodeDTO, SectionDTO } from "@/lib/cms/types";
+import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 import type { PageLayoutProps } from "./_shared";
 
 type HomePageProps = PageLayoutProps & {
   appointmentHref: string;
   navigation: NavigationNodeDTO[];
   settings: GlobalSettingsDTO;
+  homeTestimonials?: HomeTestimonialsPayload | null;
 };
 
 type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
 
-export function HomePage({ page, appointmentHref, navigation, settings }: HomePageProps) {
+export function HomePage({ page, appointmentHref, navigation, settings, homeTestimonials = null }: HomePageProps) {
   const t = getHomeStrings(page.locale);
   const heroMedia = page.imageCenter ?? page.featuredImage ?? null;
   const firstPromoIndex = page.sections.findIndex(
@@ -54,6 +57,9 @@ export function HomePage({ page, appointmentHref, navigation, settings }: HomePa
         return (
           <Fragment key={`${section.__component}-${index}`}>
             <SectionRenderer context="home" section={section} locale={page.locale} />
+            {section.__component === "sections.video" && homeTestimonials ? (
+              <HomeTestimonialsTeaser locale={page.locale} payload={homeTestimonials} />
+            ) : null}
           </Fragment>
         );
       })}

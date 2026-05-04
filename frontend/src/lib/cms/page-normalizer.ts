@@ -472,7 +472,8 @@ export function isFrontendNativeSystemLayout(layoutVariant: LayoutVariant): bool
   return (
     layoutVariant === "not-found" ||
     layoutVariant === "search-results" ||
-    layoutVariant === "sitemap"
+    layoutVariant === "sitemap" ||
+    layoutVariant === "testimonials-index"
   );
 }
 

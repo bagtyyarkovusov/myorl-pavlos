@@ -32,28 +32,57 @@
 
 .site-utility__inner {
   display: flex;
+  flex-wrap: nowrap;
   min-height: 36px;
   align-items: center;
   justify-content: space-between;
   gap: clamp(12px, 1.6vw, 20px);
+  container-type: inline-size;
+  container-name: site-utility-inner;
 }
 
-.site-utility__group,
-.locale-switcher {
+.site-utility__group {
   display: flex;
   align-items: center;
   gap: clamp(10px, 1vw, 14px);
+  min-width: 0;
 }
 
-.status-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--color-teal);
+/* Phone always before locale in the DOM; never stack vertically — nowrap + no shrink on the pill */
+.site-utility__group:last-child {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.site-utility__group:last-child .site-utility__phone {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@container site-utility-inner (max-width: 33rem) {
+  .site-utility__phone {
+    display: none;
+  }
+}
+
+.site-utility__address-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.site-utility__address {
+  flex: 1;
+  min-width: 0;
 }
 
 .locale-switcher {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: clamp(10px, 1vw, 14px);
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 2px;
@@ -75,6 +104,15 @@
 .locale-switcher a[aria-current="page"] {
   background: var(--foreground);
   color: var(--surface);
+}
+
+.status-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-teal);
 }
 
 .header-anchor {
@@ -275,39 +313,200 @@
   }
 }
 
-/* Mobile header responsive adjustments */
+/*
+ * Narrow viewports ≤680px: 2-col grid — address | trailing actions (tel + locale in one row when tel is shown).
+ */
+
 @media (max-width: 680px) {
+  .site-utility {
+    font-size: 0.73rem;
+  }
+
   .brand-logo {
-    height: 42px;
-  }
-
-  .site-utility__inner {
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 6px 10px;
-    padding: 6px 0;
-  }
-
-  .site-utility__group {
-    flex-wrap: nowrap;
-    gap: 6px 10px;
-  }
-
-  .header-spacer__utility {
-    min-height: 68px;
+    height: 40px;
   }
 
   .site-header__inner {
-    min-height: 78px;
+    min-height: 74px;
+    gap: 8px;
   }
 
   .header-spacer__main {
-    min-height: 78px;
+    min-height: 74px;
+  }
+
+  .cta-book {
+    min-height: 40px;
+    padding: 0 clamp(14px, 4vw, 22px);
+    font-size: 0.8125rem;
+    gap: 6px;
+  }
+
+  .hamburger {
+    width: 36px;
+    height: 36px;
+    gap: 4px;
+  }
+
+  .hamburger__line {
+    width: 15px;
+  }
+
+  .hamburger.is-active .hamburger__line:nth-child(1) {
+    transform: translateY(5px) rotate(45deg);
+  }
+
+  .hamburger.is-active .hamburger__line:nth-child(3) {
+    transform: translateY(-5px) rotate(-45deg);
   }
 
   .brand-meta {
     display: none;
+  }
+
+  .site-utility__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    align-items: center;
+    column-gap: clamp(8px, 2.5vw, 14px);
+    row-gap: 0;
+    padding: 6px 0;
+  }
+
+  .site-utility__group:first-child {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .site-utility__address-line {
+    min-width: 0;
+  }
+
+  .site-utility__address {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    line-height: 1.35;
+  }
+
+  .site-utility__group:last-child {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    max-width: 100%;
+    justify-self: end;
+    align-items: center;
+    justify-content: flex-end;
+    gap: clamp(8px, 2.5vw, 12px);
+  }
+
+  .site-utility__group:last-child .locale-switcher {
+    flex-shrink: 0;
+  }
+
+  .header-spacer__utility {
+    min-height: 56px;
+  }
+}
+
+@media (max-width: 479px) {
+  .site-utility {
+    font-size: clamp(0.66rem, 2.95vw + 0.52rem, 0.73rem);
+  }
+
+  /* Narrow phones: drop tel link — grid + line-clamp leaves too little room */
+  .site-utility__phone {
+    display: none;
+  }
+
+  .locale-switcher {
+    gap: 2px;
+    padding: 1px;
+    font-size: 0.61rem;
+  }
+
+  .locale-switcher a {
+    min-width: 26px;
+    height: 22px;
+    font-size: 0.61rem;
+  }
+
+  .u-link {
+    font-size: 0.7rem;
+  }
+
+  .header-spacer__utility {
+    min-height: 54px;
+  }
+
+  .brand-logo {
+    height: clamp(32px, 8.5vw + 18px, 38px);
+  }
+
+  .site-header__inner {
+    min-height: 68px;
+    gap: 6px;
+  }
+
+  .header-spacer__main {
+    min-height: 68px;
+  }
+
+  .hamburger {
+    width: 34px;
+    height: 34px;
+    gap: 3px;
+  }
+
+  .hamburger__line {
+    width: 14px;
+  }
+
+  .hamburger.is-active .hamburger__line:nth-child(1) {
+    transform: translateY(4.5px) rotate(45deg);
+  }
+
+  .hamburger.is-active .hamburger__line:nth-child(3) {
+    transform: translateY(-4.5px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 360px) {
+  .header-spacer__utility {
+    min-height: 52px;
+  }
+
+  .brand-logo {
+    height: clamp(28px, 7vw + 16px, 32px);
+  }
+
+  .site-header__inner {
+    min-height: 62px;
+  }
+
+  .header-spacer__main {
+    min-height: 62px;
+  }
+
+  .hamburger {
+    width: 32px;
+    height: 32px;
+  }
+
+  .hamburger__line {
+    width: 13px;
+    height: 1px;
+  }
+
+  .hamburger.is-active .hamburger__line:nth-child(1) {
+    transform: translateY(4px) rotate(45deg);
+  }
+
+  .hamburger.is-active .hamburger__line:nth-child(3) {
+    transform: translateY(-4px) rotate(-45deg);
   }
 }
 

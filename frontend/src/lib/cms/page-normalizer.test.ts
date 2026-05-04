@@ -63,10 +63,11 @@ describe("PAGE_POPULATE", () => {
 });
 
 describe("isFrontendNativeSystemLayout", () => {
-  it("returns true for not-found, search-results, sitemap", () => {
+  it("returns true for not-found, search-results, sitemap, testimonials-index", () => {
     expect(isFrontendNativeSystemLayout("not-found")).toBe(true);
     expect(isFrontendNativeSystemLayout("search-results")).toBe(true);
     expect(isFrontendNativeSystemLayout("sitemap")).toBe(true);
+    expect(isFrontendNativeSystemLayout("testimonials-index")).toBe(true);
   });
 
   it("returns false for other variants", () => {

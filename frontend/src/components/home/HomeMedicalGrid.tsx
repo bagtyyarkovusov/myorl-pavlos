@@ -3,6 +3,7 @@ import { CmsHtml } from "@/components/CmsHtml";
 import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { LinkedResourceItemDTO } from "@/lib/cms/types";
+import { cn } from "@/lib/utils";
 
 import styles from "./HomeMedicalGrid.module.css";
 
@@ -28,9 +29,21 @@ export function HomeMedicalGrid({
       <ol className={styles["resource-list"]}>
         {items.map((item, index) => {
           const href = resolveResourceHref(item, locale);
+          const mobileCap = 6;
+          const shownOnMobile = Math.min(items.length, mobileCap);
+          const lastMobileRowStart = Math.floor((shownOnMobile - 1) / 2) * 2;
+          const isBeyondMobileCap = index >= mobileCap;
+          const isMobileLastGridRow = index >= lastMobileRowStart && index < shownOnMobile;
 
           return (
-            <li className={styles["resource-row"]} key={`${item.title ?? "resource"}-${index}`}>
+            <li
+              className={cn(
+                styles["resource-row"],
+                isBeyondMobileCap && styles["resource-row--beyond-mobile-cap"],
+                isMobileLastGridRow && styles["resource-row--mobile-last-row"],
+              )}
+              key={`${item.title ?? "resource"}-${index}`}
+            >
               <Link href={href}>
                 <span className={styles["resource-row__visual"]}>
                   <span className={styles["resource-row__media"]} aria-hidden="true">
@@ -62,9 +75,11 @@ export function HomeMedicalGrid({
         })}
       </ol>
 
-      <Link href={`/${locale}/yperesies`} className={styles["resource-view-all"]}>
-        {viewAllLabel} <span aria-hidden="true">→</span>
-      </Link>
+      {items.length > 6 ? (
+        <Link href={`/${locale}/yperesies`} className={styles["resource-view-all"]}>
+          {viewAllLabel} <span aria-hidden="true">→</span>
+        </Link>
+      ) : null}
     </PageSection>
   );
 }

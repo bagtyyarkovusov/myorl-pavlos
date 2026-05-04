@@ -18,13 +18,8 @@
   overflow: hidden;
   border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
   background: transparent;
-  padding: 48px 0;
-}
-
-@media (min-width: 768px) {
-  .topic-section {
-    padding: 64px 0;
-  }
+  /* Vertical rhythm comes from PageSection `compact`; avoid stacking extra padding here */
+  padding-block: 0;
 }
 
 .topic-directory {
@@ -45,12 +40,11 @@
 .topic-feature {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 0;
   background: var(--surface);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.74),
-    0 18px 46px var(--shadow-ink-soft, rgba(15, 42, 74, 0.06));
-  touch-action: pan-y;
+  box-shadow: none;
+  /* Lets horizontal swipe gestures reach our pointer handlers reliably */
+  touch-action: manipulation;
 }
 
 .topic-feature__inner {
@@ -61,7 +55,7 @@
 
 .topic-feature__media {
   position: relative;
-  height: clamp(180px, 38svh, 300px);
+  height: clamp(148px, 26svh, 268px);
   min-width: 0;
   overflow: hidden;
   background: var(--surface-soft);
@@ -97,7 +91,7 @@
   min-width: 0;
   flex-direction: column;
   justify-content: center;
-  padding: 18px;
+  padding: 14px 14px 16px;
 }
 
 .topic-count {
@@ -112,13 +106,13 @@
 .topic-feature__copy h3 {
   display: -webkit-box;
   max-width: 42rem;
-  margin-top: 10px;
+  margin-top: 8px;
   overflow: hidden;
   color: var(--foreground);
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 1.78rem;
-  line-height: 1.02;
+  font-size: clamp(1.2rem, 4.75vw + 0.65rem, 1.78rem);
+  line-height: 1.06;
   overflow-wrap: anywhere;
   hyphens: auto;
   text-wrap: balance;
@@ -128,7 +122,7 @@
 
 .topic-description {
   max-width: 39rem;
-  margin-top: 18px;
+  margin-top: 10px;
   overflow: hidden;
   color: var(--muted);
 }
@@ -147,8 +141,8 @@
   width: fit-content;
   align-items: center;
   gap: 8px;
-  min-height: 42px;
-  margin-top: 16px;
+  min-height: 40px;
+  margin-top: 12px;
   color: var(--accent);
   font-size: 0.94rem;
   font-weight: 700;
@@ -226,7 +220,7 @@
   gap: 8px;
   min-width: 0;
   overflow-x: auto;
-  padding: 0 0 8px;
+  padding: 0 0 6px;
   scroll-padding-inline: 1px;
   scroll-snap-type: x proximity;
   scrollbar-width: thin;
@@ -235,17 +229,26 @@
 .topic-tab,
 .topic-tab--active {
   display: grid;
-  min-height: 74px;
-  min-width: 13.25rem;
+  flex: 0 0 min(13.25rem, calc(72vw - 52px));
+  min-height: 70px;
+  min-width: 0;
+  width: min(13.25rem, calc(72vw - 52px));
   grid-template-columns: 54px minmax(0, 1fr);
   grid-template-rows: auto 1fr;
   gap: 8px;
   align-items: start;
-  border-radius: 10px;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  appearance: none;
   background: rgba(251, 252, 254, 0.72);
   padding: 10px;
   text-align: left;
   scroll-snap-align: start;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.86),
     0 6px 18px rgba(15, 42, 74, 0.04);
@@ -256,20 +259,21 @@
     color 200ms ease;
 }
 
-.topic-tab__select {
+/* Image column; entire card is the tab button — thumb is non-interactive layout only */
+.topic-tab__thumb {
   grid-row: 1 / span 2;
+  grid-column: 1;
   display: block;
   height: 100%;
   min-height: 54px;
   overflow: hidden;
-  border: 0;
-  border-radius: 6px;
+  border-radius: 0;
   background: var(--surface-soft);
   padding: 0;
-  cursor: pointer;
 }
 
-.topic-tab__select:focus-visible {
+.topic-tab:focus-visible,
+.topic-tab--active:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -290,16 +294,13 @@
     var(--surface-soft);
 }
 
-.topic-tab > span,
-.topic-tab--active > span,
+.topic-tab__index,
 .topic-tab strong,
-.topic-tab--active strong,
-.topic-tab__title-link {
+.topic-tab--active strong {
   grid-column: 2;
 }
 
-.topic-tab > span,
-.topic-tab--active > span {
+.topic-tab__index {
   color: var(--color-stone-soft);
   font-family: var(--font-mono);
   font-size: 0.7rem;
@@ -308,8 +309,7 @@
 }
 
 .topic-tab strong,
-.topic-tab--active strong,
-.topic-tab__title-link {
+.topic-tab--active strong {
   display: -webkit-box;
   overflow: hidden;
   color: var(--foreground);
@@ -341,21 +341,9 @@
     0 12px 28px rgba(37, 99, 168, 0.14);
 }
 
-.topic-tab--active > span,
-.topic-tab--active strong,
-.topic-tab--active .topic-tab__title-link {
+.topic-tab--active .topic-tab__index,
+.topic-tab--active strong {
   color: var(--accent-ink);
-}
-
-.topic-tab__title-link:hover,
-.topic-tab__title-link:focus-visible {
-  color: var(--accent-ink);
-  outline: none;
-}
-
-.topic-tab__title-link:focus-visible {
-  border-radius: 4px;
-  box-shadow: 0 0 0 3px rgba(37, 99, 168, 0.14);
 }
 
 .topic-tile-grid {
@@ -454,8 +442,7 @@
   font-size: 0.68rem;
 }
 
-.topic-tile__ribbon strong,
-.topic-tile__title-link {
+.topic-tile__ribbon strong {
   display: -webkit-box;
   overflow: hidden;
   color: inherit;
@@ -469,16 +456,6 @@
   -webkit-line-clamp: 2;
 }
 
-.topic-tile__title-link:hover {
-  color: var(--color-bone-50);
-}
-
-.topic-tile__title-link:focus-visible {
-  border-radius: 4px;
-  outline: 2px solid rgba(251, 252, 254, 0.86);
-  outline-offset: 2px;
-}
-
 .topic-progress {
   display: flex;
   gap: 6px;
@@ -490,7 +467,7 @@
   height: 7px;
   flex: 1 1 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 0;
   background: var(--color-bone-300);
   transition:
     background 240ms ease,
@@ -530,17 +507,128 @@
   backdrop-filter: blur(6px);
 }
 
-@media (min-width: 560px) {
+/* Below desktop mosaic: hairline frame only around the hero slide; controls + progress stay full-width */
+@media (max-width: 859.98px) {
+  .topic-directory {
+    gap: 10px;
+  }
+
+  .topic-mosaic {
+    /* No top stroke — flush with preceding section (avoid stacked hairlines). */
+    overflow: hidden;
+    border: 1px solid var(--color-stone-line, #d7dfeb);
+    border-top: 0;
+    border-radius: 0;
+  }
+
+  .topic-mosaic .topic-feature {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
   .topic-feature__copy {
-    padding: 22px;
+    padding-bottom: 14px;
+  }
+
+  .topic-description p {
+    -webkit-line-clamp: 2;
+  }
+
+  .index-badge {
+    top: 0.5rem;
+    left: 0.5rem;
+    height: 1.75rem;
+    width: 1.75rem;
+    font-size: 0.67rem;
+  }
+
+  .topic-controls {
+    margin: 0;
+    gap: 6px;
+    padding: 8px;
+    grid-template-columns: 34px minmax(0, 1fr) 34px;
+  }
+
+  .topic-controls > .round-button:first-child {
+    grid-column: 1;
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    min-height: 34px;
+  }
+
+  .topic-controls > .round-button:last-child {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    min-height: 34px;
+  }
+
+  .topic-rail {
+    scroll-snap-type: x mandatory;
+    gap: 8px;
+    padding: 4px 2px 6px;
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 12px,
+      #000 calc(100% - 12px),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 12px,
+      #000 calc(100% - 12px),
+      transparent 100%
+    );
+  }
+
+  .topic-tab,
+  .topic-tab--active {
+    flex: 0 0 min(13.25rem, calc(71vw - 56px));
+    width: min(13.25rem, calc(71vw - 56px));
+    min-height: 66px;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 8px;
+    border: 1px solid rgba(215, 223, 235, 0.95);
+    background: rgba(251, 252, 254, 0.9);
+    scroll-snap-align: start;
+  }
+
+  .topic-tab--active {
+    box-shadow: inset 3px 0 0 var(--accent);
+    border-color: rgba(215, 223, 235, 0.95);
+  }
+
+  .topic-tab:hover,
+  .topic-tab:focus-within,
+  .topic-tab--active:hover,
+  .topic-tab--active:focus-within {
+    transform: none;
+  }
+
+  .topic-progress {
+    margin: 0;
+    gap: 5px;
+    padding: 10px;
+  }
+
+  .topic-progress__bar,
+  .topic-progress__bar--active {
+    height: 8px;
+    border-radius: 0;
+  }
+}
+
+@media (min-width: 560px) and (max-width: 859.98px) {
+  .topic-feature__copy {
+    padding: 20px;
   }
 }
 
 @media (min-width: 720px) {
-  .topic-feature__media {
-    height: clamp(220px, 38svh, 340px);
-  }
-
   .topic-controls {
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 14px;
@@ -554,21 +642,20 @@
     min-height: 40px;
   }
 
+  .topic-tab strong,
+  .topic-tab--active strong {
+    -webkit-line-clamp: 3;
+  }
+}
+
+@media (min-width: 720px) and (max-width: 859.98px) {
+  .topic-feature__media {
+    height: clamp(196px, 30svh, 308px);
+  }
+
   .topic-rail {
     gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-  }
-
-  .topic-tab,
-  .topic-tab--active {
-    min-width: min(16rem, 44vw);
-  }
-
-  .topic-tab strong,
-  .topic-tab--active strong,
-  .topic-tab__title-link {
-    -webkit-line-clamp: 3;
+    padding-bottom: 8px;
   }
 }
 
@@ -588,7 +675,7 @@
     gap: 4px;
     overflow: hidden;
     border: 0;
-    border-radius: 8px;
+    border-radius: 0;
     background: transparent;
     box-shadow: none;
   }

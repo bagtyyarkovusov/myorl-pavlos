@@ -49,7 +49,7 @@ const HOME_ACCESS_FALLBACKS: Record<
 
 export function MenuAccessGrid({ navigation, locale }: MenuAccessGridProps) {
   const nodes = flattenNavigation(navigation);
-  const items = HOME_ACCESS_SLUGS.flatMap((slug, index) => {
+  const items = HOME_ACCESS_SLUGS.flatMap((slug) => {
     const node = nodes.find((item) => item.slug === slug);
     if (!node) return [];
     const fallback = HOME_ACCESS_FALLBACKS[slug]?.[locale];
@@ -59,7 +59,6 @@ export function MenuAccessGrid({ navigation, locale }: MenuAccessGridProps) {
         title: node.navLabel || fallback?.title || node.title,
         description: node.excerpt?.trim() || fallback?.description || "",
         slug,
-        index,
       },
     ];
   });
@@ -70,7 +69,7 @@ export function MenuAccessGrid({ navigation, locale }: MenuAccessGridProps) {
     <section className={styles["menu-access-section"]} aria-label="Primary site areas">
       <div className="container mx-auto">
         <div className={styles["menu-access-grid"]}>
-          {items.map(({ node, title, description, slug, index }) => (
+          {items.map(({ node, title, description, slug }) => (
             <Link className={styles["menu-access-card"]} href={node.href} key={node.documentId}>
               <span className={styles["menu-access-card__accent"]} aria-hidden="true" />
               <span className={styles["menu-access-card__icon"]} aria-hidden="true">
@@ -78,7 +77,9 @@ export function MenuAccessGrid({ navigation, locale }: MenuAccessGridProps) {
               </span>
               <span className={styles["menu-access-card__copy"]}>
                 <strong>{title}</strong>
-                {description ? <span>{description}</span> : null}
+                {description ? (
+                  <span className={styles["menu-access-card__desc"]}>{description}</span>
+                ) : null}
               </span>
               <span className={styles["menu-access-card__arrow"]} aria-hidden="true">
                 <ArrowIcon />

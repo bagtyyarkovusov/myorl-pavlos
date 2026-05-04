@@ -6,6 +6,7 @@ import { getPage, getSite } from "@/lib/cms/cms-api";
 import { findAppointmentHref } from "@/lib/navigation/appointment-href";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { isLocale } from "@/lib/cms/types";
+import { getHomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
 type LocaleHomeProps = {
   params: Promise<{
@@ -33,7 +34,11 @@ export default async function LocaleHomePage({ params }: LocaleHomeProps) {
     notFound();
   }
 
-  const [page, site] = await Promise.all([getPage(locale, "index"), getSite(locale)]);
+  const [page, site, homeTestimonials] = await Promise.all([
+    getPage(locale, "index"),
+    getSite(locale),
+    getHomeTestimonialsPayload(locale),
+  ]);
 
   const appointmentHref = findAppointmentHref(site.navigation, locale);
 
@@ -43,6 +48,7 @@ export default async function LocaleHomePage({ params }: LocaleHomeProps) {
       appointmentHref={appointmentHref}
       navigation={site.navigation}
       globalSettings={site.settings}
+      homeTestimonials={homeTestimonials}
     />
   );
 }

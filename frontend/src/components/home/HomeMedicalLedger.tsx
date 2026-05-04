@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { PageSection } from "@/components/PageSection";
 import type { LinkedResourceItemDTO } from "@/lib/cms/types";
 
@@ -23,14 +22,7 @@ export function HomeMedicalLedger({ title, items, locale }: HomeMedicalLedgerPro
             (item.targetPage?.slug ? `/${locale}/${item.targetPage.slug}` : `/${locale}/sitemap`);
 
           return (
-            <motion.li
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
-              className="group border-b border-stone-line"
-            >
+            <li key={index} className="group border-b border-stone-line">
               <Link
                 href={href}
                 className="flex items-center justify-between py-8 transition-colors hover:bg-bone-200/40 sm:px-8 sm:-mx-8 sm:rounded-2xl"
@@ -51,7 +43,7 @@ export function HomeMedicalLedger({ title, items, locale }: HomeMedicalLedgerPro
                   </div>
                 </div>
               </Link>
-            </motion.li>
+            </li>
           );
         })}
       </ul>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { CmsHtml } from "@/components/CmsHtml";
@@ -19,7 +19,6 @@ type HomePromoCarouselProps = {
 };
 
 const AUTOPLAY_INTERVAL_MS = 6500;
-const MANUAL_PAUSE_MS = 10000;
 
 const slideTransition = {
   enter: (direction: number) => ({
@@ -50,47 +49,56 @@ export function HomePromoCarousel({
 }: HomePromoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  /** After any explicit user control, interval autoplay stops until the component remounts (e.g. revisit page). */
+  const [autoplayEnabled, setAutoplayEnabled] = useState(true);
   const dragStartRef = useRef<{ x: number; y: number } | null>(null);
   const isPausedRef = useRef(false);
-  const pauseUntilRef = useRef(0);
   const tabRefs = useRef<Array<HTMLElement | null>>([]);
-  const shouldReduceMotion = useReducedMotion();
+  const systemPrefersReducedMotion = useReducedMotion();
+
+  /** false during SSR + hydration, then true — avoids branching on `useReducedMotion()` before commit. */
+  const hasMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
+  /** Avoid hydration mismatch: `useReducedMotion()` is null on the server but boolean on the client. */
+  const shouldReduceMotion = Boolean(hasMounted && systemPrefersReducedMotion);
 
   const totalSlides = slides.length;
 
-  const pauseAfterManualInteraction = useCallback(() => {
-    pauseUntilRef.current = Date.now() + MANUAL_PAUSE_MS;
-  }, []);
+  const stopAutoplayForever = useCallback(() => setAutoplayEnabled(false), []);
 
   const goTo = useCallback(
     (index: number) => {
+      stopAutoplayForever();
       if (index === currentIndex || totalSlides === 0) return;
-      pauseAfterManualInteraction();
       setDirection(index > currentIndex ? 1 : -1);
       setCurrentIndex(index);
     },
-    [currentIndex, pauseAfterManualInteraction, totalSlides],
+    [currentIndex, stopAutoplayForever, totalSlides],
   );
 
   const goNext = useCallback(() => {
     if (totalSlides <= 1) return;
-    pauseAfterManualInteraction();
+    stopAutoplayForever();
     setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
-  }, [pauseAfterManualInteraction, totalSlides]);
+  }, [stopAutoplayForever, totalSlides]);
 
   const goPrev = useCallback(() => {
     if (totalSlides <= 1) return;
-    pauseAfterManualInteraction();
+    stopAutoplayForever();
     setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-  }, [pauseAfterManualInteraction, totalSlides]);
+  }, [stopAutoplayForever, totalSlides]);
 
   useEffect(() => {
-    if (totalSlides <= 1 || shouldReduceMotion) return;
+    if (totalSlides <= 1 || shouldReduceMotion || !autoplayEnabled) return;
 
     const intervalId = window.setInterval(() => {
-      if (isPausedRef.current || Date.now() < pauseUntilRef.current) return;
+      if (isPausedRef.current) return;
 
       setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % totalSlides);
@@ -99,7 +107,7 @@ export function HomePromoCarousel({
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [shouldReduceMotion, totalSlides]);
+  }, [autoplayEnabled, shouldReduceMotion, totalSlides]);
 
   useEffect(() => {
     const currentTab = tabRefs.current[currentIndex];
@@ -139,12 +147,17 @@ export function HomePromoCarousel({
 
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
-    if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.35) return;
+    const navigated =
+      Math.abs(deltaX) >= 48 && Math.abs(deltaX) >= Math.abs(deltaY) * 1.35;
 
-    if (deltaX < 0) {
-      goNext();
-    } else {
-      goPrev();
+    if (navigated) {
+      if (deltaX < 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+    } else if (event.pointerType !== "mouse") {
+      stopAutoplayForever();
     }
   }
 
@@ -257,7 +270,6 @@ export function HomePromoCarousel({
                   key={`${slide.title ?? "slide"}-${index}`}
                   index={index}
                   slide={slide}
-                  href={getSlideHref(slide, locale)}
                   isActive={index === currentIndex}
                   onClick={() => goTo(index)}
                 />
@@ -281,25 +293,22 @@ export function HomePromoCarousel({
               {slides.map((_, index) => {
                 const isActive = index === currentIndex;
                 const slide = slides[index]!;
-                const slideHref = getSlideHref(slide, locale);
                 return (
-                  <article
+                  <button
                     key={index}
-                    className={isActive ? styles["topic-tab--active"] : styles["topic-tab"]}
+                    id={`home-topic-tab-${index}`}
                     ref={(node) => {
                       tabRefs.current[index] = node;
                     }}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls="home-topic-panel"
+                    aria-label={`Slide ${index + 1}: ${slide.title ?? "Untitled topic"}`}
+                    onClick={() => goTo(index)}
+                    className={isActive ? styles["topic-tab--active"] : styles["topic-tab"]}
                   >
-                    <button
-                      id={`home-topic-tab-${index}`}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      aria-controls="home-topic-panel"
-                      aria-label={`Slide ${index + 1}: ${slide.title ?? "Untitled topic"}`}
-                      onClick={() => goTo(index)}
-                      className={styles["topic-tab__select"]}
-                    >
+                    <span className={styles["topic-tab__thumb"]}>
                       {slide.image ? (
                         <MediaFrame
                           media={slide.image}
@@ -310,16 +319,12 @@ export function HomePromoCarousel({
                       ) : (
                         <span className={styles["topic-tab__placeholder"]} aria-hidden="true" />
                       )}
-                    </button>
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    {slideHref ? (
-                      <Link href={slideHref} className={styles["topic-tab__title-link"]}>
-                        {slide.title ?? "Untitled topic"}
-                      </Link>
-                    ) : (
-                      <strong>{slide.title ?? "Untitled topic"}</strong>
-                    )}
-                  </article>
+                    </span>
+                    <span className={styles["topic-tab__index"]}>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <strong>{slide.title ?? "Untitled topic"}</strong>
+                  </button>
                 );
               })}
             </div>
@@ -362,13 +367,11 @@ export function HomePromoCarousel({
 function PromoTile({
   index,
   slide,
-  href,
   isActive,
   onClick,
 }: {
   index: number;
   slide: PromoSlideItemDTO;
-  href: string | null;
   isActive: boolean;
   onClick: () => void;
 }) {
@@ -402,13 +405,7 @@ function PromoTile({
       </button>
       <span className={styles["topic-tile__ribbon"]}>
         <span>{String(index + 1).padStart(2, "0")}</span>
-        {href ? (
-          <Link className={styles["topic-tile__title-link"]} href={href}>
-            {slide.title ?? "Untitled topic"}
-          </Link>
-        ) : (
-          <strong>{slide.title ?? "Untitled topic"}</strong>
-        )}
+        <strong>{slide.title ?? "Untitled topic"}</strong>
       </span>
     </div>
   );

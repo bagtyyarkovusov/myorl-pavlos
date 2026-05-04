@@ -7,15 +7,16 @@ export type PageLayoutProps = {
   page: PageDTO;
 };
 
-export function PageHeader({ page, kicker }: { page: PageDTO; kicker?: string }) {
+export function PageHeader({ page, kicker }: { page: PageDTO; kicker?: string | null }) {
   const media = page.imageCenter ?? page.featuredImage;
+  const kickerText = kicker === null ? null : (kicker ?? readableVariant(page.layoutVariant));
 
   return (
     <header className={`${styles["page-hero"]} ${media ? "" : styles["page-hero--text-only"]}`}>
       <div>
-        <p className="font-mono text-xs font-medium uppercase text-stone-soft">
-          {kicker ?? readableVariant(page.layoutVariant)}
-        </p>
+        {kickerText ? (
+          <p className="font-mono text-xs font-medium uppercase text-stone-soft">{kickerText}</p>
+        ) : null}
         <h1>{page.title}</h1>
         {page.excerpt ? <p className={styles.excerpt}>{page.excerpt}</p> : null}
         {page.tags.length > 0 ? (

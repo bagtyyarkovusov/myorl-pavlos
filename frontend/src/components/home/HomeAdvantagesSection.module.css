@@ -12,22 +12,26 @@
 
 .credibility-band {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-stone-line, #d7dfeb);
   border-left: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
 .credibility-card {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 4px;
+  min-width: 0;
   border-right: 1px solid var(--color-stone-line, #d7dfeb);
   border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
   background: transparent;
-  padding: 14px 12px;
+  padding: 12px 8px;
+  text-align: center;
+  text-wrap: balance;
   transition: background 200ms ease;
 }
 
@@ -37,9 +41,11 @@
 
 .credibility-card h3 {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
   color: var(--foreground);
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: clamp(0.72rem, 2.8vw, 1rem);
   font-weight: 500;
   line-height: 1.18;
   letter-spacing: -0.005em;
@@ -48,22 +54,22 @@
 
 .credibility-card__text {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
   color: var(--muted);
-  font-size: 0.78rem;
-  line-height: 1.48;
+  font-size: clamp(0.62rem, 2vw, 0.78rem);
+  line-height: 1.42;
+  text-align: center;
   text-wrap: pretty;
 }
 
 .credibility-card__text p {
   margin: 0;
+  text-align: center;
 }
 
-/* 720px — 4-column grid on larger screens */
+/* 720px — roomier cells on larger screens */
 @media (min-width: 720px) {
-  .credibility-band {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   .credibility-card {
     padding: 24px 22px;
     gap: 8px;

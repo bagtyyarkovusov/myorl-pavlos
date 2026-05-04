@@ -136,11 +136,11 @@ describe("HomeSectionRenderer", () => {
     expect(screen.queryByRole("heading", { name: "Resources" })).toBeNull();
     expect(screen.getByText("Text one")).toBeDefined();
     expect(screen.queryByText("<p>Text one</p>")).toBeNull();
-    expect(screen.getByRole("link", { name: /01 Resource 1 Text one/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Resource 1\s+Text one\s+Μάθετε/i })).toHaveAttribute(
       "href",
       "/el/sitemap",
     );
-    expect(screen.getByRole("link", { name: /02\s*Resource 2 Text two/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Resource 2\s+Text two\s+Μάθετε/i })).toHaveAttribute(
       "href",
       "/el/sitemap",
     );
@@ -154,7 +154,7 @@ describe("HomeSectionRenderer", () => {
     expect(screen.queryByRole("heading", { name: "Topics" })).toBeNull();
     expect(screen.getByText("Target excerpt")).toBeDefined();
     expect(container.querySelector('a[href="/el/first-topic"]')).toBeTruthy();
-    expect(screen.getAllByRole("link", { name: "First topic" })).toHaveLength(2);
+    expect(screen.queryByRole("link", { name: "First topic" })).toBeNull();
     expect(tileButtonLabels()).toEqual([
       "View slide 1: First topic",
       "View slide 2: Second topic",
@@ -164,16 +164,13 @@ describe("HomeSectionRenderer", () => {
     const firstTab = screen.getByRole("tab", { name: "Slide 1: First topic" });
     const secondTab = screen.getByRole("tab", { name: "Slide 2: Second topic" });
     const firstTile = screen.getByRole("button", { name: "View slide 1: First topic" });
-    const firstTopicLinks = screen.getAllByRole("link", { name: "First topic" });
 
     expect(firstTab).toHaveAttribute("aria-selected", "true");
     expect(firstTab.tagName).toBe("BUTTON");
-    expect(firstTab.closest("article")).toBeTruthy();
+    expect(firstTab.parentElement).toHaveAttribute("role", "tablist");
     expect(secondTab).toHaveAttribute("aria-selected", "false");
     expect(firstTile).toHaveAttribute("aria-current", "true");
-    expect(firstTopicLinks.every((link) => link.getAttribute("href") === "/el/first-topic")).toBe(
-      true,
-    );
+    expect(screen.queryByRole("link", { name: "First topic" })).toBeNull();
 
     fireEvent.click(secondTab);
 
@@ -183,7 +180,7 @@ describe("HomeSectionRenderer", () => {
       expect(screen.getByText("Slide description")).toBeDefined();
       expect(container.querySelector('a[href="/el/second-topic"]')).toBeTruthy();
     });
-    expect(screen.getAllByRole("link", { name: "Second topic" })).toHaveLength(2);
+    expect(screen.queryByRole("link", { name: "Second topic" })).toBeNull();
     expect(screen.getByRole("button", { name: "View slide 2: Second topic" })).toHaveAttribute(
       "aria-current",
       "true",
@@ -195,7 +192,7 @@ describe("HomeSectionRenderer", () => {
     ]);
   });
 
-  it("autoplays promo slides after hydration and pauses after manual navigation", () => {
+  it("autoplays promo slides until user navigates, then stops for the visit", () => {
     vi.useFakeTimers();
     const section = makePromoSection(2);
 
@@ -221,7 +218,8 @@ describe("HomeSectionRenderer", () => {
     act(() => {
       vi.advanceTimersByTime(6500);
     });
-    expect(secondTab).toHaveAttribute("aria-selected", "true");
+    expect(firstTab).toHaveAttribute("aria-selected", "true");
+    expect(secondTab).toHaveAttribute("aria-selected", "false");
   });
 
   it("does not start promo autoplay for a single slide", () => {

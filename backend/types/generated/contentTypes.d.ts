@@ -588,6 +588,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'sitemap',
         'specialized-article',
         'contact',
+        'testimonials-index',
       ]
     > &
       Schema.Attribute.SetPluginOptions<{

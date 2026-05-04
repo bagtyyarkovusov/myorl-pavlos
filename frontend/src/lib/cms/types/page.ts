@@ -32,7 +32,8 @@ export type LayoutVariant =
   | "search-results"
   | "sitemap"
   | "specialized-article"
-  | "contact";
+  | "contact"
+  | "testimonials-index";
 
 export type RenderMode = "cms" | "frontend-native";
 

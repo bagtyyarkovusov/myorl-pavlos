@@ -1,8 +1,13 @@
 import { PageSection } from "@/components/PageSection";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import { StandardPage } from "./StandardPage";
+import { TestimonialsIndexPage } from "./TestimonialsIndexPage";
 
-export function FrontendNativePage({ page }: PageLayoutProps) {
+type FrontendNativePageProps = PageLayoutProps & {
+  testimonialsPage?: number;
+};
+
+export function FrontendNativePage({ page, testimonialsPage = 1 }: FrontendNativePageProps) {
   if (page.layoutVariant === "search-results") {
     return (
       <PageSection>
@@ -24,6 +29,10 @@ export function FrontendNativePage({ page }: PageLayoutProps) {
         </p>
       </PageSection>
     );
+  }
+
+  if (page.layoutVariant === "testimonials-index") {
+    return <TestimonialsIndexPage page={page} currentPage={testimonialsPage} />;
   }
 
   return <StandardPage page={page} />;

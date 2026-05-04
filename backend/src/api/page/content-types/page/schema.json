@@ -167,7 +167,8 @@
         "search-results",
         "sitemap",
         "specialized-article",
-        "contact"
+        "contact",
+        "testimonials-index"
       ],
       "pluginOptions": {
         "i18n": {

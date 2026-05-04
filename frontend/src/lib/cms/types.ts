@@ -31,7 +31,12 @@ export type {
 
 export type { SectionDTO } from "./types/sections";
 
-export type { LinkedResourceItemDTO, PromoSlideItemDTO, VideoItemDTO } from "./types/sections";
+export type {
+  LinkedResourceItemDTO,
+  PromoSlideItemDTO,
+  SocialLinkItemDTO,
+  VideoItemDTO,
+} from "./types/sections";
 
 export type { SeoDTO, SitemapChangeFrequency, StrapiMedia, StrapiSeo } from "./types/seo";
 

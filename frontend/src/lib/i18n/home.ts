@@ -53,10 +53,6 @@ export type HomeStrings = {
   statTopicsFallback: string;
   learnMore: string;
   viewAll: string;
-  contactFooterTitle: string;
-  contactFooterBookLabel: string;
-  contactFooterCallLabel: string;
-  contactFooterCallHref: string;
 };
 
 const STRINGS: Record<Locale, HomeStrings> = {
@@ -123,10 +119,6 @@ const STRINGS: Record<Locale, HomeStrings> = {
     statTopicsFallback: "6+",
     learnMore: "Μάθετε περισσότερα",
     viewAll: "Δείτε όλες τις υπηρεσίες",
-    contactFooterTitle: "Έτοιμοι να αναπνεύσετε καλύτερα; Κλείστε τη συνεδρία σας.",
-    contactFooterBookLabel: "Ραντεβού",
-    contactFooterCallLabel: "Τηλέφωνο",
-    contactFooterCallHref: "tel:+302106427000",
   },
   ru: {
     heroKicker: "д-р Павлос Цоларидис, M.D. · Афины",
@@ -190,10 +182,6 @@ const STRINGS: Record<Locale, HomeStrings> = {
     statTopicsFallback: "6+",
     learnMore: "Узнать больше",
     viewAll: "Все услуги",
-    contactFooterTitle: "Готовы дышать свободнее? Запишитесь на консультацию.",
-    contactFooterBookLabel: "Записаться",
-    contactFooterCallLabel: "Позвонить",
-    contactFooterCallHref: "tel:+302106427000",
   },
 };
 

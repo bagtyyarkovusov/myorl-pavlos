@@ -609,8 +609,13 @@
     inset: 0;
     z-index: 1;
     background:
-      linear-gradient(135deg, rgba(14, 124, 123, 0.9), rgba(37, 99, 168, 0.82)),
-      linear-gradient(180deg, rgba(15, 42, 74, 0.1), rgba(15, 42, 74, 0.28));
+      linear-gradient(
+        100deg,
+        rgba(8, 26, 50, 0.78) 0%,
+        rgba(8, 26, 50, 0.45) 42%,
+        rgba(8, 26, 50, 0.05) 78%
+      ),
+      linear-gradient(180deg, rgba(8, 26, 50, 0) 50%, rgba(8, 26, 50, 0.6) 100%);
     content: "";
     pointer-events: none;
   }
@@ -625,7 +630,7 @@
     inset: 0;
     aspect-ratio: auto;
     min-height: 0;
-    opacity: 0.36;
+    opacity: 1;
   }
 
   .topic-feature .index-badge {
@@ -640,6 +645,7 @@
     min-height: 430px;
     padding: 32px;
     color: var(--color-bone-50);
+    text-shadow: 0 1px 18px rgba(8, 26, 50, 0.45);
   }
 
   .topic-feature__copy h3 {

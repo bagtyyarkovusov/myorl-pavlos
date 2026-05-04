@@ -103,11 +103,14 @@ export function HomePromoCarousel({
 
   useEffect(() => {
     const currentTab = tabRefs.current[currentIndex];
-    if (typeof currentTab?.scrollIntoView !== "function") return;
+    const rail = currentTab?.parentElement;
+    if (!currentTab || !rail) return;
+    if (typeof rail.scrollTo !== "function") return;
 
-    currentTab.scrollIntoView({
-      block: "nearest",
-      inline: "center",
+    const target =
+      currentTab.offsetLeft - rail.clientWidth / 2 + currentTab.clientWidth / 2;
+    rail.scrollTo({
+      left: Math.max(0, target),
       behavior: shouldReduceMotion ? "auto" : "smooth",
     });
   }, [currentIndex, shouldReduceMotion]);

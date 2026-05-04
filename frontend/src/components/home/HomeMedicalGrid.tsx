@@ -45,9 +45,6 @@ export function HomeMedicalGrid({
                       <span className={styles["resource-row__placeholder"]} />
                     )}
                   </span>
-                  <span className={styles["resource-row__index"]}>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
                 </span>
                 <div className={styles["resource-row__body"]}>
                   <strong>{item.title ?? "Clinical resource"}</strong>

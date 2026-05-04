@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAdvantagesSection } from "@/components/home/HomeAdvantagesSection";
-import { HomeContactFooter } from "@/components/home/HomeContactFooter";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getHomeStrings } from "@/lib/i18n/home";
@@ -56,14 +55,6 @@ export function HomePage({ page, appointmentHref, navigation }: HomePageProps) {
           </Fragment>
         );
       })}
-
-      <HomeContactFooter
-        title={t.contactFooterTitle}
-        appointmentHref={appointmentHref}
-        bookLabel={t.contactFooterBookLabel}
-        callHref={t.contactFooterCallHref}
-        callLabel={t.contactFooterCallLabel}
-      />
     </main>
   );
 }

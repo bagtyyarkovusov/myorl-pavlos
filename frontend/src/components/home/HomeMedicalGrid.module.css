@@ -134,27 +134,6 @@
     var(--surface-soft);
 }
 
-.resource-row__index {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 22px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: rgba(15, 42, 74, 0.7);
-  color: var(--color-bone-50, #fff);
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  backdrop-filter: blur(6px);
-}
-
 .resource-row__body {
   display: flex;
   flex-direction: column;

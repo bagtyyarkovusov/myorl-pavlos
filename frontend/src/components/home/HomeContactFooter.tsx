@@ -24,8 +24,10 @@ export function HomeContactFooter({
       className={`${styles["appointment-cta-section"]} ${styles["appointment-section"]}`}
     >
       <div className={styles["appointment-cta"]}>
-        <p>MyORL Athens</p>
-        <h2>{title}</h2>
+        <div className={styles["appointment-cta__copy"]}>
+          <p>MyORL Athens</p>
+          <h2>{title}</h2>
+        </div>
         <div className={styles["appointment-cta__actions"]}>
           <ButtonLink
             href={appointmentHref}

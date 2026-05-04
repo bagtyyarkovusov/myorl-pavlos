@@ -32,20 +32,22 @@ export function HomeMedicalGrid({
           return (
             <li className={styles["resource-row"]} key={`${item.title ?? "resource"}-${index}`}>
               <Link href={href}>
-                <span className={styles["resource-row__media"]} aria-hidden="true">
-                  {item.image ? (
-                    <MediaFrame
-                      media={item.image}
-                      alt=""
-                      variant="wide"
-                      className={styles["resource-row__frame"]}
-                    />
-                  ) : (
-                    <span className={styles["resource-row__placeholder"]} />
-                  )}
-                </span>
-                <span className={styles["resource-row__index"]}>
-                  {String(index + 1).padStart(2, "0")}
+                <span className={styles["resource-row__visual"]}>
+                  <span className={styles["resource-row__media"]} aria-hidden="true">
+                    {item.image ? (
+                      <MediaFrame
+                        media={item.image}
+                        alt=""
+                        variant="wide"
+                        className={styles["resource-row__frame"]}
+                      />
+                    ) : (
+                      <span className={styles["resource-row__placeholder"]} />
+                    )}
+                  </span>
+                  <span className={styles["resource-row__index"]}>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </span>
                 <div className={styles["resource-row__body"]}>
                   <strong>{item.title ?? "Clinical resource"}</strong>

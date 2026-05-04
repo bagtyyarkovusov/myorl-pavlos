@@ -1,23 +1,28 @@
 import { Fragment } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
+import { HomeAdvantagesSection } from "@/components/home/HomeAdvantagesSection";
 import { HomeContactFooter } from "@/components/home/HomeContactFooter";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getHomeStrings } from "@/lib/i18n/home";
-import type { NavigationNodeDTO } from "@/lib/cms/types";
+import type { NavigationNodeDTO, SectionDTO } from "@/lib/cms/types";
 import type { PageLayoutProps } from "./_shared";
-import styles from "@/components/home/home.module.css";
 
 type HomePageProps = PageLayoutProps & {
   appointmentHref: string;
   navigation: NavigationNodeDTO[];
 };
 
+type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
+
 export function HomePage({ page, appointmentHref, navigation }: HomePageProps) {
   const t = getHomeStrings(page.locale);
   const heroMedia = page.imageCenter ?? page.featuredImage ?? null;
   const firstPromoIndex = page.sections.findIndex(
     (section) => section.__component === "sections.promo-slider",
+  );
+  const advantagesSection = page.sections.find(
+    (section): section is AdvantagesSection => section.__component === "sections.advantages",
   );
 
   return (
@@ -34,28 +39,19 @@ export function HomePage({ page, appointmentHref, navigation }: HomePageProps) {
       {page.sections.map((section, index) => {
         const shouldRenderMenuAccess =
           section.__component === "sections.promo-slider" && index === firstPromoIndex;
-        const isMedicalGrid = section.__component === "sections.linked-resources";
-        const isVideoTheater = section.__component === "sections.video";
-
-        const dividerBefore = isMedicalGrid || isVideoTheater ? (
-          <div key={`divider-${index}`} className={styles["section-divider"]} aria-hidden="true" />
-        ) : null;
 
         if (shouldRenderMenuAccess) {
           return (
             <Fragment key={`${section.__component}-${index}`}>
-              {dividerBefore}
-              <div className={styles["section-group"]}>
-                <SectionRenderer context="home" section={section} locale={page.locale} />
-                <MenuAccessGrid navigation={navigation} locale={page.locale} />
-              </div>
+              <SectionRenderer context="home" section={section} locale={page.locale} />
+              <MenuAccessGrid navigation={navigation} locale={page.locale} />
+              {advantagesSection ? <HomeAdvantagesSection section={advantagesSection} /> : null}
             </Fragment>
           );
         }
 
         return (
           <Fragment key={`${section.__component}-${index}`}>
-            {dividerBefore}
             <SectionRenderer context="home" section={section} locale={page.locale} />
           </Fragment>
         );

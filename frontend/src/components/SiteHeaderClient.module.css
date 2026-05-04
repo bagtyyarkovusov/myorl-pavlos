@@ -17,7 +17,14 @@
 
 .site-utility {
   border-bottom: 1px solid var(--line);
-  background: var(--surface-glass-header);
+  background:
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(180deg, var(--grid-line-soft) 1px, transparent 1px),
+    rgba(246, 248, 251, 0.9);
+  background-size:
+    44px 44px,
+    44px 44px,
+    auto;
   color: var(--muted);
   font-size: 0.78rem;
   backdrop-filter: blur(16px);
@@ -94,7 +101,14 @@
 
 .site-header {
   border-bottom: 1px solid var(--line);
-  background: var(--surface-glass-nav);
+  background:
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(180deg, var(--grid-line-soft) 1px, transparent 1px),
+    rgba(246, 248, 251, 0.9);
+  background-size:
+    44px 44px,
+    44px 44px,
+    auto;
   backdrop-filter: blur(18px);
 }
 

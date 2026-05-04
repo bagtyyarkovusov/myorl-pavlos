@@ -7,27 +7,21 @@ import styles from "./home.module.css";
 type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
 
 export function HomeAdvantagesSection({ section }: { section: AdvantagesSection }) {
-  if (section.items.length === 0) {
+  const items = section.items.slice(0, 4);
+
+  if (items.length === 0) {
     return null;
   }
 
   return (
     <PageSection
-      background="surface"
       rhythm="compact"
       className={styles["credibility-section"]}
-      heading={
-        section.heading || section.intro
-          ? {
-              title: section.heading ?? "",
-              intro: section.intro ?? undefined,
-            }
-          : undefined
-      }
+      header={null}
       label={section.heading ?? undefined}
     >
       <ul className={styles["credibility-band"]} role="list">
-        {section.items.map((item, index) => (
+        {items.map((item, index) => (
           <li className={styles["credibility-card"]} key={`${item.title ?? "a"}-${index}`}>
             {item.icon ? <span>{item.icon}</span> : null}
             {item.title ? <h3>{item.title}</h3> : null}

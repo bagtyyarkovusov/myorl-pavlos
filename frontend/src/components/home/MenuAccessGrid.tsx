@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 import styles from "./home.module.css";
 
@@ -121,7 +122,7 @@ function ArrowIcon() {
   );
 }
 
-const ICON_PATHS: Record<string, React.ReactNode> = {
+const ICON_PATHS: Record<string, ReactNode> = {
   yperesies: (
     <>
       <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />

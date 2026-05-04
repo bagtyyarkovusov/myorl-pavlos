@@ -5,7 +5,7 @@ import { GalleryPage } from "@/components/page-layouts/GalleryPage";
 import { HomePage } from "@/components/page-layouts/HomePage";
 import { QuestionListPage } from "@/components/page-layouts/QuestionListPage";
 import { StandardPage } from "@/components/page-layouts/StandardPage";
-import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
+import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
 
 type PageRendererProps = {
   page: PageDTO;
@@ -13,9 +13,11 @@ type PageRendererProps = {
   appointmentHref?: string;
   /** Server-fetched navigation used by home-only entry components. */
   navigation?: NavigationNodeDTO[];
+  /** Global Strapi single-type; used by the home visit/map band. */
+  globalSettings?: GlobalSettingsDTO;
 };
 
-export function PageRenderer({ page, appointmentHref, navigation = [] }: PageRendererProps) {
+export function PageRenderer({ page, appointmentHref, navigation = [], globalSettings }: PageRendererProps) {
   if (page.renderMode === "frontend-native") {
     return <FrontendNativePage page={page} />;
   }
@@ -30,6 +32,7 @@ export function PageRenderer({ page, appointmentHref, navigation = [] }: PageRen
         page={page}
         appointmentHref={appointmentHref ?? `/${page.locale}`}
         navigation={navigation}
+        settings={globalSettings ?? { locale: page.locale, address: null, phoneTel: null, phoneDisplay: null, hours: null }}
       />
     );
   }

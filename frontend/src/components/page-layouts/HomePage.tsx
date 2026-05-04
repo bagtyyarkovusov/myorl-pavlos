@@ -1,20 +1,22 @@
 import { Fragment } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAdvantagesSection } from "@/components/home/HomeAdvantagesSection";
+import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getHomeStrings } from "@/lib/i18n/home";
-import type { NavigationNodeDTO, SectionDTO } from "@/lib/cms/types";
+import type { GlobalSettingsDTO, NavigationNodeDTO, SectionDTO } from "@/lib/cms/types";
 import type { PageLayoutProps } from "./_shared";
 
 type HomePageProps = PageLayoutProps & {
   appointmentHref: string;
   navigation: NavigationNodeDTO[];
+  settings: GlobalSettingsDTO;
 };
 
 type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
 
-export function HomePage({ page, appointmentHref, navigation }: HomePageProps) {
+export function HomePage({ page, appointmentHref, navigation, settings }: HomePageProps) {
   const t = getHomeStrings(page.locale);
   const heroMedia = page.imageCenter ?? page.featuredImage ?? null;
   const firstPromoIndex = page.sections.findIndex(
@@ -55,6 +57,11 @@ export function HomePage({ page, appointmentHref, navigation }: HomePageProps) {
           </Fragment>
         );
       })}
+      <HomeVisitMapSection
+        locale={page.locale}
+        settings={settings}
+        appointmentHref={appointmentHref}
+      />
     </main>
   );
 }

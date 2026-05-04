@@ -1,6 +1,7 @@
 import "server-only";
 
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import type { CmsGateway } from "./cms-gateway";
 import { cms as productionGateway } from "./cms-gateway-setup";
 import { globalResponseSchema } from "./strapi-validators";
@@ -108,7 +109,7 @@ function buildFallbackSettings(locale: Locale): GlobalSettingsDTO {
   };
 }
 
-export async function getSite(locale: Locale): Promise<SiteContext> {
+async function loadSite(locale: Locale): Promise<SiteContext> {
   const gateway = getGateway();
 
   const pagesPromise = gateway.pages
@@ -137,6 +138,9 @@ export async function getSite(locale: Locale): Promise<SiteContext> {
 
   return { navigation, settings };
 }
+
+/** Per-request memoization when the layout and a page both need site context. */
+export const getSite = cache(loadSite);
 
 export async function getSitemapPages(): Promise<PageDTO[]> {
   const gateway = getGateway();

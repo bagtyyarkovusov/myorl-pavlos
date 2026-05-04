@@ -1,6 +1,12 @@
 import Link from "next/link";
 
 import { getFooterStrings } from "@/lib/i18n/footer";
+import {
+  resolveContactEmail,
+  resolveFooterAddressLine,
+  resolvePhoneDisplay,
+  resolvePhoneTel,
+} from "@/lib/site/contact-fallbacks";
 import type {
   GlobalSettingsDTO,
   Locale,
@@ -45,6 +51,10 @@ export function SiteFooter({
   ];
 
   const year = new Date().getFullYear();
+  const footerAddress = resolveFooterAddressLine(settings, locale);
+  const phoneDisplay = resolvePhoneDisplay(settings);
+  const phoneTel = resolvePhoneTel(settings);
+  const email = resolveContactEmail();
 
   return (
     <footer className={styles["site-footer"]}>
@@ -64,54 +74,59 @@ export function SiteFooter({
             <p className={styles["brand-tagline"]}>{t.brandTagline}</p>
           </div>
 
-          <div className={styles["link-col"]}>
-            <p className={styles["col-label"]}>{t.practiceLabel}</p>
-            <ul className={styles["link-list"]}>
-              {practiceLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <div className={styles["nav-cols"]}>
+            <div className={styles["link-col"]}>
+              <p className={styles["col-label"]}>{t.practiceLabel}</p>
+              <ul className={styles["link-list"]}>
+                {practiceLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className={styles["link-col"]}>
-            <p className={styles["col-label"]}>{t.patientsLabel}</p>
-            <ul className={styles["link-list"]}>
-              {patientsLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
+            <div className={styles["link-col"]}>
+              <p className={styles["col-label"]}>{t.patientsLabel}</p>
+              <ul className={styles["link-list"]}>
+                {patientsLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className={styles["contact-col"]}>
             <p className={styles["col-label"]}>{t.contactLabel}</p>
-            <address className={styles["contact-block"]}>
-              {settings.address ? <span>{settings.address}</span> : null}
-              {settings.phoneTel && settings.phoneDisplay ? (
-                <a href={`tel:${settings.phoneTel}`}>{settings.phoneDisplay}</a>
+            <div className={styles["contact-row"]}>
+              <address className={styles["contact-block"]}>
+                <span>{footerAddress}</span>
+                <span>
+                  <a href={`tel:${phoneTel}`}>{phoneDisplay}</a>
+                  <span aria-hidden="true"> · </span>
+                  <a href={`mailto:${email}`}>{email}</a>
+                </span>
+              </address>
+              {socialLinks.length > 0 ? (
+                <ul className={styles["social-list"]} aria-label="Social media">
+                  {socialLinks.map((link) => (
+                    <li key={link.url}>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={link.name}
+                        title={link.name}
+                      >
+                        <SocialIcon name={link.name} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               ) : null}
-              {settings.hours ? <span>{settings.hours}</span> : null}
-            </address>
-            {socialLinks.length > 0 ? (
-              <ul className={styles["social-list"]} aria-label="Social media">
-                {socialLinks.map((link) => (
-                  <li key={link.url}>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={link.name}
-                      title={link.name}
-                    >
-                      <SocialIcon name={link.name} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+            </div>
           </div>
         </div>
 

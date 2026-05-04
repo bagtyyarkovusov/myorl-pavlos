@@ -8,7 +8,15 @@ import { ContactPage } from "./ContactPage";
 import { GalleryPage } from "./GalleryPage";
 import { QuestionListPage } from "./QuestionListPage";
 import { FrontendNativePage } from "./FrontendNativePage";
-import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
+import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
+
+const MOCK_GLOBAL_SETTINGS: GlobalSettingsDTO = {
+  locale: "el",
+  address: null,
+  phoneTel: null,
+  phoneDisplay: null,
+  hours: null,
+};
 
 const BASE_PAGE: PageDTO = {
   documentId: "test-1",
@@ -117,7 +125,14 @@ describe("HomePage", () => {
       title: "Home",
     };
 
-    render(<HomePage page={homePage} appointmentHref="/el/appointment" navigation={[]} />);
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/appointment"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
 
     expect(screen.getByRole("main")).toBeDefined();
   });
@@ -130,7 +145,14 @@ describe("HomePage", () => {
       title: "Home",
     };
 
-    render(<HomePage page={homePage} appointmentHref="/el/appointment" navigation={[]} />);
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/appointment"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
 
     expect(screen.getByRole("main").getAttribute("data-locale")).toBe("el");
   });
@@ -150,7 +172,14 @@ describe("HomePage", () => {
       ],
     };
 
-    render(<HomePage page={homePage} appointmentHref="/el/appointment" navigation={[]} />);
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/appointment"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
     expect(screen.queryByText("Follow Us")).toBeNull();
   });
 
@@ -187,7 +216,12 @@ describe("HomePage", () => {
     ];
 
     render(
-      <HomePage page={homePage} appointmentHref="/el/appointment" navigation={navigation} />,
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/appointment"
+        navigation={navigation}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
     );
 
     expect(screen.getByRole("link", { name: /Services/ })).toHaveAttribute(

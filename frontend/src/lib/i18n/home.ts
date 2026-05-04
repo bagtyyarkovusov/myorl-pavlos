@@ -53,20 +53,8 @@ export type HomeStrings = {
   statTopicsFallback: string;
   learnMore: string;
   viewAll: string;
-  /** Visit / map band (design Homepage.html — VISIT / CONTACT) */
-  visitMapEyebrow: string;
-  visitMapTitleBefore: string;
-  visitMapTitleAccent: string;
-  visitMapTitleAfter: string;
-  visitMapLead: string;
-  visitMapCardClinicLabel: string;
-  visitMapCardClinicTitle: string;
-  visitMapCardClinicBody: string;
-  visitMapCardClinicCta: string;
-  visitMapCardOnlineLabel: string;
-  visitMapCardOnlineTitle: string;
-  visitMapCardOnlineBody: string;
-  visitMapCardOnlineCta: string;
+  /** Home visit strip: address, hours, phone/email, map */
+  visitMapSectionLabel: string;
   visitMapLabelAddress: string;
   visitMapLabelHours: string;
   visitMapLabelDirect: string;
@@ -137,22 +125,7 @@ const STRINGS: Record<Locale, HomeStrings> = {
     statTopicsFallback: "6+",
     learnMore: "Μάθετε περισσότερα",
     viewAll: "Δείτε όλες τις υπηρεσίες",
-    visitMapEyebrow: "08 — Επίσκεψη",
-    visitMapTitleBefore: "Δύο τρόποι να",
-    visitMapTitleAccent: "συναντηθούμε.",
-    visitMapTitleAfter: "",
-    visitMapLead:
-      "Στο ιατρείο στην Αλεξάνδρας 201 — ή διαδικτυακά από οπουδήποτε. Και οι δύο επιλογές επιβλέπονται προσωπικά από τον δρ. Τσολαρίδη.",
-    visitMapCardClinicLabel: "Στο ιατρείο",
-    visitMapCardClinicTitle: "Κλείστε ραντεβού",
-    visitMapCardClinicBody:
-      "Συνήθως διαθέσιμο εντός 3–5 εργάσιμων ημερών. Χώρος στάθμευσης.",
-    visitMapCardClinicCta: "Άνοιγμα ημερολογίου →",
-    visitMapCardOnlineLabel: "Διαδικτυακά",
-    visitMapCardOnlineTitle: "Διαδικτυακή συνεδρία",
-    visitMapCardOnlineBody:
-      "Βιντεο-επίσκεψη 30 λεπτών. Στείλτε εξετάσεις και φωτογραφίες εκ των προτέρων.",
-    visitMapCardOnlineCta: "Έναρξη διαδικτυακής επίσκεψης →",
+    visitMapSectionLabel: "Διεύθυνση και επικοινωνία",
     visitMapLabelAddress: "Διεύθυνση",
     visitMapLabelHours: "Ώρες",
     visitMapLabelDirect: "Απευθείας",
@@ -220,22 +193,7 @@ const STRINGS: Record<Locale, HomeStrings> = {
     statTopicsFallback: "6+",
     learnMore: "Узнать больше",
     viewAll: "Все услуги",
-    visitMapEyebrow: "08 — Визит",
-    visitMapTitleBefore: "Два способа",
-    visitMapTitleAccent: "встретиться.",
-    visitMapTitleAfter: "",
-    visitMapLead:
-      "В клинике на Александрас 201 — или онлайн из любой точки. Оба варианта ведёт лично д-р Цоларидис.",
-    visitMapCardClinicLabel: "В клинике",
-    visitMapCardClinicTitle: "Запись на приём",
-    visitMapCardClinicBody:
-      "Обычно доступны окна в течение 3–5 рабочих дней. Парковка на территории.",
-    visitMapCardClinicCta: "Открыть календарь →",
-    visitMapCardOnlineLabel: "Онлайн",
-    visitMapCardOnlineTitle: "Онлайн-консультация",
-    visitMapCardOnlineBody:
-      "Видеовизит 30 минут. Заранее отправьте снимки и фотографии.",
-    visitMapCardOnlineCta: "Начать онлайн-визит →",
+    visitMapSectionLabel: "Адрес и контакты",
     visitMapLabelAddress: "Адрес",
     visitMapLabelHours: "Часы",
     visitMapLabelDirect: "Контакты",

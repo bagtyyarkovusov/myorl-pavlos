@@ -57,11 +57,7 @@ export function HomePage({ page, appointmentHref, navigation, settings }: HomePa
           </Fragment>
         );
       })}
-      <HomeVisitMapSection
-        locale={page.locale}
-        settings={settings}
-        appointmentHref={appointmentHref}
-      />
+      <HomeVisitMapSection locale={page.locale} settings={settings} />
     </main>
   );
 }

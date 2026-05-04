@@ -27,7 +27,7 @@ export function HomeVisitMapSection({ locale, settings }: HomeVisitMapSectionPro
 
   return (
     <section className={styles["section"]} aria-label={t.visitMapSectionLabel}>
-      <div className={`container ${styles["inner"]}`}>
+      <div className={styles["inner"]}>
         <div className={styles["meta"]}>
           <div>
             <div className={styles["meta-label"]}>{t.visitMapLabelAddress}</div>

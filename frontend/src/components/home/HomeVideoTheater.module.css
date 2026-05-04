@@ -15,12 +15,12 @@
 
 .video-teaser-section {
   background: transparent;
-  padding: 64px 0;
+  padding: 24px 0 48px;
 }
 
 @media (min-width: 768px) {
   .video-teaser-section {
-    padding: 96px 0;
+    padding: 32px 0 64px;
   }
 }
 
@@ -39,14 +39,23 @@
   display: grid;
   position: relative;
   isolation: isolate;
-  min-height: 430px;
+  min-height: clamp(320px, 56vw, 430px);
   align-items: end;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 14px;
   background:
     linear-gradient(135deg, rgba(15, 42, 74, 0.94), rgba(27, 58, 99, 0.74)),
     var(--color-ink);
   box-shadow: 0 28px 80px rgba(15, 42, 74, 0.2);
+  transition:
+    transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 480ms ease;
+}
+
+.video-teaser:hover .video-card,
+.video-teaser:focus-visible .video-card {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 90px rgba(15, 42, 74, 0.28);
 }
 
 .video-card video,
@@ -86,9 +95,9 @@
 
 .video-card__copy {
   display: grid;
-  gap: 18px;
+  gap: clamp(12px, 2.4vw, 18px);
   max-width: 48rem;
-  padding: clamp(24px, 5vw, 58px);
+  padding: clamp(20px, 5vw, 58px);
 }
 
 .video-card__copy p {
@@ -104,17 +113,21 @@
 .video-card__copy h2 {
   color: var(--color-bone-50);
   font-family: var(--font-display);
-  font-size: 3rem;
+  font-size: clamp(1.75rem, 6vw, 3rem);
   font-weight: 400;
   line-height: 0.98;
   text-wrap: balance;
 }
 
 .video-card__copy > span {
+  display: -webkit-box;
+  overflow: hidden;
   max-width: 42rem;
   color: rgba(251, 252, 254, 0.76);
-  font-size: 1rem;
+  font-size: clamp(0.92rem, 1.6vw, 1rem);
   line-height: 1.62;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .video-card__copy strong {
@@ -132,6 +145,16 @@
   font-size: 0.94rem;
   font-weight: 700;
   line-height: 1.1;
+  transition:
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 280ms ease,
+    box-shadow 280ms ease;
+}
+
+.video-teaser:hover .video-card__copy strong,
+.video-teaser:focus-visible .video-card__copy strong {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(15, 42, 74, 0.22);
 }
 
 .video-card__play {
@@ -152,10 +175,14 @@
   }
 
   .video-card {
-    min-height: 560px;
+    min-height: clamp(440px, 50vw, 560px);
   }
 
   .video-card__copy h2 {
-    font-size: 4.6rem;
+    font-size: clamp(2.6rem, 5vw, 4.6rem);
+  }
+
+  .video-card__copy > span {
+    -webkit-line-clamp: 4;
   }
 }

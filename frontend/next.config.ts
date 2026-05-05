@@ -48,6 +48,7 @@ function loadSlugRedirects(): NextRedirect[] {
 }
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   turbopack: {
     root: frontendRoot,
   },
@@ -82,6 +83,15 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return loadSlugRedirects();
+  },
+  async rewrites() {
+    const strapiUrl = process.env.STRAPI_URL || "http://localhost:1337";
+    return [
+      {
+        source: "/uploads/:path*",
+        destination: `${strapiUrl}/uploads/:path*`,
+      },
+    ];
   },
 };
 

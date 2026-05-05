@@ -1,6 +1,6 @@
 {
-  "rehearsedAt": "2026-04-25T12:51:20.730978+00:00",
-  "postgresVersion": "PostgreSQL 16.13 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+  "rehearsedAt": "2026-05-05T15:49:19.096830+00:00",
+  "postgresVersion": "PostgreSQL 16.11 (Debian 16.11-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
   "container": "gemini-pg-rehearsal",
   "rowCounts": {
     "pages_total": 650,
@@ -45,8 +45,8 @@
             "Total Cost": 8.29,
             "Plan Rows": 1,
             "Plan Width": 4,
-            "Actual Startup Time": 0.015,
-            "Actual Total Time": 0.016,
+            "Actual Startup Time": 0.013,
+            "Actual Total Time": 0.013,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Index Cond": "(((locale)::text = 'el'::text) AND ((slug)::text = 'epikoinonia'::text))",
@@ -63,8 +63,8 @@
             "Temp Written Blocks": 0
           },
           "Planning": {
-            "Shared Hit Blocks": 233,
-            "Shared Read Blocks": 0,
+            "Shared Hit Blocks": 222,
+            "Shared Read Blocks": 3,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
             "Local Hit Blocks": 0,
@@ -74,9 +74,9 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
           },
-          "Planning Time": 0.512,
+          "Planning Time": 0.444,
           "Triggers": [],
-          "Execution Time": 0.031
+          "Execution Time": 0.029
         }
       },
       "forcedSeqscanOff": {
@@ -94,8 +94,8 @@
             "Total Cost": 8.29,
             "Plan Rows": 1,
             "Plan Width": 4,
-            "Actual Startup Time": 0.02,
-            "Actual Total Time": 0.021,
+            "Actual Startup Time": 0.01,
+            "Actual Total Time": 0.01,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Index Cond": "(((locale)::text = 'el'::text) AND ((slug)::text = 'epikoinonia'::text))",
@@ -112,7 +112,7 @@
             "Temp Written Blocks": 0
           },
           "Planning": {
-            "Shared Hit Blocks": 233,
+            "Shared Hit Blocks": 225,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -123,9 +123,9 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
           },
-          "Planning Time": 0.952,
+          "Planning Time": 0.218,
           "Triggers": [],
-          "Execution Time": 0.044
+          "Execution Time": 0.021
         }
       },
       "verdict": "ok"
@@ -141,12 +141,12 @@
             "Node Type": "Sort",
             "Parallel Aware": false,
             "Async Capable": false,
-            "Startup Cost": 116.06,
-            "Total Cost": 116.87,
+            "Startup Cost": 184.06,
+            "Total Cost": 184.87,
             "Plan Rows": 325,
             "Plan Width": 31,
-            "Actual Startup Time": 0.389,
-            "Actual Total Time": 0.396,
+            "Actual Startup Time": 0.418,
+            "Actual Total Time": 0.426,
             "Actual Rows": 325,
             "Actual Loops": 1,
             "Sort Key": [
@@ -157,7 +157,7 @@
             "Sort Method": "quicksort",
             "Sort Space Used": 43,
             "Sort Space Type": "Memory",
-            "Shared Hit Blocks": 102,
+            "Shared Hit Blocks": 170,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -176,16 +176,16 @@
                 "Relation Name": "pages",
                 "Alias": "pages",
                 "Startup Cost": 0.0,
-                "Total Cost": 102.5,
+                "Total Cost": 170.5,
                 "Plan Rows": 325,
                 "Plan Width": 31,
-                "Actual Startup Time": 0.011,
-                "Actual Total Time": 0.233,
+                "Actual Startup Time": 0.033,
+                "Actual Total Time": 0.257,
                 "Actual Rows": 325,
                 "Actual Loops": 1,
                 "Filter": "(published_at IS NOT NULL)",
                 "Rows Removed by Filter": 325,
-                "Shared Hit Blocks": 96,
+                "Shared Hit Blocks": 164,
                 "Shared Read Blocks": 0,
                 "Shared Dirtied Blocks": 0,
                 "Shared Written Blocks": 0,
@@ -199,7 +199,7 @@
             ]
           },
           "Planning": {
-            "Shared Hit Blocks": 246,
+            "Shared Hit Blocks": 238,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -210,9 +210,9 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
           },
-          "Planning Time": 0.504,
+          "Planning Time": 0.416,
           "Triggers": [],
-          "Execution Time": 0.421
+          "Execution Time": 0.45
         }
       },
       "forcedSeqscanOff": {
@@ -222,12 +222,12 @@
             "Node Type": "Sort",
             "Parallel Aware": false,
             "Async Capable": false,
-            "Startup Cost": 134.79,
-            "Total Cost": 135.6,
+            "Startup Cost": 198.79,
+            "Total Cost": 199.6,
             "Plan Rows": 325,
             "Plan Width": 31,
-            "Actual Startup Time": 0.296,
-            "Actual Total Time": 0.303,
+            "Actual Startup Time": 0.355,
+            "Actual Total Time": 0.362,
             "Actual Rows": 325,
             "Actual Loops": 1,
             "Sort Key": [
@@ -238,7 +238,7 @@
             "Sort Method": "quicksort",
             "Sort Space Used": 43,
             "Sort Space Type": "Memory",
-            "Shared Hit Blocks": 56,
+            "Shared Hit Blocks": 105,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -256,19 +256,19 @@
                 "Async Capable": false,
                 "Relation Name": "pages",
                 "Alias": "pages",
-                "Startup Cost": 21.98,
-                "Total Cost": 121.23,
+                "Startup Cost": 17.98,
+                "Total Cost": 185.23,
                 "Plan Rows": 325,
                 "Plan Width": 31,
-                "Actual Startup Time": 0.027,
-                "Actual Total Time": 0.154,
+                "Actual Startup Time": 0.036,
+                "Actual Total Time": 0.214,
                 "Actual Rows": 325,
                 "Actual Loops": 1,
                 "Recheck Cond": "(published_at IS NOT NULL)",
                 "Rows Removed by Index Recheck": 0,
-                "Exact Heap Blocks": 46,
+                "Exact Heap Blocks": 96,
                 "Lossy Heap Blocks": 0,
-                "Shared Hit Blocks": 50,
+                "Shared Hit Blocks": 99,
                 "Shared Read Blocks": 0,
                 "Shared Dirtied Blocks": 0,
                 "Shared Written Blocks": 0,
@@ -286,14 +286,14 @@
                     "Async Capable": false,
                     "Index Name": "idx_pages_published_locale_menu_slug",
                     "Startup Cost": 0.0,
-                    "Total Cost": 21.9,
+                    "Total Cost": 17.9,
                     "Plan Rows": 325,
                     "Plan Width": 0,
                     "Actual Startup Time": 0.02,
                     "Actual Total Time": 0.02,
                     "Actual Rows": 325,
                     "Actual Loops": 1,
-                    "Shared Hit Blocks": 4,
+                    "Shared Hit Blocks": 3,
                     "Shared Read Blocks": 0,
                     "Shared Dirtied Blocks": 0,
                     "Shared Written Blocks": 0,
@@ -309,7 +309,7 @@
             ]
           },
           "Planning": {
-            "Shared Hit Blocks": 246,
+            "Shared Hit Blocks": 238,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -320,9 +320,9 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
           },
-          "Planning Time": 0.461,
+          "Planning Time": 0.277,
           "Triggers": [],
-          "Execution Time": 0.348
+          "Execution Time": 0.391
         }
       },
       "verdict": "ok"
@@ -343,16 +343,16 @@
             "Relation Name": "pages",
             "Alias": "pages",
             "Startup Cost": 0.27,
-            "Total Cost": 19.87,
+            "Total Cost": 22.08,
             "Plan Rows": 5,
             "Plan Width": 28,
-            "Actual Startup Time": 0.021,
-            "Actual Total Time": 0.026,
+            "Actual Startup Time": 0.014,
+            "Actual Total Time": 0.024,
             "Actual Rows": 5,
             "Actual Loops": 1,
             "Index Cond": "(((locale)::text = 'el'::text) AND ((page_type)::text = 'content'::text) AND ((layout_variant)::text = 'section-index'::text))",
             "Rows Removed by Index Recheck": 0,
-            "Shared Hit Blocks": 4,
+            "Shared Hit Blocks": 7,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -364,7 +364,7 @@
             "Temp Written Blocks": 0
           },
           "Planning": {
-            "Shared Hit Blocks": 252,
+            "Shared Hit Blocks": 244,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -375,9 +375,9 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
           },
-          "Planning Time": 0.507,
+          "Planning Time": 0.283,
           "Triggers": [],
-          "Execution Time": 0.097
+          "Execution Time": 0.037
         }
       },
       "forcedSeqscanOff": {
@@ -392,16 +392,16 @@
             "Relation Name": "pages",
             "Alias": "pages",
             "Startup Cost": 0.27,
-            "Total Cost": 19.87,
+            "Total Cost": 22.08,
             "Plan Rows": 5,
             "Plan Width": 28,
-            "Actual Startup Time": 0.012,
-            "Actual Total Time": 0.015,
+            "Actual Startup Time": 0.011,
+            "Actual Total Time": 0.021,
             "Actual Rows": 5,
             "Actual Loops": 1,
             "Index Cond": "(((locale)::text = 'el'::text) AND ((page_type)::text = 'content'::text) AND ((layout_variant)::text = 'section-index'::text))",
             "Rows Removed by Index Recheck": 0,
-            "Shared Hit Blocks": 4,
+            "Shared Hit Blocks": 7,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -413,7 +413,7 @@
             "Temp Written Blocks": 0
           },
           "Planning": {
-            "Shared Hit Blocks": 252,
+            "Shared Hit Blocks": 244,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -424,9 +424,9 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
           },
-          "Planning Time": 0.465,
+          "Planning Time": 0.269,
           "Triggers": [],
-          "Execution Time": 0.03
+          "Execution Time": 0.032
         }
       },
       "verdict": "ok"
@@ -445,16 +445,16 @@
             "Relation Name": "tags",
             "Alias": "tags",
             "Startup Cost": 0.0,
-            "Total Cost": 1.46,
+            "Total Cost": 2.46,
             "Plan Rows": 1,
             "Plan Width": 4,
-            "Actual Startup Time": 0.006,
-            "Actual Total Time": 0.007,
+            "Actual Startup Time": 0.011,
+            "Actual Total Time": 0.015,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Filter": "(((locale)::text = 'el'::text) AND ((slug)::text = 'ear'::text))",
             "Rows Removed by Filter": 30,
-            "Shared Hit Blocks": 1,
+            "Shared Hit Blocks": 2,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -467,7 +467,7 @@
           },
           "Planning": {
             "Shared Hit Blocks": 148,
-            "Shared Read Blocks": 0,
+            "Shared Read Blocks": 1,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
             "Local Hit Blocks": 0,
@@ -477,9 +477,9 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
           },
-          "Planning Time": 0.414,
+          "Planning Time": 0.192,
           "Triggers": [],
-          "Execution Time": 0.021
+          "Execution Time": 0.025
         }
       },
       "forcedSeqscanOff": {
@@ -497,8 +497,8 @@
             "Total Cost": 8.16,
             "Plan Rows": 1,
             "Plan Width": 4,
-            "Actual Startup Time": 0.008,
-            "Actual Total Time": 0.008,
+            "Actual Startup Time": 0.01,
+            "Actual Total Time": 0.01,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Index Cond": "(((locale)::text = 'el'::text) AND ((slug)::text = 'ear'::text))",
@@ -515,7 +515,7 @@
             "Temp Written Blocks": 0
           },
           "Planning": {
-            "Shared Hit Blocks": 148,
+            "Shared Hit Blocks": 149,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -526,19 +526,18 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
           },
-          "Planning Time": 0.344,
+          "Planning Time": 0.151,
           "Triggers": [],
-          "Execution Time": 0.028
+          "Execution Time": 0.021
         }
       },
       "verdict": "ok"
     }
   ],
   "verdict": "ok",
-  "knownDataIssues": [],
   "notes": [
-    "loadSource=direct-copy",
-    "Tag query uses slug='ear' (not the runbook's placeholder 'myorl', which does not exist in the dataset). Plan shape is what matters.",
-    "Forced 'enable_seqscan = off' is captured per query because at this row count (~325 published pages) the planner may legitimately pick Seq Scan; the forced plan confirms the index is reachable."
+    "Rehearsal orchestrated via tools/orchestrate_rehearsal.py",
+    "Full Strapi export/import used (not direct CSV copy)",
+    "Forced 'enable_seqscan = off' confirms index reachability"
   ]
 }

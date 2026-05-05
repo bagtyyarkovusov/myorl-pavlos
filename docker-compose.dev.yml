@@ -1,0 +1,93 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: gemini-pg
+    environment:
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+      POSTGRES_DB: strapi
+    ports:
+      - "55432:5432"
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U strapi -d strapi"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  strapi:
+    image: node:20-alpine
+    container_name: gemini-strapi-dev
+    working_dir: /app
+    command:
+      - sh
+      - -c
+      - |
+        if [ ! -f node_modules/.package-lock.json ]; then
+          npm ci
+        fi
+        exec npm run develop
+    environment:
+      HOST: 0.0.0.0
+      PORT: 1337
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: strapi
+      DATABASE_SSL: "false"
+      STRAPI_CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      APP_KEYS: FtNQUsitedAzF4dklt8e2svkjdIdZwVNmn/2j+ITQxM=,Y2YjYf4szIgKgxyOj2QJnT/dC2FtRQO6RRh6a1Rugxs=,8gw0ZIpZcd37uJM4DaHEmUSwtPaOgWC5FpLHFoiL4AM=,ZgucP5P3apcXcM5rWd6fP1ROvdZAXlwtA4yhIU3Uam0=
+      API_TOKEN_SALT: p0zKh/rL1ZWxDO409CA459qTIVm2htyRCzhNTYkeq0Y=
+      ADMIN_JWT_SECRET: CxuMj5qboavNIa6UaLkzo/GRzB/pCWH+AC6vlOSIxms=
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-salt}
+      JWT_SECRET: ${JWT_SECRET:-secret}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-key}
+    ports:
+      - "1337:1337"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - strapi_node_modules:/app/node_modules
+      - ./backend/public/uploads:/app/public/uploads
+
+  nextjs:
+    image: node:24-slim
+    container_name: gemini-nextjs-dev
+    working_dir: /app
+    command:
+      - sh
+      - -c
+      - |
+        if [ ! -f /tmp/.deps-installed ]; then
+          apt-get update && apt-get install -y libc6-dev && rm -rf /var/lib/apt/lists/*
+          touch /tmp/.deps-installed
+        fi
+        if [ ! -f node_modules/.package-lock.json ]; then
+          npm install
+        fi
+        exec npm run dev
+    environment:
+      STRAPI_URL: http://localhost:1337
+      STRAPI_TOKEN: 991f8b99165498a27ba3fbd047413c88dbb3cbcfcbaec64d18034c4055f698a07f8d538b1e16d0c8fcd4a103b9ce907052fdb2c81784d61cef692bacd8655375018cf75a8ca487ac7565b8f7090c5b9b355808df95f4be65a781df037be02340ac98ebd953120583e52647172d74290478c3417009c91faa2c2c1f7acfacd298
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET:-dev-revalidate-secret}
+    extra_hosts:
+      - "localhost:host-gateway"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - strapi
+    volumes:
+      - ./frontend:/app
+      - nextjs_node_modules:/app/node_modules
+      - ./data/manifests:/data/manifests:ro
+
+volumes:
+  pgdata_dev:
+  strapi_node_modules:
+  nextjs_node_modules:

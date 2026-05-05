@@ -1,26 +1,27 @@
-FROM node:20-alpine AS deps
+FROM node:24-slim AS deps
 
-RUN apk add --no-cache libc6-compat
+RUN apt-get update && apt-get install -y libc6-dev && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY ./frontend/package.json ./frontend/package-lock.json ./
 
-RUN npm ci
+RUN npm install
 
 FROM deps AS builder
 
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY ./frontend .
+COPY ./data/manifests /data/manifests
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 RUN npm run build
 
-FROM node:20-alpine AS runner
+FROM node:24-slim AS runner
 
 WORKDIR /app
 

@@ -27,11 +27,13 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=deps /app/package.json ./
 COPY --from=deps /app/patches ./patches
-COPY config ./config
 COPY src ./src
 COPY database ./database
 COPY favicon.png ./
 COPY public/robots.txt ./public/
+
+# Copy compiled config files so Strapi can load them (symlinks don't work with fs.isFile())
+RUN mkdir -p config && cp -r dist/config/* config/
 
 EXPOSE 1337
 

@@ -3,27 +3,88 @@
 Use this before any shared or production PostgreSQL cutover. SQLite remains a
 local rehearsal store only.
 
-## Inputs
+## Quick Start (Automated)
 
-- Source SQLite DB: `backend/.tmp/data.db`
-- Versioned index migrations: `backend/database/postgres-migrations/*.up.sql`
-- Historical staged SQL: `backend/database/postgres-readiness/*.sql`
-
-## Rehearsal Steps
-
-1. Start a disposable PostgreSQL database with the same Strapi version and env
-   shape intended for production.
-2. Transfer the current local Strapi dataset into PostgreSQL with Strapi's
-   supported transfer path.
-3. Apply schema changes separately from data changes.
-4. Apply index migrations outside a transaction block:
+The rehearsal lifecycle is fully automated:
 
 ```bash
-psql "$DATABASE_URL" -f backend/database/postgres-migrations/20260425_001_pages_lookup_indexes.up.sql
-psql "$DATABASE_URL" -f backend/database/postgres-migrations/20260425_002_tag_slug_indexes.up.sql
+python3 tools/orchestrate_rehearsal.py
 ```
 
-5. Verify the hot paths with `EXPLAIN ANALYZE`.
+This single command runs the entire pipeline:
+1. Preflight guard (port/container/database checks)
+2. Export full Strapi state from SQLite
+3. Start rehearsal PostgreSQL (`gemini-pg-rehearsal` on port `55532`)
+4. Import into PostgreSQL
+5. Apply forward-only index migrations
+6. Run EXPLAIN ANALYZE on hot paths
+7. Generate report at `artifacts/reports/postgres_rehearsal_explain_report.json`
+8. Clean up container and volume
+
+To leave the container running for local Strapi development against PostgreSQL:
+
+```bash
+python3 tools/orchestrate_rehearsal.py --keep-running
+```
+
+Then switch to the rehearsal environment:
+
+```bash
+cd backend
+cp .env.rehearsal .env
+npm run develop
+```
+
+## Manual Steps (Advanced)
+
+If you need to run steps individually:
+
+### 1. Environment Guard
+
+```bash
+python3 tools/check_environment.py --target=rehearsal
+```
+
+Fails fast if port `55532` is occupied, a conflicting container exists, or the SQLite source is missing.
+
+### 2. Export from SQLite
+
+```bash
+cd backend
+DATABASE_CLIENT=sqlite npx strapi export --file ../artifacts/rehearsal-export.tar.gz --no-encrypt
+```
+
+### 3. Start Rehearsal DB
+
+```bash
+docker compose -f docker-compose.rehearsal.yml up -d
+```
+
+### 4. Import into PostgreSQL
+
+```bash
+cd backend
+DATABASE_CLIENT=postgres \
+  DATABASE_HOST=127.0.0.1 \
+  DATABASE_PORT=55532 \
+  DATABASE_NAME=strapi_rehearsal \
+  DATABASE_USERNAME=strapi \
+  DATABASE_PASSWORD=strapi \
+  npx strapi import --file ../artifacts/rehearsal-export.tar.gz --force
+```
+
+### 5. Apply Index Migrations
+
+```bash
+psql "postgres://strapi:strapi@localhost:55532/strapi_rehearsal" \
+  -f backend/database/postgres-migrations/20260425_001_pages_lookup_indexes.up.sql
+psql "postgres://strapi:strapi@localhost:55532/strapi_rehearsal" \
+  -f backend/database/postgres-migrations/20260425_002_tag_slug_indexes.up.sql
+```
+
+### 6. Verify Hot Paths
+
+Run the EXPLAIN ANALYZE queries from the [Query-Plan Checks](#query-plan-checks) section below.
 
 ## Query-Plan Checks
 
@@ -70,7 +131,7 @@ EXPLAIN ANALYZE
 SELECT id
 FROM tags
 WHERE locale = 'el'
-  AND slug = 'myorl';
+  AND slug = 'ear';
 ```
 
 ## Rollback Policy
@@ -83,8 +144,10 @@ WHERE locale = 'el'
 
 ## Capture
 
-Save the final `EXPLAIN ANALYZE` output under `artifacts/reports/` and link it
-from `docs/audit.md` or the relevant ADR before launch.
+The orchestrator automatically saves the report to
+`artifacts/reports/postgres_rehearsal_explain_report.json`.
+
+Link this report from `docs/audit.md` or the relevant ADR before launch.
 
 ## Production Readiness Gates
 
@@ -113,18 +176,13 @@ python3 tools/production_readiness_gate.py
 Local development may also use `AUTORIZATION_TOKEN` where the migration tooling
 explicitly supports it. Do not commit real tokens.
 
-The `gemini-pg-rehearsal` container proves the PostgreSQL query-plan and data
-strictness evidence for this cutover. Treat it as a full Strapi runtime database
-only after it has been populated through the canonical Strapi import path,
-including navigation and plugin-owned data.
+## Port Allocation
 
-For a local PostgreSQL-backed Strapi runtime, use environment values with this
-shape:
-
-```bash
-DATABASE_CLIENT=postgres
-DATABASE_URL=postgres://strapi:strapi@localhost:55432/strapi_rehearsal
-```
+| Port | Owner |
+|------|-------|
+| `5432` | Native/system PostgreSQL |
+| `55432` | Dev Docker (`gemini-pg`) |
+| `55532` | Rehearsal Docker (`gemini-pg-rehearsal`) |
 
 Keep SQLite as the default local store unless the team explicitly decides to
 switch the committed development defaults.

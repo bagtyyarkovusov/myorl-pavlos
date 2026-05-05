@@ -1,0 +1,12 @@
+diff --git a/node_modules/@strapi/content-manager/dist/admin/hooks/useDocumentActions.mjs b/node_modules/@strapi/content-manager/dist/admin/hooks/useDocumentActions.mjs
+index 1234567..abcdefg 100644
+--- a/node_modules/@strapi/content-manager/dist/admin/hooks/useDocumentActions.mjs
++++ b/node_modules/@strapi/content-manager/dist/admin/hooks/useDocumentActions.mjs
+@@ -1,6 +1,6 @@
+ import * as React from 'react';
+ import { useNotification, useTracking, useAPIErrorHandler } from '@strapi/admin/strapi-admin';
+-import { useGetAIFeatureConfigQuery, useAIAvailability } from '@strapi/admin/strapi-admin/ee';
++import { useAIAvailability } from '@strapi/admin/strapi-admin/ee';
+ import { useIntl } from 'react-intl';
+ import { useNavigate } from 'react-router-dom';
+ import { useQueryClient, useMutation } from '@tanstack/react-query';

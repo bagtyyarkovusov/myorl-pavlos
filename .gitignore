@@ -2,6 +2,7 @@
 .env
 .env.local
 backend/.env
+backend/.env.rehearsal
 *.local.env
 
 # Python
@@ -39,6 +40,8 @@ artifacts/reports/*_report.json
 artifacts/reports/*_report.apply-results.json
 artifacts/reports/*_audit.json
 artifacts/reports/sync_navigation_report.json
+artifacts/exports/
+artifacts/*.tar.gz
 !artifacts/reports/.gitkeep
 !artifacts/reports/README.md
 
@@ -64,3 +67,8 @@ Thumbs.db
 *.swp
 *.swo
 .gitnexus
+
+# Test artifacts
+test-results/
+playwright-report/
+playwright/.cache/

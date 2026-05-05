@@ -51,8 +51,8 @@ services:
 
   nextjs:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     container_name: gemini-nextjs-prod
     environment:
       STRAPI_URL: ${STRAPI_URL:-http://strapi:1337}

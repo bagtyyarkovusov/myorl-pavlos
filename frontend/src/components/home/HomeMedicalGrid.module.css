@@ -108,18 +108,16 @@
 .resource-row__media {
   display: block;
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
 .resource-row__frame {
   width: 100%;
-  height: 100%;
   border: 0;
   border-radius: 0;
-  aspect-ratio: auto;
   transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 
 .resource-row a:hover .resource-row__frame,
 .resource-row a:focus-visible .resource-row__frame {
@@ -286,11 +284,17 @@
   .resource-row a:focus-visible {
     padding-left: 8px;
   }
-}
 
-@media (min-width: 480px) {
-  .resource-row--beyond-mobile-cap {
-    display: list-item;
+  .resource-row__media {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .resource-row a .resource-row__frame {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
   }
 }
 
@@ -308,19 +312,21 @@
   /* Keep row layout arrows for 480–767 horizontal cards */
 }
 
-@media (min-width: 768px) {
-  .resource-row__text {
-    display: -webkit-box !important;
-  }
-
-  .resource-row__cta {
-    display: inline-flex !important;
-  }
-}
-
-/* ── 480px+: two-column row cards ── */
-
 @media (min-width: 480px) {
+  .resource-row--beyond-mobile-cap {
+    display: list-item;
+  }
+
+  .resource-row__visual {
+    align-self: center;
+  }
+
+  /* Square thumb = grid column width; overrides MediaFrame `wide` 16/9 */
+  .resource-row a .resource-row__frame {
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
   .resource-list {
     grid-template-columns: repeat(2, 1fr);
     border-left: 1px solid var(--color-stone-line, #d7dfeb);
@@ -339,16 +345,24 @@
   }
 }
 
-@media (min-width: 720px) {
+@media (min-width: 768px) {
   .resource-row a {
     grid-template-columns: 132px minmax(0, 1fr);
     gap: 18px;
     padding: 14px;
-    min-height: 132px;
+    min-height: 148px;
   }
 
   .resource-row__body {
     padding-right: 56px;
+  }
+
+  .resource-row__text {
+    display: -webkit-box !important;
+  }
+
+  .resource-row__cta {
+    display: inline-flex !important;
   }
 }
 
@@ -363,7 +377,7 @@
 
   .resource-row a {
     grid-template-columns: 156px minmax(0, 1fr);
-    min-height: 148px;
+    min-height: 184px;
   }
 
   .resource-row__body strong {
@@ -380,7 +394,7 @@
 @media (min-width: 1024px) {
   .resource-row a {
     grid-template-columns: 180px minmax(0, 1fr);
-    min-height: 164px;
+    min-height: 212px;
     padding: 16px;
   }
 

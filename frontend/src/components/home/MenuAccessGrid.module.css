@@ -20,7 +20,7 @@
   border-left: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
-/* Mobile: 3 cols × 2 rows (six links) — titles + icons only; descriptions from 768px+ */
+/* Narrow viewports: 3 cols × 2 rows (six links) — icons + titles only; row tiles + descriptions from 768px+ */
 .menu-access-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -95,7 +95,7 @@
   text-wrap: balance;
 }
 
-/* Descriptions hidden on phones / small tablets; shown lg+ alongside row layout below */
+/* Descriptions hidden in compact grid; shown from 768px+ alongside row layout below */
 .menu-access-card__desc {
   display: none;
   overflow: hidden;
@@ -109,9 +109,9 @@
   display: none;
 }
 
-/* ── 560px: row tiles, 2-column grid ── */
+/* ── 768px: row tiles, 2-column grid (compact 3×2 grid below this width, including ~640px phones) ── */
 
-@media (min-width: 560px) {
+@media (min-width: 768px) {
   .menu-access-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -197,11 +197,8 @@
     transform: translateX(3px);
     color: var(--accent);
   }
-}
 
-/* Large screens: show excerpt text inside each tile */
-
-@media (min-width: 768px) {
+  /* Show excerpt text inside each tile */
   .menu-access-card__desc {
     display: -webkit-box;
     -webkit-box-orient: vertical;

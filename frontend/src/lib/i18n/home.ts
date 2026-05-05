@@ -64,7 +64,6 @@ export type HomeStrings = {
   testimonialsEyebrow: string;
   testimonialsTitle: string;
   testimonialsIntro: string;
-  testimonialsSourceLabel: string;
   testimonialsRatingLabel: string;
   /** "{{count}}" → number of reviews on Google (e.g. 147). */
   testimonialsReviewCountTemplate: string;
@@ -151,11 +150,10 @@ const STRINGS: Record<Locale, HomeStrings> = {
     testimonialsEyebrow: "Κριτικές ασθενών",
     testimonialsTitle: "Τι γράφουν στο Google Maps",
     testimonialsIntro: "Σύντομα αποσπάσματα από δημόσιες κριτικές· πηγή: Google Maps.",
-    testimonialsSourceLabel: "Πηγή: Google Maps",
     testimonialsRatingLabel: "Βαθμολογία στο Google",
     testimonialsReviewCountTemplate: "{{count}} κριτικές στο Google Maps",
-    testimonialsViewAll: "Όλες οι κριτικές →",
-    testimonialsOpenMaps: "Άνοιγμα στο Google Maps →",
+    testimonialsViewAll: "Όλες οι κριτικές",
+    testimonialsOpenMaps: "Άνοιγμα στο Google Maps",
     testimonialsMobileExpand: "Περισσότερα",
     testimonialsMobileCollapse: "Λιγότερα",
     testimonialsPaginationPrev: "Προηγούμενη",
@@ -233,11 +231,10 @@ const STRINGS: Record<Locale, HomeStrings> = {
     testimonialsEyebrow: "Отзывы пациентов",
     testimonialsTitle: "Отзывы в Google Maps",
     testimonialsIntro: "Короткие цитаты из публичных отзывов; источник: Google Maps.",
-    testimonialsSourceLabel: "Источник: Google Maps",
     testimonialsRatingLabel: "Рейтинг в Google",
     testimonialsReviewCountTemplate: "{{count}} отзывов на Google Maps",
-    testimonialsViewAll: "Все отзывы →",
-    testimonialsOpenMaps: "Открыть в Google Maps →",
+    testimonialsViewAll: "Все отзывы",
+    testimonialsOpenMaps: "Открыть в Google Maps",
     testimonialsMobileExpand: "Показать полностью",
     testimonialsMobileCollapse: "Свернуть",
     testimonialsPaginationPrev: "Назад",

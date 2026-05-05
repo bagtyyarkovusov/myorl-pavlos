@@ -1,4 +1,14 @@
+/* ════════════════════════════════════════════════════════════
+   Site footer — responsive spacing aligned with main layout (768+ tablet)
+   ════════════════════════════════════════════════════════════ */
+
 .site-footer {
+  --footer-divider: rgba(251, 252, 254, 0.1);
+  --footer-divider-subtle: rgba(251, 252, 254, 0.06);
+  --footer-stack-gap: clamp(1.15rem, 3.8vw, 1.6rem);
+  --footer-stack-gap-section: clamp(1.35rem, 4.5vw, 2rem);
+  --footer-link-tap: 44px;
+
   background: var(--color-ink, #0f2a4a);
   color: var(--color-bone-50, #fbfcfe);
   margin-top: clamp(48px, 9vw, 88px);
@@ -12,7 +22,7 @@
 .site-footer__grid {
   display: grid;
   align-items: start;
-  gap: clamp(24px, 5vw, 40px);
+  gap: var(--footer-stack-gap-section);
   grid-template-columns: 1fr;
 }
 
@@ -115,6 +125,9 @@
 }
 
 .link-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
   color: rgba(251, 252, 254, 0.8);
   font-size: clamp(0.86rem, 2.2vw, 0.92rem);
   line-height: 1.45;
@@ -196,6 +209,7 @@
   border-top: 1px solid rgba(251, 252, 254, 0.12);
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   gap: clamp(10px, 2vw, 14px);
   align-items: flex-start;
   font-family: var(--font-mono);
@@ -212,6 +226,11 @@
 }
 
 .bottom-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--footer-link-tap);
+  margin: -0.35rem 0;
+  padding: 0.35rem 0;
   color: inherit;
   text-decoration: none;
   transition: color 180ms ease;
@@ -223,15 +242,23 @@
   outline: none;
 }
 
-/* Phones: full-width intro, tighter rhythm, hairline dividers */
-@media (max-width: 719.98px) {
+/* ── Stacked layout: tablet portrait & down (matches site 768bp) ── */
+
+@media (max-width: 767.98px) {
   .site-footer__inner {
     padding-top: clamp(28px, 7vw, 44px);
     padding-bottom: max(1.75rem, calc(env(safe-area-inset-bottom, 0px) + 2rem));
   }
 
   .site-footer__grid {
-    gap: 1.25rem;
+    gap: var(--footer-stack-gap);
+  }
+
+  /* Visual separation between brand → nav → contact (single rhythm) */
+  .site-footer__grid > .nav-cols,
+  .site-footer__grid > .contact-col {
+    padding-top: var(--footer-stack-gap-section);
+    border-top: 1px solid var(--footer-divider-subtle);
   }
 
   .brand-col {
@@ -251,10 +278,6 @@
     gap: clamp(6px, 1.5vw, 10px);
   }
 
-  .contact-col .col-label {
-    text-align: left;
-  }
-
   .contact-row {
     gap: clamp(8px, 2vw, 12px);
   }
@@ -264,26 +287,32 @@
   }
 
   .link-list a {
+    min-height: 2.5rem;
     line-height: 1.35;
   }
 
   .site-footer__bottom {
-    margin-top: 1.35rem;
-    padding-top: 1rem;
-    gap: 0.65rem;
-    /* Leave room for fixed back-to-top / overlays beside copyright */
-    padding-right: 3rem;
+    margin-top: clamp(1.35rem, 4.5vw, 1.75rem);
+    padding-top: clamp(1rem, 3vw, 1.25rem);
+    gap: 0.65rem 1rem;
+    /* Fixed back-to-top / overlays */
+    padding-right: clamp(2.5rem, 12vw, 3.25rem);
   }
 }
 
+/* ── Small phones: tighter nav density; centered contact block ── */
+
 @media (max-width: 479.98px) {
-  .site-footer__grid > .nav-cols,
-  .site-footer__grid > .contact-col {
-    padding-top: 0.875rem;
-    border-top: 1px solid rgba(251, 252, 254, 0.055);
+  .site-footer__grid {
+    gap: var(--footer-stack-gap);
   }
 
-  /* Centered contact row — small phones only */
+  .site-footer__grid > .nav-cols,
+  .site-footer__grid > .contact-col {
+    padding-top: clamp(1rem, 3.5vw, 1.125rem);
+    border-top-color: var(--footer-divider-subtle);
+  }
+
   .contact-col {
     align-items: center;
   }
@@ -316,11 +345,13 @@
   }
 }
 
-@media (min-width: 720px) {
+/* ── Tablet landscape & up: 3-column grid ── */
+
+@media (min-width: 768px) {
   .site-footer__grid {
-    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1.52fr) minmax(0, 1.12fr);
-    column-gap: clamp(32px, 4.5vw, 56px);
-    row-gap: clamp(28px, 3.5vw, 40px);
+    grid-template-columns: minmax(10.5rem, 1.05fr) minmax(0, 1.5fr) minmax(10.25rem, 1.1fr);
+    column-gap: clamp(28px, 4vw, 56px);
+    row-gap: clamp(24px, 3.2vw, 40px);
   }
 
   .brand-col {
@@ -355,28 +386,35 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
+    gap: 1rem 1.5rem;
   }
 
   .site-footer__bottom p {
     text-wrap: unset;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .bottom-link {
+    flex-shrink: 0;
   }
 }
 
 @media (min-width: 960px) {
   .site-footer__inner {
     padding: clamp(72px, 7vw, 96px) 0 clamp(32px, 3.5vw, 44px);
+    padding-bottom: max(clamp(32px, 3.5vw, 44px), calc(env(safe-area-inset-bottom, 0px) + 1.25rem));
   }
 
   .site-footer__grid {
-    column-gap: clamp(40px, 5vw, 72px);
-    row-gap: clamp(32px, 4vw, 48px);
+    column-gap: clamp(36px, 4.6vw, 72px);
+    row-gap: clamp(28px, 3.6vw, 48px);
   }
 }
 
 @media (min-width: 1200px) {
   .site-footer__grid {
-    column-gap: clamp(48px, 5vw, 88px);
-    row-gap: clamp(36px, 4vw, 52px);
+    column-gap: clamp(44px, 4.8vw, 88px);
+    row-gap: clamp(32px, 3.8vw, 52px);
   }
 }

@@ -1,10 +1,11 @@
 import { MediaFrame } from "@/components/design-system";
-import type { PageDTO } from "@/lib/cms/types";
+import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
 
 import styles from "./_shared.module.css";
 
 export type PageLayoutProps = {
   page: PageDTO;
+  navigation?: NavigationNodeDTO[];
 };
 
 export function PageHeader({ page, kicker }: { page: PageDTO; kicker?: string | null }) {
@@ -14,6 +15,7 @@ export function PageHeader({ page, kicker }: { page: PageDTO; kicker?: string | 
   return (
     <header className={`${styles["page-hero"]} ${media ? "" : styles["page-hero--text-only"]}`}>
       <div>
+        <span className={styles["accent-hairline"]} data-accent aria-hidden="true" />
         {kickerText ? (
           <p className="font-mono text-xs font-medium uppercase text-stone-soft">{kickerText}</p>
         ) : null}

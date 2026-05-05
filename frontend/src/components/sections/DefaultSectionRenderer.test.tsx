@@ -134,4 +134,73 @@ describe("DefaultSectionRenderer", () => {
     const { container } = render(<DefaultSectionRenderer section={section} />);
     expect(container.querySelector("section")).toBeFalsy();
   });
+
+  it("wraps advantages in a 3-column SectionGrid", () => {
+    const section = makeSection({
+      __component: "sections.advantages",
+      heading: "Advantages",
+      items: [
+        { title: "A1", description: "<p>D1</p>", icon: null },
+        { title: "A2", description: "<p>D2</p>", icon: null },
+      ],
+    } as SectionDTO);
+
+    const { container } = render(<DefaultSectionRenderer section={section} />);
+    const grid = container.firstElementChild as HTMLElement;
+    expect(grid.className).toContain("cols-3");
+  });
+
+  it("wraps faq in a 1-column SectionGrid", () => {
+    const section = makeSection({
+      __component: "sections.faq",
+      heading: "FAQ",
+      items: [{ question: "Q1", answer: "<p>A1</p>" }],
+    } as SectionDTO);
+
+    const { container } = render(<DefaultSectionRenderer section={section} />);
+    const grid = container.firstElementChild as HTMLElement;
+    expect(grid.className).toContain("cols-1");
+  });
+
+  it("wraps video in a 2-column SectionGrid", () => {
+    const section = makeSection({
+      __component: "sections.video",
+      heading: "Videos",
+      videos: [{ title: "V1", videoMp4: null, videoWebm: null, thumbnail: null, videoTags: null }],
+    } as SectionDTO);
+
+    const { container } = render(<DefaultSectionRenderer section={section} />);
+    const grid = container.firstElementChild as HTMLElement;
+    expect(grid.className).toContain("cols-2");
+  });
+
+  it("renders FAQ disclosure items with a chevron indicator", () => {
+    const section = makeSection({
+      __component: "sections.faq",
+      heading: "FAQ",
+      items: [{ question: "Q1", answer: "<p>A1</p>" }],
+    } as SectionDTO);
+
+    const { container } = render(<DefaultSectionRenderer section={section} />);
+    const details = container.querySelector("details");
+    expect(details).toBeTruthy();
+    const summary = details!.querySelector("summary");
+    expect(summary).toBeTruthy();
+    const chevron = summary!.querySelector("[data-chevron]");
+    expect(chevron).toBeTruthy();
+  });
+
+  it("renders accordion disclosure items with a chevron indicator", () => {
+    const section = makeSection({
+      __component: "sections.accordion",
+      heading: "Accordion",
+      items: [{ title: "Item 1", content: "<p>Content</p>" }],
+    } as SectionDTO);
+
+    const { container } = render(<DefaultSectionRenderer section={section} />);
+    const summary = container.querySelector("summary");
+    expect(summary).toBeTruthy();
+    const chevron = summary!.querySelector("[data-chevron]");
+    expect(chevron).toBeTruthy();
+  });
 });

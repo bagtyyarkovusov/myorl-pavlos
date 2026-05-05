@@ -53,6 +53,7 @@ export function HomeMedicalGrid({
                         alt=""
                         variant="wide"
                         className={styles["resource-row__frame"]}
+                        sizes="(max-width: 479px) 42vw, (max-width: 767px) 112px, (max-width: 859px) 152px, (max-width: 1023px) 176px, 200px"
                       />
                     ) : (
                       <span className={styles["resource-row__placeholder"]} />

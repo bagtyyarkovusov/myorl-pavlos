@@ -66,6 +66,8 @@ type MediaFrameProps = {
   variant?: "portrait" | "wide";
   eager?: boolean;
   className?: string;
+  /** Overrides the default `sizes` hint for `next/image` (layout-specific breakpoints). */
+  sizes?: string;
 };
 
 export function MediaFrame({
@@ -75,6 +77,7 @@ export function MediaFrame({
   variant = "wide",
   eager = false,
   className,
+  sizes: sizesProp,
 }: MediaFrameProps) {
   const frameClass = cn(
     styles["media-frame"],
@@ -83,6 +86,11 @@ export function MediaFrame({
     className,
   );
 
+  const defaultSizes =
+    variant === "portrait"
+      ? "(min-width: 960px) 36vw, 100vw"
+      : "(min-width: 960px) 44vw, 100vw";
+
   return (
     <div className={frameClass}>
       {media?.url ? (
@@ -90,11 +98,7 @@ export function MediaFrame({
           src={media.url}
           alt={alt || media.alternativeText || ""}
           fill
-          sizes={
-            variant === "portrait"
-              ? "(min-width: 960px) 36vw, 100vw"
-              : "(min-width: 960px) 44vw, 100vw"
-          }
+          sizes={sizesProp ?? defaultSizes}
           loading={eager ? "eager" : undefined}
           fetchPriority={eager ? "high" : undefined}
           unoptimized

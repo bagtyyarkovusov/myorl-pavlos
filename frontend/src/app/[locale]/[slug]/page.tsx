@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageRenderer } from "@/components/PageRenderer";
-import { getPage } from "@/lib/cms/cms-api";
+import { getPage, getSite } from "@/lib/cms/cms-api";
 import { getSitemapPages } from "@/lib/cms/cms-api";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { isLocale } from "@/lib/cms/types";
@@ -52,9 +52,9 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
     notFound();
   }
 
-  const page = await getPage(locale, slug);
+  const [page, { navigation }] = await Promise.all([getPage(locale, slug), getSite(locale)]);
   const sp = searchParams ? await searchParams : {};
   const testimonialsPage = parsePageParam(sp.page);
 
-  return <PageRenderer page={page} testimonialsPage={testimonialsPage} />;
+  return <PageRenderer page={page} navigation={navigation} testimonialsPage={testimonialsPage} />;
 }

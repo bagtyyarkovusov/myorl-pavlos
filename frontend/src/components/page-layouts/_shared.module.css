@@ -1,3 +1,11 @@
+.accent-hairline {
+  display: block;
+  width: 48px;
+  height: 1px;
+  margin-bottom: 16px;
+  background: var(--accent);
+}
+
 .page-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
@@ -66,6 +74,17 @@
 .gallery-grid img {
   width: 100%;
   border-radius: 8px;
+}
+
+.contact-band {
+  margin-top: 36px;
+  padding: clamp(24px, 4vw, 40px) 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.contact-clinics {
+  margin-top: 36px;
 }
 
 .contact-grid {

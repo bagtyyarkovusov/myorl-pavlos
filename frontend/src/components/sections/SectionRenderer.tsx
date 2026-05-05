@@ -3,6 +3,8 @@ import { DefaultSectionRenderer } from "./DefaultSectionRenderer";
 import { PageSection } from "@/components/PageSection";
 import type { Locale, SectionDTO } from "@/lib/cms/types";
 
+import styles from "./SectionRenderer.module.css";
+
 type SectionRendererProps = {
   section: SectionDTO;
   context?: "default" | "home";
@@ -24,7 +26,7 @@ export function SectionRenderer({
       : undefined;
 
   return (
-    <PageSection heading={headingBlock} rhythm="standard">
+    <PageSection heading={headingBlock} rhythm="standard" className={styles["section-divider"]}>
       <DefaultSectionRenderer section={section} />
     </PageSection>
   );

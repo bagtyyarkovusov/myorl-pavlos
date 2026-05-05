@@ -1,0 +1,84 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.content img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.nav:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav--prev {
+  left: 16px;
+}
+
+.nav--next {
+  right: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content img {
+    transition: none;
+  }
+}

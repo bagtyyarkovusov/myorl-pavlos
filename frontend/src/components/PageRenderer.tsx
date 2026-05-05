@@ -4,6 +4,7 @@ import { FrontendNativePage } from "@/components/page-layouts/FrontendNativePage
 import { GalleryPage } from "@/components/page-layouts/GalleryPage";
 import { HomePage } from "@/components/page-layouts/HomePage";
 import { QuestionListPage } from "@/components/page-layouts/QuestionListPage";
+import { SectionIndexPage } from "@/components/page-layouts/SectionIndexPage";
 import { StandardPage } from "@/components/page-layouts/StandardPage";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
@@ -35,7 +36,11 @@ export function PageRenderer({
   }
 
   if (page.layoutVariant === "appointment-form") {
-    return <AppointmentPage page={page} />;
+    return <AppointmentPage page={page} navigation={navigation} />;
+  }
+
+  if (page.layoutVariant === "section-index") {
+    return <SectionIndexPage page={page} navigation={navigation} />;
   }
 
   if (page.pageType === "home") {
@@ -51,16 +56,16 @@ export function PageRenderer({
   }
 
   if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
-    return <QuestionListPage page={page} />;
+    return <QuestionListPage page={page} navigation={navigation} />;
   }
 
   if (page.pageType === "gallery") {
-    return <GalleryPage page={page} />;
+    return <GalleryPage page={page} navigation={navigation} />;
   }
 
   if (page.pageType === "contact") {
-    return <ContactPage page={page} />;
+    return <ContactPage page={page} navigation={navigation} />;
   }
 
-  return <StandardPage page={page} />;
+  return <StandardPage page={page} navigation={navigation} />;
 }

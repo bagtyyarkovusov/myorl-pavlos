@@ -10,6 +10,58 @@
   padding: clamp(22px, 3vw, 34px);
 }
 
+.content-card--media {
+  composes: content-card;
+  padding: 0;
+  overflow: hidden;
+}
+
+.content-card--media > img,
+.content-card--media > picture,
+.content-card--media > video {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.content-card--media-body {
+  padding: clamp(16px, 2.5vw, 24px);
+}
+
+.content-card--disclosure {
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 16px 0;
+}
+
+.content-card--inline-strip {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.inline-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: border-color 0.15s ease;
+}
+
+.inline-pill:hover {
+  border-color: var(--accent);
+}
+
 .gallery-grid {
   display: grid;
   gap: 24px;

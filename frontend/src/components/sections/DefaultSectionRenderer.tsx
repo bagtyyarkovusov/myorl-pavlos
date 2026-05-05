@@ -1,9 +1,12 @@
 import Image from "next/image";
 
 import { CmsHtml } from "@/components/CmsHtml";
+import { GalleryWithLightbox } from "@/components/GalleryWithLightbox";
+import { SectionGrid } from "@/components/SectionGrid";
 import { toSocialLinkDTO } from "@/lib/cms/dto";
 import type { MediaDTO, SectionDTO } from "@/lib/cms/types";
 
+import { SECTION_COLUMN_DEFAULTS } from "./grid-defaults";
 import styles from "./SectionRenderer.module.css";
 
 function DisclosureList({
@@ -12,14 +15,19 @@ function DisclosureList({
   items: Array<[string | null | undefined, string | null | undefined]>;
 }) {
   return (
-    <div className={styles["card-list"]}>
+    <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.faq"]}>
       {items.map(([title, content], index) => (
-        <details className={styles["content-card"]} key={`${title ?? "item"}-${index}`}>
-          <summary>{title}</summary>
-          <CmsHtml html={content} />
+        <details className={styles["disclosure"]} key={`${title ?? "item"}-${index}`}>
+          <summary className={styles["disclosure__summary"]}>
+            <span>{title}</span>
+            <span className={styles["disclosure__chevron"]} data-chevron aria-hidden="true" />
+          </summary>
+          <div className={styles["disclosure__body"]}>
+            <CmsHtml html={content} />
+          </div>
         </details>
       ))}
-    </div>
+    </SectionGrid>
   );
 }
 
@@ -44,7 +52,7 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
   switch (section.__component) {
     case "sections.promo-slider":
       return (
-        <div className={`${styles["card-list"]} ${styles["feature-list"]}`}>
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.promo-slider"]}>
           {section.slides.map((slide, index) => (
             <article
               className={`${styles["content-card"]} ${styles["media-card"]}`}
@@ -56,11 +64,11 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
               {slide.targetUrl ? <a href={slide.targetUrl}>Open</a> : null}
             </article>
           ))}
-        </div>
+        </SectionGrid>
       );
     case "sections.linked-resources":
       return (
-        <div className={styles["card-list"]}>
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.linked-resources"]}>
           {section.items.map((item, index) => (
             <article
               className={styles["content-card"]}
@@ -71,24 +79,26 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
               {item.targetUrl ? <a href={item.targetUrl}>Open</a> : null}
             </article>
           ))}
-        </div>
+        </SectionGrid>
       );
     case "sections.social-links":
       return (
-        <ul className={styles["inline-list"]}>
-          {section.links
-            .map(toSocialLinkDTO)
-            .filter((link): link is NonNullable<typeof link> => link !== null)
-            .map((link) => (
-              <li key={`${link.platform}-${link.url}`}>
-                <a href={link.url}>{link.label}</a>
-              </li>
-            ))}
-        </ul>
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.social-links"]}>
+          <ul className={styles["inline-list"]}>
+            {section.links
+              .map(toSocialLinkDTO)
+              .filter((link): link is NonNullable<typeof link> => link !== null)
+              .map((link) => (
+                <li key={`${link.platform}-${link.url}`}>
+                  <a href={link.url}>{link.label}</a>
+                </li>
+              ))}
+          </ul>
+        </SectionGrid>
       );
     case "sections.video":
       return (
-        <div className={styles["card-list"]}>
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.video"]}>
           {section.videos.map((video, index) => (
             <article
               className={`${styles["content-card"]} ${styles["media-card"]}`}
@@ -110,11 +120,11 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
               {video.videoTags ? <p>{video.videoTags}</p> : null}
             </article>
           ))}
-        </div>
+        </SectionGrid>
       );
     case "sections.advantages":
       return (
-        <div className={styles["card-list"]}>
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.advantages"]}>
           {section.items.map((item, index) => (
             <article
               className={styles["content-card"]}
@@ -129,7 +139,7 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
               <CmsHtml html={item.description} />
             </article>
           ))}
-        </div>
+        </SectionGrid>
       );
     case "sections.accordion":
       return <DisclosureList items={section.items.map((item) => [item.title, item.content])} />;
@@ -137,7 +147,7 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
       return <DisclosureList items={section.items.map((item) => [item.question, item.answer])} />;
     case "sections.tabs":
       return (
-        <div className={styles["card-list"]}>
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.tabs"]}>
           {section.items.map((item, index) => (
             <article className={styles["content-card"]} key={`${item.title ?? "tab"}-${index}`}>
               {item.title ? <h3>{item.title}</h3> : null}
@@ -145,28 +155,19 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
               {item.link ? <a href={item.link}>Open</a> : null}
             </article>
           ))}
-        </div>
+        </SectionGrid>
       );
     case "sections.gallery":
       return (
-        <div className={styles["gallery-grid"]}>
-          {section.items.map((item, index) => (
-            <article
-              className={`${styles["content-card"]} ${styles["media-card"]}`}
-              key={`${item.caption ?? "image"}-${index}`}
-            >
-              <ResponsiveImage
-                media={item.image}
-                alt={item.image?.alternativeText ?? item.caption ?? ""}
-              />
-              {item.caption ? <h3>{item.caption}</h3> : null}
-            </article>
-          ))}
-        </div>
+        <GalleryWithLightbox
+          items={section.items}
+          className={styles["gallery-grid"]}
+          itemClassName={`${styles["content-card"]} ${styles["media-card"]}`}
+        />
       );
     case "sections.contact":
       return (
-        <div className={styles["card-list"]}>
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.contact"]}>
           {section.details.map((detail, index) => (
             <article className={styles["content-card"]} key={`${detail.type}-${index}`}>
               <h3>{detail.type}</h3>
@@ -181,7 +182,7 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
               {clinic.email ? <p>{clinic.email}</p> : null}
             </article>
           ))}
-        </div>
+        </SectionGrid>
       );
     default:
       if (process.env.NODE_ENV === "development") {

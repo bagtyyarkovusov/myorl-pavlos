@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
+import { cn } from "@/lib/utils";
 import type { HomeTestimonialQuote } from "@/lib/testimonials/home-payload";
 
-import styles from "./HomeTestimonialsTeaser.module.css";
-
-const WIDE_BP = 768;
-/** Collapsed mobile grid: up to four tight cells (2×2). */
-const PREVIEW_CAP = 4;
+import styles from "./HomeTestimonialsTeaserQuotes.module.css";
 
 function starsLabel(rating: number): string {
   const n = Math.round(Math.min(5, Math.max(0, rating)));
@@ -28,70 +25,92 @@ export function HomeTestimonialsTeaserQuotes({
   expandLabel,
   collapseLabel,
 }: HomeTestimonialsTeaserQuotesProps) {
-  const [expanded, setExpanded] = useState(false);
-  const [isWide, setIsWide] = useState(true);
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
+  const [overflowCards, setOverflowCards] = useState<Set<number>>(new Set());
+  const textRefs = useRef<Map<number, HTMLParagraphElement>>(new Map());
 
-  useEffect(() => {
-    const mq = window.matchMedia(`(min-width: ${WIDE_BP}px)`);
-    const apply = () => setIsWide(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
+  const toggleCard = useCallback((index: number) => {
+    setExpandedCards((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
   }, []);
 
-  const showToggle = !isWide && quotes.length > 2;
-  const isExpandedLayout = isWide || expanded;
-  const preview = quotes.slice(0, PREVIEW_CAP);
+  useEffect(() => {
+    // Detect which cards have text that overflows the clamped line count.
+    // scrollHeight reflects full unclamped content when -webkit-line-clamp is active.
+    const overflows = new Set<number>();
+
+    const raf = requestAnimationFrame(() => {
+      textRefs.current.forEach((el, index) => {
+        if (!el) return;
+        // 2px tolerance for subpixel rounding
+        if (el.scrollHeight > el.clientHeight + 2) {
+          overflows.add(index);
+        }
+      });
+      if (overflows.size > 0) {
+        setOverflowCards(overflows);
+      }
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [quotes]);
 
   return (
-    <div className={styles.quotesWrap}>
-      {isExpandedLayout || !showToggle ? (
-        <ul className={styles.list} role="list">
-          {quotes.map((q, i) => (
-            <li key={`${q.author}-${i}`} className={styles.item}>
-              <blockquote className={styles.quote} cite={googleMapsUrl}>
-                <p>{q.text}</p>
-                <footer className={styles.meta}>
-                  {q.author ? <span>{q.author}</span> : null}
-                  {q.rating != null && q.rating > 0 ? (
-                    <span aria-label={`${q.rating} of 5`}>{starsLabel(q.rating)}</span>
-                  ) : null}
-                  {q.relativeTime ? <span className={styles.metaTime}>{q.relativeTime}</span> : null}
-                </footer>
-              </blockquote>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <ul className={styles.gridPreview} role="list">
-          {preview.map((q, i) => (
-            <li key={`${q.author}-p-${i}`} className={styles.itemCompact}>
-              <blockquote className={styles.compactQuote} cite={googleMapsUrl}>
-                <p className={styles.compactText}>{q.text}</p>
-                <footer className={styles.compactMeta}>
-                  {q.author ? <span>{q.author}</span> : null}
-                  {q.rating != null && q.rating > 0 ? (
-                    <span aria-label={`${q.rating} of 5`}>{starsLabel(q.rating)}</span>
-                  ) : null}
-                </footer>
-              </blockquote>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className={styles.wrap}>
+      <ul className={styles.grid} role="list">
+      {quotes.map((q, i) => {
+        const isExpanded = expandedCards.has(i);
+        const hasOverflow = overflowCards.has(i);
+        const showFade = hasOverflow && !isExpanded;
 
-      {showToggle ? (
-        <div className={styles.toggleRow}>
-          <button
-            type="button"
-            className={styles.toggleBtn}
-            onClick={() => setExpanded((v) => !v)}
-            aria-expanded={isExpandedLayout}
-          >
-            {isExpandedLayout ? collapseLabel : expandLabel}
-          </button>
-        </div>
-      ) : null}
+        return (
+          <li key={`${q.author}-${i}`} className={cn(styles.gridItem, styles.card)}>
+            <blockquote className={styles.cardBody} cite={googleMapsUrl}>
+              <div className={cn(styles.textWrapper, showFade && styles.fadeActive)}>
+                <p
+                  ref={(el) => {
+                    if (el) {
+                      textRefs.current.set(i, el);
+                    } else {
+                      textRefs.current.delete(i);
+                    }
+                  }}
+                  className={cn(styles.text, isExpanded && styles.textExpanded)}
+                >
+                  {q.text}
+                </p>
+              </div>
+
+              {hasOverflow ? (
+                <button
+                  type="button"
+                  className={styles.expandBtn}
+                  onClick={() => toggleCard(i)}
+                  aria-expanded={isExpanded}
+                >
+                  {isExpanded ? collapseLabel : expandLabel}
+                </button>
+              ) : null}
+
+              <footer className={styles.meta}>
+                {q.author ? <span>{q.author}</span> : null}
+                {q.rating != null && q.rating > 0 ? (
+                  <span aria-label={`${q.rating} of 5`}>{starsLabel(q.rating)}</span>
+                ) : null}
+                {q.relativeTime ? <span className={styles.metaTime}>{q.relativeTime}</span> : null}
+              </footer>
+            </blockquote>
+          </li>
+        );
+      })}
+      </ul>
     </div>
   );
 }

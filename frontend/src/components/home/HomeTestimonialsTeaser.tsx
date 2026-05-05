@@ -1,8 +1,8 @@
-import Link from "next/link";
-
+import { ButtonLink } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import { TestimonialsRatingBar } from "@/components/testimonials/TestimonialsRatingBar";
 import { getHomeStrings } from "@/lib/i18n/home";
+import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
@@ -23,12 +23,16 @@ export function HomeTestimonialsTeaser({
     <PageSection
       rhythm="compact"
       containerWidth="tight"
-      className={`border-y border-stone-line ${styles.section}`}
+      className={cn(
+        styles.section,
+        /* Tighter bottom than compact py so the action links sit nearer HomeVisitMapSection */
+        "pb-5 md:pb-6",
+      )}
       heading={{ title: t.testimonialsTitle }}
     >
       <div className={styles.ratingSlot}>
         <TestimonialsRatingBar
-          className="justify-center text-center md:justify-start md:text-left"
+          className="w-full justify-center text-center lg:w-auto lg:justify-start lg:text-left"
           rating={payload.aggregateRating}
           userRatingCount={payload.userRatingCount}
           countTemplate={t.testimonialsReviewCountTemplate}
@@ -43,22 +47,12 @@ export function HomeTestimonialsTeaser({
       />
 
       <div className={styles.actions}>
-        <Link href={fullHref} className={`u-link ${styles.actionsLink}`}>
+        <ButtonLink href={fullHref} variant="primary" className={styles.actionBtn}>
           {t.testimonialsViewAll}
-        </Link>
-        <a
-          href={payload.googleMapsReviewsUrl}
-          className={`u-link ${styles.actionsLink}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        </ButtonLink>
+        <ButtonLink href={payload.googleMapsReviewsUrl} variant="secondary" className={styles.actionBtn}>
           {t.testimonialsOpenMaps}
-        </a>
-        <p className={styles.source}>
-          <a href={payload.googleMapsUrl} target="_blank" rel="noopener noreferrer" className={styles.sourceLink}>
-            {t.testimonialsSourceLabel}
-          </a>
-        </p>
+        </ButtonLink>
       </div>
     </PageSection>
   );

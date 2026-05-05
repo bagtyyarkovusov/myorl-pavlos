@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 
 import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
+import { SectionIndexPage } from "./SectionIndexPage";
 import { AppointmentPage } from "./AppointmentPage";
 import { ContactPage } from "./ContactPage";
 import { GalleryPage } from "./GalleryPage";
@@ -77,6 +78,21 @@ function makeNav(slug: string, label: string, index = 0): NavigationNodeDTO {
   };
 }
 
+describe("PageHeader", () => {
+  it("renders accent hairline decoration", () => {
+    render(<StandardPage page={{ ...BASE_PAGE, title: "Accent Test" }} />);
+    const header = screen.getByRole("banner");
+    expect(header.querySelector("[data-accent]")).toBeTruthy();
+  });
+
+  it("renders kicker text from layout variant", () => {
+    render(
+      <StandardPage page={{ ...BASE_PAGE, title: "Service", layoutVariant: "service-article" }} />,
+    );
+    expect(screen.getByText("service article")).toBeDefined();
+  });
+});
+
 describe("StandardPage", () => {
   it("renders title and excerpt", () => {
     render(
@@ -85,6 +101,17 @@ describe("StandardPage", () => {
 
     expect(screen.getByRole("heading", { name: "My Article" })).toBeDefined();
     expect(screen.getByText("A short excerpt")).toBeDefined();
+  });
+
+  it("accepts navigation prop for future tab bar use", () => {
+    const nav = [makeNav("child-1", "Child 1")];
+    render(
+      <StandardPage
+        page={{ ...BASE_PAGE, title: "Parent", isFolder: true }}
+        navigation={nav}
+      />,
+    );
+    expect(screen.getByRole("heading", { name: "Parent" })).toBeDefined();
   });
 
   it("renders content via CmsHtml", () => {
@@ -253,6 +280,56 @@ describe("ContactPage", () => {
     render(<ContactPage page={contactPage} />);
     expect(screen.getByText("+30 210 123 4567")).toBeDefined();
   });
+
+  it("renders contact details in a featured band", () => {
+    const contactPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "contact",
+      layoutVariant: "contact",
+      title: "Contact Us",
+      sections: [
+        {
+          __component: "sections.contact" as const,
+          heading: "Get in Touch",
+          intro: null,
+          details: [
+            { type: "phone", valueHtml: "<p>+30 210 123 4567</p>" },
+            { type: "email", valueHtml: "<p>info@clinic.com</p>" },
+          ],
+          clinics: [{ name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null }],
+        },
+      ],
+    };
+
+    const { container } = render(<ContactPage page={contactPage} />);
+    const band = container.querySelector("[data-contact-band]");
+    expect(band).toBeTruthy();
+  });
+
+  it("renders clinics in a separate grid section", () => {
+    const contactPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "contact",
+      layoutVariant: "contact",
+      title: "Contact Us",
+      sections: [
+        {
+          __component: "sections.contact" as const,
+          heading: "Get in Touch",
+          intro: null,
+          details: [{ type: "phone", valueHtml: "<p>+30 210 123 4567</p>" }],
+          clinics: [
+            { name: "Athens", addressHtml: "<p>123 Main St</p>", phone: "+30 210 000", email: null },
+            { name: "Thessaloniki", addressHtml: "<p>456 Other St</p>", phone: null, email: "th@cl.com" },
+          ],
+        },
+      ],
+    };
+
+    render(<ContactPage page={contactPage} />);
+    expect(screen.getByText("Athens")).toBeDefined();
+    expect(screen.getByText("Thessaloniki")).toBeDefined();
+  });
 });
 
 describe("GalleryPage", () => {
@@ -296,6 +373,27 @@ describe("GalleryPage", () => {
     expect(screen.getByText("Photo A")).toBeDefined();
     expect(screen.getByText("Photo B")).toBeDefined();
     expect(screen.getByText("Our Work")).toBeDefined();
+  });
+
+  it("renders gallery items as clickable buttons for lightbox", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Gallery",
+      sections: [
+        {
+          __component: "sections.gallery",
+          items: [
+            { caption: "Photo 1", image: { url: "/img/1.jpg", alternativeText: "Pic 1", width: 800, height: 600 } },
+          ],
+        },
+      ],
+    };
+
+    const { container } = render(<GalleryPage page={galleryPage} />);
+    const clickable = container.querySelector("button[data-gallery-trigger]");
+    expect(clickable).toBeTruthy();
   });
 });
 
@@ -357,6 +455,72 @@ describe("FrontendNativePage", () => {
   });
 });
 
+describe("SectionIndexPage", () => {
+  it("renders page title and content", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "section-index",
+      isFolder: true,
+      title: "Diseases",
+      content: "<p>Browse our conditions library</p>",
+    };
+    const nav = [
+      {
+        ...makeNav("diseases", "Diseases"),
+        isFolder: true,
+        children: [
+          makeNav("rhinitis", "Rhinitis", 1),
+          makeNav("sinusitis", "Sinusitis", 2),
+        ],
+      },
+    ];
+
+    render(<SectionIndexPage page={page} navigation={nav} />);
+
+    expect(screen.getByRole("heading", { name: "Diseases" })).toBeDefined();
+    expect(screen.getByText("Browse our conditions library")).toBeDefined();
+  });
+
+  it("renders child page links from navigation tree", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-diseases",
+      layoutVariant: "section-index",
+      isFolder: true,
+      title: "Diseases",
+      slug: "diseases",
+    };
+    const nav = [
+      {
+        ...makeNav("diseases", "Diseases"),
+        isFolder: true,
+        children: [
+          makeNav("rhinitis", "Rhinitis", 1),
+          makeNav("sinusitis", "Sinusitis", 2),
+        ],
+      },
+    ];
+
+    render(<SectionIndexPage page={page} navigation={nav} />);
+
+    expect(screen.getByRole("link", { name: /Rhinitis/ })).toHaveAttribute("href", "/el/rhinitis");
+    expect(screen.getByRole("link", { name: /Sinusitis/ })).toHaveAttribute("href", "/el/sinusitis");
+  });
+
+  it("renders nothing for child grid when no navigation match", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "section-index",
+      isFolder: true,
+      title: "Orphan",
+    };
+
+    const { container } = render(<SectionIndexPage page={page} navigation={[]} />);
+
+    expect(container.querySelector("ol")).toBeNull();
+  });
+});
+
 describe("AppointmentPage", () => {
   it("renders without crashing", () => {
     const apptPage: PageDTO = {
@@ -367,6 +531,20 @@ describe("AppointmentPage", () => {
 
     render(<AppointmentPage page={apptPage} />);
     expect(screen.getByRole("heading", { name: "Appointment" })).toBeDefined();
+  });
+
+  it("renders prominent contact CTA links", () => {
+    const apptPage: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "appointment-form",
+      title: "Appointment",
+    };
+
+    render(<AppointmentPage page={apptPage} />);
+    const phoneLink = screen.getByRole("link", { name: /call/i });
+    expect(phoneLink).toBeTruthy();
+    const emailLink = screen.getByRole("link", { name: /email/i });
+    expect(emailLink).toBeTruthy();
   });
 
   it("renders sections through SectionRenderer", () => {

@@ -1,5 +1,3 @@
-diff --git a/node_modules/@strapi/content-manager/dist/admin/hooks/useDocumentActions.mjs b/node_modules/@strapi/content-manager/dist/admin/hooks/useDocumentActions.mjs
-index 1234567..abcdefg 100644
 --- a/node_modules/@strapi/content-manager/dist/admin/hooks/useDocumentActions.mjs
 +++ b/node_modules/@strapi/content-manager/dist/admin/hooks/useDocumentActions.mjs
 @@ -1,6 +1,6 @@
@@ -9,4 +7,4 @@ index 1234567..abcdefg 100644
 +import { useAIAvailability } from '@strapi/admin/strapi-admin/ee';
  import { useIntl } from 'react-intl';
  import { useNavigate } from 'react-router-dom';
- import { useQueryClient, useMutation } from '@tanstack/react-query';
+ import { useRelationModal } from '../pages/EditView/components/FormInputs/Relations/RelationModal.mjs';

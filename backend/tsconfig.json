@@ -38,6 +38,8 @@
     "src/admin/",
     // Do not include test files
     "**/*.test.*",
+    // Do not include test runner config
+    "vitest.config.ts",
     // Do not include plugins in the server compilation
     "src/plugins/**"
   ]

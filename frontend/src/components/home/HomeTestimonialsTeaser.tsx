@@ -50,7 +50,11 @@ export function HomeTestimonialsTeaser({
         <ButtonLink href={fullHref} variant="primary" className={styles.actionBtn}>
           {t.testimonialsViewAll}
         </ButtonLink>
-        <ButtonLink href={payload.googleMapsReviewsUrl} variant="secondary" className={styles.actionBtn}>
+        <ButtonLink
+          href={payload.googleMapsReviewsUrl}
+          variant="secondary"
+          className={styles.actionBtn}
+        >
           {t.testimonialsOpenMaps}
         </ButtonLink>
       </div>

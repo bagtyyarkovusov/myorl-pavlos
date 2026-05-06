@@ -5,8 +5,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
+  workers: process.env.CI ? 2 : undefined,
+  snapshotPathTemplate:
+    "{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}",
+  reporter: process.env.CI ? "github" : "html",
   timeout: 30000,
 
   use: {

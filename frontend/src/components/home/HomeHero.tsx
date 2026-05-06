@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ButtonLink } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
@@ -67,12 +68,12 @@ export function HomeHero({ kicker, title, excerpt, media, ctaHref, ctaLabel }: H
 
         <motion.div variants={itemVariants} className={styles["hero-media-wrap"]}>
           <div className={styles["hero-media-frame"]}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={heroMedia.url}
               alt={heroMedia.alternativeText ?? ""}
-              loading="eager"
-              fetchPriority="high"
+              fill
+              priority
+              sizes="(max-width: 719px) 90vw, (max-width: 1023px) 60vw, 40vw"
               className={styles["hero-media-image"]}
             />
           </div>

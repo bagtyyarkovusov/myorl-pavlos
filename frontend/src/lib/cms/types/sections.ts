@@ -1,17 +1,8 @@
+import type { SectionComponent } from "@gemini/shared-types";
 import type { MediaDTO, PageRefDTO } from "./common";
 import type { ContactClinicDTO, ContactDetailDTO } from "./contact";
 
-export type SectionComponent =
-  | "sections.promo-slider"
-  | "sections.linked-resources"
-  | "sections.social-links"
-  | "sections.video"
-  | "sections.advantages"
-  | "sections.accordion"
-  | "sections.faq"
-  | "sections.tabs"
-  | "sections.gallery"
-  | "sections.contact";
+export type { SectionComponent };
 
 type SectionBase = {
   heading?: string | null;

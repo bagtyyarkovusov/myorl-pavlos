@@ -65,51 +65,53 @@ export function HomeTestimonialsTeaserQuotes({
   return (
     <div className={styles.wrap}>
       <ul className={styles.grid} role="list">
-      {quotes.map((q, i) => {
-        const isExpanded = expandedCards.has(i);
-        const hasOverflow = overflowCards.has(i);
-        const showFade = hasOverflow && !isExpanded;
+        {quotes.map((q, i) => {
+          const isExpanded = expandedCards.has(i);
+          const hasOverflow = overflowCards.has(i);
+          const showFade = hasOverflow && !isExpanded;
 
-        return (
-          <li key={`${q.author}-${i}`} className={cn(styles.gridItem, styles.card)}>
-            <blockquote className={styles.cardBody} cite={googleMapsUrl}>
-              <div className={cn(styles.textWrapper, showFade && styles.fadeActive)}>
-                <p
-                  ref={(el) => {
-                    if (el) {
-                      textRefs.current.set(i, el);
-                    } else {
-                      textRefs.current.delete(i);
-                    }
-                  }}
-                  className={cn(styles.text, isExpanded && styles.textExpanded)}
-                >
-                  {q.text}
-                </p>
-              </div>
+          return (
+            <li key={`${q.author}-${i}`} className={cn(styles.gridItem, styles.card)}>
+              <blockquote className={styles.cardBody} cite={googleMapsUrl}>
+                <div className={cn(styles.textWrapper, showFade && styles.fadeActive)}>
+                  <p
+                    ref={(el) => {
+                      if (el) {
+                        textRefs.current.set(i, el);
+                      } else {
+                        textRefs.current.delete(i);
+                      }
+                    }}
+                    className={cn(styles.text, isExpanded && styles.textExpanded)}
+                  >
+                    {q.text}
+                  </p>
+                </div>
 
-              {hasOverflow ? (
-                <button
-                  type="button"
-                  className={styles.expandBtn}
-                  onClick={() => toggleCard(i)}
-                  aria-expanded={isExpanded}
-                >
-                  {isExpanded ? collapseLabel : expandLabel}
-                </button>
-              ) : null}
-
-              <footer className={styles.meta}>
-                {q.author ? <span>{q.author}</span> : null}
-                {q.rating != null && q.rating > 0 ? (
-                  <span aria-label={`${q.rating} of 5`}>{starsLabel(q.rating)}</span>
+                {hasOverflow ? (
+                  <button
+                    type="button"
+                    className={styles.expandBtn}
+                    onClick={() => toggleCard(i)}
+                    aria-expanded={isExpanded}
+                  >
+                    {isExpanded ? collapseLabel : expandLabel}
+                  </button>
                 ) : null}
-                {q.relativeTime ? <span className={styles.metaTime}>{q.relativeTime}</span> : null}
-              </footer>
-            </blockquote>
-          </li>
-        );
-      })}
+
+                <footer className={styles.meta}>
+                  {q.author ? <span>{q.author}</span> : null}
+                  {q.rating != null && q.rating > 0 ? (
+                    <span aria-label={`${q.rating} of 5`}>{starsLabel(q.rating)}</span>
+                  ) : null}
+                  {q.relativeTime ? (
+                    <span className={styles.metaTime}>{q.relativeTime}</span>
+                  ) : null}
+                </footer>
+              </blockquote>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

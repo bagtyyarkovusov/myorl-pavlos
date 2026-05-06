@@ -26,16 +26,34 @@ const HOME_ACCESS_FALLBACKS: Record<
     ru: { title: "Услуги", description: "Свяжитесь с нами по любой ЛОР-проблеме." },
   },
   epemvaseis: {
-    el: { title: "ΩΡΛ επεμβάσεις", description: "Πληροφορίες για τις χειρουργικές επιλογές και τη διαδικασία." },
-    ru: { title: "ЛОР Операции", description: "Операции выполняются современными минимально-травматичными методами." },
+    el: {
+      title: "ΩΡΛ επεμβάσεις",
+      description: "Πληροφορίες για τις χειρουργικές επιλογές και τη διαδικασία.",
+    },
+    ru: {
+      title: "ЛОР Операции",
+      description: "Операции выполняются современными минимально-травматичными методами.",
+    },
   },
   diagnosi: {
-    el: { title: "Διάγνωση", description: "Εξετάσεις και εξοπλισμός για γρήγορη διάγνωση και θεραπεία." },
-    ru: { title: "Диагностика", description: "Современное оборудование для быстрой диагностики и лечения." },
+    el: {
+      title: "Διάγνωση",
+      description: "Εξετάσεις και εξοπλισμός για γρήγορη διάγνωση και θεραπεία.",
+    },
+    ru: {
+      title: "Диагностика",
+      description: "Современное оборудование для быстрой диагностики и лечения.",
+    },
   },
   klinikes: {
-    el: { title: "Κλινικές", description: "Συνεργασίες με ασφαλιστικά ταμεία και κλινικές στην Αθήνα." },
-    ru: { title: "Больницы", description: "Сотрудничаем со страховыми и ЛОР-клиниками в Афинах и Греции." },
+    el: {
+      title: "Κλινικές",
+      description: "Συνεργασίες με ασφαλιστικά ταμεία και κλινικές στην Αθήνα.",
+    },
+    ru: {
+      title: "Больницы",
+      description: "Сотрудничаем со страховыми и ЛОР-клиниками в Афинах и Греции.",
+    },
   },
   timokatalogos: {
     el: { title: "Τιμοκατάλογος", description: "Δείτε ενδεικτικά τις διαθέσιμες υπηρεσίες." },
@@ -43,7 +61,10 @@ const HOME_ACCESS_FALLBACKS: Record<
   },
   video: {
     el: { title: "Βίντεο", description: "Συλλογή ιατρικών βίντεο από εξετάσεις και επεμβάσεις." },
-    ru: { title: "Видео", description: "Коллекция медицинских видео из диагностических тестов и операций." },
+    ru: {
+      title: "Видео",
+      description: "Коллекция медицинских видео из диагностических тестов и операций.",
+    },
   },
 };
 
@@ -99,7 +120,13 @@ function flattenNavigation(nodes: NavigationNodeDTO[]): NavigationNodeDTO[] {
 function MenuIcon({ slug }: { slug: string }) {
   const icon = ICON_PATHS[slug] ?? ICON_PATHS.yperesies;
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      aria-hidden="true"
+    >
       {icon}
     </svg>
   );

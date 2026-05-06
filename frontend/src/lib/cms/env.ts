@@ -18,6 +18,11 @@ const cmsConfigSchema = z.object({
   revalidateSecret: optionalString,
 });
 
+/**
+ * Validated CMS environment configuration.
+ *
+ * @see {@link getCmsConfig}
+ */
 export type CmsConfig = z.infer<typeof cmsConfigSchema>;
 
 let cached: CmsConfig | null = null;
@@ -26,6 +31,15 @@ function normalizeOrigin(value: string): string {
   return value.replace(/\/+$/, "");
 }
 
+/**
+ * Reads and validates CMS environment variables.
+ *
+ * Caches the result so subsequent calls are free. Throws a descriptive error
+ * if any required variable is missing or malformed.
+ *
+ * @returns The validated {@link CmsConfig}.
+ * @throws When environment configuration is invalid.
+ */
 export function getCmsConfig(): CmsConfig {
   if (cached) {
     return cached;

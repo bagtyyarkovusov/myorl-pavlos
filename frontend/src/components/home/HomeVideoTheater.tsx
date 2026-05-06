@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
@@ -22,10 +23,39 @@ export function HomeVideoTheater({
   ctaLabel,
   ctaHref,
 }: HomeVideoTheaterProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
   if (videos.length === 0) return null;
 
   const primaryVideo = videos[0];
   const hasVideoSource = Boolean(primaryVideo?.videoMp4?.url || primaryVideo?.videoWebm?.url);
+
+  function togglePlay(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      void video.play();
+      setIsPlaying(true);
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
+  }
 
   return (
     <PageSection
@@ -38,22 +68,33 @@ export function HomeVideoTheater({
           {primaryVideo && (
             <>
               {hasVideoSource ? (
-                <video
-                  aria-hidden="true"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  poster={primaryVideo.thumbnail?.url ?? undefined}
-                >
-                  {primaryVideo.videoMp4?.url ? (
-                    <source src={primaryVideo.videoMp4.url} type="video/mp4" />
-                  ) : null}
-                  {primaryVideo.videoWebm?.url ? (
-                    <source src={primaryVideo.videoWebm.url} type="video/webm" />
-                  ) : null}
-                </video>
+                <>
+                  <video
+                    ref={videoRef}
+                    aria-hidden="true"
+                    autoPlay={!prefersReducedMotion}
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster={primaryVideo.thumbnail?.url ?? undefined}
+                  >
+                    {primaryVideo.videoMp4?.url ? (
+                      <source src={primaryVideo.videoMp4.url} type="video/mp4" />
+                    ) : null}
+                    {primaryVideo.videoWebm?.url ? (
+                      <source src={primaryVideo.videoWebm.url} type="video/webm" />
+                    ) : null}
+                  </video>
+                  <button
+                    type="button"
+                    onClick={togglePlay}
+                    className={styles["video-pause-btn"]}
+                    aria-label={isPlaying ? "Pause video" : "Play video"}
+                  >
+                    {isPlaying ? "⏸" : "▶"}
+                  </button>
+                </>
               ) : (
                 <MediaFrame
                   media={primaryVideo.thumbnail}

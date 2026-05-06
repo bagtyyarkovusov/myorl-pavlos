@@ -111,21 +111,24 @@ describe("getTabBarNodes", () => {
   });
 
   it("returns null for section-index layout variant even when page is a folder", () => {
-    const children = [
-      makeNode("child-1", "Child 1", { parentDocId: "doc-services" }),
-    ];
+    const children = [makeNode("child-1", "Child 1", { parentDocId: "doc-services" })];
     const parent = makeNode("services", "Services", { isFolder: true, children });
     const tree = [parent];
-    const page: PageDTO = { ...makePage("services", { isFolder: true }), layoutVariant: "section-index" };
+    const page: PageDTO = {
+      ...makePage("services", { isFolder: true }),
+      layoutVariant: "section-index",
+    };
 
     expect(getTabBarNodes(tree, page)).toBeNull();
   });
 
   it("handles deeply nested tree by finding parent at any depth", () => {
-    const grandchildren = [
-      makeNode("gc-1", "GC 1", { parentDocId: "doc-child" }),
-    ];
-    const child = makeNode("child", "Child", { isFolder: true, parentDocId: "doc-root", children: grandchildren });
+    const grandchildren = [makeNode("gc-1", "GC 1", { parentDocId: "doc-child" })];
+    const child = makeNode("child", "Child", {
+      isFolder: true,
+      parentDocId: "doc-root",
+      children: grandchildren,
+    });
     const root = makeNode("root", "Root", { isFolder: true, children: [child] });
     const tree = [root];
     const page = makePage("gc-1", { parentDocId: "doc-child" });

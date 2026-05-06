@@ -1,6 +1,15 @@
 import { normalizeOptionalText } from "./text";
 import type { SocialLinkDTO, SocialPlatform, StrapiSocialLink } from "./types";
 
+/**
+ * Derives the social platform from a Strapi social link.
+ *
+ * Matches against the link label and URL hostname. Returns `null` for
+ * unsupported platforms (e.g. Google Plus) or when the link is unrecognised.
+ *
+ * @param link - Raw Strapi social link object.
+ * @returns The detected platform, or `null`.
+ */
 export function deriveSocialPlatform(link: StrapiSocialLink): SocialPlatform | null {
   const label = (link.name ?? "").trim().toLowerCase();
   const hostname = safeHostname(link.url);
@@ -23,6 +32,13 @@ export function deriveSocialPlatform(link: StrapiSocialLink): SocialPlatform | n
   return null;
 }
 
+/**
+ * Normalises a Strapi social link into a {@link SocialLinkDTO}.
+ *
+ * @param link - Raw Strapi social link object.
+ * @returns A social link DTO, or `null` if the platform is unrecognised or
+ *   the label / URL is empty.
+ */
 export function toSocialLinkDTO(link: StrapiSocialLink): SocialLinkDTO | null {
   const platform = deriveSocialPlatform(link);
   const label = normalizeOptionalText(link.name);

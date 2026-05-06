@@ -20,7 +20,7 @@ export default function LocaleErrorPage({
     error.message.includes("[CMS] network");
 
   return (
-    <main className="page-shell">
+    <div className="page-shell">
       <header className="page-hero">
         <p className="kicker">Connection Error</p>
         <h1>{isTimeout ? "Server Timeout" : "Content Unavailable"}</h1>
@@ -33,6 +33,6 @@ export default function LocaleErrorPage({
           Try Again
         </button>
       </header>
-    </main>
+    </div>
   );
 }

@@ -1,10 +1,16 @@
 import { z, type ZodSchema } from "zod";
 import { CmsError } from "./errors";
-import { pageResponseSchema, toPageDTO } from "./page-normalizer";
-import type { PageDTO, StrapiPagePayload } from "./types";
+import { pageEntitySchema, pageResponseSchema } from "./page-parsers";
+import type { PageDTO } from "./types";
 
+/** Re-export of the page DTO type used by the gateway. */
 export { type PageDTO };
 
+/**
+ * Options for fetching a single CMS entity.
+ *
+ * @see {@link CmsGateway.fetchOne}
+ */
 export interface FetchOneOptions {
   locale?: string;
   populate?: string | string[] | Record<string, unknown>;
@@ -15,16 +21,27 @@ export interface FetchOneOptions {
   signal?: AbortSignal;
 }
 
+/**
+ * Options for fetching a paginated list of CMS entities.
+ *
+ * Extends {@link FetchOneOptions} with pagination controls.
+ */
 export interface FetchAllOptions extends FetchOneOptions {
   pageSize?: number;
   maxPages?: number;
 }
 
+/**
+ * Optional cache / deduplication configuration for the gateway.
+ */
 export interface CmsGatewayCacheConfig {
   fetchInit?: (tags: string[]) => Partial<RequestInit>;
   dedupe?: (fn: (...args: unknown[]) => unknown) => (...args: unknown[]) => unknown;
 }
 
+/**
+ * Configuration object for {@link createCmsGateway}.
+ */
 export interface CmsGatewayConfig {
   baseUrl: string;
   token?: string;
@@ -35,6 +52,12 @@ export interface CmsGatewayConfig {
   cache?: CmsGatewayCacheConfig;
 }
 
+/**
+ * Generic gateway for communicating with the Strapi CMS.
+ *
+ * Provides typed methods for fetching pages (with retry, timeout, and
+ * relation unwrapping) as well as low-level `fetch` access.
+ */
 export interface CmsGateway {
   pages: {
     all(opts?: FetchAllOptions): Promise<PageDTO[]>;
@@ -182,6 +205,15 @@ function extractDataArray(json: unknown): unknown[] {
   return [];
 }
 
+/**
+ * Factory that creates a {@link CmsGateway} for the given configuration.
+ *
+ * The returned gateway handles Strapi relation unwrapping, Zod validation,
+ * timeout, retry with exponential back-off, and optional request deduplication.
+ *
+ * @param config - Gateway configuration (base URL, auth token, timeouts, etc.).
+ * @returns A fully configured CMS gateway.
+ */
 export function createCmsGateway(config: CmsGatewayConfig): CmsGateway {
   const baseUrl = config.baseUrl.replace(/\/+$/, "");
   const token = config.token;
@@ -352,23 +384,9 @@ export function createCmsGateway(config: CmsGatewayConfig): CmsGateway {
     return fetchFn(url, { ...init, headers });
   };
 
-  const zodPageEntity = z
-    .object({
-      id: z.number().optional(),
-      documentId: z.string(),
-      locale: z.enum(["el", "ru"]),
-      slug: z.string(),
-      title: z.string(),
-      menuTitle: z.string().nullish(),
-      pageType: z.string(),
-      layoutVariant: z.string(),
-    })
-    .passthrough();
-
   const pagesImpl = {
     all: async (opts?: FetchAllOptions): Promise<PageDTO[]> => {
-      const entities = await fetchAllImpl("/api/pages", zodPageEntity, opts);
-      return entities.map((e) => toPageDTO(e as unknown as StrapiPagePayload));
+      return fetchAllImpl("/api/pages", pageEntitySchema, opts);
     },
     one: async (slug: string, opts?: FetchOneOptions): Promise<PageDTO | null> => {
       const slugFilter: Record<string, unknown> = { $eq: slug };

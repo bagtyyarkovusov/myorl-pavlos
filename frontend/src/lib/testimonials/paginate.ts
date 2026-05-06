@@ -1,4 +1,8 @@
-export function paginate<T>(items: T[], page: number, pageSize: number): { slice: T[]; totalPages: number } {
+export function paginate<T>(
+  items: T[],
+  page: number,
+  pageSize: number,
+): { slice: T[]; totalPages: number } {
   const safeSize = Math.max(1, Math.floor(pageSize));
   const totalPages = Math.max(1, Math.ceil(items.length / safeSize));
   let safePage = Math.floor(page);

@@ -1,8 +1,14 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { PageSection } from "@/components/PageSection";
 import { HomeMedicalGrid } from "@/components/home/HomeMedicalGrid";
-import { HomePromoCarousel } from "@/components/home/HomePromoCarousel";
-import { HomeVideoTheater } from "@/components/home/HomeVideoTheater";
+const HomePromoCarousel = dynamic(() =>
+  import("@/components/home/HomePromoCarousel").then((m) => m.HomePromoCarousel),
+);
+import dynamic from "next/dynamic";
+
+const HomeVideoTheater = dynamic(() =>
+  import("@/components/home/HomeVideoTheater").then((m) => m.HomeVideoTheater),
+);
 import { getHomeStrings } from "@/lib/i18n/home";
 import type { Locale, SectionDTO } from "@/lib/cms/types";
 

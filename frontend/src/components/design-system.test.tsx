@@ -53,7 +53,10 @@ describe("ButtonLink", () => {
 describe("MediaFrame", () => {
   it("renders with wide variant class by default", () => {
     const { container } = render(
-      <MediaFrame media={{ url: "/test.jpg", width: 800, height: 600, alternativeText: null }} alt="test" />,
+      <MediaFrame
+        media={{ url: "/test.jpg", width: 800, height: 600, alternativeText: null }}
+        alt="test"
+      />,
     );
     const frame = container.firstElementChild as HTMLElement;
     expect(frame.className).toContain("media-frame");
@@ -74,25 +77,24 @@ describe("MediaFrame", () => {
   });
 
   it("renders ph-stripe class when media has no url", () => {
-    const { container } = render(
-      <MediaFrame media={null} alt="no image" />,
-    );
+    const { container } = render(<MediaFrame media={null} alt="no image" />);
     const frame = container.firstElementChild as HTMLElement;
     expect(frame.className).toContain("ph-stripe");
   });
 
   it("does not render ph-stripe class when media url is present", () => {
     const { container } = render(
-      <MediaFrame media={{ url: "/test.jpg", width: 800, height: 600, alternativeText: null }} alt="test" />,
+      <MediaFrame
+        media={{ url: "/test.jpg", width: 800, height: 600, alternativeText: null }}
+        alt="test"
+      />,
     );
     const frame = container.firstElementChild as HTMLElement;
     expect(frame.className).not.toContain("ph-stripe");
   });
 
   it("renders label", () => {
-    render(
-      <MediaFrame media={null} alt="test" label="Slide 1" />,
-    );
+    render(<MediaFrame media={null} alt="test" label="Slide 1" />);
     expect(screen.getByText("Slide 1")).toBeDefined();
   });
 

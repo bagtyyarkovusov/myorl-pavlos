@@ -1,13 +1,35 @@
-import { AppointmentPage } from "@/components/page-layouts/AppointmentPage";
-import { ContactPage } from "@/components/page-layouts/ContactPage";
-import { FrontendNativePage } from "@/components/page-layouts/FrontendNativePage";
-import { GalleryPage } from "@/components/page-layouts/GalleryPage";
-import { HomePage } from "@/components/page-layouts/HomePage";
-import { QuestionListPage } from "@/components/page-layouts/QuestionListPage";
-import { SectionIndexPage } from "@/components/page-layouts/SectionIndexPage";
-import { StandardPage } from "@/components/page-layouts/StandardPage";
+import dynamic from "next/dynamic";
+import { StructuredData } from "@/components/StructuredData";
+import { getCmsConfig } from "@/lib/cms/env";
+import { buildWebPageLd } from "@/lib/structured-data/webpage";
+import { buildWebSiteLd } from "@/lib/structured-data/website";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
+
+const AppointmentPage = dynamic(() =>
+  import("@/components/page-layouts/AppointmentPage").then((m) => m.AppointmentPage),
+);
+const ContactPage = dynamic(() =>
+  import("@/components/page-layouts/ContactPage").then((m) => m.ContactPage),
+);
+const FrontendNativePage = dynamic(() =>
+  import("@/components/page-layouts/FrontendNativePage").then((m) => m.FrontendNativePage),
+);
+const GalleryPage = dynamic(() =>
+  import("@/components/page-layouts/GalleryPage").then((m) => m.GalleryPage),
+);
+const HomePage = dynamic(() =>
+  import("@/components/page-layouts/HomePage").then((m) => m.HomePage),
+);
+const QuestionListPage = dynamic(() =>
+  import("@/components/page-layouts/QuestionListPage").then((m) => m.QuestionListPage),
+);
+const SectionIndexPage = dynamic(() =>
+  import("@/components/page-layouts/SectionIndexPage").then((m) => m.SectionIndexPage),
+);
+const StandardPage = dynamic(() =>
+  import("@/components/page-layouts/StandardPage").then((m) => m.StandardPage),
+);
 
 type PageRendererProps = {
   page: PageDTO;
@@ -23,6 +45,18 @@ type PageRendererProps = {
   testimonialsPage?: number;
 };
 
+function PageJsonLd({ page }: { page: PageDTO }) {
+  const config = getCmsConfig();
+  const webSiteLd = buildWebSiteLd(config.siteUrl, "MyORL");
+  const webPageLd = buildWebPageLd(page, config.siteUrl);
+  return (
+    <>
+      <StructuredData data={webSiteLd} />
+      <StructuredData data={webPageLd} />
+    </>
+  );
+}
+
 export function PageRenderer({
   page,
   appointmentHref,
@@ -31,41 +65,89 @@ export function PageRenderer({
   homeTestimonials = null,
   testimonialsPage = 1,
 }: PageRendererProps) {
+  const jsonLd = <PageJsonLd page={page} />;
+
   if (page.renderMode === "frontend-native") {
-    return <FrontendNativePage page={page} testimonialsPage={testimonialsPage} />;
+    return (
+      <>
+        {jsonLd}
+        <FrontendNativePage page={page} testimonialsPage={testimonialsPage} />
+      </>
+    );
   }
 
   if (page.layoutVariant === "appointment-form") {
-    return <AppointmentPage page={page} navigation={navigation} />;
+    return (
+      <>
+        {jsonLd}
+        <AppointmentPage page={page} navigation={navigation} />
+      </>
+    );
   }
 
   if (page.layoutVariant === "section-index") {
-    return <SectionIndexPage page={page} navigation={navigation} />;
+    return (
+      <>
+        {jsonLd}
+        <SectionIndexPage page={page} navigation={navigation} />
+      </>
+    );
   }
 
   if (page.pageType === "home") {
     return (
-      <HomePage
-        page={page}
-        appointmentHref={appointmentHref ?? `/${page.locale}`}
-        navigation={navigation}
-        settings={globalSettings ?? { locale: page.locale, address: null, phoneTel: null, phoneDisplay: null, hours: null }}
-        homeTestimonials={homeTestimonials}
-      />
+      <>
+        {jsonLd}
+        <HomePage
+          page={page}
+          appointmentHref={appointmentHref ?? `/${page.locale}`}
+          navigation={navigation}
+          settings={
+            globalSettings ?? {
+              locale: page.locale,
+              address: null,
+              phoneTel: null,
+              phoneDisplay: null,
+              hours: null,
+            }
+          }
+          homeTestimonials={homeTestimonials}
+        />
+      </>
     );
   }
 
   if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
-    return <QuestionListPage page={page} navigation={navigation} />;
+    return (
+      <>
+        {jsonLd}
+        <QuestionListPage page={page} navigation={navigation} />
+      </>
+    );
   }
 
   if (page.pageType === "gallery") {
-    return <GalleryPage page={page} navigation={navigation} />;
+    return (
+      <>
+        {jsonLd}
+        <GalleryPage page={page} navigation={navigation} />
+      </>
+    );
   }
 
   if (page.pageType === "contact") {
-    return <ContactPage page={page} navigation={navigation} />;
+    return (
+      <>
+        {jsonLd}
+        <ContactPage page={page} navigation={navigation} />
+      </>
+    );
   }
 
-  return <StandardPage page={page} navigation={navigation} />;
+  return (
+    <>
+      {jsonLd}
+      <StandardPage page={page} navigation={navigation} />
+    </>
+  );
 }

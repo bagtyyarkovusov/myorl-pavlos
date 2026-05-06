@@ -1,18 +1,21 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 /**
  * Measures and reports spacing between testimonials teaser components.
  * Use this test to verify parent-child spacing, alignment, and padding.
  */
 
-async function getBox(page: ReturnType<typeof test>, selector: string) {
+async function getBox(page: Page, selector: string) {
   const el = page.locator(selector).first();
   const count = await el.count();
   if (count === 0) return null;
   return el.boundingBox();
 }
 
-function distanceY(a: { y: number; height: number } | null, b: { y: number } | null): number | null {
+function distanceY(
+  a: { y: number; height: number } | null,
+  b: { y: number } | null,
+): number | null {
   if (!a || !b) return null;
   return Math.round(b.y - (a.y + a.height));
 }
@@ -23,9 +26,9 @@ function distanceX(a: { x: number; width: number } | null, b: { x: number } | nu
 }
 
 function report(name: string, measurements: Record<string, unknown>) {
-  // eslint-disable-next-line no-console
+   
   console.log(`\n=== ${name} ===`);
-  // eslint-disable-next-line no-console
+   
   console.log(JSON.stringify(measurements, null, 2));
 }
 
@@ -34,25 +37,33 @@ test.describe("Testimonials teaser spacing audit", () => {
 
   test("desktop @desktop", async ({ page }) => {
     await page.goto(path);
-    await page.waitForTimeout(2500);
+    await page.waitForLoadState("networkidle");
 
     // Key selectors — use text/structure rather than hashed CSS module classes
     const section = await getBox(page, 'section:has(h2:has-text("Google Maps"))');
     const heading = await getBox(page, 'h2:has-text("Google Maps")');
-    const ratingBar = await getBox(page, 'section:has(h2:has-text("Google Maps")) .inline-flex:has-text("★")');
+    const ratingBar = await getBox(
+      page,
+      'section:has(h2:has-text("Google Maps")) .inline-flex:has-text("★")',
+    );
     const grid = await getBox(page, 'section:has(h2:has-text("Google Maps")) ul[role="list"]');
-    const actions = await getBox(page, 'section:has(h2:has-text("Google Maps")) >> div:has(> a):has-text("Google Maps")');
+    const actions = await getBox(
+      page,
+      'section:has(h2:has-text("Google Maps")) >> div:has(> a):has-text("Google Maps")',
+    );
 
     // If testimonials are missing (CMS-dependent), skip gracefully
     if (!heading || !grid) {
-      test.skip(true, "Testimonials section not rendered — CMS data may be missing");
+      test.info().skip(true, "Testimonials section not rendered — CMS data may be missing");
       return;
     }
 
-    const cardLocator = page.locator('section:has(h2:has-text("Google Maps")) ul[role="list"] > li');
+    const cardLocator = page.locator(
+      'section:has(h2:has-text("Google Maps")) ul[role="list"] > li',
+    );
     const cardCount = await cardLocator.count();
 
-    const measurements: Record<string, unknown> = {
+    const measurements = {
       viewport: { width: 1280, height: 720 },
       section,
       heading,
@@ -89,7 +100,10 @@ test.describe("Testimonials teaser spacing audit", () => {
         metaBox,
         textToMeta: distanceY(textBox, metaBox),
         cardPaddingTop: textBox && cardBox ? Math.round(textBox.y - cardBox.y) : null,
-        cardPaddingBottom: metaBox && cardBox ? Math.round(cardBox.y + cardBox.height - (metaBox.y + metaBox.height)) : null,
+        cardPaddingBottom:
+          metaBox && cardBox
+            ? Math.round(cardBox.y + cardBox.height - (metaBox.y + metaBox.height))
+            : null,
       });
     }
 
@@ -100,8 +114,12 @@ test.describe("Testimonials teaser spacing audit", () => {
     expect.soft(measurements.distances.ratingToGrid).toBeGreaterThanOrEqual(16);
     expect.soft(measurements.distances.gridToActions).toBeGreaterThanOrEqual(16);
 
-    for (const card of measurements.cards as any[]) {
-      if (card.cardPaddingTop == null || card.cardPaddingBottom == null || card.textToMeta == null) {
+    for (const card of measurements.cards) {
+      if (
+        card.cardPaddingTop == null ||
+        card.cardPaddingBottom == null ||
+        card.textToMeta == null
+      ) {
         continue;
       }
       expect.soft(card.cardPaddingTop).toBeGreaterThanOrEqual(16);
@@ -112,23 +130,31 @@ test.describe("Testimonials teaser spacing audit", () => {
 
   test("mobile @mobile", async ({ page }) => {
     await page.goto(path);
-    await page.waitForTimeout(2500);
+    await page.waitForLoadState("networkidle");
 
     const section = await getBox(page, 'section:has(h2:has-text("Google Maps"))');
     const heading = await getBox(page, 'h2:has-text("Google Maps")');
-    const ratingBar = await getBox(page, 'section:has(h2:has-text("Google Maps")) .inline-flex:has-text("★")');
+    const ratingBar = await getBox(
+      page,
+      'section:has(h2:has-text("Google Maps")) .inline-flex:has-text("★")',
+    );
     const grid = await getBox(page, 'section:has(h2:has-text("Google Maps")) ul[role="list"]');
-    const actions = await getBox(page, 'section:has(h2:has-text("Google Maps")) >> div:has(> a):has-text("Google Maps")');
+    const actions = await getBox(
+      page,
+      'section:has(h2:has-text("Google Maps")) >> div:has(> a):has-text("Google Maps")',
+    );
 
     if (!heading || !grid) {
-      test.skip(true, "Testimonials section not rendered — CMS data may be missing");
+      test.info().skip(true, "Testimonials section not rendered — CMS data may be missing");
       return;
     }
 
-    const cardLocator = page.locator('section:has(h2:has-text("Google Maps")) ul[role="list"] > li');
+    const cardLocator = page.locator(
+      'section:has(h2:has-text("Google Maps")) ul[role="list"] > li',
+    );
     const cardCount = await cardLocator.count();
 
-    const measurements: Record<string, unknown> = {
+    const measurements = {
       viewport: { width: 390, height: 844 },
       section,
       heading,
@@ -164,7 +190,10 @@ test.describe("Testimonials teaser spacing audit", () => {
         metaBox,
         textToMeta: distanceY(textBox, metaBox),
         cardPaddingTop: textBox && cardBox ? Math.round(textBox.y - cardBox.y) : null,
-        cardPaddingBottom: metaBox && cardBox ? Math.round(cardBox.y + cardBox.height - (metaBox.y + metaBox.height)) : null,
+        cardPaddingBottom:
+          metaBox && cardBox
+            ? Math.round(cardBox.y + cardBox.height - (metaBox.y + metaBox.height))
+            : null,
       });
     }
 
@@ -174,8 +203,12 @@ test.describe("Testimonials teaser spacing audit", () => {
     expect.soft(measurements.distances.ratingToGrid).toBeGreaterThanOrEqual(12);
     expect.soft(measurements.distances.gridToActions).toBeGreaterThanOrEqual(12);
 
-    for (const card of measurements.cards as any[]) {
-      if (card.cardPaddingTop == null || card.cardPaddingBottom == null || card.textToMeta == null) {
+    for (const card of measurements.cards) {
+      if (
+        card.cardPaddingTop == null ||
+        card.cardPaddingBottom == null ||
+        card.textToMeta == null
+      ) {
         continue;
       }
       expect.soft(card.cardPaddingTop).toBeGreaterThanOrEqual(12);

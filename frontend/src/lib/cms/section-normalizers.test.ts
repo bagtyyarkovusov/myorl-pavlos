@@ -2,12 +2,12 @@ import { describe, expect, it, beforeAll, vi } from "vitest";
 import type { StrapiContactDetail, StrapiClinic, StrapiPagePayload } from "./types";
 import type { StrapiSectionRaw } from "./types/sections";
 
-let mod: typeof import("./section-normalizers");
+let mod: typeof import("./section-normalizer");
 
 beforeAll(async () => {
   vi.stubEnv("STRAPI_URL", "http://localhost:1337");
   vi.stubEnv("NEXT_PUBLIC_SITE_URL", "http://localhost:3000");
-  mod = await import("./section-normalizers");
+  mod = await import("./section-normalizer");
 });
 
 function makePage(overrides: Partial<StrapiPagePayload> = {}): StrapiPagePayload {

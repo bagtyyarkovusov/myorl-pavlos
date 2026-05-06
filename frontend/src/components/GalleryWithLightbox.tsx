@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
-import { Lightbox } from "@/components/Lightbox";
 import type { MediaDTO } from "@/lib/cms/types";
+
+const Lightbox = dynamic(() => import("@/components/Lightbox").then((m) => m.Lightbox), {
+  ssr: false,
+});
 
 type GalleryItem = {
   caption?: string | null;
@@ -47,7 +51,6 @@ export function GalleryWithLightbox({ items, className, itemClassName }: Gallery
                     width={item.image!.width ?? 960}
                     height={item.image!.height ?? 640}
                     sizes="(min-width: 960px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    unoptimized
                     style={{ width: "100%", height: "auto", borderRadius: 8 }}
                   />
                 </button>

@@ -118,9 +118,7 @@ describe("SectionTabBar", () => {
   });
 
   it("uses navLabel for link text", () => {
-    const children = [
-      makeNode("child", "Child Label", { parentDocId: "doc-parent" }),
-    ];
+    const children = [makeNode("child", "Child Label", { parentDocId: "doc-parent" })];
     const parent = makeNode("parent", "Parent Label", { isFolder: true, children });
     const tree = [parent];
     const page = makePage("parent", { isFolder: true });

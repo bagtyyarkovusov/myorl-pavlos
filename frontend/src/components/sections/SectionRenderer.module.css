@@ -118,7 +118,9 @@
   .disclosure__body {
     interpolate-size: allow-keywords;
     overflow: hidden;
-    transition: height 0.25s ease, padding-top 0.25s ease;
+    transition:
+      height 0.25s ease,
+      padding-top 0.25s ease;
   }
 }
 

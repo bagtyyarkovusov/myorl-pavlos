@@ -1,41 +1,10 @@
+import type { PageType, LayoutVariant, RenderMode } from "@gemini/shared-types";
 import type { Locale, MediaDTO, PageRefDTO } from "./common";
 import type { SectionDTO, StrapiSectionRaw } from "./sections";
 import type { SeoDTO, StrapiMedia, StrapiSeo } from "./seo";
 import type { TagDTO, StrapiTag } from "./tag";
 
-export type PageType =
-  | "home"
-  | "content"
-  | "faq"
-  | "accordion"
-  | "tabs"
-  | "gallery"
-  | "contact"
-  | "system";
-
-export type LayoutVariant =
-  | "home"
-  | "standard"
-  | "service-article"
-  | "service-faq"
-  | "service-accordion"
-  | "service-tabs"
-  | "clinic-gallery"
-  | "office-gallery"
-  | "encyclopedia-article"
-  | "section-index"
-  | "clinic-index"
-  | "video-index"
-  | "encyclopedia-index"
-  | "appointment-form"
-  | "not-found"
-  | "search-results"
-  | "sitemap"
-  | "specialized-article"
-  | "contact"
-  | "testimonials-index";
-
-export type RenderMode = "cms" | "frontend-native";
+export type { PageType, LayoutVariant, RenderMode };
 
 export type PageDTO = {
   documentId: string;

@@ -118,7 +118,6 @@
   transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-
 .resource-row a:hover .resource-row__frame,
 .resource-row a:focus-visible .resource-row__frame {
   transform: scale(1.06);

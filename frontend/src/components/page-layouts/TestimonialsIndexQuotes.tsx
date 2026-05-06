@@ -49,7 +49,9 @@ export function TestimonialsIndexQuotes({
                 </blockquote>
                 <p className={styles.meta}>
                   <span>{row.author}</span>
-                  {row.rating != null ? <span aria-label={`${row.rating} of 5`}>{row.rating}★</span> : null}
+                  {row.rating != null ? (
+                    <span aria-label={`${row.rating} of 5`}>{row.rating}★</span>
+                  ) : null}
                 </p>
               </div>
             </li>
@@ -65,7 +67,9 @@ export function TestimonialsIndexQuotes({
                 </blockquote>
                 <p className={styles.metaCompact}>
                   <span>{row.author}</span>
-                  {row.rating != null ? <span aria-label={`${row.rating} of 5`}>{row.rating}★</span> : null}
+                  {row.rating != null ? (
+                    <span aria-label={`${row.rating} of 5`}>{row.rating}★</span>
+                  ) : null}
                 </p>
               </div>
             </li>

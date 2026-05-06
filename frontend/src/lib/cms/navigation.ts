@@ -7,6 +7,16 @@ import type {
   StrapiLocalization,
 } from "./types";
 
+/**
+ * Builds a hierarchical navigation tree for a given locale.
+ *
+ * Pages marked `hideFromMenu` are excluded. The resulting tree preserves
+ * `menuIndex` ordering and detects / prevents parent-child cycles.
+ *
+ * @param pages - Flat list of navigation inputs (e.g. from {@link getSite}).
+ * @param locale - The locale to filter by.
+ * @returns Root nodes of the navigation tree, each with nested `children`.
+ */
 export function buildNavigationTree(pages: NavigationInput[], locale: Locale): NavigationNodeDTO[] {
   const scopedPages = pages
     .filter((page) => page.locale === locale && !page.hideFromMenu)
@@ -40,6 +50,12 @@ export function buildNavigationTree(pages: NavigationInput[], locale: Locale): N
   return roots;
 }
 
+/**
+ * Returns the URL path for a page, respecting external URLs.
+ *
+ * @param page - Page with `locale`, `slug`, and optional `externalUrl`.
+ * @returns Absolute external URL, or a locale-prefixed internal path.
+ */
 export function hrefForPage(page: Pick<PageDTO, "locale" | "slug" | "externalUrl">): string {
   const external = normalizeOptionalText(page.externalUrl);
   if (external) {
@@ -48,6 +64,15 @@ export function hrefForPage(page: Pick<PageDTO, "locale" | "slug" | "externalUrl
   return hrefForLocaleSlug(page.locale, page.slug);
 }
 
+/**
+ * Builds a locale-prefixed URL path for a given slug.
+ *
+ * The home slug (`"index"`) resolves to `/${locale}`.
+ *
+ * @param locale - The page locale.
+ * @param slug - The page slug.
+ * @returns A locale-prefixed path string.
+ */
 export function hrefForLocaleSlug(locale: Locale, slug: string): string {
   return slug === "index" ? `/${locale}` : `/${locale}/${slug}`;
 }
@@ -60,6 +85,12 @@ function compareNavigationItems(left: NavigationInput, right: NavigationInput): 
   );
 }
 
+/**
+ * Safely coerces an unknown value to an array of Strapi localization objects.
+ *
+ * @param value - Raw CMS value (typically from `localizations`).
+ * @returns A filtered array of localization objects.
+ */
 export function toLocalizationList(value: unknown): StrapiLocalization[] {
   if (!Array.isArray(value)) {
     return [];

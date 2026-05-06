@@ -1,0 +1,59 @@
+// Auto-generated from Strapi schemas. Do not edit manually.
+// Regenerate via: npm run generate --prefix packages/shared-types
+
+export type PageType =
+  | "home"
+  | "content"
+  | "faq"
+  | "accordion"
+  | "tabs"
+  | "gallery"
+  | "contact"
+  | "system";
+
+export type LayoutVariant =
+  | "home"
+  | "standard"
+  | "service-article"
+  | "service-faq"
+  | "service-accordion"
+  | "service-tabs"
+  | "clinic-gallery"
+  | "office-gallery"
+  | "encyclopedia-article"
+  | "section-index"
+  | "clinic-index"
+  | "video-index"
+  | "encyclopedia-index"
+  | "appointment-form"
+  | "not-found"
+  | "search-results"
+  | "sitemap"
+  | "specialized-article"
+  | "contact"
+  | "testimonials-index";
+
+export type SectionComponent =
+  | "sections.promo-slider"
+  | "sections.linked-resources"
+  | "sections.social-links"
+  | "sections.video"
+  | "sections.advantages"
+  | "sections.accordion"
+  | "sections.faq"
+  | "sections.tabs"
+  | "sections.gallery"
+  | "sections.contact";
+
+export type SitemapChangeFrequency =
+  | "always"
+  | "hourly"
+  | "daily"
+  | "weekly"
+  | "monthly"
+  | "yearly"
+  | "never";
+
+// RenderMode is frontend-native and not derived from Strapi schema
+export type RenderMode = "cms" | "frontend-native";
+

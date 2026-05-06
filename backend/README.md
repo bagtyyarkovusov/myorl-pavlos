@@ -1,61 +1,87 @@
-# 🚀 Getting started with Strapi
+# myORL Backend — Strapi 5 CMS
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+This directory contains the Strapi 5 headless CMS for the myORL website. It serves the content API consumed by the Next.js frontend and provides the admin panel for content editors.
 
-### `develop`
+## Stack
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+- **Strapi 5.42.1** with the REST API
+- **PostgreSQL 16** — canonical dev database (see ADR-008)
+- **SQLite** — fallback when running without Docker (`npm run dev:local`)
 
-```
-npm run develop
-# or
-yarn develop
-```
+## Getting Started
 
-### `start`
+### With Docker Compose (recommended)
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+From the project root:
 
-```
-npm run start
-# or
-yarn start
+```bash
+# Starts PostgreSQL + Strapi + Next.js
+npm run dev
 ```
 
-### `build`
+Strapi admin is available at http://localhost:1337/admin.
 
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
+### Without Docker (SQLite fallback)
 
-```
-npm run build
-# or
-yarn build
-```
-
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
+```bash
+# From the project root
+npm run dev:local
 ```
 
-## 📚 Learn more
+This starts Strapi with SQLite on port 1337 and the Next.js dev server on port 3000.
 
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
+## Environment Variables
 
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
+Copy `.env.example` in the project root to `.env` and set:
 
-## ✨ Community
+| Variable | Purpose |
+|----------|---------|
+| `STRAPI_URL` | URL the frontend uses to reach Strapi |
+| `STRAPI_TOKEN` | API token for frontend read access |
+| `STRAPI_REVALIDATE_SECRET` | Secret for Next.js on-demand revalidation |
 
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+Strapi's own secrets (App keys, JWT, API token salt) are pre-configured in `docker-compose.dev.yml` for local development only.
 
----
+## Content Model
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+The CMS defines content types for:
+
+- **Page** — dynamic pages with a `pageSections` DynamicZone (see ADR-006)
+- **Home** — dedicated homepage singleton
+- **Tag** — taxonomy tags for content categorization
+- **Navigation** — menu structure via the Navigation plugin
+
+All content is bilingual (Greek `el` and Russian `ru`) using Strapi's i18n plugin.
+
+## Bootstrap & Migrations
+
+- **Bootstrap scripts** run automatically on Strapi startup to seed initial config (permissions, navigation, content-manager layouts). They are version-gated and idempotent.
+- **Migration runner** (`tools/migration_runner.py`) applies forward-only PostgreSQL schema migrations. See `docs/runbooks/postgres-rehearsal.md` for the full pipeline.
+- **Content promotion** uses `strapi transfer` to push dev content to production. See `docs/runbooks/content-promotion.md`.
+
+## Useful Commands
+
+```bash
+# Enter the running Strapi container
+docker exec -it gemini-strapi-dev sh
+
+# Run Strapi CLI commands inside the container
+docker exec gemini-strapi-dev npx strapi <command>
+
+# Generate TypeScript types from the content model
+docker exec gemini-strapi-dev npx strapi ts:generate-types
+
+# Build the admin panel (for production)
+npm run build --prefix backend
+```
+
+## Patches
+
+Custom patches in `backend/patches/` fix upstream Strapi issues. See each patch file for the bug it addresses.
+
+## Further Reading
+
+- **Editor cheat sheet** → [`docs/admin-hierarchy-ux.md`](../docs/admin-hierarchy-ux.md)
+- **Operational runbooks** → [`docs/runbooks/`](../docs/runbooks/)
+- **Architecture decisions** → [`docs/adr/`](../docs/adr/)
+- **Strapi docs** → https://docs.strapi.io

@@ -61,7 +61,8 @@ describe("MobileDrawer", () => {
     render(<MobileDrawer {...baseProps} isOpen={true} />);
     const img = screen.getByAltText("MyORL Logo");
     expect(img).toBeDefined();
-    expect(img.getAttribute("src")).toBe("/logo-myorl.png");
+    // Next.js Image transforms src to /_next/image?url=... so just verify it exists
+    expect(img.getAttribute("data-nimg")).toBe("1");
   });
 
   it("renders close button in drawer head", () => {
@@ -138,5 +139,20 @@ describe("MobileDrawer", () => {
   it("renders hours in info section", () => {
     render(<MobileDrawer {...baseProps} isOpen={true} />);
     expect(screen.getByText("Mon-Fri 09:00-21:00")).toBeDefined();
+  });
+
+  it("traps focus: Tab from last focusable element cycles to first", () => {
+    render(<MobileDrawer {...baseProps} isOpen={true} />);
+
+    const panel = document.getElementById("mobile-navigation") as HTMLElement;
+    const tabbables = panel.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    const last = tabbables[tabbables.length - 1]!;
+    last.focus();
+
+    fireEvent.keyDown(panel, { key: "Tab" });
+
+    expect(document.activeElement).toBe(tabbables[0]);
   });
 });

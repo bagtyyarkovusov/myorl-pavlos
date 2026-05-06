@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+# Regenerate shared types if Strapi schemas changed
+if git diff --cached --name-only | grep -q "backend/src/api/page/content-types/page/schema.json"; then
+  echo "[pre-commit] Schema changed — regenerating shared types..."
+  cd packages/shared-types && npm run generate
+  git add src/index.ts
+fi
+
+cd frontend && npx lint-staged

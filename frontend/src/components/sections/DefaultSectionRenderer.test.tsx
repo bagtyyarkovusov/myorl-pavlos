@@ -19,7 +19,15 @@ describe("DefaultSectionRenderer", () => {
     const section = makeSection({
       __component: "sections.promo-slider",
       heading: "Featured",
-      slides: [{ title: "Slide 1", description: "<p>Desc</p>", image: null, targetPage: null, targetUrl: null }],
+      slides: [
+        {
+          title: "Slide 1",
+          description: "<p>Desc</p>",
+          image: null,
+          targetPage: null,
+          targetUrl: null,
+        },
+      ],
     } as SectionDTO);
 
     const { container } = render(<DefaultSectionRenderer section={section} />);
@@ -30,7 +38,9 @@ describe("DefaultSectionRenderer", () => {
     const section = makeSection({
       __component: "sections.linked-resources",
       heading: "Resources",
-      items: [{ title: "Resource 1", description: "<p>Text</p>", targetPage: null, targetUrl: null }],
+      items: [
+        { title: "Resource 1", description: "<p>Text</p>", targetPage: null, targetUrl: null },
+      ],
     } as SectionDTO);
 
     const { container } = render(<DefaultSectionRenderer section={section} />);
@@ -52,7 +62,9 @@ describe("DefaultSectionRenderer", () => {
     const section = makeSection({
       __component: "sections.video",
       heading: "Videos",
-      videos: [{ title: "Video 1", videoMp4: null, videoWebm: null, thumbnail: null, videoTags: null }],
+      videos: [
+        { title: "Video 1", videoMp4: null, videoWebm: null, thumbnail: null, videoTags: null },
+      ],
     } as SectionDTO);
 
     const { container } = render(<DefaultSectionRenderer section={section} />);

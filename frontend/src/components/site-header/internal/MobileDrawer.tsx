@@ -1,21 +1,21 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
+import { useRef } from "react";
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import type { Locale, NavigationNodeDTO } from "@/lib/cms/types";
 
 import { MobileMenu } from "./MobileMenu";
 import drawerStyles from "./MobileDrawer.module.css";
 import sharedStyles from "../../SiteHeaderClient.module.css";
 
-const styles = new Proxy(
-  {} as Record<string, string>,
-  {
-    get(_, key: string) {
-      return drawerStyles[key] ?? sharedStyles[key];
-    },
+const styles = new Proxy({} as Record<string, string>, {
+  get(_, key: string) {
+    return drawerStyles[key] ?? sharedStyles[key];
   },
-);
+});
 
 const LOGO_SRC = "/logo-myorl.png";
 
@@ -56,6 +56,8 @@ export function MobileDrawer({
   overviewMobile,
   bookAppointmentLabel,
 }: MobileDrawerProps) {
+  const panelRef = useRef<HTMLElement>(null);
+  useFocusTrap(panelRef, isOpen, { restoreFocus: false });
   const staggerBase = items.length + 1;
 
   return (
@@ -72,6 +74,7 @@ export function MobileDrawer({
       />
 
       <aside
+        ref={panelRef}
         id="mobile-navigation"
         className={styles["mobile-drawer__panel"]}
         aria-label={mobileNavLabel}
@@ -83,8 +86,7 @@ export function MobileDrawer({
             aria-label={brandLogoAlt}
             onClick={onClose}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               className={`${styles["brand-logo"]} ${styles["brand-logo--mobile"]}`}
               src={LOGO_SRC}
               alt={brandLogoAlt}

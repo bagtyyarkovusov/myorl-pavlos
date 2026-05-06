@@ -61,11 +61,7 @@ export function SiteFooter({
       <div className={`container ${styles["site-footer__inner"]}`}>
         <div className={styles["site-footer__grid"]}>
           <div className={styles["brand-col"]}>
-            <Link
-              href={`/${locale}`}
-              className={styles["brand-mark"]}
-              aria-label={t.brandLogoAlt}
-            >
+            <Link href={`/${locale}`} className={styles["brand-mark"]} aria-label={t.brandLogoAlt}>
               <span className={styles["brand-glyph"]} aria-hidden="true">
                 m
               </span>

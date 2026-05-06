@@ -6,7 +6,7 @@ import type { CmsGateway } from "./cms-gateway";
 import { cms as productionGateway } from "./cms-gateway-setup";
 import { globalResponseSchema } from "./strapi-validators";
 import { buildNavigationTree } from "./navigation";
-import { NAVIGATION_POPULATE, PAGE_POPULATE, SITEMAP_POPULATE } from "./page-normalizer";
+import { NAVIGATION_POPULATE, PAGE_POPULATE, SITEMAP_POPULATE } from "./cms-populate";
 import type { GlobalSettingsDTO, Locale, NavigationNodeDTO, PageDTO } from "./types";
 import { CmsError } from "./errors";
 
@@ -16,10 +16,18 @@ function getGateway(): CmsGateway {
   return _gateway ?? productionGateway;
 }
 
+/**
+ * Injects a mock gateway for testing purposes.
+ *
+ * @param gw - A {@link CmsGateway} mock to use instead of the production gateway.
+ */
 export function injectCmsGatewayForTesting(gw: CmsGateway): void {
   _gateway = gw;
 }
 
+/**
+ * Discriminated union of all CMS error kinds that can surface to the UI.
+ */
 export type CmsPageError =
   | { kind: "not_found"; locale: Locale; slug: string; message: string }
   | { kind: "network"; message: string; cause?: unknown }
@@ -32,6 +40,12 @@ export type CmsPageError =
       message: string;
     };
 
+/**
+ * Result of attempting to fetch a single page.
+ *
+ * Use {@link getPageResult} for safe error handling, or {@link getPage} for
+ * throw-on-failure semantics.
+ */
 export type PageResult = { ok: true; page: PageDTO } | { ok: false; error: CmsPageError };
 
 function toCmsPageError(error: unknown, locale: Locale, slug: string): CmsPageError {
@@ -61,6 +75,17 @@ function toCmsPageError(error: unknown, locale: Locale, slug: string): CmsPageEr
   };
 }
 
+/**
+ * Fetches a single page by locale and slug, returning a discriminated result.
+ *
+ * Unlike {@link getPage}, this never throws — failures are encoded in the
+ * `PageResult` union so callers can handle errors explicitly.
+ *
+ * @param locale - The page locale.
+ * @param slug - The page slug (e.g. `"about"`, `"index"`).
+ * @returns A {@link PageResult} that is either `{ ok: true, page }` or
+ *   `{ ok: false, error }`.
+ */
 export async function getPageResult(locale: Locale, slug: string): Promise<PageResult> {
   const gateway = getGateway();
 
@@ -83,6 +108,17 @@ export async function getPageResult(locale: Locale, slug: string): Promise<PageR
   }
 }
 
+/**
+ * Fetches a single page and returns its {@link PageDTO}, or throws.
+ *
+ * A `not_found` error triggers Next.js `notFound()`. All other errors are
+ * thrown as plain `Error` instances.
+ *
+ * @param locale - The page locale.
+ * @param slug - The page slug.
+ * @returns The resolved {@link PageDTO}.
+ * @throws When the CMS request fails or the page is not found.
+ */
 export async function getPage(locale: Locale, slug: string): Promise<PageDTO> {
   const result = await getPageResult(locale, slug);
   if (!result.ok) {
@@ -94,6 +130,11 @@ export async function getPage(locale: Locale, slug: string): Promise<PageDTO> {
   return result.page;
 }
 
+/**
+ * Site-wide context fetched once per request and cached via `React.cache`.
+ *
+ * @see {@link getSite}
+ */
 export type SiteContext = {
   navigation: NavigationNodeDTO[];
   settings: GlobalSettingsDTO;
@@ -139,9 +180,24 @@ async function loadSite(locale: Locale): Promise<SiteContext> {
   return { navigation, settings };
 }
 
-/** Per-request memoization when the layout and a page both need site context. */
+/**
+ * Fetches site-wide context (navigation tree + global settings) for a locale.
+ *
+ * Wrapped in `React.cache` so multiple calls within the same request are
+ * deduplicated. Falls back to empty navigation and default settings on failure.
+ *
+ * @param locale - The locale to fetch context for.
+ * @returns Navigation tree and global settings.
+ */
 export const getSite = cache(loadSite);
 
+/**
+ * Returns all pages that should appear in the XML sitemap.
+ *
+ * Pages with `seo.sitemapExclude === true` are filtered out.
+ *
+ * @returns Array of {@link PageDTO} objects eligible for the sitemap.
+ */
 export async function getSitemapPages(): Promise<PageDTO[]> {
   const gateway = getGateway();
 

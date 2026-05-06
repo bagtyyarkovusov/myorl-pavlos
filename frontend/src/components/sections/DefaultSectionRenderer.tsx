@@ -43,7 +43,6 @@ function ResponsiveImage({ media, alt }: { media?: MediaDTO | null; alt: string 
       width={media.width ?? 960}
       height={media.height ?? 640}
       sizes="(min-width: 960px) 33vw, (min-width: 640px) 50vw, 100vw"
-      unoptimized
     />
   );
 }

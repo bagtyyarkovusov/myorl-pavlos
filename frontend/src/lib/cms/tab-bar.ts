@@ -1,5 +1,16 @@
 import type { NavigationNodeDTO, PageDTO } from "./types";
 
+/**
+ * Derives the tab-bar nodes for a given page.
+ *
+ * For folder pages returns the page itself plus its children. For leaf pages
+ * returns the parent plus its siblings. Returns `null` when the page is a
+ * section index (no tab bar needed).
+ *
+ * @param tree - Full navigation tree for the current locale.
+ * @param page - The current page DTO.
+ * @returns Tab-bar nodes, or `null` if no tab bar should be shown.
+ */
 export function getTabBarNodes(
   tree: NavigationNodeDTO[],
   page: PageDTO,

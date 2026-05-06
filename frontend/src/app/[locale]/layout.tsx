@@ -4,6 +4,7 @@ import { LocaleLangSetter } from "@/components/LocaleLangSetter";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
+import { SkipLink } from "@/components/SkipLink";
 import { findAppointmentHref } from "@/lib/navigation/appointment-href";
 import { getPageResult, getSite } from "@/lib/cms/cms-api";
 import { isLocale } from "@/lib/cms/types";
@@ -31,9 +32,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <>
+      <SkipLink />
       <LocaleLangSetter lang={locale} />
       <SiteHeader locale={locale} navigation={navigation} settings={settings} />
-      {children}
+      <main id="main-content">{children}</main>
       <SiteFooter
         locale={locale}
         navigation={navigation}

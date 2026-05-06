@@ -14,7 +14,12 @@ export function HomeMedicalLedger({ title, items, locale }: HomeMedicalLedgerPro
   if (items.length === 0) return null;
 
   return (
-    <PageSection background="default" containerWidth="tight" heading={{ title }} className="border-y border-stone-line">
+    <PageSection
+      background="default"
+      containerWidth="tight"
+      heading={{ title }}
+      className="border-y border-stone-line"
+    >
       <ul className="flex flex-col border-t border-stone-line" role="list">
         {items.map((item, index) => {
           const href =

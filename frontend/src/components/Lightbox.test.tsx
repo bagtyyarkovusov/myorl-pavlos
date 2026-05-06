@@ -78,4 +78,17 @@ describe("Lightbox", () => {
     fireEvent.click(closeBtn);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it("traps focus: Tab from last button cycles to first", () => {
+    render(<Lightbox images={IMAGES} initialIndex={0} onClose={vi.fn()} />);
+
+    const dialog = screen.getByRole("dialog");
+    const buttons = screen.getAllByRole("button");
+    const last = buttons[buttons.length - 1]!;
+    last.focus();
+
+    fireEvent.keyDown(dialog, { key: "Tab" });
+
+    expect(document.activeElement).toBe(buttons[0]);
+  });
 });

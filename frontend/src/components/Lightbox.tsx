@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import type { MediaDTO } from "@/lib/cms/types";
 
 import styles from "./Lightbox.module.css";
@@ -16,6 +17,7 @@ type LightboxProps = {
 export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
   const [index, setIndex] = useState(initialIndex);
   const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, true);
 
   const goNext = useCallback(() => {
     setIndex((i) => (i + 1) % images.length);
@@ -24,10 +26,6 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
   const goPrev = useCallback(() => {
     setIndex((i) => (i - 1 + images.length) % images.length);
   }, [images.length]);
-
-  useEffect(() => {
-    dialogRef.current?.focus();
-  }, []);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -68,12 +66,7 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
       onKeyDown={handleKeyDown}
       tabIndex={-1}
     >
-      <button
-        className={styles.close}
-        onClick={onClose}
-        aria-label="Close lightbox"
-        type="button"
-      >
+      <button className={styles.close} onClick={onClose} aria-label="Close lightbox" type="button">
         ×
       </button>
 
@@ -94,7 +87,6 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
           alt={current.alternativeText ?? ""}
           width={current.width ?? 960}
           height={current.height ?? 640}
-          unoptimized
         />
       </div>
 

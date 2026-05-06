@@ -7,14 +7,10 @@
  * the admin; bumping the version in this file re-applies the baseline.
  */
 
-type AnyStrapi = {
-  log: { info: (msg: string) => void; warn: (msg: string) => void; error: (msg: string, err?: unknown) => void };
-  store: (opts: { type: string; name: string }) => {
-    get: (opts: { key: string }) => Promise<any>;
-    set: (opts: { key: string; value: any }) => Promise<void>;
-  };
-  plugin: (name: string) => { service: (name: string) => any };
-  contentTypes: Record<string, any>;
+import type { Core } from "@strapi/strapi";
+
+type ContentTypeSchema = {
+  attributes: Record<string, unknown>;
 };
 
 const SEED_VERSION = 'v7';
@@ -294,7 +290,7 @@ function mergeMetadatas(
 
 function removeStaleMetadatas(
   metadatas: Record<string, FieldMetadata>,
-  contentType: any,
+  contentType: ContentTypeSchema,
 ): Record<string, FieldMetadata> {
   const validFields = new Set(Object.keys(contentType?.attributes ?? {}));
   const cleaned: Record<string, FieldMetadata> = {};
@@ -310,7 +306,7 @@ function removeStaleMetadatas(
 
 function sanitizeListLayout(
   layout: string[] | undefined,
-  contentType: any,
+  contentType: ContentTypeSchema,
   metadatas: Record<string, FieldMetadata>,
 ): string[] {
   const validFields = new Set(Object.keys(contentType?.attributes ?? {}));
@@ -325,7 +321,7 @@ function sanitizeListLayout(
   });
 }
 
-function sanitizeEditLayout(layout: EditRow[] | undefined, contentType: any): EditRow[] {
+function sanitizeEditLayout(layout: EditRow[] | undefined, contentType: ContentTypeSchema): EditRow[] {
   const validFields = new Set(Object.keys(contentType?.attributes ?? {}));
 
   return (layout ?? [])
@@ -333,7 +329,7 @@ function sanitizeEditLayout(layout: EditRow[] | undefined, contentType: any): Ed
     .filter((row) => row.length > 0);
 }
 
-function getFallbackListLayout(contentType: any, metadatas: Record<string, FieldMetadata>): string[] {
+function getFallbackListLayout(contentType: ContentTypeSchema, metadatas: Record<string, FieldMetadata>): string[] {
   const preferredFields = ['title', 'slug', 'menuIndex', 'isFolder', 'hideFromMenu', 'name'];
   const available = preferredFields.filter((fieldName) => metadatas[fieldName]?.list);
 
@@ -344,7 +340,7 @@ function getFallbackListLayout(contentType: any, metadatas: Record<string, Field
   return Object.keys(contentType?.attributes ?? {}).filter((fieldName) => metadatas[fieldName]?.list).slice(0, 4);
 }
 
-function buildSeedConfig(currentConfig: CMConfig, override: CMConfigOverride, contentType: any): CMConfig {
+function buildSeedConfig(currentConfig: CMConfig, override: CMConfigOverride, contentType: ContentTypeSchema): CMConfig {
   const metadatas = removeStaleMetadatas(
     mergeMetadatas(currentConfig.metadatas, override.metadatas),
     contentType,
@@ -367,7 +363,7 @@ function buildSeedConfig(currentConfig: CMConfig, override: CMConfigOverride, co
   };
 }
 
-export async function seedContentManagerConfig(strapi: AnyStrapi): Promise<void> {
+export async function seedContentManagerConfig(strapi: Core.Strapi): Promise<void> {
   const store = strapi.store({ type: 'plugin', name: 'content_manager' });
 
   const markerValue = await store.get({ key: MARKER_KEY });

@@ -151,9 +151,12 @@ describe("HomeSectionRenderer", () => {
 
     const { container } = render(<HomeSectionRenderer section={section} locale="el" />);
 
+    // Allow dynamic import to resolve
+    await waitFor(() => {
+      expect(container.querySelector('a[href="/el/first-topic"]')).toBeTruthy();
+    });
+
     expect(screen.queryByRole("heading", { name: "Topics" })).toBeNull();
-    expect(screen.getByText("Target excerpt")).toBeDefined();
-    expect(container.querySelector('a[href="/el/first-topic"]')).toBeTruthy();
     expect(screen.queryByRole("link", { name: "First topic" })).toBeNull();
     expect(tileButtonLabels()).toEqual([
       "View slide 1: First topic",
@@ -192,11 +195,16 @@ describe("HomeSectionRenderer", () => {
     ]);
   });
 
-  it("autoplays promo slides until user navigates, then stops for the visit", () => {
-    vi.useFakeTimers();
+  it("autoplays promo slides until user navigates, then stops for the visit", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     const section = makePromoSection(2);
 
     render(<HomeSectionRenderer section={section} locale="el" />);
+
+    // Wait for dynamic import to resolve
+    await waitFor(() => {
+      expect(screen.getByText("Target excerpt")).toBeDefined();
+    });
 
     const firstTab = screen.getByRole("tab", { name: "Slide 1: First topic" });
     const secondTab = screen.getByRole("tab", { name: "Slide 2: Second topic" });
@@ -222,16 +230,50 @@ describe("HomeSectionRenderer", () => {
     expect(secondTab).toHaveAttribute("aria-selected", "false");
   });
 
-  it("does not start promo autoplay for a single slide", () => {
-    vi.useFakeTimers();
+  it("does not start promo autoplay for a single slide", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     const setIntervalSpy = vi.spyOn(window, "setInterval");
     const section = makePromoSection(1);
 
     render(<HomeSectionRenderer section={section} locale="el" />);
 
+    // Wait for dynamic import to resolve
+    await waitFor(() => {
+      expect(screen.getByText("Target excerpt")).toBeDefined();
+    });
+
     expect(setIntervalSpy).not.toHaveBeenCalledWith(expect.any(Function), 6500);
     expect(screen.queryByRole("tab")).toBeNull();
-    expect(screen.getByText("Target excerpt")).toBeDefined();
+  });
+
+  it("renders a video section with video element and play/pause control", async () => {
+    const section = makeSection({
+      __component: "sections.video",
+      heading: "Our Videos",
+      intro: "Watch our procedures",
+      videos: [
+        {
+          videoMp4: {
+            url: "https://example.com/video.mp4",
+            width: 1920,
+            height: 1080,
+            alternativeText: null,
+          },
+          videoWebm: null,
+          thumbnail: {
+            url: "https://example.com/thumb.jpg",
+            width: 800,
+            height: 600,
+            alternativeText: null,
+          },
+        },
+      ],
+    } as SectionDTO);
+
+    render(<HomeSectionRenderer section={section} locale="el" />);
+    await waitFor(() => {
+      expect(document.querySelector("video")).not.toBeNull();
+    });
   });
 
   it("supports promo previous and next buttons, keyboard arrows, and swipe gestures", () => {

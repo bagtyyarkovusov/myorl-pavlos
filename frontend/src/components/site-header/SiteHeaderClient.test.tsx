@@ -161,7 +161,7 @@ describe("SiteHeaderClient", () => {
     expect(panel.getAttribute("aria-label")).toBe("Πλοήγηση κινητού");
   });
 
-  it("renders brand logo", () => {
+  it("renders brand logo with next/image", () => {
     render(
       <SiteHeaderClient
         locale="el"
@@ -173,6 +173,9 @@ describe("SiteHeaderClient", () => {
 
     const logos = screen.getAllByAltText("MyORL — ΩΡΛ Χειρουργική Κλινική Αθηνών");
     expect(logos.length).toBeGreaterThanOrEqual(1);
+    // Next.js Image sets width/height attributes from props
+    expect(logos[0]?.getAttribute("width")).toBe("64");
+    expect(logos[0]?.getAttribute("height")).toBe("64");
   });
 
   it("renders utility bar with contact info and locale switcher", () => {

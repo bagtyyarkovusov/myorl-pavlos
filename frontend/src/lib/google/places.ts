@@ -79,7 +79,9 @@ function normalizeReviews(raw: PlacesReview[] | undefined): GoogleReviewQuote[] 
  * favor Greek or Russian instead of the API default (often English).
  * Cached for one hour per locale via Next.js fetch caching (URL includes languageCode).
  */
-export async function getGooglePlaceReviewTeaser(locale: Locale): Promise<GooglePlaceReviewTeaser | null> {
+export async function getGooglePlaceReviewTeaser(
+  locale: Locale,
+): Promise<GooglePlaceReviewTeaser | null> {
   const env = getGooglePlacesEnv();
   if (!env) {
     return null;

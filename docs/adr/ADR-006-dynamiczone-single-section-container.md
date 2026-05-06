@@ -1,6 +1,6 @@
 # ADR-006: Use DynamicZone as Single Section Container for All Page Types
 
-**Status:** Proposed
+**Status:** Accepted
 
 **Date:** 2026-04-30
 

@@ -47,7 +47,9 @@ function curatedToHomeQuotes(locale: Locale): HomeTestimonialQuote[] {
  * Home teaser: prefers live Google reviews (Places API); falls back to curated quotes.
  * Returns null if there is no Maps URL and nothing to show.
  */
-export async function getHomeTestimonialsPayload(locale: Locale): Promise<HomeTestimonialsPayload | null> {
+export async function getHomeTestimonialsPayload(
+  locale: Locale,
+): Promise<HomeTestimonialsPayload | null> {
   const teaser = await getGooglePlaceReviewTeaser(locale);
   const listingFromEnv = getGoogleMapsListingUrlOnly();
 

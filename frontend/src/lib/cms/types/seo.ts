@@ -1,13 +1,7 @@
+import type { SitemapChangeFrequency } from "@gemini/shared-types";
 import type { MediaDTO } from "./common";
 
-export type SitemapChangeFrequency =
-  | "always"
-  | "hourly"
-  | "daily"
-  | "weekly"
-  | "monthly"
-  | "yearly"
-  | "never";
+export type { SitemapChangeFrequency };
 
 export type SeoDTO = {
   metaTitle?: string | null;

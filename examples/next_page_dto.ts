@@ -1,469 +1,313 @@
-export type Locale = 'el' | 'ru'
+/**
+ * Standalone example of the myORL PageDTO and related types.
+ *
+ * This file mirrors the actual types in frontend/src/lib/cms/types/ and the
+ * normalizer in frontend/src/lib/cms/page-normalizer.ts. It is provided as a
+ * quick reference for API consumers and integrators.
+ *
+ * For the canonical source of truth, see:
+ *   - frontend/src/lib/cms/types/*.ts
+ *   - frontend/src/lib/cms/page-normalizer.ts
+ *   - docs/api-contract.md
+ */
+
+export type Locale = "el" | "ru";
 
 export type PageType =
-  | 'home'
-  | 'content'
-  | 'faq'
-  | 'accordion'
-  | 'tabs'
-  | 'gallery'
-  | 'contact'
-  | 'system'
+  | "home"
+  | "content"
+  | "faq"
+  | "accordion"
+  | "tabs"
+  | "gallery"
+  | "contact"
+  | "system";
 
 export type LayoutVariant =
-  | 'home'
-  | 'standard'
-  | 'service-article'
-  | 'service-faq'
-  | 'service-accordion'
-  | 'service-tabs'
-  | 'clinic-gallery'
-  | 'office-gallery'
-  | 'encyclopedia-article'
-  | 'section-index'
-  | 'clinic-index'
-  | 'video-index'
-  | 'encyclopedia-index'
-  | 'appointment-form'
-  | 'not-found'
-  | 'search-results'
-  | 'sitemap'
-  | 'specialized-article'
-  | 'contact'
+  | "home"
+  | "standard"
+  | "service-article"
+  | "service-faq"
+  | "service-accordion"
+  | "service-tabs"
+  | "clinic-gallery"
+  | "office-gallery"
+  | "encyclopedia-article"
+  | "section-index"
+  | "clinic-index"
+  | "video-index"
+  | "encyclopedia-index"
+  | "appointment-form"
+  | "not-found"
+  | "search-results"
+  | "sitemap"
+  | "specialized-article"
+  | "contact"
+  | "testimonials-index";
 
-export type SocialPlatform = 'facebook' | 'google' | 'instagram' | 'youtube'
+export type RenderMode = "cms" | "frontend-native";
 
-export type RenderMode = 'cms' | 'frontend-native'
+export type SocialPlatform = "facebook" | "google" | "instagram" | "youtube";
 
 export type SeoDTO = {
-  metaTitle?: string | null
-  metaDescription?: string | null
-  canonicalUrl?: string | null
-  ogImage?: MediaDTO | null
-  robotsNoindex?: boolean | null
-  robotsNofollow?: boolean | null
-  sitemapExclude?: boolean | null
-  sitemapPriority?: number | null
-  sitemapChangeFrequency?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' | null
-}
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  canonicalUrl?: string | null;
+  ogImage?: MediaDTO | null;
+  robotsNoindex?: boolean | null;
+  robotsNofollow?: boolean | null;
+  sitemapExclude?: boolean | null;
+  sitemapPriority?: number | null;
+  sitemapChangeFrequency:
+    | "always"
+    | "hourly"
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "yearly"
+    | "never"
+    | null;
+};
 
 export type MediaDTO = {
-  url: string
-  alternativeText?: string | null
-  width?: number | null
-  height?: number | null
-}
+  url: string;
+  alternativeText?: string | null;
+  width?: number | null;
+  height?: number | null;
+};
 
 export type PageRefDTO = {
-  documentId: string
-  slug?: string | null
-  title?: string | null
-}
+  documentId: string;
+  slug?: string | null;
+  title?: string | null;
+};
 
 export type TagDTO = {
-  name: string
-  slug: string
-}
+  name: string;
+  slug: string;
+};
 
 export type ContactDetailDTO = {
-  type: string
-  valueHtml: string
-}
+  type: string;
+  valueHtml: string;
+};
 
 export type ContactClinicDTO = {
-  name: string
-  addressHtml: string
-  phone?: string | null
-  email?: string | null
-}
+  name: string;
+  addressHtml: string;
+  phone?: string | null;
+  email?: string | null;
+};
 
 export type SocialLinkDTO = {
-  label: string
-  url: string
-  platform: SocialPlatform
-}
+  label: string;
+  url: string;
+  platform: SocialPlatform;
+};
+
+// ── Section item DTOs ────────────────────────────────────────────────────────
+
+export type PromoSlideItemDTO = {
+  title?: string | null;
+  description?: string | null;
+  targetPageExcerpt?: string | null;
+  image?: MediaDTO | null;
+  targetPage?: PageRefDTO | null;
+  targetUrl?: string | null;
+};
+
+export type LinkedResourceItemDTO = {
+  title?: string | null;
+  description?: string | null;
+  image?: MediaDTO | null;
+  targetPage?: PageRefDTO | null;
+  targetUrl?: string | null;
+};
+
+export type SocialLinkItemDTO = {
+  name: string;
+  url: string;
+  icon?: string | null;
+};
+
+export type VideoItemDTO = {
+  title?: string | null;
+  videoMp4?: MediaDTO | null;
+  videoWebm?: MediaDTO | null;
+  thumbnail?: MediaDTO | null;
+  videoTags?: string | null;
+};
+
+export type AdvantageItemDTO = {
+  title?: string | null;
+  description?: string | null;
+  icon?: string | null;
+};
+
+export type AccordionItemDTO = {
+  title?: string | null;
+  content?: string | null;
+};
+
+export type FaqItemDTO = {
+  question?: string | null;
+  answer?: string | null;
+};
+
+export type TabItemDTO = {
+  title?: string | null;
+  content?: string | null;
+  link?: string | null;
+};
+
+export type GalleryItemDTO = {
+  caption?: string | null;
+  image?: MediaDTO | null;
+};
+
+// ── SectionDTO discriminated union ───────────────────────────────────────────
+
+export type SectionDTO =
+  | {
+      __component: "sections.promo-slider";
+      heading?: string | null;
+      intro?: string | null;
+      slides: PromoSlideItemDTO[];
+    }
+  | {
+      __component: "sections.linked-resources";
+      heading?: string | null;
+      intro?: string | null;
+      items: LinkedResourceItemDTO[];
+    }
+  | {
+      __component: "sections.social-links";
+      heading?: string | null;
+      intro?: string | null;
+      links: SocialLinkItemDTO[];
+    }
+  | {
+      __component: "sections.video";
+      heading?: string | null;
+      intro?: string | null;
+      videos: VideoItemDTO[];
+    }
+  | {
+      __component: "sections.advantages";
+      heading?: string | null;
+      intro?: string | null;
+      items: AdvantageItemDTO[];
+    }
+  | {
+      __component: "sections.accordion";
+      heading?: string | null;
+      intro?: string | null;
+      items: AccordionItemDTO[];
+    }
+  | {
+      __component: "sections.faq";
+      heading?: string | null;
+      intro?: string | null;
+      items: FaqItemDTO[];
+    }
+  | {
+      __component: "sections.tabs";
+      heading?: string | null;
+      intro?: string | null;
+      items: TabItemDTO[];
+    }
+  | {
+      __component: "sections.gallery";
+      heading?: string | null;
+      intro?: string | null;
+      items: GalleryItemDTO[];
+    }
+  | {
+      __component: "sections.contact";
+      heading?: string | null;
+      intro?: string | null;
+      details: ContactDetailDTO[];
+      clinics: ContactClinicDTO[];
+    };
+
+// ── PageDTO ──────────────────────────────────────────────────────────────────
 
 export type PageDTO = {
-  documentId: string
-  locale: Locale
-  slug: string
-  title: string
-  menuTitle?: string | null
-  navLabel: string
-  pageType: PageType
-  layoutVariant: LayoutVariant
-  renderMode: RenderMode
-  seo: SeoDTO
-  seoTitle: string
-  content?: string | null
-  excerpt?: string | null
-  featuredImage?: MediaDTO | null
-  imageCenter?: MediaDTO | null
-  externalUrl?: string | null
-  isFolder: boolean
-  hideFromMenu: boolean
-  menuIndex: number
-  parentPage?: PageRefDTO | null
-  tags: TagDTO[]
-  infoBlockBottom?: string | null
-  articleAuthor?: string | null
-  sources?: string | null
-  popUpClose?: string | null
-  sections?: unknown[]
-  contact?: {
-    details: ContactDetailDTO[]
-    clinics: ContactClinicDTO[]
-  }
-}
+  documentId: string;
+  locale: Locale;
+  slug: string;
+  title: string;
+  menuTitle?: string | null;
+  navLabel: string;
+  pageType: PageType;
+  layoutVariant: LayoutVariant;
+  renderMode: RenderMode;
+  seo: SeoDTO;
+  seoTitle: string;
+  content?: string | null;
+  excerpt?: string | null;
+  featuredImage?: MediaDTO | null;
+  imageCenter?: MediaDTO | null;
+  externalUrl?: string | null;
+  isFolder: boolean;
+  hideFromMenu: boolean;
+  menuIndex: number;
+  parentPage?: PageRefDTO | null;
+  tags: TagDTO[];
+  infoBlockBottom?: string | null;
+  articleAuthor?: string | null;
+  sources?: string | null;
+  popUpClose?: string | null;
+  alternateUrls: Partial<Record<Locale, string>>;
+  sections: SectionDTO[];
+};
 
-export type NavigationInput = Pick<
-  PageDTO,
-  | 'documentId'
-  | 'locale'
-  | 'slug'
-  | 'title'
-  | 'menuTitle'
-  | 'navLabel'
-  | 'menuIndex'
-  | 'hideFromMenu'
-  | 'parentPage'
-  | 'externalUrl'
-  | 'isFolder'
->
+// ── Navigation DTOs ──────────────────────────────────────────────────────────
+
+export interface NavigationInput {
+  documentId: string;
+  locale: Locale;
+  slug: string;
+  title: string;
+  menuTitle?: string | null;
+  navLabel: string;
+  menuIndex: number;
+  hideFromMenu: boolean;
+  parentPage?: PageRefDTO | null;
+  externalUrl?: string | null;
+  isFolder: boolean;
+  excerpt?: string | null;
+}
 
 export type NavigationNodeDTO = NavigationInput & {
-  children: NavigationNodeDTO[]
-}
+  href: string;
+  children: NavigationNodeDTO[];
+};
 
-function compareNavigationItems(left: NavigationInput, right: NavigationInput): number {
-  return (
-    left.menuIndex - right.menuIndex
-    || left.slug.localeCompare(right.slug)
-    || left.navLabel.localeCompare(right.navLabel)
-  )
-}
+// ── Global settings DTO ──────────────────────────────────────────────────────
 
-type StrapiMedia = {
-  url: string
-  alternativeText?: string | null
-  width?: number | null
-  height?: number | null
-}
+export type GlobalSettingsDTO = {
+  locale: Locale;
+  address: string | null;
+  phoneTel: string | null;
+  phoneDisplay: string | null;
+  hours: string | null;
+};
 
-type StrapiTag = {
-  name?: string | null
-  slug?: string | null
-}
+// ── Error types ──────────────────────────────────────────────────────────────
 
-type StrapiPageRef = {
-  documentId?: string | null
-  slug?: string | null
-  title?: string | null
-}
+export type CmsPageError =
+  | { kind: "not_found"; locale: Locale; slug: string; message: string }
+  | { kind: "network"; message: string; cause?: unknown }
+  | { kind: "timeout"; message: string }
+  | { kind: "server_error"; status: number; message: string }
+  | {
+      kind: "validation";
+      issues?: { path: (string | number)[]; message: string }[];
+      raw?: unknown;
+      message: string;
+    };
 
-type StrapiSocialLink = {
-  name?: string | null
-  url?: string | null
-}
-
-type StrapiContactDetail = {
-  type?: string | null
-  value?: string | null
-}
-
-type StrapiClinic = {
-  name?: string | null
-  address?: string | null
-  phone?: string | null
-  email?: string | null
-  latitude?: number | null
-  longitude?: number | null
-}
-
-export type StrapiPagePayload = {
-  documentId: string
-  locale: Locale
-  slug: string
-  title: string
-  menuTitle?: string | null
-  pageType: PageType
-  layoutVariant: LayoutVariant
-  seo?: SeoDTO | null
-  content?: string | null
-  excerpt?: string | null
-  featuredImage?: StrapiMedia | null
-  imageCenter?: StrapiMedia | null
-  externalUrl?: string | null
-  isFolder?: boolean | null
-  hideFromMenu?: boolean | null
-  menuIndex?: number | null
-  parentPage?: StrapiPageRef | null
-  tags?: StrapiTag[] | null
-  infoBlockBottom?: string | null
-  articleAuthor?: string | null
-  sources?: string | null
-  popUpClose?: string | null
-  pageSections?: unknown[] | null
-  faqSection?: unknown | null
-  accordionSection?: unknown | null
-  tabsSection?: unknown | null
-  gallerySection?: unknown | null
-  contactSection?: {
-    details?: StrapiContactDetail[] | null
-    clinics?: StrapiClinic[] | null
-  } | null
-
-  // Intentionally ignored by the DTO boundary.
-  templateId?: unknown
-  pageBlocks?: unknown
-  relatedPages?: unknown
-  childrenPages?: unknown
-}
-
-export function isFrontendNativeSystemLayout(layoutVariant: LayoutVariant): boolean {
-  return layoutVariant === 'not-found' || layoutVariant === 'search-results' || layoutVariant === 'sitemap'
-}
-
-export function deriveSocialPlatform(link: StrapiSocialLink): SocialPlatform | null {
-  const label = (link.name ?? '').trim().toLowerCase()
-  const hostname = safeHostname(link.url)
-
-  if (label === 'google plus' || hostname.includes('plus.google')) {
-    return null
-  }
-  if (label === 'facebook' || hostname.includes('facebook.com')) {
-    return 'facebook'
-  }
-  if (label === 'instagram' || hostname.includes('instagram.com')) {
-    return 'instagram'
-  }
-  if (label === 'youtube' || hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
-    return 'youtube'
-  }
-  if (label === 'google' || hostname.includes('google.')) {
-    return 'google'
-  }
-  return null
-}
-
-export function toSocialLinkDTO(link: StrapiSocialLink): SocialLinkDTO | null {
-  const platform = deriveSocialPlatform(link)
-  const label = (link.name ?? '').trim()
-  const url = (link.url ?? '').trim()
-
-  if (!platform || !label || !url) {
-    return null
-  }
-
-  return {
-    label,
-    url,
-    platform,
-  }
-}
-
-export function toPageDTO(page: StrapiPagePayload): PageDTO {
-  const renderMode: RenderMode =
-    page.pageType === 'system' && isFrontendNativeSystemLayout(page.layoutVariant)
-      ? 'frontend-native'
-      : 'cms'
-  const menuTitle = normalizeOptionalText(page.menuTitle)
-  const navLabel = menuTitle ?? page.title
-  const seoTitle = deriveSeoTitle(page)
-
-  return {
-    documentId: page.documentId,
-    locale: page.locale,
-    slug: page.slug,
-    title: page.title,
-    menuTitle,
-    navLabel,
-    pageType: page.pageType,
-    layoutVariant: page.layoutVariant,
-    renderMode,
-    seo: page.seo ?? {},
-    seoTitle,
-    content: page.content ?? null,
-    excerpt: page.excerpt ?? null,
-    featuredImage: toMediaDTO(page.featuredImage),
-    imageCenter: toMediaDTO(page.imageCenter),
-    externalUrl: page.externalUrl ?? null,
-    isFolder: Boolean(page.isFolder),
-    hideFromMenu: Boolean(page.hideFromMenu),
-    menuIndex: Number(page.menuIndex ?? 0),
-    parentPage: toPageRefDTO(page.parentPage),
-    tags: (page.tags ?? [])
-      .map(toTagDTO)
-      .filter((value): value is TagDTO => value !== null),
-    infoBlockBottom: page.infoBlockBottom ?? null,
-    articleAuthor: page.articleAuthor ?? null,
-    sources: page.sources ?? null,
-    popUpClose: page.popUpClose ?? null,
-    sections: toSemanticSections(page),
-    contact: toContactDTO(page.contactSection),
-  }
-}
-
-export function buildNavigationTree(pages: NavigationInput[], locale: Locale): NavigationNodeDTO[] {
-  const scopedPages = pages
-    .filter((page) => page.locale === locale && !page.hideFromMenu)
-    .sort(compareNavigationItems)
-
-  const nodes = new Map<string, NavigationNodeDTO>()
-  for (const page of scopedPages) {
-    nodes.set(page.documentId, {
-      ...page,
-      children: [],
-    })
-  }
-
-  const roots: NavigationNodeDTO[] = []
-  for (const node of nodes.values()) {
-    const parentDocumentId = node.parentPage?.documentId
-    const parent = parentDocumentId ? nodes.get(parentDocumentId) : undefined
-    if (parent) {
-      parent.children.push(node)
-    } else {
-      roots.push(node)
-    }
-  }
-
-  for (const node of nodes.values()) {
-    node.children.sort(compareNavigationItems)
-  }
-  roots.sort(compareNavigationItems)
-
-  return roots
-}
-
-export type PageMetadataInput = {
-  title: string
-  description?: string | null
-  canonicalUrl?: string | null
-  openGraphImage?: MediaDTO | null
-  robots?: {
-    index: boolean
-    follow: boolean
-  }
-}
-
-export function toPageMetadataInput(page: PageDTO): PageMetadataInput {
-  const noIndex = page.layoutVariant === 'not-found' || page.layoutVariant === 'search-results'
-
-  return {
-    title: page.seoTitle,
-    description: normalizeOptionalText(page.seo.metaDescription),
-    canonicalUrl: normalizeOptionalText(page.seo.canonicalUrl),
-    openGraphImage: page.seo.ogImage ?? null,
-    robots: {
-      index: !noIndex && !page.seo.robotsNoindex,
-      follow: !noIndex && !page.seo.robotsNofollow,
-    },
-  }
-}
-
-export function deriveSeoTitle(page: Pick<StrapiPagePayload, 'title' | 'seo'>): string {
-  return normalizeOptionalText(page.seo?.metaTitle) ?? page.title
-}
-
-function toSemanticSections(page: StrapiPagePayload): unknown[] | undefined {
-  if (page.pageType === 'home') {
-    return page.pageSections ?? []
-  }
-  if (page.pageType === 'faq') {
-    return page.faqSection ? [page.faqSection] : []
-  }
-  if (page.pageType === 'accordion') {
-    return page.accordionSection ? [page.accordionSection] : []
-  }
-  if (page.pageType === 'tabs') {
-    return page.tabsSection ? [page.tabsSection] : []
-  }
-  if (page.pageType === 'gallery') {
-    return page.gallerySection ? [page.gallerySection] : []
-  }
-  return undefined
-}
-
-function toContactDTO(
-  section: StrapiPagePayload['contactSection'],
-): PageDTO['contact'] {
-  if (!section) {
-    return undefined
-  }
-
-  return {
-    details: (section.details ?? []).map((detail) => ({
-      type: (detail.type ?? '').trim(),
-      valueHtml: detail.value ?? '',
-    })),
-    clinics: (section.clinics ?? [])
-      .map((clinic) => {
-        const name = (clinic.name ?? '').trim()
-        const addressHtml = clinic.address ?? ''
-        if (!name || !addressHtml) {
-          return null
-        }
-
-        // Coordinates are intentionally ignored in v1.
-        return {
-          name,
-          addressHtml,
-          phone: clinic.phone ?? null,
-          email: clinic.email ?? null,
-        }
-      })
-      .filter((value): value is ContactClinicDTO => value !== null),
-  }
-}
-
-function toPageRefDTO(ref: StrapiPageRef | null | undefined): PageRefDTO | null {
-  if (!ref?.documentId) {
-    return null
-  }
-
-  return {
-    documentId: ref.documentId,
-    slug: ref.slug ?? null,
-    title: ref.title ?? null,
-  }
-}
-
-function normalizeOptionalText(value: string | null | undefined): string | null {
-  const normalized = (value ?? '').trim()
-  return normalized ? normalized : null
-}
-
-function toTagDTO(tag: StrapiTag | null | undefined): TagDTO | null {
-  const name = (tag?.name ?? '').trim()
-  const slug = (tag?.slug ?? '').trim()
-  if (!name || !slug) {
-    return null
-  }
-
-  return { name, slug }
-}
-
-function toMediaDTO(media: StrapiMedia | null | undefined): MediaDTO | null {
-  if (!media?.url) {
-    return null
-  }
-
-  return {
-    url: media.url,
-    alternativeText: media.alternativeText ?? null,
-    width: media.width ?? null,
-    height: media.height ?? null,
-  }
-}
-
-function safeHostname(url: string | null | undefined): string {
-  if (!url) {
-    return ''
-  }
-  try {
-    return new URL(url).hostname.toLowerCase()
-  } catch {
-    return ''
-  }
-}
+export type PageResult =
+  | { ok: true; page: PageDTO }
+  | { ok: false; error: CmsPageError };

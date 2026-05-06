@@ -87,9 +87,7 @@ export function MediaFrame({
   );
 
   const defaultSizes =
-    variant === "portrait"
-      ? "(min-width: 960px) 36vw, 100vw"
-      : "(min-width: 960px) 44vw, 100vw";
+    variant === "portrait" ? "(min-width: 960px) 36vw, 100vw" : "(min-width: 960px) 44vw, 100vw";
 
   return (
     <div className={frameClass}>
@@ -101,7 +99,6 @@ export function MediaFrame({
           sizes={sizesProp ?? defaultSizes}
           loading={eager ? "eager" : undefined}
           fetchPriority={eager ? "high" : undefined}
-          unoptimized
         />
       ) : null}
       {label ? (

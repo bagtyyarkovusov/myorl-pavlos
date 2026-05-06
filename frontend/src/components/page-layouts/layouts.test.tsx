@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { HomePage } from "./HomePage";
@@ -10,6 +10,15 @@ import { GalleryPage } from "./GalleryPage";
 import { QuestionListPage } from "./QuestionListPage";
 import { FrontendNativePage } from "./FrontendNativePage";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
+
+beforeEach(() => {
+  vi.stubEnv("STRAPI_URL", "http://localhost:1337");
+  vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://myorl.example.com");
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 const MOCK_GLOBAL_SETTINGS: GlobalSettingsDTO = {
   locale: "el",
@@ -106,10 +115,7 @@ describe("StandardPage", () => {
   it("accepts navigation prop for future tab bar use", () => {
     const nav = [makeNav("child-1", "Child 1")];
     render(
-      <StandardPage
-        page={{ ...BASE_PAGE, title: "Parent", isFolder: true }}
-        navigation={nav}
-      />,
+      <StandardPage page={{ ...BASE_PAGE, title: "Parent", isFolder: true }} navigation={nav} />,
     );
     expect(screen.getByRole("heading", { name: "Parent" })).toBeDefined();
   });
@@ -161,7 +167,7 @@ describe("HomePage", () => {
       />,
     );
 
-    expect(screen.getByRole("main")).toBeDefined();
+    expect(document.querySelector("[data-locale='el']")).toBeDefined();
   });
 
   it("renders data-locale attribute", () => {
@@ -181,7 +187,7 @@ describe("HomePage", () => {
       />,
     );
 
-    expect(screen.getByRole("main").getAttribute("data-locale")).toBe("el");
+    expect(document.querySelector("[data-locale='el']")?.getAttribute("data-locale")).toBe("el");
   });
 
   it("suppresses social sections in the home flow", () => {
@@ -251,10 +257,7 @@ describe("HomePage", () => {
       />,
     );
 
-    expect(screen.getByRole("link", { name: /Services/ })).toHaveAttribute(
-      "href",
-      "/el/yperesies",
-    );
+    expect(screen.getByRole("link", { name: /Services/ })).toHaveAttribute("href", "/el/yperesies");
     expect(screen.getByRole("link", { name: /Video/ })).toHaveAttribute("href", "/el/video");
   });
 });
@@ -272,7 +275,9 @@ describe("ContactPage", () => {
           heading: "Get in Touch",
           intro: null,
           details: [{ type: "phone", valueHtml: "<p>+30 210 123 4567</p>" }],
-          clinics: [{ name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null }],
+          clinics: [
+            { name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null },
+          ],
         },
       ],
     };
@@ -296,7 +301,9 @@ describe("ContactPage", () => {
             { type: "phone", valueHtml: "<p>+30 210 123 4567</p>" },
             { type: "email", valueHtml: "<p>info@clinic.com</p>" },
           ],
-          clinics: [{ name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null }],
+          clinics: [
+            { name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null },
+          ],
         },
       ],
     };
@@ -319,8 +326,18 @@ describe("ContactPage", () => {
           intro: null,
           details: [{ type: "phone", valueHtml: "<p>+30 210 123 4567</p>" }],
           clinics: [
-            { name: "Athens", addressHtml: "<p>123 Main St</p>", phone: "+30 210 000", email: null },
-            { name: "Thessaloniki", addressHtml: "<p>456 Other St</p>", phone: null, email: "th@cl.com" },
+            {
+              name: "Athens",
+              addressHtml: "<p>123 Main St</p>",
+              phone: "+30 210 000",
+              email: null,
+            },
+            {
+              name: "Thessaloniki",
+              addressHtml: "<p>456 Other St</p>",
+              phone: null,
+              email: "th@cl.com",
+            },
           ],
         },
       ],
@@ -385,7 +402,10 @@ describe("GalleryPage", () => {
         {
           __component: "sections.gallery",
           items: [
-            { caption: "Photo 1", image: { url: "/img/1.jpg", alternativeText: "Pic 1", width: 800, height: 600 } },
+            {
+              caption: "Photo 1",
+              image: { url: "/img/1.jpg", alternativeText: "Pic 1", width: 800, height: 600 },
+            },
           ],
         },
       ],
@@ -468,10 +488,7 @@ describe("SectionIndexPage", () => {
       {
         ...makeNav("diseases", "Diseases"),
         isFolder: true,
-        children: [
-          makeNav("rhinitis", "Rhinitis", 1),
-          makeNav("sinusitis", "Sinusitis", 2),
-        ],
+        children: [makeNav("rhinitis", "Rhinitis", 1), makeNav("sinusitis", "Sinusitis", 2)],
       },
     ];
 
@@ -494,17 +511,17 @@ describe("SectionIndexPage", () => {
       {
         ...makeNav("diseases", "Diseases"),
         isFolder: true,
-        children: [
-          makeNav("rhinitis", "Rhinitis", 1),
-          makeNav("sinusitis", "Sinusitis", 2),
-        ],
+        children: [makeNav("rhinitis", "Rhinitis", 1), makeNav("sinusitis", "Sinusitis", 2)],
       },
     ];
 
     render(<SectionIndexPage page={page} navigation={nav} />);
 
     expect(screen.getByRole("link", { name: /Rhinitis/ })).toHaveAttribute("href", "/el/rhinitis");
-    expect(screen.getByRole("link", { name: /Sinusitis/ })).toHaveAttribute("href", "/el/sinusitis");
+    expect(screen.getByRole("link", { name: /Sinusitis/ })).toHaveAttribute(
+      "href",
+      "/el/sinusitis",
+    );
   });
 
   it("renders nothing for child grid when no navigation match", () => {

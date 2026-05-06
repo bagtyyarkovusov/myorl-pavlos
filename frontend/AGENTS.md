@@ -12,12 +12,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ### When to use Playwright
 
-| Trigger | Action |
-|---|---|
+| Trigger                                            | Action                                                              |
+| -------------------------------------------------- | ------------------------------------------------------------------- |
 | User asks "how does X look?" or "check the design" | Run `npm run e2e` then read the screenshots in `playwright-report/` |
-| User asks to compare visual changes | Run tests, then `npm run e2e:report` |
-| User modifies component styles | Run the relevant test with `--grep`, read the screenshot |
-| User wants interactive debugging | Run `npm run e2e:ui` |
+| User asks to compare visual changes                | Run tests, then `npm run e2e:report`                                |
+| User modifies component styles                     | Run the relevant test with `--grep`, read the screenshot            |
+| User wants interactive debugging                   | Run `npm run e2e:ui`                                                |
 
 ### Commands
 
@@ -46,6 +46,7 @@ npm run e2e -- --project=desktop  # Run only desktop viewport
 ### Prerequisites
 
 Strapi CMS must be running for CMS-dependent pages (`/el`, `/el/<slug>`). Start with:
+
 ```bash
 npm run dev:local   # from repo root — starts Strapi + Next.js
 ```

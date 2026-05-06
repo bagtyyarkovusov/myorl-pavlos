@@ -115,8 +115,7 @@ export function HomePromoCarousel({
     if (!currentTab || !rail) return;
     if (typeof rail.scrollTo !== "function") return;
 
-    const target =
-      currentTab.offsetLeft - rail.clientWidth / 2 + currentTab.clientWidth / 2;
+    const target = currentTab.offsetLeft - rail.clientWidth / 2 + currentTab.clientWidth / 2;
     rail.scrollTo({
       left: Math.max(0, target),
       behavior: shouldReduceMotion ? "auto" : "smooth",
@@ -147,8 +146,7 @@ export function HomePromoCarousel({
 
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
-    const navigated =
-      Math.abs(deltaX) >= 48 && Math.abs(deltaX) >= Math.abs(deltaY) * 1.35;
+    const navigated = Math.abs(deltaX) >= 48 && Math.abs(deltaX) >= Math.abs(deltaY) * 1.35;
 
     if (navigated) {
       if (deltaX < 0) {

@@ -1,7 +1,16 @@
+/**
+ * Discriminant values for {@link CmsError}.
+ */
 export type CmsErrorKind = "network" | "timeout" | "not_found" | "server_error" | "validation";
 
 const ERROR_PREFIX = "[CMS]" as const;
 
+/**
+ * Structured error thrown by the CMS layer.
+ *
+ * Carries a machine-readable `kind`, optional HTTP `status`, validation
+ * `issues`, and the raw response payload for debugging.
+ */
 export class CmsError extends Error {
   readonly kind: CmsErrorKind;
   readonly type: CmsErrorKind;
@@ -35,6 +44,16 @@ export class CmsError extends Error {
   }
 }
 
+/**
+ * Checks whether an error represents a timeout or network failure.
+ *
+ * Returns `true` for {@link CmsError} with kind `"timeout"` or `"network"`,
+ * or for generic `Error` instances whose message mentions "aborted" or
+ * "timeout".
+ *
+ * @param error - Any thrown value.
+ * @returns `true` if the error is timeout-like.
+ */
 export function isTimeoutError(error: unknown): boolean {
   if (error instanceof CmsError) {
     return error.kind === "timeout" || error.kind === "network";

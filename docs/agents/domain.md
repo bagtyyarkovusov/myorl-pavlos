@@ -4,7 +4,7 @@ How the engineering skills should consume this repo's domain documentation when 
 
 ## Before exploring, read these
 
-- **`CONTEXT.md`** at the repo root (not yet created — `grill-with-docs` creates it lazily when terms get resolved).
+- **`CONTEXT.md`** at the repo root.
 - **`docs/adr/`** — read ADRs that touch the area you're about to work in.
 
 If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The producer skill (`/grill-with-docs`) creates them lazily when terms or decisions actually get resolved.
@@ -21,7 +21,10 @@ Single-context repo:
 │   ├── ADR-002-nextjs-v1-contact-and-system-pages.md
 │   ├── ADR-003-postgres-readiness-indexes.md
 │   ├── ADR-004-flat-locale-routes-and-localized-navigation-labels.md
-│   └── ADR-005-repair-source-parent-integrity-before-postgres-cutover.md
+│   ├── ADR-005-repair-source-parent-integrity-before-postgres-cutover.md
+│   ├── ADR-006-dynamiczone-single-section-container.md
+│   ├── ADR-007-hybrid-tailwind-css-modules-styling-boundary.md
+│   └── ADR-008-dev-postgres-is-canonical-strapi-state-store.md
 ├── frontend/
 └── docs/agents/
 ```

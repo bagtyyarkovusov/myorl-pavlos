@@ -21,7 +21,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@gemini/shared-types": ["../packages/shared-types/src/index.ts"]
     }
   },
   "include": [

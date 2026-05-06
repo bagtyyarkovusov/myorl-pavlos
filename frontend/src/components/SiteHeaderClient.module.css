@@ -19,8 +19,7 @@
   border-bottom: 1px solid var(--line);
   background:
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(180deg, var(--grid-line-soft) 1px, transparent 1px),
-    rgba(246, 248, 251, 0.9);
+    linear-gradient(180deg, var(--grid-line-soft) 1px, transparent 1px), rgba(246, 248, 251, 0.9);
   background-size:
     44px 44px,
     44px 44px,
@@ -141,8 +140,7 @@
   border-bottom: 1px solid var(--line);
   background:
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(180deg, var(--grid-line-soft) 1px, transparent 1px),
-    rgba(246, 248, 251, 0.9);
+    linear-gradient(180deg, var(--grid-line-soft) 1px, transparent 1px), rgba(246, 248, 251, 0.9);
   background-size:
     44px 44px,
     44px 44px,

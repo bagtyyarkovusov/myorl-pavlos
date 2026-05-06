@@ -127,12 +127,14 @@ describe("toPageDTO", () => {
   it("does not expose contact field on PageDTO", () => {
     const contactPayload: StrapiPagePayload = {
       ...contentPayload,
-      pageSections: [{
-        __component: "sections.contact",
-        heading: "Contact",
-        details: [{ type: "Phone", value: "<p>123</p>" }],
-        clinics: [{ name: "Main", address: "<p>123 St</p>", phone: "555", email: "a@b.com" }],
-      }],
+      pageSections: [
+        {
+          __component: "sections.contact",
+          heading: "Contact",
+          details: [{ type: "Phone", value: "<p>123</p>" }],
+          clinics: [{ name: "Main", address: "<p>123 St</p>", phone: "555", email: "a@b.com" }],
+        },
+      ],
     };
 
     const dto = toPageDTO(contactPayload);
@@ -142,12 +144,14 @@ describe("toPageDTO", () => {
   it("contact data is in sections array from pageSections", () => {
     const contactPayload: StrapiPagePayload = {
       ...contentPayload,
-      pageSections: [{
-        __component: "sections.contact",
-        heading: "Contact",
-        details: [{ type: "Phone", value: "<p>123</p>" }],
-        clinics: [{ name: "Main", address: "<p>123 St</p>", phone: "555", email: "a@b.com" }],
-      }],
+      pageSections: [
+        {
+          __component: "sections.contact",
+          heading: "Contact",
+          details: [{ type: "Phone", value: "<p>123</p>" }],
+          clinics: [{ name: "Main", address: "<p>123 St</p>", phone: "555", email: "a@b.com" }],
+        },
+      ],
     };
 
     const dto = toPageDTO(contactPayload);

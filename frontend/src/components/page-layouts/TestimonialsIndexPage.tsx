@@ -1,7 +1,9 @@
 import Link from "next/link";
 
 import { PageSection } from "@/components/PageSection";
+import { StructuredData } from "@/components/StructuredData";
 import { TestimonialsRatingBar } from "@/components/testimonials/TestimonialsRatingBar";
+import { getCmsConfig } from "@/lib/cms/env";
 import { getGooglePlaceReviewTeaser } from "@/lib/google/places";
 import {
   buildGoogleMapsReviewsUrlFromPlaceId,
@@ -9,6 +11,7 @@ import {
   getGooglePlacesEnv,
 } from "@/lib/google/places-env";
 import { getHomeStrings } from "@/lib/i18n/home";
+import { buildPageBreadcrumbLd } from "@/lib/structured-data/page-breadcrumbs";
 import { getCuratedTestimonials } from "@/lib/testimonials/curated";
 import { paginate } from "@/lib/testimonials/paginate";
 import type { PageLayoutProps } from "./_shared";
@@ -34,13 +37,29 @@ export async function TestimonialsIndexPage({
   const listingUrl = teaser?.listingUrl ?? getGoogleMapsListingUrlOnly();
   const reviewsUrl =
     teaser?.reviewsUrl ??
-    (getGooglePlacesEnv() ? buildGoogleMapsReviewsUrlFromPlaceId(getGooglePlacesEnv()!.placeId) : listingUrl);
+    (getGooglePlacesEnv()
+      ? buildGoogleMapsReviewsUrlFromPlaceId(getGooglePlacesEnv()!.placeId)
+      : listingUrl);
 
   const basePath = `/${page.locale}/${page.slug}`;
   const pathForPage = (p: number) => (p <= 1 ? basePath : `${basePath}?page=${p}`);
 
+  const config = getCmsConfig();
+  const breadcrumbLd = buildPageBreadcrumbLd(page);
+  const aggregateRatingLd =
+    teaser?.rating != null && teaser?.userRatingCount != null
+      ? {
+          "@context": "https://schema.org",
+          "@type": "AggregateRating",
+          ratingValue: teaser.rating,
+          reviewCount: teaser.userRatingCount,
+        }
+      : null;
+
   return (
-    <main data-locale={page.locale}>
+    <div data-locale={page.locale}>
+      {breadcrumbLd ? <StructuredData data={breadcrumbLd} /> : null}
+      {aggregateRatingLd ? <StructuredData data={aggregateRatingLd} /> : null}
       <PageSection rhythm="standard" containerWidth="tight" className="border-b border-stone-line">
         <PageHeader page={page} kicker={null} />
         <div className={styles.toolbar}>
@@ -91,6 +110,6 @@ export async function TestimonialsIndexPage({
           </nav>
         ) : null}
       </PageSection>
-    </main>
+    </div>
   );
 }

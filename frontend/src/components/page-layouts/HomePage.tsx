@@ -5,7 +5,10 @@ import { HomeTestimonialsTeaser } from "@/components/home/HomeTestimonialsTeaser
 import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
+import { StructuredData } from "@/components/StructuredData";
 import { getHomeStrings } from "@/lib/i18n/home";
+import { getCmsConfig } from "@/lib/cms/env";
+import { buildMedicalBusinessLd } from "@/lib/structured-data/medical-business";
 import type { GlobalSettingsDTO, NavigationNodeDTO, SectionDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 import type { PageLayoutProps } from "./_shared";
@@ -19,7 +22,13 @@ type HomePageProps = PageLayoutProps & {
 
 type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
 
-export function HomePage({ page, appointmentHref, navigation, settings, homeTestimonials = null }: HomePageProps) {
+export function HomePage({
+  page,
+  appointmentHref,
+  navigation,
+  settings,
+  homeTestimonials = null,
+}: HomePageProps) {
   const t = getHomeStrings(page.locale);
   const heroMedia = page.imageCenter ?? page.featuredImage ?? null;
   const firstPromoIndex = page.sections.findIndex(
@@ -29,41 +38,61 @@ export function HomePage({ page, appointmentHref, navigation, settings, homeTest
     (section): section is AdvantagesSection => section.__component === "sections.advantages",
   );
 
+  const config = getCmsConfig();
+  const medicalBusinessLd = buildMedicalBusinessLd({
+    siteUrl: config.siteUrl,
+    name: "MyORL",
+    description: page.seo.metaDescription ?? undefined,
+    telephone: settings.phoneTel ?? undefined,
+    address: settings.address ?? undefined,
+    imageUrls: page.seo.ogImage ? [page.seo.ogImage.url] : undefined,
+    aggregateRating:
+      homeTestimonials?.aggregateRating != null && homeTestimonials?.userRatingCount != null
+        ? {
+            ratingValue: homeTestimonials.aggregateRating,
+            reviewCount: homeTestimonials.userRatingCount,
+          }
+        : undefined,
+  });
+
   return (
-    <main data-locale={page.locale}>
-      <HomeHero
-        kicker={t.heroKicker}
-        title={t.heroTitle}
-        excerpt={t.heroLead}
-        media={heroMedia}
-        ctaHref={appointmentHref}
-        ctaLabel={t.heroCtaLabel}
-      />
+    <>
+      <StructuredData data={medicalBusinessLd} />
+      <div data-locale={page.locale}>
+        <HomeHero
+          kicker={t.heroKicker}
+          title={t.heroTitle}
+          excerpt={t.heroLead}
+          media={heroMedia}
+          ctaHref={appointmentHref}
+          ctaLabel={t.heroCtaLabel}
+        />
 
-      {page.sections.map((section, index) => {
-        const shouldRenderMenuAccess =
-          section.__component === "sections.promo-slider" && index === firstPromoIndex;
+        {page.sections.map((section, index) => {
+          const shouldRenderMenuAccess =
+            section.__component === "sections.promo-slider" && index === firstPromoIndex;
 
-        if (shouldRenderMenuAccess) {
+          if (shouldRenderMenuAccess) {
+            return (
+              <Fragment key={`${section.__component}-${index}`}>
+                <SectionRenderer context="home" section={section} locale={page.locale} />
+                <MenuAccessGrid navigation={navigation} locale={page.locale} />
+                {advantagesSection ? <HomeAdvantagesSection section={advantagesSection} /> : null}
+              </Fragment>
+            );
+          }
+
           return (
             <Fragment key={`${section.__component}-${index}`}>
               <SectionRenderer context="home" section={section} locale={page.locale} />
-              <MenuAccessGrid navigation={navigation} locale={page.locale} />
-              {advantagesSection ? <HomeAdvantagesSection section={advantagesSection} /> : null}
+              {section.__component === "sections.video" && homeTestimonials ? (
+                <HomeTestimonialsTeaser locale={page.locale} payload={homeTestimonials} />
+              ) : null}
             </Fragment>
           );
-        }
-
-        return (
-          <Fragment key={`${section.__component}-${index}`}>
-            <SectionRenderer context="home" section={section} locale={page.locale} />
-            {section.__component === "sections.video" && homeTestimonials ? (
-              <HomeTestimonialsTeaser locale={page.locale} payload={homeTestimonials} />
-            ) : null}
-          </Fragment>
-        );
-      })}
-      <HomeVisitMapSection locale={page.locale} settings={settings} />
-    </main>
+        })}
+        <HomeVisitMapSection locale={page.locale} settings={settings} />
+      </div>
+    </>
   );
 }

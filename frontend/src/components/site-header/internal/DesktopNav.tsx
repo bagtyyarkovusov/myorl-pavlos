@@ -7,14 +7,11 @@ import { NavigationAnchor } from "./NavigationAnchor";
 import desktopStyles from "./DesktopNav.module.css";
 import megaStyles from "./MegaMenu.module.css";
 
-const styles = new Proxy(
-  {} as Record<string, string>,
-  {
-    get(_, key: string) {
-      return desktopStyles[key] ?? megaStyles[key];
-    },
+const styles = new Proxy({} as Record<string, string>, {
+  get(_, key: string) {
+    return desktopStyles[key] ?? megaStyles[key];
   },
-);
+});
 
 type DesktopNavProps = {
   items: NavigationNodeDTO[];

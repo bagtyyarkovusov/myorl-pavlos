@@ -7,7 +7,7 @@
 - [../../frontend/src/lib/cms/client.ts](../../frontend/src/lib/cms/client.ts) — API client
 - [../../frontend/src/lib/cms/dto.ts](../../frontend/src/lib/cms/dto.ts) — DTOs
 - [../../frontend/src/lib/cms/page-normalizer.ts](../../frontend/src/lib/cms/page-normalizer.ts)
-- [../../frontend/src/lib/cms/sections.ts](../../frontend/src/lib/cms/sections.ts) + [../../frontend/src/lib/cms/section-normalizers.ts](../../frontend/src/lib/cms/section-normalizers.ts)
+- [../../frontend/src/lib/cms/section-normalizer.ts](../../frontend/src/lib/cms/section-normalizer.ts)
 - [../../frontend/src/lib/cms/navigation.ts](../../frontend/src/lib/cms/navigation.ts)
 - [../../frontend/src/lib/cms/cms-gateway.ts](../../frontend/src/lib/cms/cms-gateway.ts) — Strapi normalization pipeline
 

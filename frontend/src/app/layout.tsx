@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, JetBrains_Mono, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { getCmsConfig } from "@/lib/cms/env";
 
 const display = Instrument_Serif({
   subsets: ["latin"],
@@ -18,7 +19,10 @@ const mono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
+const config = getCmsConfig();
+
 export const metadata: Metadata = {
+  metadataBase: new URL(config.siteUrl),
   title: {
     default: "MyORL",
     template: "%s | MyORL",

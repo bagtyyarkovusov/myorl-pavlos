@@ -13,40 +13,30 @@
  * section in pageSections are safely skipped.
  */
 
-type AnyStrapi = {
-  log: { info: (msg: string) => void; warn: (msg: string) => void; error: (msg: string, err?: unknown) => void };
-  store: (opts: { type: string; name: string }) => {
-    get: (opts: { key: string }) => Promise<any>;
-    set: (opts: { key: string; value: any }) => Promise<void>;
-  };
-  documents: (uid: string) => {
-    findMany: (params?: any) => Promise<any[]>;
-    update: (params: any) => Promise<any>;
-  };
-};
+import type { Core } from "@strapi/strapi";
 
-const SEED_VERSION = 'v1';
-const MARKER_KEY = 'migrate_sections_version';
+const SEED_VERSION = "v1";
+const MARKER_KEY = "migrate_sections_version";
 
 type SectionComponent =
-  | 'sections.faq'
-  | 'sections.accordion'
-  | 'sections.tabs'
-  | 'sections.gallery'
-  | 'sections.contact';
+  | "sections.faq"
+  | "sections.accordion"
+  | "sections.tabs"
+  | "sections.gallery"
+  | "sections.contact";
 
 const DEDICATED_FIELDS: Array<{ field: string; component: SectionComponent }> = [
-  { field: 'faqSection', component: 'sections.faq' },
-  { field: 'accordionSection', component: 'sections.accordion' },
-  { field: 'tabsSection', component: 'sections.tabs' },
-  { field: 'gallerySection', component: 'sections.gallery' },
-  { field: 'contactSection', component: 'sections.contact' },
+  { field: "faqSection", component: "sections.faq" },
+  { field: "accordionSection", component: "sections.accordion" },
+  { field: "tabsSection", component: "sections.tabs" },
+  { field: "gallerySection", component: "sections.gallery" },
+  { field: "contactSection", component: "sections.contact" },
 ];
 
 function hasData(value: unknown): value is Record<string, unknown> {
   if (value === null || value === undefined) return false;
   if (Array.isArray(value)) return value.length > 0;
-  if (typeof value === 'object') return Object.keys(value as object).length > 0;
+  if (typeof value === "object") return Object.keys(value as object).length > 0;
   return true;
 }
 
@@ -57,14 +47,14 @@ function sectionAlreadyInDynamicZone(
   return (
     Array.isArray(pageSections) &&
     pageSections.some(
-      (entry: any) =>
+      (entry: { __component?: string }) =>
         entry && entry.__component === component,
     )
   );
 }
 
-export async function migrateSections(strapi: AnyStrapi): Promise<void> {
-  const store = strapi.store({ type: 'plugin', name: 'content-manager' });
+export async function migrateSections(strapi: Core.Strapi): Promise<void> {
+  const store = strapi.store({ type: "plugin", name: "content-manager" });
 
   const markerValue = await store.get({ key: MARKER_KEY });
   if (markerValue === SEED_VERSION) {
@@ -75,10 +65,10 @@ export async function migrateSections(strapi: AnyStrapi): Promise<void> {
     DEDICATED_FIELDS.map(({ field }) => [field, true]),
   );
 
-  const pages = await strapi.documents('api::page.page').findMany({
+  const pages = await strapi.documents("api::page.page").findMany({
     populate: { pageSections: true, ...populate },
     filters: {
-      pageType: { $ne: 'home' },
+      pageType: { $ne: "home" },
     },
   });
 
@@ -101,7 +91,7 @@ export async function migrateSections(strapi: AnyStrapi): Promise<void> {
         : [];
 
       try {
-        await strapi.documents('api::page.page').update({
+        await strapi.documents("api::page.page").update({
           documentId: page.documentId,
           data: {
             pageSections: [...existingSections, sectionEntry],

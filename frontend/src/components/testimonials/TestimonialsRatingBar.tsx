@@ -19,7 +19,9 @@ export function TestimonialsRatingBar({
   }
 
   const countText =
-    userRatingCount != null ? countTemplate.replace(/\{\{count\}\}/g, String(userRatingCount)) : null;
+    userRatingCount != null
+      ? countTemplate.replace(/\{\{count\}\}/g, String(userRatingCount))
+      : null;
 
   return (
     <div className={cn("flex", className)}>

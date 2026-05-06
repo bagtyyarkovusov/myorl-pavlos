@@ -12,6 +12,8 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "strapi": "strapi",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
@@ -32,7 +34,8 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "patch-package": "^8.0.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^1.6.0"
   },
   "engines": {
     "node": ">=20.0.0 <=24.x.x",

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
@@ -70,8 +71,7 @@ export function SiteHeaderClient({
         <header className={styles["site-header"]} data-locale={locale}>
           <div className={`container ${styles["site-header__inner"]}`}>
             <Link className={styles.brand} href={`/${locale}`} aria-label={t.brandLogoAlt}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 className={styles["brand-logo"]}
                 src={LOGO_SRC}
                 alt={t.brandLogoAlt}

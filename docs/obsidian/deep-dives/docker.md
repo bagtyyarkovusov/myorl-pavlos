@@ -9,7 +9,7 @@ source: code reading (Dockerfile*, docker-compose*)
 
 ## Services
 
-### Development (`docker-compose.yml`)
+### Development (`docker-compose.dev.yml`)
 
 | Service | Image | Port | Purpose |
 | --- | --- | --- | --- |
@@ -70,7 +70,8 @@ The Next.js Dockerfile accepts `STRAPI_URL` as a build arg to bake the Strapi UR
 
 ## Related
 
-- [[../../docker-compose.yml]] — dev compose file
+- [[../../docker-compose.dev.yml]] — dev compose file
+- [[../../docker-compose.rehearsal.yml]] — rehearsal compose file
 - [[../../docker-compose.prod.yml]] — prod compose file
 - [[../../backend/Dockerfile]] — Strapi Dockerfile
 - [[../../frontend/Dockerfile]] — Next.js Dockerfile

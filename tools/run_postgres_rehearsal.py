@@ -14,11 +14,13 @@ Assumptions made by this script:
   with database ``strapi_rehearsal`` and user ``strapi``. Provision per the
   runbook before invoking this script.
 - Strapi has been booted once against that PG so the schema is materialized.
-- ``backend/.tmp/data.db`` is the canonical SQLite source.
 
-Use ``--load-source existing-postgres`` after a canonical Strapi import has
-populated the rehearsal database. The default ``direct-copy`` mode remains for
-index-plan debugging when import tooling is unavailable.
+Per ADR-008, dev Postgres is the canonical Strapi State store and the
+canonical source for the rehearsal pipeline (orchestrate_rehearsal.py). This
+script's ``direct-copy`` mode reads from ``backend/.tmp/data.db`` (the SQLite
+fallback) for index-plan debugging only — when canonical Strapi import
+tooling is unavailable. Use ``--load-source existing-postgres`` after a
+canonical Strapi import has populated the rehearsal database.
 """
 
 from __future__ import annotations
@@ -36,11 +38,16 @@ from typing import Any
 
 from cms_audit import REPORTS_DIR, ROOT
 from audit_postgres_strictness import POSTGRES_TEXT_LIMIT, audit as audit_postgres_strictness
+from environments import ENVIRONMENTS, SQLITE_FALLBACK_PATH
 
-CONTAINER = "gemini-pg-rehearsal"
-PG_USER = "strapi"
-PG_DB = "strapi_rehearsal"
-SQLITE_PATH = ROOT / "backend" / ".tmp" / "data.db"
+# Rehearsal target identity comes from the Environment Manifest
+_REHEARSAL = ENVIRONMENTS["rehearsal"]
+CONTAINER = _REHEARSAL["container"]
+PG_USER = _REHEARSAL["db_user"]
+PG_DB = _REHEARSAL["db_name"]
+# SQLite is the direct-copy debugging fallback; the canonical rehearsal source
+# is dev Postgres (see ADR-008 and tools/orchestrate_rehearsal.py).
+SQLITE_PATH = ROOT / SQLITE_FALLBACK_PATH
 REPORT_PATH = REPORTS_DIR / "postgres_rehearsal_explain_report.json"
 
 PAGE_COLUMNS = [

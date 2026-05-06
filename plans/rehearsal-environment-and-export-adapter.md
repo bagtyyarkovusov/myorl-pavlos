@@ -24,11 +24,11 @@ A standalone guard module checks port availability, container conflicts, and sou
 
 ### Acceptance criteria
 
-- [ ] `tools/check_environment.py --target=rehearsal` passes when port 55532 is free, no conflicting container exists, and SQLite source is present
-- [ ] `tools/check_environment.py --target=rehearsal` fails fast with a clear error when port 55532 is occupied
-- [ ] `docker-compose.rehearsal.yml` defines `gemini-pg-rehearsal` with port `55532:5432`, volume `pgdata-rehearsal`, and healthcheck
-- [ ] `backend/.env.rehearsal` contains pre-configured PostgreSQL connection values for the rehearsal target
-- [ ] The rehearsal container starts independently and reaches a healthy state
+- [x] `tools/check_environment.py --target=rehearsal` passes when port 55532 is free, no conflicting container exists, and SQLite source is present
+- [x] `tools/check_environment.py --target=rehearsal` fails fast with a clear error when port 55532 is occupied
+- [x] `docker-compose.rehearsal.yml` defines `gemini-pg-rehearsal` with port `55532:5432`, volume `pgdata-rehearsal`, and healthcheck
+- [x] `backend/.env.rehearsal` contains pre-configured PostgreSQL connection values for the rehearsal target
+- [x] The rehearsal container starts independently and reaches a healthy state
 
 ---
 
@@ -38,15 +38,15 @@ A standalone guard module checks port availability, container conflicts, and sou
 
 ### What to build
 
-A single-command orchestrator that runs the full rehearsal lifecycle: preflight (guard), export from SQLite, start rehearsal DB, wait for health, import into PostgreSQL, apply forward-only index migrations, run EXPLAIN ANALYZE queries, validate the report, and cleanup (or keep running with `--keep-running`).
+A single-command orchestrator that runs the full rehearsal lifecycle: preflight (guard), export from dev Postgres (canonical store, see ADR-008), start rehearsal DB, wait for health, import into PostgreSQL, apply forward-only index migrations, run EXPLAIN ANALYZE queries, validate the report, and cleanup (or keep running with `--keep-running`).
 
 ### Acceptance criteria
 
-- [ ] `python3 tools/orchestrate_rehearsal.py` runs the full lifecycle end-to-end
-- [ ] `--keep-running` flag leaves the rehearsal container and volume intact
-- [ ] The orchestrator generates `artifacts/reports/postgres_rehearsal_explain_report.json`
-- [ ] Failure at any step produces a clear error message identifying the failing step
-- [ ] The existing `run_postgres_rehearsal.py` is deprecated in favor of the new orchestrator
+- [x] `python3 tools/orchestrate_rehearsal.py` runs the full lifecycle end-to-end
+- [x] `--keep-running` flag leaves the rehearsal container and volume intact
+- [x] The orchestrator generates `artifacts/reports/postgres_rehearsal_explain_report.json`
+- [x] Failure at any step produces a clear error message identifying the failing step
+- [x] The existing `run_postgres_rehearsal.py` is deprecated in favor of the new orchestrator
 
 ---
 
@@ -60,11 +60,11 @@ A unified migration module that moves full Strapi state from any source to any t
 
 ### Acceptance criteria
 
-- [ ] `python3 tools/migrate_to_postgres.py --from=sqlite --to=rehearsal` successfully migrates all Strapi data
-- [ ] Row counts match between source and target after migration
-- [ ] `--dry-run` validates without modifying the target
-- [ ] Platform-managed path (`--to=production` with `DATABASE_URL`) uses `pg_dump` / `pg_restore`
-- [ ] Strapi version mismatch is detected and blocked before migration
+- [x] `python3 tools/migrate_to_postgres.py --from=sqlite --to=rehearsal` successfully migrates all Strapi data
+- [x] Row counts match between source and target after migration
+- [x] `--dry-run` validates without modifying the target
+- [x] Platform-managed path (`--to=production` with `DATABASE_URL`) uses `pg_dump` / `pg_restore`
+- [x] Strapi version mismatch is detected and blocked before migration
 
 ---
 
@@ -78,8 +78,8 @@ Automatic production database backup before overwrite. Strapi version mismatch d
 
 ### Acceptance criteria
 
-- [ ] Production cutover script backs up the existing production database before overwriting
-- [ ] `docs/runbooks/production-cutover.md` documents both shell-access and platform-managed paths
-- [ ] `CONTEXT.md` exists at project root with domain terms defined
-- [ ] `production_readiness_gate.py` includes the new rehearsal report validation
-- [ ] The existing `docs/runbooks/postgres-rehearsal.md` is updated to reference the new orchestrator
+- [x] Production cutover script backs up the existing production database before overwriting
+- [x] `docs/runbooks/production-cutover.md` documents both shell-access and platform-managed paths
+- [x] `CONTEXT.md` exists at project root with domain terms defined
+- [x] `production_readiness_gate.py` includes the new rehearsal report validation
+- [x] The existing `docs/runbooks/postgres-rehearsal.md` is updated to reference the new orchestrator

@@ -34,7 +34,8 @@
 
 ## Infrastructure
 
-- [../../docker-compose.yml](../../docker-compose.yml) — Dev: postgres + strapi + nextjs
+- [../../docker-compose.dev.yml](../../docker-compose.dev.yml) — Dev: postgres + strapi + nextjs (hot reload)
+- [../../docker-compose.rehearsal.yml](../../docker-compose.rehearsal.yml) — Rehearsal: disposable postgres for migration validation
 - [../../docker-compose.prod.yml](../../docker-compose.prod.yml) — Prod: +caddy with auto TLS
 - [[deep-dives/docker]] — Docker architecture deep dive
 

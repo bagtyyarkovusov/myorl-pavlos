@@ -11,7 +11,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
 from check_environment import (
-    TARGET_CONFIG,
     CheckResult,
     check_container_conflict,
     check_port_free,
@@ -19,6 +18,7 @@ from check_environment import (
     check_target_config,
     run_checks,
 )
+from environments import ENVIRONMENTS
 
 
 class TestCheckTargetConfig(unittest.TestCase):
@@ -45,12 +45,14 @@ class TestCheckTargetConfig(unittest.TestCase):
 
 
 class TestCheckPortFree(unittest.TestCase):
-    def test_port_in_target_config_are_defined(self):
-        for target, config in TARGET_CONFIG.items():
-            port = config["port"]
-            self.assertIsInstance(port, int, f"Target {target} port must be an integer")
-            self.assertGreater(port, 0, f"Target {target} port must be positive")
-            self.assertLess(port, 65536, f"Target {target} port must be < 65536")
+    def test_host_ports_in_manifest_are_valid(self):
+        for target, env in ENVIRONMENTS.items():
+            port = env["host_port"]
+            if port is None:
+                continue  # internal-only targets (production)
+            self.assertIsInstance(port, int, f"Target {target} host_port must be an integer")
+            self.assertGreater(port, 0, f"Target {target} host_port must be positive")
+            self.assertLess(port, 65536, f"Target {target} host_port must be < 65536")
 
 
 class TestCheckSQLiteSource(unittest.TestCase):
@@ -74,7 +76,7 @@ class TestRunChecks(unittest.TestCase):
 
     def test_rehearsal_runs_all_checks(self):
         results = run_checks("rehearsal")
-        # Should have: target, port, container, sqlite checks
+        # Should have: target, port, container checks
         self.assertGreaterEqual(len(results), 3)
         # First check (target validity) should pass
         self.assertTrue(results[0].passed)

@@ -71,3 +71,23 @@ jobs:
 
       - name: Strapi build
         run: npm run build
+
+  manifest:
+    name: environment manifest • drift detector
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PyYAML
+        run: pip install "PyYAML>=6.0"
+
+      - name: Drift detector — manifest vs compose files
+        run: python3 tests/test_environments.py
+
+      - name: Port Guard tests
+        run: python3 tests/test_check_environment.py

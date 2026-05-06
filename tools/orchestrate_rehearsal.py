@@ -3,7 +3,7 @@
 
 Runs the full rehearsal pipeline end-to-end:
   1. Preflight (environment guard)
-  2. Export full Strapi state from SQLite
+  2. Export full Strapi state from dev Postgres (canonical store, see ADR-008)
   3. Start rehearsal PostgreSQL container
   4. Wait for database health
   5. Import Strapi state into PostgreSQL
@@ -15,8 +15,9 @@ Runs the full rehearsal pipeline end-to-end:
 Interface:
   python3 tools/orchestrate_rehearsal.py [--keep-running]
 
-The implementation handles Docker lifecycle, Strapi CLI invocation,
-psql execution, and error handling behind this single command.
+Requires the dev Postgres container (`gemini-pg`) to be running. Start it
+with `npm run dev:db` (or `npm run dev` for the full stack) before invoking
+the orchestrator. The implementation fails fast if it is not running.
 """
 
 from __future__ import annotations
@@ -33,19 +34,29 @@ from pathlib import Path
 from typing import Any
 
 from cms_audit import REPORTS_DIR, ROOT
+from environments import ENVIRONMENTS
 
-# Configuration
-REHEARSAL_COMPOSE = ROOT / "docker-compose.rehearsal.yml"
+# Configuration — rehearsal-specific values come from the Environment Manifest
+_REHEARSAL = ENVIRONMENTS["rehearsal"]
+_DEV = ENVIRONMENTS["dev"]
+
 BACKEND_DIR = ROOT / "backend"
-SQLITE_DB_PATH = BACKEND_DIR / ".tmp" / "data.db"
+REHEARSAL_COMPOSE = ROOT / _REHEARSAL["compose_file"]
 EXPORT_PATH = ROOT / "artifacts" / "rehearsal-export.tar.gz"
 # Strapi appends .tar.gz automatically, so the base path we pass should not include it
 EXPORT_BASE = EXPORT_PATH.with_suffix("").with_suffix("")  # removes .tar.gz -> rehearsal-export
 REPORT_PATH = REPORTS_DIR / "postgres_rehearsal_explain_report.json"
-CONTAINER = "gemini-pg-rehearsal"
-PG_USER = "strapi"
-PG_DB = "strapi_rehearsal"
-PG_PORT = "55532"
+CONTAINER = _REHEARSAL["container"]
+PG_USER = _REHEARSAL["db_user"]
+PG_DB = _REHEARSAL["db_name"]
+PG_PORT = str(_REHEARSAL["host_port"])
+
+# Source for rehearsal exports — the dev Postgres database (canonical Strapi State store)
+DEV_CONTAINER = _DEV["container"]
+DEV_HOST_PORT = str(_DEV["host_port"])
+DEV_DB = _DEV["db_name"]
+DEV_USER = _DEV["db_user"]
+DEV_PASSWORD = "strapi"  # Local-only default
 
 # Hot-path EXPLAIN ANALYZE queries (from ADR-003 and runbook)
 QUERIES: list[dict[str, str]] = [
@@ -149,12 +160,34 @@ def preflight() -> None:
     log_step(step, "All preflight checks passed.")
 
 
-def export_sqlite() -> Path:
-    step = Step("export")
-    log_step(step, f"Exporting Strapi state from SQLite ({SQLITE_DB_PATH})...")
+def _check_dev_postgres_running() -> None:
+    """Fail fast if the dev Postgres container is not running.
 
-    if not SQLITE_DB_PATH.exists():
-        raise RuntimeError(f"SQLite database not found: {SQLITE_DB_PATH}")
+    Per ADR-008, dev Postgres is the canonical source for the rehearsal
+    pipeline. We do not auto-start it — the developer must bring it up first
+    with `npm run dev:db` (or the full dev stack).
+    """
+    result = subprocess.run(
+        ["docker", "ps", "--format", "{{.Names}}"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=5,
+    )
+    running = {line.strip() for line in result.stdout.splitlines() if line.strip()}
+    if DEV_CONTAINER not in running:
+        raise RuntimeError(
+            f"Dev Postgres container '{DEV_CONTAINER}' is not running. "
+            "Rehearsal exports its source from dev Postgres. "
+            "Start it first: `npm run dev:db` (or `npm run dev` for the full stack)."
+        )
+
+
+def export_from_dev_postgres() -> Path:
+    step = Step("export")
+    log_step(step, f"Exporting Strapi state from dev Postgres ({DEV_CONTAINER})...")
+
+    _check_dev_postgres_running()
 
     EXPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     if EXPORT_BASE.exists():
@@ -162,11 +195,20 @@ def export_sqlite() -> Path:
     if EXPORT_PATH.exists():
         EXPORT_PATH.unlink()
 
-    # Use Strapi CLI to export from the current SQLite database
-    # We explicitly set DATABASE_CLIENT=sqlite to ensure we export from the right source
-    env = {"DATABASE_CLIENT": "sqlite", "DATABASE_FILENAME": ".tmp/data.db"}
+    # Strapi CLI exports from whatever DATABASE_CLIENT/connection it sees in env.
+    # Point it at dev Postgres on its host port — the canonical Strapi State store.
+    env = {
+        "DATABASE_CLIENT": "postgres",
+        "DATABASE_HOST": "127.0.0.1",
+        "DATABASE_PORT": DEV_HOST_PORT,
+        "DATABASE_NAME": DEV_DB,
+        "DATABASE_USERNAME": DEV_USER,
+        "DATABASE_PASSWORD": DEV_PASSWORD,
+        "DATABASE_SSL": "false",
+        "DATABASE_SCHEMA": "public",
+    }
 
-    result = run_command(
+    run_command(
         ["npx", "strapi", "export", "--file", str(EXPORT_BASE), "--no-encrypt", "--exclude", "files"],
         cwd=BACKEND_DIR,
         env=env,
@@ -245,48 +287,27 @@ def import_into_postgres(export_path: Path) -> None:
 
 def apply_migrations() -> None:
     step = Step("migrate")
-    log_step(step, "Applying forward-only index migrations...")
+    log_step(step, "Applying forward-only index migrations via Migration Runner...")
 
-    migrations_dir = ROOT / "backend" / "database" / "postgres-migrations"
-    if not migrations_dir.exists():
-        log_step(step, "No migration directory found; skipping.")
-        return
+    runner = ROOT / "tools" / "migration_runner.py"
+    result = run_command(
+        [sys.executable, str(runner), "up", "--target", "rehearsal"],
+        cwd=ROOT,
+        check=False,
+        capture=True,
+        timeout=300,
+    )
 
-    # Find all .up.sql files and sort them
-    up_files = sorted(migrations_dir.glob("*.up.sql"))
-    if not up_files:
-        log_step(step, "No up-migrations found; skipping.")
-        return
-
-    applied = 0
-    failed = []
-    for mig_file in up_files:
-        log_step(step, f"Applying {mig_file.name}...")
-        with open(mig_file, "r", encoding="utf-8") as f:
-            sql = f.read()
-
-        # Run via psql inside the container
-        result = subprocess.run(
-            [
-                "docker", "exec", "-i", CONTAINER,
-                "psql", "-U", PG_USER, "-d", PG_DB, "-v", "ON_ERROR_STOP=1",
-            ],
-            input=sql,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=60,
+    if result.returncode != 0:
+        stderr = result.stderr.strip() if result.stderr else ""
+        stdout = result.stdout.strip() if result.stdout else ""
+        raise RuntimeError(
+            f"Migration Runner failed (exit {result.returncode}).\n"
+            f"stdout: {stdout[:500]}\n"
+            f"stderr: {stderr[:500]}"
         )
-        if result.returncode != 0:
-            error_msg = result.stderr.strip() if result.stderr else result.stdout.strip()
-            log_step(step, f"  [WARN] {mig_file.name} failed: {error_msg[:200]}")
-            failed.append({"file": mig_file.name, "error": error_msg})
-        else:
-            applied += 1
 
-    log_step(step, f"Applied {applied}/{len(up_files)} migration(s).")
-    if failed:
-        log_step(step, f"  {len(failed)} migration(s) failed (non-fatal for rehearsal)")
+    log_step(step, "Migrations applied successfully.")
 
 
 def docker_psql(sql: str, *, args: tuple[str, ...] = ("-At",)) -> str:
@@ -455,14 +476,14 @@ def main() -> int:
         # 1. Preflight
         preflight()
 
-        # 2. Export from SQLite
+        # 2. Export from dev Postgres (canonical store, see ADR-008)
         if args.skip_export:
             if not EXPORT_PATH.exists():
                 raise RuntimeError(f"--skip-export requested but {EXPORT_PATH} not found.")
             export_path = EXPORT_PATH
             print(f"Using existing export: {export_path}")
         else:
-            export_path = export_sqlite()
+            export_path = export_from_dev_postgres()
 
         # 3. Start rehearsal DB
         start_rehearsal_db()

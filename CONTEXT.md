@@ -33,7 +33,15 @@ The adapter chooses the correct transport based on target capabilities. The inte
 
 ## Port Guard
 
-The **preflight validation module** that checks port availability, container conflicts, source database existence, and environment configuration before any database operation begins. The port guard fails fast with actionable errors, preventing the class of port-conflict data-loss failures.
+The **preflight validation module** that checks port availability, container conflicts, source database existence, and environment configuration before any database operation begins. The port guard fails fast with actionable errors, preventing the class of port-conflict data-loss failures. It reads target identity from the Environment Manifest.
+
+## Environment Manifest
+
+The **single source of truth for deployment-target identity** (host port, container name, volume name, database name, database user, compose file, access kind). Lives at `tools/environments.py`. Every Python tool that touches a target — Port Guard, Canonical Export Adapter, rehearsal orchestrator — imports `ENVIRONMENTS` from the manifest instead of carrying its own copy.
+
+Secrets, runtime tunables (pool sizes, SSL flags), and constants that don't vary across environments (Strapi 1337, Next.js 3000) deliberately do not live in the manifest. They live in `.env.<target>` files or compose YAML.
+
+Drift between the manifest and `docker-compose.<target>.yml` is caught by `tests/test_environments.py`.
 
 ## Deep Module
 
@@ -55,9 +63,17 @@ A **concrete thing satisfying an interface at a seam**. The Strapi `export`/`imp
 
 A **database migration that cannot be rolled back** by editing the migration file after it has run. Forward-only migrations are required for production PostgreSQL because shared databases must not have their migration history altered. Rollbacks are implemented as new forward-only migrations that reverse the previous change.
 
-## SQLite Rehearsal Store
+## Migration Runner
 
-The **local SQLite database** (`backend/.tmp/data.db`) used for fast development without Docker. It is not suitable for production or shared environments. All content changes are rehearsed against PostgreSQL before production cutover.
+The **codified enforcement module** for the Forward-Only Migration policy. Lives at `tools/migration_runner.py`. It discovers migrations in `backend/database/postgres-migrations/`, tracks applied state in a `_migrations` table with SHA-256 checksums, and enforces:
+
+- **Edited-migration guard** — fatal error if a previously-applied `.up.sql` file changes.
+- **Prod safety** — `up` requires `--force` for production; `down` is blocked entirely for production.
+- **Idempotent apply** — skips already-applied migrations; applies pending ones in filename order.
+
+## SQLite Fallback Store
+
+The **local SQLite database** (`backend/.tmp/data.db`) used for fast development without Docker (`npm run dev:local`). It is a convenience fallback, not a source of truth. The canonical `Strapi State` store for dev and rehearsal is **dev Postgres** (`gemini-pg`). See ADR-008.
 
 ## Strapi State
 
@@ -70,9 +86,17 @@ The **complete data owned by Strapi**, including:
 
 A canonical migration must transfer the full Strapi state, not just pages and tags.
 
+## Backup Runner
+
+The **automated backup / restore / drill module** for PostgreSQL and uploads. Lives at `tools/backup_runner.py`. It wraps `pg_dump` and `psql` with three modes:
+
+- **backup** — full/schema-only/data-only dump, gzip-compressed, with automatic retention pruning (30 days).
+- **restore** — drop/recreate/import cycle. Blocked for production without ``--force``.
+- **drill** — backup → restore → verify row counts. Blocked for production entirely; intended for rehearsal.
+
 ## Port Allocation Contract
 
-The **fixed port mapping** that prevents collisions:
+The **fixed port mapping** that prevents collisions. PostgreSQL host ports are owned by the Environment Manifest (`tools/environments.py`) — this table mirrors that for human reference; the manifest is canonical:
 
 | Port | Owner |
 |------|-------|
@@ -81,9 +105,9 @@ The **fixed port mapping** that prevents collisions:
 | `5432` | Native/system PostgreSQL (`auto.tm` project) |
 | `55432` | Dev Docker PostgreSQL (`gemini-pg`, `pgdata_dev` volume) |
 | `55532` | Rehearsal Docker PostgreSQL (`gemini-pg-rehearsal`, `pgdata-rehearsal` volume) |
-| `5433` | Production Docker PostgreSQL (`gemini-pg-prod` on deployed server) |
+| _internal_ | Production Docker PostgreSQL (`gemini-pg-prod`, `pgdata-prod` volume) — no host exposure |
 
-This contract is enforced by the Port Guard module.
+This contract is enforced by the Port Guard module via the manifest.
 
 ## Dev Environment (Docker)
 

@@ -18,29 +18,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from cms_audit import DEFAULT_SQLITE_DB_PATH, ROOT
-
-# Port allocation contract: see docker-compose*.yml and CONTEXT.md
-TARGET_CONFIG: dict[str, dict[str, Any]] = {
-    "dev": {
-        "port": 55432,
-        "container_name": "gemini-pg",
-        "compose_file": "docker-compose.yml",
-        "needs_sqlite_source": True,
-    },
-    "rehearsal": {
-        "port": 55532,
-        "container_name": "gemini-pg-rehearsal",
-        "compose_file": "docker-compose.rehearsal.yml",
-        "needs_sqlite_source": True,
-    },
-    "production": {
-        "port": 5432,
-        "container_name": "gemini-pg-prod",
-        "compose_file": "docker-compose.prod.yml",
-        "needs_sqlite_source": False,
-    },
-}
+from cms_audit import ROOT
+from environments import ENVIRONMENTS
 
 
 @dataclass
@@ -161,12 +140,12 @@ def check_sqlite_source_exists(db_path: Path) -> CheckResult:
 
 def check_target_config(target: str) -> CheckResult:
     """Validate that the target is known and its configuration is complete."""
-    if target not in TARGET_CONFIG:
-        known = ", ".join(TARGET_CONFIG.keys())
+    if target not in ENVIRONMENTS:
+        known = ", ".join(ENVIRONMENTS.keys())
         return CheckResult(
             passed=False,
             message=f"Unknown target '{target}'. Known targets: {known}",
-            details={"target": target, "known_targets": list(TARGET_CONFIG.keys())},
+            details={"target": target, "known_targets": list(ENVIRONMENTS.keys())},
         )
     return CheckResult(passed=True, message=f"Target '{target}' is valid")
 
@@ -180,17 +159,14 @@ def run_checks(target: str) -> list[CheckResult]:
     if not results[-1].passed:
         return results
 
-    config = TARGET_CONFIG[target]
+    env = ENVIRONMENTS[target]
 
-    # Port availability
-    results.append(check_port_free(config["port"]))
+    # Port availability — skip when target is internal-only (production)
+    if env["host_port"] is not None:
+        results.append(check_port_free(env["host_port"]))
 
     # Container conflict
-    results.append(check_container_conflict(config["container_name"]))
-
-    # SQLite source (for dev and rehearsal)
-    if config.get("needs_sqlite_source"):
-        results.append(check_sqlite_source_exists(DEFAULT_SQLITE_DB_PATH))
+    results.append(check_container_conflict(env["container"]))
 
     return results
 
@@ -215,7 +191,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--target",
-        choices=list(TARGET_CONFIG.keys()),
+        choices=list(ENVIRONMENTS.keys()),
         required=True,
         help="Target environment to validate",
     )

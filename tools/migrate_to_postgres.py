@@ -25,37 +25,36 @@ from pathlib import Path
 from typing import Any
 
 from cms_audit import ROOT
+from environments import ENVIRONMENTS
 
 # Configuration
 BACKEND_DIR = ROOT / "backend"
 SQLITE_DB_PATH = BACKEND_DIR / ".tmp" / "data.db"
 EXPORT_DIR = ROOT / "artifacts" / "exports"
 
-TARGET_CONFIG: dict[str, dict[str, Any]] = {
-    "dev": {
+
+def _target_config(target: str) -> dict[str, Any] | None:
+    """Build a connection config dict for ``target`` from the Environment Manifest.
+
+    Returns ``None`` for unknown targets. Remote targets (e.g. production) have
+    only ``access: remote`` since their connection details must come from
+    DATABASE_URL or platform-specific credentials, not the manifest.
+    """
+    env = ENVIRONMENTS.get(target)
+    if env is None:
+        return None
+    if env["access"] == "remote":
+        return {"access": "remote"}
+    return {
         "host": "127.0.0.1",
-        "port": "55432",
-        "database": "strapi",
-        "username": "strapi",
-        "password": "strapi",
-        "container": "gemini-pg",
+        "port": str(env["host_port"]),
+        "database": env["db_name"],
+        "username": env["db_user"],
+        "password": "strapi",  # Local-only default; production uses DATABASE_URL
+        "container": env["container"],
         "ssl": "false",
-        "access": "local",
-    },
-    "rehearsal": {
-        "host": "127.0.0.1",
-        "port": "55532",
-        "database": "strapi_rehearsal",
-        "username": "strapi",
-        "password": "strapi",
-        "container": "gemini-pg-rehearsal",
-        "ssl": "false",
-        "access": "local",  # We have Docker/local access
-    },
-    "production": {
-        "access": "remote",  # Requires shell or DATABASE_URL
-    },
-}
+        "access": env["access"],
+    }
 
 
 @dataclass
@@ -126,14 +125,16 @@ def export_strapi_state(source: str, export_path: Path) -> Path:
         env["DATABASE_CLIENT"] = "sqlite"
         env["DATABASE_FILENAME"] = ".tmp/data.db"
     elif source == "postgres":
-        # Assume rehearsal PostgreSQL config
+        # Source is the rehearsal PostgreSQL — pull connection from the manifest
+        rehearsal = _target_config("rehearsal")
+        assert rehearsal is not None, "rehearsal target missing from Environment Manifest"
         env["DATABASE_CLIENT"] = "postgres"
-        env["DATABASE_HOST"] = "127.0.0.1"
-        env["DATABASE_PORT"] = "55532"
-        env["DATABASE_NAME"] = "strapi_rehearsal"
-        env["DATABASE_USERNAME"] = "strapi"
-        env["DATABASE_PASSWORD"] = "strapi"
-        env["DATABASE_SSL"] = "false"
+        env["DATABASE_HOST"] = rehearsal["host"]
+        env["DATABASE_PORT"] = rehearsal["port"]
+        env["DATABASE_NAME"] = rehearsal["database"]
+        env["DATABASE_USERNAME"] = rehearsal["username"]
+        env["DATABASE_PASSWORD"] = rehearsal["password"]
+        env["DATABASE_SSL"] = rehearsal["ssl"]
     else:
         raise RuntimeError(f"Unknown source: {source}")
 
@@ -160,7 +161,7 @@ def import_strapi_state(target: str, export_path: Path) -> None:
     """Import Strapi state from tarball into the target database."""
     log(f"Importing into {target}...")
 
-    config = TARGET_CONFIG.get(target)
+    config = _target_config(target)
     if not config:
         raise RuntimeError(f"Unknown target: {target}")
 
@@ -208,7 +209,7 @@ def pg_restore_to_url(sql: str, database_url: str) -> None:
 
 def verify_row_counts(target: str) -> dict[str, int]:
     """Verify basic row counts in the target database."""
-    config = TARGET_CONFIG.get(target)
+    config = _target_config(target)
     if not config:
         return {}
 
@@ -270,8 +271,12 @@ def migrate_platform_managed(source: str, target_url: str, dry_run: bool) -> Mig
         log("[DRY RUN] Would pg_dump from rehearsal and pg_restore to target.")
         return MigrationResult(success=True, message="Dry run: platform-managed path validated.")
 
-    # Dump from rehearsal container
-    sql = pg_dump_from_container("gemini-pg-rehearsal", "strapi_rehearsal", "strapi")
+    # Dump from rehearsal container — pull identity from the manifest
+    rehearsal = _target_config("rehearsal")
+    assert rehearsal is not None, "rehearsal target missing from Environment Manifest"
+    sql = pg_dump_from_container(
+        rehearsal["container"], rehearsal["database"], rehearsal["username"]
+    )
 
     # Restore to target
     pg_restore_to_url(sql, target_url)

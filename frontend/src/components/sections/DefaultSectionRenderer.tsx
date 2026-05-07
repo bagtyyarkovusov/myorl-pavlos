@@ -8,30 +8,9 @@ import { toSocialLinkDTO } from "@/lib/cms/dto";
 import type { Density } from "@/lib/cms/density";
 import type { Locale, MediaDTO, SectionDTO } from "@/lib/cms/types";
 
+import { DisclosureList, TabsPanel } from "./DisclosurePanels";
 import { SECTION_COLUMN_DEFAULTS } from "./grid-defaults";
 import styles from "./SectionRenderer.module.css";
-
-function DisclosureList({
-  items,
-}: {
-  items: Array<[string | null | undefined, string | null | undefined]>;
-}) {
-  return (
-    <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.faq"]}>
-      {items.map(([title, content], index) => (
-        <details className={styles["disclosure"]} key={`${title ?? "item"}-${index}`}>
-          <summary className={styles["disclosure__summary"]}>
-            <span>{title}</span>
-            <span className={styles["disclosure__chevron"]} data-chevron aria-hidden="true" />
-          </summary>
-          <div className={styles["disclosure__body"]}>
-            <CmsHtml html={content} />
-          </div>
-        </details>
-      ))}
-    </SectionGrid>
-  );
-}
 
 function ResponsiveImage({ media, alt }: { media?: MediaDTO | null; alt: string }) {
   if (!media?.url) {
@@ -149,21 +128,19 @@ export function DefaultSectionRenderer({
         </SectionGrid>
       );
     case "sections.accordion":
-      return <DisclosureList items={section.items.map((item) => [item.title, item.content])} />;
-    case "sections.faq":
-      return <DisclosureList items={section.items.map((item) => [item.question, item.answer])} />;
-    case "sections.tabs":
       return (
-        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.tabs"]}>
-          {section.items.map((item, index) => (
-            <article className={styles["content-card"]} key={`${item.title ?? "tab"}-${index}`}>
-              {item.title ? <h3>{item.title}</h3> : null}
-              <CmsHtml html={item.content} />
-              {item.link ? <a href={item.link}>Open</a> : null}
-            </article>
-          ))}
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.accordion"]}>
+          <DisclosureList items={section.items.map((item) => [item.title, item.content])} />
         </SectionGrid>
       );
+    case "sections.faq":
+      return (
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.faq"]}>
+          <DisclosureList items={section.items.map((item) => [item.question, item.answer])} />
+        </SectionGrid>
+      );
+    case "sections.tabs":
+      return <TabsPanel items={section.items} />;
     case "sections.gallery":
       if (galleryMode === "lightbox") {
         return (

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import type { SectionDTO } from "@/lib/cms/types";
 
 import { DefaultSectionRenderer } from "./DefaultSectionRenderer";
@@ -109,8 +109,11 @@ describe("DefaultSectionRenderer", () => {
       items: [{ title: "Item 1", content: "<p>Content</p>" }],
     } as SectionDTO);
 
-    const { container } = render(<DefaultSectionRenderer section={section} />);
-    expect(container.querySelector("details")).toBeTruthy();
+    render(<DefaultSectionRenderer section={section} />);
+    expect(screen.getByRole("button", { name: "Item 1" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
   });
 
   it("renders a faq section", () => {
@@ -120,8 +123,8 @@ describe("DefaultSectionRenderer", () => {
       items: [{ question: "Q1", answer: "<p>A1</p>" }],
     } as SectionDTO);
 
-    const { container } = render(<DefaultSectionRenderer section={section} />);
-    expect(container.querySelector("details")).toBeTruthy();
+    render(<DefaultSectionRenderer section={section} />);
+    expect(screen.getByRole("button", { name: "Q1" })).toHaveAttribute("aria-expanded", "false");
   });
 
   it("renders a tabs section", () => {
@@ -132,7 +135,77 @@ describe("DefaultSectionRenderer", () => {
     } as SectionDTO);
 
     const { container } = render(<DefaultSectionRenderer section={section} />);
-    expect(container.querySelector("h3")).toBeTruthy();
+    expect(container.querySelector("[role='tablist']")).toBeTruthy();
+  });
+
+  it("renders tabs with tablist semantics and aria-selected state", () => {
+    const section = makeSection({
+      __component: "sections.tabs",
+      heading: "Tabs",
+      items: [
+        { title: "Diagnosis", content: "<p>Diagnosis content</p>", link: null },
+        { title: "Treatment", content: "<p>Treatment content</p>", link: null },
+      ],
+    } as SectionDTO);
+
+    render(<DefaultSectionRenderer section={section} />);
+
+    expect(screen.getByRole("tablist")).toBeTruthy();
+    const diagnosis = screen.getByRole("tab", { name: "Diagnosis" });
+    const treatment = screen.getByRole("tab", { name: "Treatment" });
+    expect(diagnosis).toHaveAttribute("aria-selected", "true");
+    expect(treatment).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("Diagnosis content");
+
+    fireEvent.click(treatment);
+
+    expect(diagnosis).toHaveAttribute("aria-selected", "false");
+    expect(treatment).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("Treatment content");
+  });
+
+  it("supports keyboard navigation between desktop tabs", () => {
+    const section = makeSection({
+      __component: "sections.tabs",
+      heading: "Tabs",
+      items: [
+        { title: "Diagnosis", content: "<p>Diagnosis content</p>", link: null },
+        { title: "Treatment", content: "<p>Treatment content</p>", link: null },
+      ],
+    } as SectionDTO);
+
+    render(<DefaultSectionRenderer section={section} />);
+
+    const diagnosis = screen.getByRole("tab", { name: "Diagnosis" });
+    const treatment = screen.getByRole("tab", { name: "Treatment" });
+
+    fireEvent.keyDown(diagnosis, { key: "ArrowRight" });
+
+    expect(diagnosis).toHaveAttribute("aria-selected", "false");
+    expect(treatment).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("Treatment content");
+  });
+
+  it("also renders tabs as accordion disclosures for mobile", () => {
+    const section = makeSection({
+      __component: "sections.tabs",
+      heading: "Tabs",
+      items: [
+        { title: "Diagnosis", content: "<p>Diagnosis content</p>", link: null },
+        { title: "Treatment", content: "<p>Treatment content</p>", link: null },
+      ],
+    } as SectionDTO);
+
+    render(<DefaultSectionRenderer section={section} />);
+
+    const mobileTabs = screen.getByTestId("tabs-mobile-accordion");
+    const treatment = within(mobileTabs).getByRole("button", { name: "Treatment" });
+    expect(treatment).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(treatment);
+
+    expect(treatment).toHaveAttribute("aria-expanded", "true");
+    expect(within(mobileTabs).getByText("Treatment content").closest(".prose-luxury")).toBeTruthy();
   });
 
   it("renders a gallery section", () => {
@@ -213,13 +286,30 @@ describe("DefaultSectionRenderer", () => {
       items: [{ question: "Q1", answer: "<p>A1</p>" }],
     } as SectionDTO);
 
-    const { container } = render(<DefaultSectionRenderer section={section} />);
-    const details = container.querySelector("details");
-    expect(details).toBeTruthy();
-    const summary = details!.querySelector("summary");
-    expect(summary).toBeTruthy();
-    const chevron = summary!.querySelector("[data-chevron]");
+    render(<DefaultSectionRenderer section={section} />);
+    const trigger = screen.getByRole("button", { name: "Q1" });
+    const chevron = trigger.querySelector("[data-chevron]");
     expect(chevron).toBeTruthy();
+  });
+
+  it("toggles FAQ rows with aria-expanded and prose-luxury content", () => {
+    const section = makeSection({
+      __component: "sections.faq",
+      heading: "FAQ",
+      items: [{ question: "Q1", answer: "<p>A1</p>" }],
+    } as SectionDTO);
+
+    render(<DefaultSectionRenderer section={section} />);
+
+    const trigger = screen.getByRole("button", { name: "Q1" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger.closest("[data-state]")).toHaveAttribute("data-state", "closed");
+
+    fireEvent.click(trigger);
+
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(trigger.closest("[data-state]")).toHaveAttribute("data-state", "open");
+    expect(screen.getByText("A1").closest(".prose-luxury")).toBeTruthy();
   });
 
   it("renders accordion disclosure items with a chevron indicator", () => {
@@ -229,10 +319,27 @@ describe("DefaultSectionRenderer", () => {
       items: [{ title: "Item 1", content: "<p>Content</p>" }],
     } as SectionDTO);
 
-    const { container } = render(<DefaultSectionRenderer section={section} />);
-    const summary = container.querySelector("summary");
-    expect(summary).toBeTruthy();
-    const chevron = summary!.querySelector("[data-chevron]");
+    render(<DefaultSectionRenderer section={section} />);
+    const trigger = screen.getByRole("button", { name: "Item 1" });
+    const chevron = trigger.querySelector("[data-chevron]");
     expect(chevron).toBeTruthy();
+  });
+
+  it("toggles accordion rows with the same aria-expanded disclosure treatment", () => {
+    const section = makeSection({
+      __component: "sections.accordion",
+      heading: "Accordion",
+      items: [{ title: "Item 1", content: "<p>Content</p>" }],
+    } as SectionDTO);
+
+    render(<DefaultSectionRenderer section={section} />);
+
+    const trigger = screen.getByRole("button", { name: "Item 1" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(trigger);
+
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Content").closest(".prose-luxury")).toBeTruthy();
   });
 });

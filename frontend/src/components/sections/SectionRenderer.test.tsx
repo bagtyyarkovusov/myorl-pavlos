@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { SectionRenderer } from "./SectionRenderer";
 import type { SectionDTO } from "@/lib/cms/types";
 
@@ -98,8 +98,11 @@ describe("SectionRenderer", () => {
       items: [{ title: "Item 1", content: "<p>Content</p>" }],
     } as SectionDTO);
 
-    const { container } = render(<SectionRenderer section={section} />);
-    expect(container.querySelector("details")).toBeTruthy();
+    render(<SectionRenderer section={section} />);
+    expect(screen.getByRole("button", { name: "Item 1" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
   });
 
   it("renders a faq section", () => {
@@ -109,8 +112,8 @@ describe("SectionRenderer", () => {
       items: [{ question: "Q1", answer: "<p>A1</p>" }],
     } as SectionDTO);
 
-    const { container } = render(<SectionRenderer section={section} />);
-    expect(container.querySelector("details")).toBeTruthy();
+    render(<SectionRenderer section={section} />);
+    expect(screen.getByRole("button", { name: "Q1" })).toHaveAttribute("aria-expanded", "false");
   });
 
   it("renders a tabs section", () => {
@@ -121,7 +124,7 @@ describe("SectionRenderer", () => {
     } as SectionDTO);
 
     const { container } = render(<SectionRenderer section={section} />);
-    expect(container.querySelector("h3")).toBeTruthy();
+    expect(container.querySelector("[role='tablist']")).toBeTruthy();
   });
 
   it("renders a gallery section", () => {

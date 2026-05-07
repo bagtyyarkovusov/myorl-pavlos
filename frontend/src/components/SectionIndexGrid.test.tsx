@@ -3,12 +3,17 @@ import { render, screen, fireEvent } from "@testing-library/react";
 
 import { SectionIndexGrid } from "./SectionIndexGrid";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
+import type { LayoutVariant } from "@/lib/cms/types";
 import type { TagDTO } from "@/lib/cms/types/tag";
 
 function makeChild(
   slug: string,
   label: string,
-  opts: { menuIndex?: number; excerpt?: string | null } = {},
+  opts: {
+    menuIndex?: number;
+    excerpt?: string | null;
+    imageUrl?: string | null;
+  } = {},
 ): NavigationNodeDTO {
   return {
     documentId: `doc-${slug}`,
@@ -23,6 +28,10 @@ function makeChild(
     externalUrl: null,
     isFolder: false,
     excerpt: opts.excerpt ?? null,
+    featuredImage: opts.imageUrl
+      ? { url: opts.imageUrl, alternativeText: label, width: 1200, height: 800 }
+      : null,
+    imageCenter: null,
     href: `/el/${slug}`,
     children: [],
   };
@@ -88,6 +97,67 @@ describe("SectionIndexGrid", () => {
 
     const arrows = container.querySelectorAll("[aria-hidden='true']");
     expect(arrows.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+describe("SectionIndexGrid variants", () => {
+  it.each([
+    ["section-index", "section-grid"],
+    ["clinic-index", "clinic-grid"],
+    ["encyclopedia-index", "encyclopedia-list"],
+    ["video-index", "video-grid"],
+  ] as Array<[LayoutVariant, string]>)(
+    "renders %s with its directory variant",
+    (variant, expectedVariant) => {
+      const children = [
+        makeChild("first", "First", { imageUrl: "/img/first.jpg" }),
+        makeChild("second", "Second", { imageUrl: "/img/second.jpg" }),
+      ];
+
+      render(<SectionIndexGrid items={children} locale="el" variant={variant} />);
+
+      expect(document.querySelector(`[data-index-variant="${expectedVariant}"]`)).toBeTruthy();
+    },
+  );
+
+  it("renders video index cards with play overlays", () => {
+    const children = [makeChild("video", "Video Visit", { imageUrl: "/img/video.jpg" })];
+
+    render(<SectionIndexGrid items={children} locale="el" variant="video-index" />);
+
+    expect(screen.getByLabelText("Play video")).toBeDefined();
+  });
+
+  it("shows the first 12 items and a pagination control when more children exist", () => {
+    const children = Array.from({ length: 13 }, (_, index) =>
+      makeChild(`item-${index + 1}`, `Item ${index + 1}`, { menuIndex: index + 1 }),
+    );
+
+    render(<SectionIndexGrid items={children} locale="el" variant="section-index" />);
+
+    expect(screen.getAllByRole("link")).toHaveLength(12);
+    expect(screen.getByRole("button", { name: "Load more" })).toBeDefined();
+    expect(screen.queryByRole("link", { name: /Item 13/ })).toBeNull();
+  });
+
+  it("loads the next page of children on demand", () => {
+    const children = Array.from({ length: 13 }, (_, index) =>
+      makeChild(`item-${index + 1}`, `Item ${index + 1}`, { menuIndex: index + 1 }),
+    );
+
+    render(<SectionIndexGrid items={children} locale="el" variant="section-index" />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Load more" }));
+
+    expect(screen.getAllByRole("link")).toHaveLength(13);
+    expect(screen.getByRole("link", { name: /Item 13/ })).toHaveAttribute("href", "/el/item-13");
+  });
+
+  it("renders an empty state with a back link when there are no children", () => {
+    render(<SectionIndexGrid items={[]} locale="el" variant="section-index" backHref="/el" />);
+
+    expect(screen.getByText("No pages are available yet.")).toBeDefined();
+    expect(screen.getByRole("link", { name: "Back to overview" })).toHaveAttribute("href", "/el");
   });
 });
 

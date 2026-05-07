@@ -34,35 +34,65 @@
 .index-list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0;
+  gap: 24px;
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
 .index-row {
-  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
+  min-width: 0;
 }
 
 .index-row a {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: center;
-  min-height: 72px;
-  padding: 16px 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--surface, #fff);
+  color: inherit;
   text-decoration: none;
   transition:
     background 220ms ease,
-    padding-left 220ms ease;
+    transform 220ms ease;
 }
 
 .index-row a:hover,
 .index-row a:focus-visible {
   background: rgba(228, 237, 248, 0.22);
-  padding-left: 8px;
+  transform: translateY(-2px);
   outline: none;
+}
+
+.index-list--section-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.index-list--clinic-grid,
+.index-list--video-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.index-list--encyclopedia-list {
+  gap: 0;
+  border-top: 1px solid var(--color-stone-line, #d7dfeb);
+}
+
+.index-list--encyclopedia-list .index-row {
+  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
+}
+
+.index-list--encyclopedia-list .index-row a {
+  grid-template-columns: minmax(0, 1fr) minmax(84px, 132px) auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 96px;
+  padding: 16px 0;
+  background: transparent;
+}
+
+.index-list--encyclopedia-list .index-row a:hover,
+.index-list--encyclopedia-list .index-row a:focus-visible {
+  padding-left: 8px;
 }
 
 .index-row__body {
@@ -70,6 +100,11 @@
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  padding: 18px;
+}
+
+.index-list--encyclopedia-list .index-row__body {
+  padding: 0;
 }
 
 .index-row__body strong {
@@ -105,34 +140,124 @@
     transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.index-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  min-height: 0;
+  background: var(--surface-soft, #f6f8fb);
+}
+
+.index-media img {
+  object-fit: cover;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.index-row a:hover .index-media img,
+.index-row a:focus-visible .index-media img {
+  transform: scale(1.03);
+}
+
+.index-media[data-media-variant="section-grid"],
+.index-media[data-media-variant="video-grid"] {
+  aspect-ratio: 16 / 9;
+}
+
+.index-media[data-media-variant="clinic-grid"] {
+  aspect-ratio: 4 / 3;
+}
+
+.index-media[data-media-variant="encyclopedia-list"] {
+  aspect-ratio: 4 / 3;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: rgba(15, 42, 74, 0.82);
+  color: #fff;
+  font-size: 1rem;
+  transform: translate(-50%, -50%);
+}
+
 .index-row a:hover .index-row__arrow,
 .index-row a:focus-visible .index-row__arrow {
   color: var(--accent);
   transform: translateX(3px);
 }
 
-@media (min-width: 480px) {
-  .index-list {
-    grid-template-columns: repeat(2, 1fr);
-    border-left: 1px solid var(--color-stone-line, #d7dfeb);
-  }
+.load-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 24px;
+  border: 1px solid var(--color-stone-line, #d7dfeb);
+  border-radius: 999px;
+  padding: 0 18px;
+  background: transparent;
+  color: var(--foreground);
+  font-weight: 600;
+  cursor: pointer;
+}
 
-  .index-row {
-    border-right: 1px solid var(--color-stone-line, #d7dfeb);
-  }
+.load-more:hover,
+.load-more:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  outline: none;
+}
 
-  .index-row a {
-    padding: 16px 12px;
-  }
+.empty-state {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  border-top: 1px solid var(--color-stone-line, #d7dfeb);
+  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
+  padding: 28px 0;
+}
+
+.empty-state p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.empty-state a {
+  color: var(--accent-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 @media (min-width: 768px) {
   .index-row__body strong {
     font-size: 1.25rem;
   }
+}
 
-  .index-row a {
-    min-height: 88px;
-    padding: 18px 14px;
+@media (max-width: 1024px) {
+  .index-list--section-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .index-list--section-grid,
+  .index-list--clinic-grid,
+  .index-list--video-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .index-list--encyclopedia-list .index-row a {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .index-list--encyclopedia-list .index-media {
+    display: none;
   }
 }

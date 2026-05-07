@@ -49,6 +49,8 @@ export interface NavigationInput {
   externalUrl?: string | null;
   isFolder: boolean;
   excerpt?: string | null;
+  featuredImage?: MediaDTO | null;
+  imageCenter?: MediaDTO | null;
 }
 
 export type NavigationNodeDTO = NavigationInput & {

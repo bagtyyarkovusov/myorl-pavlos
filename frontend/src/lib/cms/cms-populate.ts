@@ -82,6 +82,8 @@ export const PAGE_POPULATE = {
  */
 export const NAVIGATION_POPULATE = {
   parentPage: { fields: ["documentId", "slug", "title"] },
+  featuredImage: true,
+  imageCenter: true,
 } as const;
 
 /**

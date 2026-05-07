@@ -82,6 +82,8 @@ function makeNav(slug: string, label: string, index = 0): NavigationNodeDTO {
     externalUrl: null,
     isFolder: false,
     excerpt: null,
+    featuredImage: null,
+    imageCenter: null,
     href: `/el/${slug}`,
     children: [],
   };
@@ -632,7 +634,7 @@ describe("SectionIndexPage", () => {
     );
   });
 
-  it("renders nothing for child grid when no navigation match", () => {
+  it("renders an empty state for child grid when no navigation match", () => {
     const page: PageDTO = {
       ...BASE_PAGE,
       layoutVariant: "section-index",
@@ -640,9 +642,31 @@ describe("SectionIndexPage", () => {
       title: "Orphan",
     };
 
-    const { container } = render(<SectionIndexPage page={page} navigation={[]} />);
+    render(<SectionIndexPage page={page} navigation={[]} />);
 
-    expect(container.querySelector("ol")).toBeNull();
+    expect(screen.getByText("No pages are available yet.")).toBeDefined();
+  });
+
+  it("passes the layout variant into the dense directory grid", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-videos",
+      layoutVariant: "video-index",
+      isFolder: true,
+      title: "Videos",
+      slug: "videos",
+    };
+    const nav = [
+      {
+        ...makeNav("videos", "Videos"),
+        isFolder: true,
+        children: [makeNav("tour", "Clinic Tour", 1)],
+      },
+    ];
+
+    render(<SectionIndexPage page={page} navigation={nav} />);
+
+    expect(document.querySelector('[data-index-variant="video-grid"]')).toBeTruthy();
   });
 });
 

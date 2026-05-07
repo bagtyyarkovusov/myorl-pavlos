@@ -2,6 +2,7 @@ import { CmsHtml } from "@/components/CmsHtml";
 import { PageSection } from "@/components/PageSection";
 import { SectionIndexGrid } from "@/components/SectionIndexGrid";
 import { StructuredData } from "@/components/StructuredData";
+import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { buildPageBreadcrumbLd } from "@/lib/structured-data/page-breadcrumbs";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 import { PageHeader, type PageLayoutProps } from "./_shared";
@@ -15,7 +16,16 @@ export function SectionIndexPage({ page, navigation = [] }: PageLayoutProps) {
       {breadcrumbLd ? <StructuredData data={breadcrumbLd} /> : null}
       <PageHeader page={page} kicker={null} />
       {page.content ? <CmsHtml html={page.content} /> : null}
-      <SectionIndexGrid items={children} locale={page.locale} />
+      <SectionIndexGrid
+        items={children}
+        locale={page.locale}
+        variant={page.layoutVariant}
+        backHref={
+          page.parentPage?.slug
+            ? hrefForLocaleSlug(page.locale, page.parentPage.slug)
+            : `/${page.locale}`
+        }
+      />
     </PageSection>
   );
 }

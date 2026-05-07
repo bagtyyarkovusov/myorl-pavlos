@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { CmsHtml } from "@/components/CmsHtml";
+import type { Density } from "@/lib/cms/density";
 import type { MediaDTO } from "@/lib/cms/types";
 import { cn } from "@/lib/utils";
 
@@ -105,6 +107,60 @@ export function MediaFrame({
         <span className={cn(styles["media-frame__label"], styles["ph-label"])}>{label}</span>
       ) : null}
     </div>
+  );
+}
+
+type CardProps = {
+  title?: string | null;
+  description?: string | null;
+  href?: string | null;
+  image?: MediaDTO | null;
+  imageAlt?: string;
+  density?: Density;
+  ctaLabel?: string;
+  className?: string;
+};
+
+export function Card({
+  title,
+  description,
+  href,
+  image,
+  imageAlt,
+  density = "focused",
+  ctaLabel,
+  className,
+}: CardProps) {
+  const resolvedTitle = title?.trim() || "Resource";
+  const linkHref = href || "#";
+  const showCta = density !== "scanning" && ctaLabel;
+
+  return (
+    <article
+      className={cn(styles.card, styles[`card--${density}`], className)}
+      data-card
+      data-density={density}
+    >
+      {image?.url ? (
+        <div className={styles.card__media}>
+          <Image
+            src={image.url}
+            alt={imageAlt || image.alternativeText || resolvedTitle}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          />
+        </div>
+      ) : null}
+      <div className={styles.card__body}>
+        <h3 className={styles.card__title}>
+          <Link className={styles.card__link} href={linkHref}>
+            {resolvedTitle}
+          </Link>
+        </h3>
+        <CmsHtml className={styles.card__description} html={description} />
+        {showCta ? <span className={styles.card__cta}>{ctaLabel}</span> : null}
+      </div>
+    </article>
   );
 }
 

@@ -44,7 +44,27 @@ describe("DefaultSectionRenderer", () => {
     } as SectionDTO);
 
     const { container } = render(<DefaultSectionRenderer section={section} />);
-    expect(container.querySelector("h3")).toBeTruthy();
+    expect(container.querySelector("article[data-card]")).toBeTruthy();
+  });
+
+  it("renders linked-resources with density-aware cards", () => {
+    const section = makeSection({
+      __component: "sections.linked-resources",
+      heading: "Resources",
+      items: [
+        {
+          title: "Resource 1",
+          description: "<p>Text</p>",
+          targetPage: null,
+          targetUrl: "/el/resource-1",
+        },
+      ],
+    } as SectionDTO);
+
+    const { container } = render(<DefaultSectionRenderer section={section} density="theater" />);
+    const card = container.querySelector("article[data-card]");
+    expect(card?.getAttribute("data-density")).toBe("theater");
+    expect(container.querySelector("a")?.getAttribute("href")).toBe("/el/resource-1");
   });
 
   it("renders a social-links section", () => {

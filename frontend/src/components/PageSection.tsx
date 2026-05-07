@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 
+import type { Density } from "@/lib/cms/density";
 import { cn } from "@/lib/utils";
+import { MotionSection } from "./MotionSection";
 
 type PageSectionHeading = {
   eyebrow?: string;
@@ -12,6 +14,7 @@ type PageSectionHeading = {
 type PageSectionBackground = "default" | "surface" | "ink-dark";
 type PageSectionRhythm = "standard" | "hero" | "compact" | "contact";
 type PageSectionContainerWidth = "full" | "tight" | "prose";
+type PageSectionWidth = "full-bleed" | "contained" | "narrow";
 
 type PageSectionProps = {
   heading?: PageSectionHeading;
@@ -19,6 +22,9 @@ type PageSectionProps = {
   background?: PageSectionBackground;
   rhythm?: PageSectionRhythm;
   containerWidth?: PageSectionContainerWidth;
+  sectionIndex?: number;
+  density?: Density;
+  width?: PageSectionWidth;
   className?: string;
   label?: string;
   id?: string;
@@ -32,11 +38,22 @@ const BACKGROUND_CLASSES: Record<PageSectionBackground, string> = {
   "ink-dark": "bg-ink text-bone-50",
 };
 
+const ALTERNATING_BACKGROUND_CLASSES = {
+  bone: "bg-bone",
+  white: "bg-white",
+} as const;
+
 const RHYTHM_CLASSES: Record<PageSectionRhythm, string> = {
   standard: "py-20 md:py-32",
   hero: "pt-[clamp(60px,8vw,120px)] pb-[clamp(54px,7vw,96px)]",
   compact: "py-12 md:py-16",
   contact: "py-[clamp(80px,10vw,160px)]",
+};
+
+const DENSITY_RHYTHM_CLASSES: Record<Density, string> = {
+  scanning: "py-[var(--section-padding-scanning)]",
+  focused: "py-[var(--section-padding-focused)]",
+  theater: "py-[var(--section-padding-theater)]",
 };
 
 const CONTAINER_CLASSES: Record<PageSectionContainerWidth, string> = {
@@ -45,25 +62,52 @@ const CONTAINER_CLASSES: Record<PageSectionContainerWidth, string> = {
   prose: "max-w-3xl mx-auto w-[min(820px,calc(100vw-48px))]",
 };
 
+const WIDTH_CLASSES: Record<PageSectionWidth, string> = {
+  "full-bleed": "w-full",
+  contained: "container mx-auto",
+  narrow: "max-w-3xl mx-auto w-[min(768px,calc(100vw-48px))]",
+};
+
 export function PageSection({
   heading,
   header,
   background = "default",
   rhythm = "standard",
   containerWidth = "full",
+  sectionIndex,
+  density = "focused",
+  width,
   className,
   label,
   id,
   ariaLabelledBy,
   children,
 }: PageSectionProps) {
-  const sectionClass = cn(BACKGROUND_CLASSES[background], RHYTHM_CLASSES[rhythm], className);
+  const alternatingBackground =
+    sectionIndex !== undefined ? getAlternatingBackground(sectionIndex) : null;
+  const sectionClass = cn(
+    alternatingBackground
+      ? ALTERNATING_BACKGROUND_CLASSES[alternatingBackground]
+      : BACKGROUND_CLASSES[background],
+    sectionIndex !== undefined ? DENSITY_RHYTHM_CLASSES[density] : RHYTHM_CLASSES[rhythm],
+    className,
+  );
 
-  const containerClass = cn(CONTAINER_CLASSES[containerWidth], "px-0");
+  const containerClass = cn(
+    width ? WIDTH_CLASSES[width] : CONTAINER_CLASSES[containerWidth],
+    "px-0",
+  );
 
   return (
-    <section id={id} className={sectionClass} aria-label={label} aria-labelledby={ariaLabelledBy}>
-      <div className={containerClass}>
+    <MotionSection
+      id={id}
+      className={sectionClass}
+      label={label}
+      ariaLabelledBy={ariaLabelledBy}
+      background={alternatingBackground ?? undefined}
+      density={sectionIndex !== undefined ? density : undefined}
+    >
+      <div className={containerClass} data-width={width}>
         {header !== undefined ? (
           header
         ) : heading ? (
@@ -86,6 +130,10 @@ export function PageSection({
         ) : null}
         {children}
       </div>
-    </section>
+    </MotionSection>
   );
+}
+
+function getAlternatingBackground(sectionIndex: number): "bone" | "white" {
+  return sectionIndex % 2 === 0 ? "bone" : "white";
 }

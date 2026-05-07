@@ -3,8 +3,10 @@ import Image from "next/image";
 import { CmsHtml } from "@/components/CmsHtml";
 import { GalleryWithLightbox } from "@/components/GalleryWithLightbox";
 import { SectionGrid } from "@/components/SectionGrid";
+import { Card } from "@/components/design-system";
 import { toSocialLinkDTO } from "@/lib/cms/dto";
-import type { MediaDTO, SectionDTO } from "@/lib/cms/types";
+import type { Density } from "@/lib/cms/density";
+import type { Locale, MediaDTO, SectionDTO } from "@/lib/cms/types";
 
 import { SECTION_COLUMN_DEFAULTS } from "./grid-defaults";
 import styles from "./SectionRenderer.module.css";
@@ -47,7 +49,15 @@ function ResponsiveImage({ media, alt }: { media?: MediaDTO | null; alt: string 
   );
 }
 
-export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
+export function DefaultSectionRenderer({
+  section,
+  density = "focused",
+  locale = "el",
+}: {
+  section: SectionDTO;
+  density?: Density;
+  locale?: Locale;
+}) {
   switch (section.__component) {
     case "sections.promo-slider":
       return (
@@ -69,14 +79,15 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
       return (
         <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.linked-resources"]}>
           {section.items.map((item, index) => (
-            <article
-              className={styles["content-card"]}
+            <Card
               key={`${item.title ?? "resource"}-${index}`}
-            >
-              {item.title ? <h3>{item.title}</h3> : null}
-              <CmsHtml html={item.description} />
-              {item.targetUrl ? <a href={item.targetUrl}>Open</a> : null}
-            </article>
+              title={item.title}
+              description={item.description}
+              href={resolveResourceHref(item, locale)}
+              image={item.image}
+              density={density}
+              ctaLabel="Open"
+            />
           ))}
         </SectionGrid>
       );
@@ -191,4 +202,15 @@ export function DefaultSectionRenderer({ section }: { section: SectionDTO }) {
       }
       return null;
   }
+}
+
+function resolveResourceHref(
+  item: Extract<SectionDTO, { __component: "sections.linked-resources" }>["items"][number],
+  locale: Locale,
+): string {
+  if (item.targetUrl) {
+    return item.targetUrl;
+  }
+
+  return item.targetPage?.slug ? `/${locale}/${item.targetPage.slug}` : `/${locale}/sitemap`;
 }

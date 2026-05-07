@@ -29,8 +29,8 @@ export function QuestionListPage({ page, navigation = [] }: PageLayoutProps) {
       <PageHeader page={page} />
       <SectionTabBar navigation={navigation} currentPage={page} />
       <CmsHtml html={page.content} />
-      {page.sections.map((section) => (
-        <SectionRenderer key={section.__component} section={section} />
+      {page.sections.map((section, index) => (
+        <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
       ))}
     </PageSection>
   );

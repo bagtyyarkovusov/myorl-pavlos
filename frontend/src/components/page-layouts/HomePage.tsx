@@ -75,7 +75,12 @@ export function HomePage({
           if (shouldRenderMenuAccess) {
             return (
               <Fragment key={`${section.__component}-${index}`}>
-                <SectionRenderer context="home" section={section} locale={page.locale} />
+                <SectionRenderer
+                  context="home"
+                  section={section}
+                  locale={page.locale}
+                  index={index}
+                />
                 <MenuAccessGrid navigation={navigation} locale={page.locale} />
                 {advantagesSection ? <HomeAdvantagesSection section={advantagesSection} /> : null}
               </Fragment>
@@ -84,7 +89,12 @@ export function HomePage({
 
           return (
             <Fragment key={`${section.__component}-${index}`}>
-              <SectionRenderer context="home" section={section} locale={page.locale} />
+              <SectionRenderer
+                context="home"
+                section={section}
+                locale={page.locale}
+                index={index}
+              />
               {section.__component === "sections.video" && homeTestimonials ? (
                 <HomeTestimonialsTeaser locale={page.locale} payload={homeTestimonials} />
               ) : null}

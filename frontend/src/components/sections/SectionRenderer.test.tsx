@@ -189,6 +189,18 @@ describe("SectionRenderer", () => {
     expect(container.querySelector("h2")).toBeTruthy();
   });
 
+  it("passes section index into PageSection alternation", () => {
+    const section = makeSection({
+      __component: "sections.faq",
+      heading: "FAQ Section",
+      intro: null,
+      items: [],
+    } as SectionDTO);
+
+    const { container } = render(<SectionRenderer section={section} index={1} />);
+    expect(container.querySelector("section")?.getAttribute("data-background")).toBe("white");
+  });
+
   it("renders with home context", () => {
     const section = makeSection({
       __component: "sections.contact",

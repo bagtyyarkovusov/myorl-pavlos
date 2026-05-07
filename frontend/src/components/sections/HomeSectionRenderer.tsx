@@ -1,6 +1,5 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { PageSection } from "@/components/PageSection";
-import { HomeMedicalGrid } from "@/components/home/HomeMedicalGrid";
 const HomePromoCarousel = dynamic(() =>
   import("@/components/home/HomePromoCarousel").then((m) => m.HomePromoCarousel),
 );
@@ -15,7 +14,15 @@ import type { Locale, SectionDTO } from "@/lib/cms/types";
 import { DefaultSectionRenderer } from "./DefaultSectionRenderer";
 import styles from "./SectionRenderer.module.css";
 
-export function HomeSectionRenderer({ section, locale }: { section: SectionDTO; locale: Locale }) {
+export function HomeSectionRenderer({
+  section,
+  locale,
+  index,
+}: {
+  section: SectionDTO;
+  locale: Locale;
+  index?: number;
+}) {
   const t = getHomeStrings(locale);
 
   switch (section.__component) {
@@ -33,14 +40,17 @@ export function HomeSectionRenderer({ section, locale }: { section: SectionDTO; 
       return null;
     case "sections.linked-resources":
       return (
-        <HomeMedicalGrid
-          title={section.heading || t.journalTitleLine1}
-          intro={section.intro || t.journalIntro}
-          items={section.items}
-          locale={locale}
-          learnMoreLabel={t.learnMore}
-          viewAllLabel={t.viewAll}
-        />
+        <PageSection
+          heading={{
+            title: section.heading || t.journalTitleLine1,
+            intro: section.intro || t.journalIntro,
+          }}
+          sectionIndex={index}
+          density="theater"
+          width="contained"
+        >
+          <DefaultSectionRenderer section={section} density="theater" locale={locale} />
+        </PageSection>
       );
     case "sections.video":
       return (
@@ -63,6 +73,8 @@ export function HomeSectionRenderer({ section, locale }: { section: SectionDTO; 
               ? { title: section.heading ?? "", intro: section.intro ?? undefined }
               : undefined
           }
+          sectionIndex={index}
+          density="theater"
         >
           <div className={styles["home-contact"]}>
             {section.details.length > 0 ? (
@@ -107,8 +119,10 @@ export function HomeSectionRenderer({ section, locale }: { section: SectionDTO; 
               : undefined
           }
           rhythm="compact"
+          sectionIndex={index}
+          density="theater"
         >
-          <DefaultSectionRenderer section={section} />
+          <DefaultSectionRenderer section={section} density="theater" locale={locale} />
         </PageSection>
       );
   }

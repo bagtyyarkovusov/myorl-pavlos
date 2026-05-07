@@ -133,16 +133,13 @@ describe("HomeSectionRenderer", () => {
     render(<HomeSectionRenderer section={section} locale="el" />);
 
     expect(screen.getAllByText("Resource 1")).toHaveLength(1);
-    expect(screen.queryByRole("heading", { name: "Resources" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Resources" })).toBeDefined();
     expect(screen.getByText("Text one")).toBeDefined();
     expect(screen.queryByText("<p>Text one</p>")).toBeNull();
-    expect(screen.getByRole("link", { name: /Resource 1\s+Text one\s+Μάθετε/i })).toHaveAttribute(
-      "href",
-      "/el/sitemap",
-    );
-    expect(screen.getByRole("link", { name: /Resource 2\s+Text two\s+Μάθετε/i })).toHaveAttribute(
-      "href",
-      "/el/sitemap",
+    expect(screen.getByRole("link", { name: "Resource 1" })).toHaveAttribute("href", "/el/sitemap");
+    expect(screen.getByRole("link", { name: "Resource 2" })).toHaveAttribute("href", "/el/sitemap");
+    expect(document.querySelector("article[data-card]")?.getAttribute("data-density")).toBe(
+      "theater",
     );
   });
 

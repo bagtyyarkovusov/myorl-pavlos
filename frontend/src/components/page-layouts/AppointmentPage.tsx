@@ -34,8 +34,8 @@ export function AppointmentPage({ page, navigation = [] }: PageLayoutProps) {
           </ButtonLink>
         </div>
       </section>
-      {page.sections.map((section) => (
-        <SectionRenderer key={section.__component} section={section} />
+      {page.sections.map((section, index) => (
+        <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
       ))}
     </PageSection>
   );

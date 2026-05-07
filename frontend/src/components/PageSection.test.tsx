@@ -270,4 +270,35 @@ describe("PageSection", () => {
 
     expect(screen.getByRole("heading")).toBeDefined();
   });
+
+  it("alternates section background from sectionIndex", () => {
+    const { container, rerender } = render(
+      <PageSection sectionIndex={0}>
+        <p>First</p>
+      </PageSection>,
+    );
+
+    expect(container.querySelector("section")?.getAttribute("data-background")).toBe("bone");
+
+    rerender(
+      <PageSection sectionIndex={1}>
+        <p>Second</p>
+      </PageSection>,
+    );
+
+    expect(container.querySelector("section")?.getAttribute("data-background")).toBe("white");
+  });
+
+  it("applies density and width as public section attributes", () => {
+    const { container } = render(
+      <PageSection density="theater" width="narrow" sectionIndex={2}>
+        <p>Body</p>
+      </PageSection>,
+    );
+
+    const section = container.querySelector("section");
+    const inner = section?.firstElementChild as HTMLElement;
+    expect(section?.getAttribute("data-density")).toBe("theater");
+    expect(inner.getAttribute("data-width")).toBe("narrow");
+  });
 });

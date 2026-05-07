@@ -5,7 +5,7 @@ import type { MediaDTO } from "@/lib/cms/types";
 
 import styles from "./PageHero.module.css";
 
-type PageHeroVariant = "minimal" | "cinematic";
+type PageHeroVariant = "minimal" | "cinematic" | "compact" | "journal";
 
 type Breadcrumb = {
   label: string;
@@ -27,11 +27,13 @@ type PageHeroProps = {
     label: string;
     href: string;
   };
+  metadata?: string[];
 };
 
-export function PageHero({ page, variant, breadcrumbs = [], cta }: PageHeroProps) {
+export function PageHero({ page, variant, breadcrumbs = [], cta, metadata = [] }: PageHeroProps) {
   const media = page.imageCenter ?? page.featuredImage;
   const showMedia = variant === "cinematic" && media?.url;
+  const showPortrait = variant === "journal" && media?.url;
 
   return (
     <header
@@ -62,12 +64,24 @@ export function PageHero({ page, variant, breadcrumbs = [], cta }: PageHeroProps
         ) : null}
         <h1 className={styles.title}>{page.title}</h1>
         {page.excerpt ? <p className={styles.excerpt}>{page.excerpt}</p> : null}
+        {metadata.length > 0 ? (
+          <ul className={styles.metadata}>
+            {metadata.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        ) : null}
         {cta ? (
           <Link className={styles.cta} href={cta.href}>
             {cta.label}
           </Link>
         ) : null}
       </div>
+      {showPortrait ? (
+        <div className={styles.portrait} data-hero-portrait>
+          <Image src={media.url} alt={media.alternativeText || page.title} fill sizes="96px" />
+        </div>
+      ) : null}
     </header>
   );
 }

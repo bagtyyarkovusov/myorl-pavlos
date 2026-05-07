@@ -4,7 +4,14 @@ import { cn } from "@/lib/utils";
 type CmsHtmlProps = {
   html?: string | null;
   className?: string;
-  variant?: "luxury" | "service";
+  variant?: "luxury" | "service" | "encyclopedia" | "specialized";
+};
+
+const PROSE_VARIANT_CLASSES: Record<NonNullable<CmsHtmlProps["variant"]>, string | null> = {
+  luxury: null,
+  service: "prose-service",
+  encyclopedia: "prose-encyclopedia",
+  specialized: "prose-specialized",
 };
 
 export function CmsHtml({ html, className, variant = "luxury" }: CmsHtmlProps) {
@@ -16,7 +23,7 @@ export function CmsHtml({ html, className, variant = "luxury" }: CmsHtmlProps) {
 
   return (
     <div
-      className={cn("cms-html prose-luxury", variant === "service" && "prose-service", className)}
+      className={cn("cms-html prose-luxury", PROSE_VARIANT_CLASSES[variant], className)}
       data-variant={variant === "luxury" ? undefined : variant}
       dangerouslySetInnerHTML={{ __html: sanitized }}
     />

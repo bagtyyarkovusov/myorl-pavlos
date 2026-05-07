@@ -18,6 +18,7 @@ const ALLOWED_TAGS = [
   "details",
   "dl",
   "dt",
+  "div",
   "em",
   "figcaption",
   "figure",
@@ -61,6 +62,7 @@ const ALLOWED_TAGS = [
 ];
 
 const ALLOWED_ATTR = [
+  "class",
   "href",
   "title",
   "alt",
@@ -86,6 +88,8 @@ const ALLOWED_ATTR = [
   "frameborder",
   "referrerpolicy",
 ];
+
+const ALLOWED_CALLOUT_CLASSES = new Set(["callout-teal", "callout-ink", "callout-trust"]);
 
 const ALLOWED_IFRAME_HOSTS = new Set([
   "www.youtube.com",
@@ -132,6 +136,17 @@ function registerHooks(): void {
     if (!isElementNode(node)) {
       return;
     }
+    const className = node.getAttribute("class");
+    if (className) {
+      const safeClasses = className
+        .split(/\s+/)
+        .filter((token) => ALLOWED_CALLOUT_CLASSES.has(token));
+      if (safeClasses.length > 0) {
+        node.setAttribute("class", safeClasses.join(" "));
+      } else {
+        node.removeAttribute("class");
+      }
+    }
     if (node.tagName === "A" && node.getAttribute("target") === "_blank") {
       const existingRel = node.getAttribute("rel") ?? "";
       const tokens = new Set(existingRel.split(/\s+/).filter(Boolean));
@@ -168,6 +183,6 @@ export function sanitizeCmsHtml(html: string | null | undefined): string {
     ALLOWED_ATTR,
     ALLOW_DATA_ATTR: false,
     FORBID_TAGS: ["style", "script", "font"],
-    FORBID_ATTR: ["style", "class"],
+    FORBID_ATTR: ["style"],
   });
 }

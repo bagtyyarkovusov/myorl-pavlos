@@ -54,4 +54,56 @@ describe("PageHero", () => {
     expect(container.querySelector("[data-hero-variant='cinematic']")).toBeTruthy();
     expect(container.querySelector("[data-hero-media]")).toBeTruthy();
   });
+
+  it("renders compact metadata for reference articles without media", () => {
+    const { container } = render(
+      <PageHero
+        page={{
+          title: "Sinus reference",
+          excerpt: "A dense clinical reference",
+          featuredImage: {
+            url: "/sinus.jpg",
+            alternativeText: "Sinus",
+            width: 1200,
+            height: 800,
+          },
+          imageCenter: null,
+        }}
+        metadata={["4 min read", "Updated clinical review"]}
+        variant="compact"
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Sinus reference" })).toBeDefined();
+    expect(screen.getByText("4 min read")).toBeDefined();
+    expect(screen.getByText("Updated clinical review")).toBeDefined();
+    expect(container.querySelector("[data-hero-variant='compact']")).toBeTruthy();
+    expect(container.querySelector("[data-hero-media]")).toBeNull();
+  });
+
+  it("renders journal author metadata and portrait", () => {
+    const { container } = render(
+      <PageHero
+        page={{
+          title: "Specialized rhinology",
+          excerpt: null,
+          featuredImage: null,
+          imageCenter: {
+            url: "/author.jpg",
+            alternativeText: "Dr Author",
+            width: 320,
+            height: 320,
+          },
+        }}
+        metadata={["Dr Author", "Sources included"]}
+        variant="journal"
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Specialized rhinology" })).toBeDefined();
+    expect(screen.getByText("Dr Author")).toBeDefined();
+    expect(screen.getByText("Sources included")).toBeDefined();
+    expect(container.querySelector("[data-hero-variant='journal']")).toBeTruthy();
+    expect(container.querySelector("[data-hero-portrait]")).toBeTruthy();
+  });
 });

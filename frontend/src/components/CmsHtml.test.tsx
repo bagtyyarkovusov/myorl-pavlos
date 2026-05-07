@@ -29,6 +29,27 @@ describe("CmsHtml", () => {
     expect(prose?.className).toContain("prose-service");
   });
 
+  it("adds public classes for encyclopedia and specialized prose variants", () => {
+    render(<CmsHtml html="<p>Clinical copy</p>" variant="encyclopedia" />);
+    expect(screen.getByText("Clinical copy").closest("div")?.className).toContain(
+      "prose-encyclopedia",
+    );
+
+    render(<CmsHtml html="<p>Research copy</p>" variant="specialized" />);
+    expect(screen.getByText("Research copy").closest("div")?.className).toContain(
+      "prose-specialized",
+    );
+  });
+
+  it("preserves editor callout classes while stripping unrelated classes", () => {
+    render(
+      <CmsHtml html='<div class="callout-teal unsafe-class">Clinical note</div><p class="unsafe-class">Body</p>' />,
+    );
+
+    expect(screen.getByText("Clinical note").closest("div")?.className).toBe("callout-teal");
+    expect(screen.getByText("Body").className).toBe("");
+  });
+
   it("renders nothing for empty sanitized content", () => {
     const { container } = render(<CmsHtml html="<script>alert(1)</script>" />);
 

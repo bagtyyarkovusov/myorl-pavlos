@@ -306,3 +306,86 @@ img {
   padding: 16px 20px;
   color: var(--foreground);
 }
+
+.prose-encyclopedia {
+  max-width: 760px;
+  color: var(--foreground);
+  font-size: 0.9375rem;
+  line-height: 1.68;
+}
+
+.prose-encyclopedia p {
+  margin-bottom: 0.875em;
+}
+
+.prose-encyclopedia h2 {
+  font-size: 1.25em;
+}
+
+.prose-encyclopedia a {
+  color: var(--accent-ink);
+  font-size: 0.88em;
+  vertical-align: super;
+}
+
+.prose-encyclopedia blockquote {
+  border-left: 4px solid var(--color-ink);
+  background: var(--surface);
+  padding: 14px 18px;
+}
+
+.prose-specialized {
+  max-width: 800px;
+  color: var(--foreground);
+  counter-reset: specialized-section;
+  font-size: 1rem;
+  line-height: 1.78;
+}
+
+.prose-specialized p {
+  margin-bottom: 1.25em;
+}
+
+.prose-specialized h2 {
+  counter-increment: specialized-section;
+}
+
+.prose-specialized h2::before {
+  content: counter(specialized-section, decimal-leading-zero) ". ";
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.58em;
+}
+
+.prose-specialized a {
+  color: var(--accent-ink);
+  text-decoration-style: dotted;
+}
+
+.prose-specialized blockquote {
+  border-left: 4px solid var(--color-trust);
+  background: var(--color-trust-soft);
+  padding: 16px 20px;
+}
+
+.callout-teal,
+.callout-ink,
+.callout-trust {
+  border-left: 4px solid var(--accent);
+  background: var(--surface);
+  padding: 16px 20px;
+}
+
+.callout-teal {
+  border-left-color: var(--color-teal);
+  background: var(--color-teal-soft);
+}
+
+.callout-ink {
+  border-left-color: var(--color-ink);
+}
+
+.callout-trust {
+  border-left-color: var(--color-trust);
+  background: var(--color-trust-soft);
+}

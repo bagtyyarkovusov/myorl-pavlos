@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 
 import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
@@ -96,11 +96,9 @@ describe("PageHeader", () => {
 
   it("renders kicker text from layout variant", () => {
     render(
-      <StandardPage
-        page={{ ...BASE_PAGE, title: "Reference", layoutVariant: "encyclopedia-article" }}
-      />,
+      <StandardPage page={{ ...BASE_PAGE, title: "Reference", layoutVariant: "service-faq" }} />,
     );
-    expect(screen.getByText("encyclopedia article")).toBeDefined();
+    expect(screen.getByText("service faq")).toBeDefined();
   });
 });
 
@@ -186,6 +184,76 @@ describe("StandardPage", () => {
     expect(screen.getByText("Service body").closest("div")?.getAttribute("data-variant")).toBe(
       "service",
     );
+  });
+
+  it("routes encyclopedia articles through compact hero, generated TOC, and dense prose", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          title: "Sinus Encyclopedia",
+          layoutVariant: "encyclopedia-article",
+          content: "<h2>Diagnosis</h2><p>Reference body</p><h3>Imaging</h3>",
+          sections: [
+            {
+              __component: "sections.linked-resources",
+              heading: "Related topics",
+              items: [
+                {
+                  title: "Nasal guide",
+                  description: null,
+                  image: null,
+                  targetPage: {
+                    documentId: "related-nasal-guide",
+                    slug: "nasal-guide",
+                    title: "Nasal guide",
+                  },
+                  targetUrl: null,
+                },
+              ],
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(document.querySelector("[data-hero-variant='compact']")).toBeTruthy();
+    expect(document.querySelector("[data-article-layout='encyclopedia']")).toBeTruthy();
+    const articleContents = screen.getByRole("navigation", { name: "Article contents" });
+    expect(articleContents).toBeDefined();
+    expect(within(articleContents).getByRole("link", { name: "Diagnosis" })).toHaveAttribute(
+      "href",
+      "#diagnosis",
+    );
+    expect(screen.getByText("Reference body").closest("div")?.getAttribute("data-variant")).toBe(
+      "encyclopedia",
+    );
+    expect(screen.getByRole("link", { name: "Nasal guide" })).toBeDefined();
+  });
+
+  it("routes specialized articles through journal hero, author sidebar, sources, and callouts", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          title: "Specialized Rhinology",
+          layoutVariant: "specialized-article",
+          content:
+            '<h2>Evidence</h2><p>Research body</p><div class="callout-teal">Clinical note</div>',
+          articleAuthor: "Dr Expert, MD",
+          sources: "<ol><li>Journal source</li></ol>",
+        }}
+      />,
+    );
+
+    expect(document.querySelector("[data-hero-variant='journal']")).toBeTruthy();
+    expect(document.querySelector("[data-article-layout='specialized']")).toBeTruthy();
+    expect(screen.getAllByText("Dr Expert, MD")).toHaveLength(2);
+    expect(screen.getByText("Journal source")).toBeDefined();
+    expect(screen.getByText("Research body").closest("div")?.getAttribute("data-variant")).toBe(
+      "specialized",
+    );
+    expect(screen.getByText("Clinical note").closest("div")?.className).toContain("callout-teal");
   });
 });
 

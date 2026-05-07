@@ -88,6 +88,7 @@ describe("SectionRenderer", () => {
 
     const { container } = render(<SectionRenderer section={section} />);
     expect(container.querySelector("h3")).toBeTruthy();
+    expect(container.querySelector("[data-card]")).toBeTruthy();
   });
 
   it("renders an accordion section", () => {
@@ -127,11 +128,12 @@ describe("SectionRenderer", () => {
     const section = makeSection({
       __component: "sections.gallery",
       heading: "Gallery",
-      items: [{ caption: "Image 1", image: null }],
+      items: [{ caption: "Image 1", image: { url: "/clinic.jpg", alternativeText: "Clinic" } }],
     } as SectionDTO);
 
     const { container } = render(<SectionRenderer section={section} />);
     expect(container.querySelector("h3")).toBeTruthy();
+    expect(container.querySelector("[data-card]")).toBeTruthy();
   });
 
   it("renders a contact section", () => {

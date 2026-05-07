@@ -21,6 +21,14 @@ describe("CmsHtml", () => {
     expect(prose?.className).toContain("custom-prose");
   });
 
+  it("adds a variant data attribute for variant-scoped prose styling", () => {
+    render(<CmsHtml html="<blockquote>Clinical note</blockquote>" variant="service" />);
+
+    const prose = screen.getByText("Clinical note").closest("div");
+    expect(prose?.getAttribute("data-variant")).toBe("service");
+    expect(prose?.className).toContain("prose-service");
+  });
+
   it("renders nothing for empty sanitized content", () => {
     const { container } = render(<CmsHtml html="<script>alert(1)</script>" />);
 

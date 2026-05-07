@@ -6,5 +6,9 @@ export const contentType = "image/png";
 
 export default async function AppleIcon() {
   const buffer = await readFile(path.join(process.cwd(), "src/app/icon.png"));
-  return buffer;
+  return new Response(new Uint8Array(buffer), {
+    headers: {
+      "Content-Type": contentType,
+    },
+  });
 }

@@ -16,7 +16,12 @@ export function GalleryPage({ page, navigation = [] }: PageLayoutProps) {
       <SectionTabBar navigation={navigation} currentPage={page} />
       <CmsHtml html={page.content} />
       {page.sections.map((section, index) => (
-        <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
+        <SectionRenderer
+          key={`${section.__component}-${index}`}
+          section={section}
+          index={index}
+          galleryMode="lightbox"
+        />
       ))}
     </PageSection>
   );

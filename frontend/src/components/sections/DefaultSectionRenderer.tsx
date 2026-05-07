@@ -53,10 +53,12 @@ export function DefaultSectionRenderer({
   section,
   density = "focused",
   locale = "el",
+  galleryMode = "cards",
 }: {
   section: SectionDTO;
   density?: Density;
   locale?: Locale;
+  galleryMode?: "cards" | "lightbox";
 }) {
   switch (section.__component) {
     case "sections.promo-slider":
@@ -136,18 +138,13 @@ export function DefaultSectionRenderer({
       return (
         <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.advantages"]}>
           {section.items.map((item, index) => (
-            <article
-              className={styles["content-card"]}
+            <Card
               key={`${item.title ?? "advantage"}-${index}`}
-            >
-              {item.icon ? (
-                <p className="font-mono text-xs font-medium uppercase text-stone-soft">
-                  {item.icon}
-                </p>
-              ) : null}
-              {item.title ? <h3>{item.title}</h3> : null}
-              <CmsHtml html={item.description} />
-            </article>
+              title={item.title}
+              description={item.description}
+              href="#"
+              density={density}
+            />
           ))}
         </SectionGrid>
       );
@@ -168,12 +165,28 @@ export function DefaultSectionRenderer({
         </SectionGrid>
       );
     case "sections.gallery":
+      if (galleryMode === "lightbox") {
+        return (
+          <GalleryWithLightbox
+            items={section.items}
+            className={styles["gallery-grid"]}
+            itemClassName={`${styles["content-card"]} ${styles["media-card"]}`}
+          />
+        );
+      }
+
       return (
-        <GalleryWithLightbox
-          items={section.items}
-          className={styles["gallery-grid"]}
-          itemClassName={`${styles["content-card"]} ${styles["media-card"]}`}
-        />
+        <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.gallery"]}>
+          {section.items.map((item, index) => (
+            <Card
+              key={`${item.caption ?? "gallery"}-${index}`}
+              title={item.caption}
+              image={item.image}
+              href="#"
+              density={density}
+            />
+          ))}
+        </SectionGrid>
       );
     case "sections.contact":
       return (

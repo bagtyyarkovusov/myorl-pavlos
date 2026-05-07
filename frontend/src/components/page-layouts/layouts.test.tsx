@@ -96,9 +96,11 @@ describe("PageHeader", () => {
 
   it("renders kicker text from layout variant", () => {
     render(
-      <StandardPage page={{ ...BASE_PAGE, title: "Service", layoutVariant: "service-article" }} />,
+      <StandardPage
+        page={{ ...BASE_PAGE, title: "Reference", layoutVariant: "encyclopedia-article" }}
+      />,
     );
-    expect(screen.getByText("service article")).toBeDefined();
+    expect(screen.getByText("encyclopedia article")).toBeDefined();
   });
 });
 
@@ -146,6 +148,44 @@ describe("StandardPage", () => {
 
     render(<StandardPage page={sectionPage} />);
     expect(screen.getByText("Common Q")).toBeDefined();
+  });
+
+  it("routes service articles through the cinematic hero and service prose layout", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          title: "Implant Therapy",
+          excerpt: "A treatment overview",
+          layoutVariant: "service-article",
+          content: "<p>Service body</p>",
+          featuredImage: {
+            url: "/implant.jpg",
+            alternativeText: "Implant theatre",
+            width: 1200,
+            height: 800,
+          },
+          sections: [
+            {
+              __component: "sections.faq",
+              heading: "What to expect",
+              items: [{ question: "How long?", answer: "<p>One visit</p>" }],
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(document.querySelector("[data-hero-variant='cinematic']")).toBeTruthy();
+    expect(document.querySelector("[data-service-layout='true']")).toBeTruthy();
+    expect(screen.getByRole("navigation", { name: "Article sections" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "What to expect" })).toHaveAttribute(
+      "href",
+      "#section-1",
+    );
+    expect(screen.getByText("Service body").closest("div")?.getAttribute("data-variant")).toBe(
+      "service",
+    );
   });
 });
 

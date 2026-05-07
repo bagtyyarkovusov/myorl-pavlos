@@ -12,6 +12,8 @@ type SectionRendererProps = {
   locale?: Locale;
   density?: Density;
   index?: number;
+  id?: string;
+  galleryMode?: "cards" | "lightbox";
 };
 
 export function SectionRenderer({
@@ -20,6 +22,8 @@ export function SectionRenderer({
   locale = "el",
   density = context === "home" ? "theater" : "focused",
   index,
+  id,
+  galleryMode = "cards",
 }: SectionRendererProps) {
   if (context === "home") {
     return <HomeSectionRenderer section={section} locale={locale} index={index} />;
@@ -32,6 +36,7 @@ export function SectionRenderer({
 
   return (
     <PageSection
+      id={id}
       heading={headingBlock}
       rhythm="standard"
       sectionIndex={index}
@@ -39,7 +44,12 @@ export function SectionRenderer({
       width="contained"
       className={styles["section-divider"]}
     >
-      <DefaultSectionRenderer section={section} density={density} locale={locale} />
+      <DefaultSectionRenderer
+        section={section}
+        density={density}
+        locale={locale}
+        galleryMode={galleryMode}
+      />
     </PageSection>
   );
 }

@@ -10,6 +10,12 @@ const IMAGES: MediaDTO[] = [
   { url: "/img/photo-3.jpg", alternativeText: "Photo 3", width: 800, height: 600 },
 ];
 
+const CAPTIONED_IMAGES = [
+  { ...IMAGES[0]!, caption: "Reception area" },
+  { ...IMAGES[1]!, caption: "Treatment room" },
+  { ...IMAGES[2]!, caption: "Waiting lounge" },
+];
+
 describe("Lightbox", () => {
   it("renders an overlay with the current image", () => {
     const onClose = vi.fn();
@@ -32,6 +38,29 @@ describe("Lightbox", () => {
     render(<Lightbox images={IMAGES} initialIndex={0} onClose={onClose} />);
 
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "ArrowRight" });
+    expect(screen.getByAltText("Photo 2")).toBeTruthy();
+  });
+
+  it("shows the caption for the current image", () => {
+    render(<Lightbox images={CAPTIONED_IMAGES} initialIndex={0} onClose={vi.fn()} />);
+
+    expect(screen.getByText("Reception area")).toBeTruthy();
+
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "ArrowRight" });
+
+    expect(screen.getByText("Treatment room")).toBeTruthy();
+  });
+
+  it("navigates by horizontal swipe", () => {
+    render(<Lightbox images={IMAGES} initialIndex={1} onClose={vi.fn()} />);
+
+    const dialog = screen.getByRole("dialog");
+    fireEvent.touchStart(dialog, { touches: [{ clientX: 220, clientY: 40 }] });
+    fireEvent.touchEnd(dialog, { changedTouches: [{ clientX: 80, clientY: 44 }] });
+    expect(screen.getByAltText("Photo 3")).toBeTruthy();
+
+    fireEvent.touchStart(dialog, { touches: [{ clientX: 80, clientY: 44 }] });
+    fireEvent.touchEnd(dialog, { changedTouches: [{ clientX: 230, clientY: 42 }] });
     expect(screen.getByAltText("Photo 2")).toBeTruthy();
   });
 

@@ -8,14 +8,19 @@ import type { MediaDTO } from "@/lib/cms/types";
 
 import styles from "./Lightbox.module.css";
 
+export type LightboxImage = MediaDTO & {
+  caption?: string | null;
+};
+
 type LightboxProps = {
-  images: MediaDTO[];
+  images: LightboxImage[];
   initialIndex: number;
   onClose: () => void;
 };
 
 export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
   const [index, setIndex] = useState(initialIndex);
+  const touchStartX = useRef<number | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   useFocusTrap(dialogRef, true);
 
@@ -53,6 +58,34 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
     [onClose],
   );
 
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const startX = touchStartX.current;
+      const endX = e.changedTouches[0]?.clientX;
+      touchStartX.current = null;
+
+      if (startX == null || endX == null) {
+        return;
+      }
+
+      const deltaX = endX - startX;
+      if (Math.abs(deltaX) < 48) {
+        return;
+      }
+
+      if (deltaX < 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+    },
+    [goNext, goPrev],
+  );
+
   const current = images[index]!;
 
   return (
@@ -64,6 +97,8 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
       className={styles.overlay}
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       tabIndex={-1}
     >
       <button className={styles.close} onClick={onClose} aria-label="Close lightbox" type="button">
@@ -81,14 +116,21 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
         </button>
       ) : null}
 
-      <div className={styles.content} onClick={(e) => e.stopPropagation()}>
+      <figure
+        className={styles.content}
+        data-current-index={index}
+        onClick={(e) => e.stopPropagation()}
+      >
         <Image
           src={current.url}
           alt={current.alternativeText ?? ""}
           width={current.width ?? 960}
           height={current.height ?? 640}
         />
-      </div>
+        {current.caption ? (
+          <figcaption className={styles.caption}>{current.caption}</figcaption>
+        ) : null}
+      </figure>
 
       {images.length > 1 ? (
         <button

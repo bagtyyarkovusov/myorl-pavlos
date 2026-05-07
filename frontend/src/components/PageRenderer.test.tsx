@@ -114,6 +114,42 @@ describe("PageRenderer", () => {
     });
   });
 
+  it("renders SectionIndexPage for all directory layout variants", async () => {
+    const variants: Array<PageDTO["layoutVariant"]> = [
+      "section-index",
+      "clinic-index",
+      "encyclopedia-index",
+      "video-index",
+    ];
+
+    for (const variant of variants) {
+      const directoryPage: PageDTO = {
+        ...BASE_PAGE,
+        documentId: `nav-${variant}`,
+        layoutVariant: variant,
+        title: variant,
+        slug: variant,
+        isFolder: true,
+      };
+      const navigation: NavigationNodeDTO[] = [
+        {
+          ...makeNavNode(variant, variant),
+          documentId: `nav-${variant}`,
+          children: [makeNavNode(`${variant}-child`, "Child page")],
+        },
+      ];
+
+      const { unmount } = render(<PageRenderer page={directoryPage} navigation={navigation} />);
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: variant })).toBeDefined();
+        expect(screen.getByRole("link", { name: /Child page/ })).toBeDefined();
+      });
+
+      unmount();
+    }
+  });
+
   it("renders QuestionListPage for faq page type", async () => {
     const faqPage: PageDTO = {
       ...BASE_PAGE,
@@ -191,3 +227,24 @@ describe("PageRenderer", () => {
     });
   });
 });
+
+function makeNavNode(slug: string, navLabel: string, menuIndex = 0): NavigationNodeDTO {
+  return {
+    documentId: `nav-${slug}`,
+    locale: "el",
+    slug,
+    title: navLabel,
+    menuTitle: null,
+    navLabel,
+    menuIndex,
+    hideFromMenu: false,
+    parentPage: null,
+    externalUrl: null,
+    isFolder: false,
+    excerpt: null,
+    featuredImage: null,
+    imageCenter: null,
+    href: `/el/${slug}`,
+    children: [],
+  };
+}

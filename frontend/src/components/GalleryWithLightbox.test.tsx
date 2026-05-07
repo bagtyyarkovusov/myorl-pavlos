@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 import { GalleryWithLightbox } from "./GalleryWithLightbox";
 import type { MediaDTO } from "@/lib/cms/types";
 
@@ -41,6 +41,7 @@ describe("GalleryWithLightbox", () => {
     });
     const dialog = screen.getByRole("dialog");
     expect(dialog.querySelector('img[alt="Image 1"]')).toBeTruthy();
+    expect(within(dialog).getByText("Photo 1")).toBeTruthy();
   });
 
   it("closes lightbox when Escape is pressed", async () => {
@@ -62,5 +63,32 @@ describe("GalleryWithLightbox", () => {
   it("does not render lightbox initially", () => {
     render(<GalleryWithLightbox items={ITEMS} />);
     expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("returns focus to the clicked gallery image when the lightbox closes", async () => {
+    render(<GalleryWithLightbox items={ITEMS} />);
+
+    const firstButton = screen.getAllByRole("button")[0]!;
+    fireEvent.click(firstButton);
+
+    await waitFor(() => {
+      expect(screen.getByRole("dialog")).toBeTruthy();
+    });
+
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    await waitFor(() => {
+      expect(document.activeElement).toBe(firstButton);
+    });
+  });
+
+  it("uses a gallery grid with hidden grid captions", () => {
+    const { container } = render(<GalleryWithLightbox items={ITEMS} />);
+
+    expect(container.querySelector("[data-gallery-grid]")).toBeTruthy();
+    expect(container.querySelectorAll("[data-gallery-caption]")).toHaveLength(2);
   });
 });

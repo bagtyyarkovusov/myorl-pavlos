@@ -6,6 +6,13 @@ import { buildWebSiteLd } from "@/lib/structured-data/website";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
+const DIRECTORY_LAYOUT_VARIANTS = new Set<PageDTO["layoutVariant"]>([
+  "section-index",
+  "clinic-index",
+  "encyclopedia-index",
+  "video-index",
+]);
+
 const AppointmentPage = dynamic(() =>
   import("@/components/page-layouts/AppointmentPage").then((m) => m.AppointmentPage),
 );
@@ -85,7 +92,7 @@ export function PageRenderer({
     );
   }
 
-  if (page.layoutVariant === "section-index") {
+  if (DIRECTORY_LAYOUT_VARIANTS.has(page.layoutVariant)) {
     return (
       <>
         {jsonLd}

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
+import type { LightboxImage } from "@/components/Lightbox";
 import type { MediaDTO } from "@/lib/cms/types";
 
 const Lightbox = dynamic(() => import("@/components/Lightbox").then((m) => m.Lightbox), {
@@ -23,14 +24,24 @@ type GalleryWithLightboxProps = {
 
 export function GalleryWithLightbox({ items, className, itemClassName }: GalleryWithLightboxProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   const images = items
-    .map((item) => item.image)
-    .filter((img): img is MediaDTO => img != null && img.url != null);
+    .map((item): LightboxImage | null =>
+      item.image?.url ? { ...item.image, caption: item.caption } : null,
+    )
+    .filter((img): img is LightboxImage => img !== null);
+
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+    setTimeout(() => {
+      lastTriggerRef.current?.focus();
+    }, 0);
+  };
 
   return (
     <>
-      <div className={className}>
+      <div className={className} data-gallery-grid>
         {items.map((item, index) => {
           const hasImage = item.image?.url != null;
           return (
@@ -39,7 +50,8 @@ export function GalleryWithLightbox({ items, className, itemClassName }: Gallery
                 <button
                   type="button"
                   data-gallery-trigger
-                  onClick={() => {
+                  onClick={(event) => {
+                    lastTriggerRef.current = event.currentTarget;
                     const imgIndex = images.findIndex((img) => img.url === item.image!.url);
                     setLightboxIndex(imgIndex >= 0 ? imgIndex : 0);
                   }}
@@ -51,22 +63,18 @@ export function GalleryWithLightbox({ items, className, itemClassName }: Gallery
                     width={item.image!.width ?? 960}
                     height={item.image!.height ?? 640}
                     sizes="(min-width: 960px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    style={{ width: "100%", height: "auto", borderRadius: 8 }}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
                 </button>
               ) : null}
-              {item.caption ? <h3>{item.caption}</h3> : null}
+              {item.caption ? <h3 data-gallery-caption>{item.caption}</h3> : null}
             </article>
           );
         })}
       </div>
 
       {lightboxIndex !== null ? (
-        <Lightbox
-          images={images}
-          initialIndex={lightboxIndex}
-          onClose={() => setLightboxIndex(null)}
-        />
+        <Lightbox images={images} initialIndex={lightboxIndex} onClose={closeLightbox} />
       ) : null}
     </>
   );

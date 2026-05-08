@@ -14,6 +14,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY ./frontend .
+COPY ./packages/shared-types /packages/shared-types
 COPY ./data/manifests /data/manifests
 
 ENV NEXT_TELEMETRY_DISABLED=1

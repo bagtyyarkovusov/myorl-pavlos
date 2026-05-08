@@ -82,21 +82,21 @@ export async function migrateSections(strapi: Core.Strapi): Promise<void> {
       if (sectionAlreadyInDynamicZone(page.pageSections, component)) continue;
 
       const sectionEntry = {
-        __component: component,
+        __component: component as SectionComponent,
         ...(dedicatedValue as Record<string, unknown>),
       };
 
       const existingSections = Array.isArray(page.pageSections)
-        ? page.pageSections
+        ? (page.pageSections as Array<{ __component: string } & Record<string, unknown>>)
         : [];
 
       try {
         await strapi.documents("api::page.page").update({
           documentId: page.documentId,
           data: {
-            pageSections: [...existingSections, sectionEntry],
+            pageSections: [...existingSections, sectionEntry] as unknown,
             [field]: null,
-          },
+          } as unknown,
         });
         migrated++;
         strapi.log.info(

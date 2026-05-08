@@ -85,7 +85,20 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
-    return loadSlugRedirects();
+    const manifestRedirects = loadSlugRedirects();
+    return [
+      ...manifestRedirects,
+      {
+        source: "/el/contact",
+        destination: "/el/epikoinonia",
+        permanent: true,
+      },
+      {
+        source: "/el/contact/:path*",
+        destination: "/el/epikoinonia/:path*",
+        permanent: true,
+      },
+    ];
   },
   async rewrites() {
     const strapiUrl = process.env.STRAPI_URL || "http://localhost:1337";

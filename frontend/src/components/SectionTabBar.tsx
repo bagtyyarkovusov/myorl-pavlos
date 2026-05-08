@@ -15,20 +15,22 @@ export function SectionTabBar({ navigation, currentPage }: SectionTabBarProps) {
   if (!nodes) return null;
 
   return (
-    <nav className={styles["tab-bar"]} aria-label="Section navigation">
-      {nodes.map((node) => {
-        const isActive = node.documentId === currentPage.documentId;
-        return (
-          <Link
-            key={node.documentId}
-            href={node.href}
-            className={styles.tab}
-            aria-current={isActive ? "page" : undefined}
-          >
-            {node.navLabel}
-          </Link>
-        );
-      })}
-    </nav>
+    <div className={styles["tab-bar-wrapper"]}>
+      <nav className={styles["tab-bar"]} aria-label="Section navigation">
+        {nodes.map((node) => {
+          const isActive = node.documentId === currentPage.documentId;
+          return (
+            <Link
+              key={node.documentId}
+              href={node.href}
+              className={styles.tab}
+              aria-current={isActive ? "page" : undefined}
+            >
+              {node.navLabel}
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
   );
 }

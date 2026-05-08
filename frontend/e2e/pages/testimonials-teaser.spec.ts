@@ -26,9 +26,8 @@ function distanceX(a: { x: number; width: number } | null, b: { x: number } | nu
 }
 
 function report(name: string, measurements: Record<string, unknown>) {
-   
   console.log(`\n=== ${name} ===`);
-   
+
   console.log(JSON.stringify(measurements, null, 2));
 }
 

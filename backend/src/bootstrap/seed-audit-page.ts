@@ -10,16 +10,16 @@ import type { Core } from "@strapi/strapi";
 const AUDIT_SLUG = "design-system-audit";
 
 const AUDIT_SECTIONS = [
-  { __component: "sections.promo-slider", heading: "Promo Slider", slides: [] },
-  { __component: "sections.advantages", heading: "Advantages", items: [] },
-  { __component: "sections.linked-resources", heading: "Linked Resources", items: [] },
-  { __component: "sections.video", heading: "Video", videos: [] },
-  { __component: "sections.accordion", heading: "Accordion", items: [] },
-  { __component: "sections.faq", heading: "FAQ", items: [] },
-  { __component: "sections.tabs", heading: "Tabs", items: [] },
-  { __component: "sections.gallery", heading: "Gallery", items: [] },
-  { __component: "sections.contact", heading: "Contact", clinics: [] },
-  { __component: "sections.social-links", heading: "Social Links", links: [] },
+  { __component: "sections.promo-slider" as const, heading: "Promo Slider", slides: [] },
+  { __component: "sections.advantages" as const, heading: "Advantages", items: [] },
+  { __component: "sections.linked-resources" as const, heading: "Linked Resources", items: [] },
+  { __component: "sections.video" as const, heading: "Video", videos: [] },
+  { __component: "sections.accordion" as const, heading: "Accordion", items: [] },
+  { __component: "sections.faq" as const, heading: "FAQ", items: [] },
+  { __component: "sections.tabs" as const, heading: "Tabs", items: [] },
+  { __component: "sections.gallery" as const, heading: "Gallery", items: [] },
+  { __component: "sections.contact" as const, heading: "Contact", clinics: [] },
+  { __component: "sections.social-links" as const, heading: "Social Links", links: [] },
 ];
 
 export async function seedAuditPage(strapi: Core.Strapi): Promise<void> {

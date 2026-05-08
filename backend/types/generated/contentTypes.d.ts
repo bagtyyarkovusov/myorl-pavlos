@@ -541,6 +541,15 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    footerCategory: Schema.Attribute.Enumeration<
+      ['services', 'patients', 'company', 'none']
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'none'>;
     hideFromMenu: Schema.Attribute.Boolean &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

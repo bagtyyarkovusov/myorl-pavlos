@@ -26,6 +26,7 @@ export type PageDTO = {
   isFolder: boolean;
   hideFromMenu: boolean;
   menuIndex: number;
+  footerCategory?: FooterCategory | null;
   parentPage?: PageRefDTO | null;
   tags: TagDTO[];
   infoBlockBottom?: string | null;
@@ -101,6 +102,7 @@ export type StrapiPagePayload = {
   isFolder?: boolean | null;
   hideFromMenu?: boolean | null;
   menuIndex?: number | null;
+  footerCategory?: FooterCategory | null;
   parentPage?: StrapiPageRef | null;
   tags?: StrapiTag[] | null;
   infoBlockBottom?: string | null;

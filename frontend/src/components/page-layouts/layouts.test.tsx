@@ -551,41 +551,6 @@ describe("ContactPage", () => {
     expect(screen.queryByRole("region", { name: "Clinic map" })).toBeNull();
     expect(screen.getByRole("region", { name: "Athens details" })).toBeDefined();
   });
-
-  it("injects ContactPoint and MedicalBusiness structured data", () => {
-    const contactPage: PageDTO = {
-      ...BASE_PAGE,
-      pageType: "contact",
-      layoutVariant: "contact",
-      title: "Contact Us",
-      seoTitle: "MyORL Contact",
-      sections: [
-        {
-          __component: "sections.contact" as const,
-          heading: "Get in Touch",
-          intro: null,
-          details: [],
-          clinics: [
-            {
-              name: "Athens",
-              addressHtml: "<p>123 Main St</p>",
-              phone: "+30 210 000",
-              email: "athens@clinic.com",
-              latitude: 37.9838,
-              longitude: 23.7275,
-            },
-          ],
-        },
-      ],
-    };
-
-    const { container } = render(<ContactPage page={contactPage} />);
-    const scripts = Array.from(container.querySelectorAll('script[type="application/ld+json"]'));
-    const payloads = scripts.map((script) => JSON.parse(script.textContent ?? "{}"));
-
-    expect(payloads.some((payload) => payload["@type"] === "ContactPoint")).toBe(true);
-    expect(payloads.some((payload) => payload["@type"] === "MedicalBusiness")).toBe(true);
-  });
 });
 
 describe("GalleryPage", () => {

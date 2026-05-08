@@ -5,10 +5,7 @@ import { HomeTestimonialsTeaser } from "@/components/home/HomeTestimonialsTeaser
 import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
-import { StructuredData } from "@/components/StructuredData";
 import { getHomeStrings } from "@/lib/i18n/home";
-import { getCmsConfig } from "@/lib/cms/env";
-import { buildMedicalBusinessLd } from "@/lib/structured-data/medical-business";
 import type { GlobalSettingsDTO, NavigationNodeDTO, SectionDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 import type { PageLayoutProps } from "./_shared";
@@ -38,26 +35,8 @@ export function HomePage({
     (section): section is AdvantagesSection => section.__component === "sections.advantages",
   );
 
-  const config = getCmsConfig();
-  const medicalBusinessLd = buildMedicalBusinessLd({
-    siteUrl: config.siteUrl,
-    name: "MyORL",
-    description: page.seo.metaDescription ?? undefined,
-    telephone: settings.phoneTel ?? undefined,
-    address: settings.address ?? undefined,
-    imageUrls: page.seo.ogImage ? [page.seo.ogImage.url] : undefined,
-    aggregateRating:
-      homeTestimonials?.aggregateRating != null && homeTestimonials?.userRatingCount != null
-        ? {
-            ratingValue: homeTestimonials.aggregateRating,
-            reviewCount: homeTestimonials.userRatingCount,
-          }
-        : undefined,
-  });
-
   return (
     <>
-      <StructuredData data={medicalBusinessLd} />
       <div data-locale={page.locale}>
         <HomeHero
           kicker={t.heroKicker}

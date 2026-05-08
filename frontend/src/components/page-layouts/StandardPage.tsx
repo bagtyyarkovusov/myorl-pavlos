@@ -3,29 +3,24 @@ import { PageHero } from "@/components/PageHero";
 import { PageSection } from "@/components/PageSection";
 import { SectionTabBar } from "@/components/SectionTabBar";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
-import { StructuredData } from "@/components/StructuredData";
 import type { SectionDTO } from "@/lib/cms/types";
-import { buildPageBreadcrumbLd } from "@/lib/structured-data/page-breadcrumbs";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import styles from "./_shared.module.css";
 
 export function StandardPage({ page, navigation = [] }: PageLayoutProps) {
-  const breadcrumbLd = buildPageBreadcrumbLd(page);
-
   if (page.layoutVariant === "service-article") {
-    return <ServiceArticlePage page={page} navigation={navigation} breadcrumbLd={breadcrumbLd} />;
+    return <ServiceArticlePage page={page} navigation={navigation} />;
   }
 
   if (
     page.layoutVariant === "encyclopedia-article" ||
     page.layoutVariant === "specialized-article"
   ) {
-    return <ReferenceArticlePage page={page} navigation={navigation} breadcrumbLd={breadcrumbLd} />;
+    return <ReferenceArticlePage page={page} navigation={navigation} />;
   }
 
   return (
     <PageSection>
-      {breadcrumbLd ? <StructuredData data={breadcrumbLd} /> : null}
       <PageHeader page={page} />
       <SectionTabBar navigation={navigation} currentPage={page} />
       <CmsHtml html={page.content} />
@@ -42,11 +37,7 @@ export function StandardPage({ page, navigation = [] }: PageLayoutProps) {
   );
 }
 
-function ReferenceArticlePage({
-  page,
-  navigation = [],
-  breadcrumbLd,
-}: PageLayoutProps & { breadcrumbLd: ReturnType<typeof buildPageBreadcrumbLd> }) {
+function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
   const variant = page.layoutVariant === "specialized-article" ? "specialized" : "encyclopedia";
   const headings = extractHeadings(page.content);
   const contentWithHeadingIds = addHeadingIds(page.content, headings);
@@ -57,7 +48,6 @@ function ReferenceArticlePage({
 
   return (
     <>
-      {breadcrumbLd ? <StructuredData data={breadcrumbLd} /> : null}
       <PageHero
         page={page}
         variant={variant === "specialized" ? "journal" : "compact"}
@@ -136,11 +126,7 @@ function ReferenceArticlePage({
   );
 }
 
-function ServiceArticlePage({
-  page,
-  navigation = [],
-  breadcrumbLd,
-}: PageLayoutProps & { breadcrumbLd: ReturnType<typeof buildPageBreadcrumbLd> }) {
+function ServiceArticlePage({ page, navigation = [] }: PageLayoutProps) {
   const sectionLinks = page.sections
     .map((section, index) => ({
       id: `section-${index + 1}`,
@@ -150,7 +136,6 @@ function ServiceArticlePage({
 
   return (
     <>
-      {breadcrumbLd ? <StructuredData data={breadcrumbLd} /> : null}
       <PageHero
         page={page}
         variant="cinematic"

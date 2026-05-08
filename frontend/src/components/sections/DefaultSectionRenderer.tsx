@@ -10,6 +10,7 @@ import type { Locale, MediaDTO, SectionDTO } from "@/lib/cms/types";
 
 import { DisclosureList, TabsPanel } from "./DisclosurePanels";
 import { SECTION_COLUMN_DEFAULTS } from "./grid-defaults";
+import { UnknownSection } from "./UnknownSection";
 import styles from "./SectionRenderer.module.css";
 
 function ResponsiveImage({ media, alt }: { media?: MediaDTO | null; alt: string }) {
@@ -33,11 +34,13 @@ export function DefaultSectionRenderer({
   density = "focused",
   locale = "el",
   galleryMode = "cards",
+  sectionIndex = 0,
 }: {
   section: SectionDTO;
   density?: Density;
   locale?: Locale;
   galleryMode?: "cards" | "lightbox";
+  sectionIndex?: number;
 }) {
   switch (section.__component) {
     case "sections.promo-slider":
@@ -185,12 +188,12 @@ export function DefaultSectionRenderer({
         </SectionGrid>
       );
     default:
-      if (process.env.NODE_ENV === "development") {
-        console.warn(
-          `[SectionRenderer] unknown section component: ${(section as { __component?: string }).__component}`,
-        );
-      }
-      return null;
+      return (
+        <UnknownSection
+          section={section as { __component: string; heading?: string | null }}
+          sectionIndex={sectionIndex}
+        />
+      );
   }
 }
 

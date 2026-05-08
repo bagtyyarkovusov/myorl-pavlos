@@ -1,6 +1,7 @@
 import { isLocale } from "./types";
 import type {
   ContactClinicDTO,
+  FooterCategory,
   LayoutVariant,
   Locale,
   MediaDTO,
@@ -229,6 +230,7 @@ export function toPageDTO(page: StrapiPagePayload, config?: CmsConfig): PageDTO 
     isFolder: Boolean(page.isFolder),
     hideFromMenu: Boolean(page.hideFromMenu),
     menuIndex: Number(page.menuIndex ?? 0),
+    footerCategory: (page.footerCategory as FooterCategory | null | undefined) ?? null,
     parentPage: toPageRefDTO(page.parentPage),
     tags: (page.tags ?? []).map(toTagDTO).filter((value): value is TagDTO => value !== null),
     infoBlockBottom: page.infoBlockBottom ?? null,

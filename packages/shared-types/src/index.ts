@@ -45,6 +45,12 @@ export type SectionComponent =
   | "sections.gallery"
   | "sections.contact";
 
+export type FooterCategory =
+  | "services"
+  | "patients"
+  | "company"
+  | "none";
+
 export type SitemapChangeFrequency =
   | "always"
   | "hourly"

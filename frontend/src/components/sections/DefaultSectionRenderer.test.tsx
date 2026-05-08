@@ -231,13 +231,13 @@ describe("DefaultSectionRenderer", () => {
     expect(container.querySelector("h3")).toBeTruthy();
   });
 
-  it("returns null for unknown components", () => {
+  it("renders UnknownSection for unknown components", () => {
     const section = makeSection({
       __component: "sections.unknown",
     } as unknown as SectionDTO);
 
     const { container } = render(<DefaultSectionRenderer section={section} />);
-    expect(container.querySelector("section")).toBeFalsy();
+    expect(container.querySelector("[data-section='unknown']")).toBeTruthy();
   });
 
   it("wraps advantages in a 3-column SectionGrid", () => {

@@ -1,8 +1,5 @@
 import dynamic from "next/dynamic";
-import { StructuredData } from "@/components/StructuredData";
-import { getCmsConfig } from "@/lib/cms/env";
-import { buildWebPageLd } from "@/lib/structured-data/webpage";
-import { buildWebSiteLd } from "@/lib/structured-data/website";
+import { StructuredDataComposer } from "@/components/StructuredDataComposer";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
@@ -52,18 +49,6 @@ type PageRendererProps = {
   testimonialsPage?: number;
 };
 
-function PageJsonLd({ page }: { page: PageDTO }) {
-  const config = getCmsConfig();
-  const webSiteLd = buildWebSiteLd(config.siteUrl, "MyORL");
-  const webPageLd = buildWebPageLd(page, config.siteUrl);
-  return (
-    <>
-      <StructuredData data={webSiteLd} />
-      <StructuredData data={webPageLd} />
-    </>
-  );
-}
-
 export function PageRenderer({
   page,
   appointmentHref,
@@ -72,7 +57,13 @@ export function PageRenderer({
   homeTestimonials = null,
   testimonialsPage = 1,
 }: PageRendererProps) {
-  const jsonLd = <PageJsonLd page={page} />;
+  const jsonLd = (
+    <StructuredDataComposer
+      page={page}
+      globalSettings={globalSettings}
+      homeTestimonials={homeTestimonials}
+    />
+  );
 
   if (page.renderMode === "frontend-native") {
     return (

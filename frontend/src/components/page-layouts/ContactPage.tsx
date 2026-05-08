@@ -4,13 +4,8 @@ import { useState } from "react";
 import { CmsHtml } from "@/components/CmsHtml";
 import { PageSection } from "@/components/PageSection";
 import { SectionTabBar } from "@/components/SectionTabBar";
-import { StructuredData } from "@/components/StructuredData";
-import { getCmsConfig } from "@/lib/cms/env";
-import type { ContactClinicDTO } from "@/lib/cms/types";
 import { stripTags } from "@/lib/html";
-import { buildContactPointLd } from "@/lib/structured-data/contact-point";
-import { buildMedicalBusinessLd } from "@/lib/structured-data/medical-business";
-import { buildPageBreadcrumbLd } from "@/lib/structured-data/page-breadcrumbs";
+import type { ContactClinicDTO } from "@/lib/cms/types";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import styles from "./_shared.module.css";
 
@@ -43,25 +38,8 @@ export function ContactPage({ page, navigation = [] }: PageLayoutProps) {
     return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=14&output=embed`;
   })();
 
-  const breadcrumbLd = buildPageBreadcrumbLd(page);
-  const contactLd = primaryPhone ? buildContactPointLd(primaryPhone) : null;
-  const config = getCmsConfig();
-  const medicalBusinessLd = primaryClinic
-    ? buildMedicalBusinessLd({
-        siteUrl: config.siteUrl,
-        name: page.seoTitle || page.title,
-        description: page.excerpt ?? undefined,
-        telephone: primaryPhone ?? undefined,
-        address: stripTags(primaryClinic.addressHtml).trim() || undefined,
-        imageUrls: page.featuredImage?.url ? [page.featuredImage.url] : undefined,
-      })
-    : null;
-
   return (
     <PageSection>
-      {breadcrumbLd ? <StructuredData data={breadcrumbLd} /> : null}
-      {contactLd ? <StructuredData data={contactLd} /> : null}
-      {medicalBusinessLd ? <StructuredData data={medicalBusinessLd} /> : null}
       <PageHeader page={page} kicker={null} />
       <SectionTabBar navigation={navigation} currentPage={page} />
       {contactSection && contactSection.__component === "sections.contact" ? (

@@ -36,6 +36,11 @@ async function main() {
     pageSchema.attributes.pageSections.components,
   );
 
+  const footerCategory = toUnionType(
+    "FooterCategory",
+    pageSchema.attributes.footerCategory.enum,
+  );
+
   const sitemapChangeFrequency = toUnionType(
     "SitemapChangeFrequency",
     seoComponent.attributes.sitemapChangeFrequency.enum,
@@ -47,7 +52,7 @@ async function main() {
 
   const output =
     header +
-    [pageType, layoutVariant, sectionComponent, sitemapChangeFrequency, renderMode].join("\n\n") +
+    [pageType, layoutVariant, sectionComponent, footerCategory, sitemapChangeFrequency, renderMode].join("\n\n") +
     "\n";
 
   await writeFile(OUTFILE, output, "utf-8");

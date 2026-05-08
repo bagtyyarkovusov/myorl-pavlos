@@ -37,6 +37,7 @@ const zodSeo = z
     metaDescription: z.string().nullish(),
     canonicalUrl: z.string().nullish(),
     ogImage: zodMedia,
+    schemaType: z.string().nullish(),
     robotsNoindex: z.boolean().nullish(),
     robotsNofollow: z.boolean().nullish(),
     sitemapExclude: z.boolean().nullish(),

@@ -186,3 +186,17 @@ export function sanitizeCmsHtml(html: string | null | undefined): string {
     FORBID_ATTR: ["style"],
   });
 }
+
+/**
+ * Strip all HTML tags and collapse whitespace into a single space.
+ * Use for extracting plain-text fallbacks from rich HTML (e.g. map queries).
+ */
+export function stripTags(value: string | null | undefined): string {
+  if (!value) {
+    return "";
+  }
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}

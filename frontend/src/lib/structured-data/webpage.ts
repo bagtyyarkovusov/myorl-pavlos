@@ -20,7 +20,7 @@ export type WebPageLd = {
 export function buildWebPageLd(page: PageDTO, siteUrl: string): WebPageLd {
   const result: WebPageLd = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
+    "@type": page.seo.schemaType || "WebPage",
     name: page.title,
     url: new URL(hrefForPage(page), siteUrl).toString(),
     inLanguage: page.locale,

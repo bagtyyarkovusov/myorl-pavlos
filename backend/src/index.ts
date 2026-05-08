@@ -3,6 +3,7 @@ import { seedContentManagerConfig } from './bootstrap/content-manager-config';
 import { migrateSections } from './bootstrap/migrate-sections';
 import { seedNavigationConfig } from './bootstrap/navigation-config';
 import { seedNavigationPermissions } from './bootstrap/navigation-permissions';
+import { seedAuditPage } from './bootstrap/seed-audit-page';
 
 function shouldBootstrapMigrationToken(): boolean {
   const raw = process.env.STRAPI_ENABLE_MIGRATION_TOKEN_BOOTSTRAP?.trim().toLowerCase();
@@ -77,6 +78,12 @@ export default {
       await seedNavigationPermissions(strapi);
     } catch (err) {
       strapi.log.error('Failed to seed Navigation plugin permissions', err);
+    }
+
+    try {
+      await seedAuditPage(strapi);
+    } catch (err) {
+      strapi.log.error('Failed to seed design-system-audit page', err);
     }
   },
 };

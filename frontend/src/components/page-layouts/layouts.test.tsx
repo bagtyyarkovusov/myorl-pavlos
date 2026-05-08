@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
@@ -456,6 +456,135 @@ describe("ContactPage", () => {
     render(<ContactPage page={contactPage} />);
     expect(screen.getByText("Athens")).toBeDefined();
     expect(screen.getByText("Thessaloniki")).toBeDefined();
+  });
+
+  it("renders a split-screen clinic map with linked contact actions and synchronized pins", () => {
+    const contactPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "contact",
+      layoutVariant: "contact",
+      title: "Contact Us",
+      sections: [
+        {
+          __component: "sections.contact" as const,
+          heading: "Get in Touch",
+          intro: null,
+          details: [{ type: "hours", valueHtml: "<p>Mon-Fri 09:00-21:00</p>" }],
+          clinics: [
+            {
+              name: "Athens",
+              addressHtml: "<p>123 Main St</p>",
+              phone: "+30 210 000",
+              email: "athens@clinic.com",
+              latitude: 37.9838,
+              longitude: 23.7275,
+            },
+            {
+              name: "Piraeus",
+              addressHtml: "<p>456 Port St</p>",
+              phone: "+30 210 111",
+              email: "piraeus@clinic.com",
+              latitude: 37.942,
+              longitude: 23.646,
+            },
+          ],
+        },
+      ],
+    };
+
+    const { container } = render(<ContactPage page={contactPage} />);
+
+    expect(container.querySelector("[data-contact-split='true']")).toBeTruthy();
+    expect(screen.getAllByRole("link", { name: "+30 210 000" })[0]!).toHaveAttribute(
+      "href",
+      "tel:+30210000",
+    );
+    expect(screen.getAllByRole("link", { name: "athens@clinic.com" })[0]!).toHaveAttribute(
+      "href",
+      "mailto:athens@clinic.com",
+    );
+
+    // Map should be stable — centered on first mappable clinic, not changing on selection
+    expect(container.querySelector("[data-map-center='37.9838,23.7275']")).toBeTruthy();
+
+    // iframe should carry a secure referrer policy
+    const iframe = container.querySelector('iframe[title="Clinic map"]') as HTMLIFrameElement;
+    expect(iframe).toBeTruthy();
+    expect(iframe.getAttribute("referrerpolicy")).toBe("no-referrer-when-downgrade");
+
+    // No fake pins overlay
+    expect(container.querySelector("[aria-label='Clinic map pins']")).toBeNull();
+
+    // Selecting a clinic updates the panel highlight, not the map
+    const piraeusPanel = screen.getByRole("region", { name: "Piraeus details" });
+    fireEvent.click(screen.getByRole("button", { name: "Piraeus" }));
+    expect(piraeusPanel).toHaveAttribute("data-active", "true");
+    expect(screen.getByText("Map")).toBeDefined();
+  });
+
+  it("hides the map when clinics do not have coordinates", () => {
+    const contactPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "contact",
+      layoutVariant: "contact",
+      title: "Contact Us",
+      sections: [
+        {
+          __component: "sections.contact" as const,
+          heading: "Get in Touch",
+          intro: null,
+          details: [],
+          clinics: [
+            {
+              name: "Athens",
+              addressHtml: "<p>123 Main St</p>",
+              phone: "+30 210 000",
+              email: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    render(<ContactPage page={contactPage} />);
+
+    expect(screen.queryByRole("region", { name: "Clinic map" })).toBeNull();
+    expect(screen.getByRole("region", { name: "Athens details" })).toBeDefined();
+  });
+
+  it("injects ContactPoint and MedicalBusiness structured data", () => {
+    const contactPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "contact",
+      layoutVariant: "contact",
+      title: "Contact Us",
+      seoTitle: "MyORL Contact",
+      sections: [
+        {
+          __component: "sections.contact" as const,
+          heading: "Get in Touch",
+          intro: null,
+          details: [],
+          clinics: [
+            {
+              name: "Athens",
+              addressHtml: "<p>123 Main St</p>",
+              phone: "+30 210 000",
+              email: "athens@clinic.com",
+              latitude: 37.9838,
+              longitude: 23.7275,
+            },
+          ],
+        },
+      ],
+    };
+
+    const { container } = render(<ContactPage page={contactPage} />);
+    const scripts = Array.from(container.querySelectorAll('script[type="application/ld+json"]'));
+    const payloads = scripts.map((script) => JSON.parse(script.textContent ?? "{}"));
+
+    expect(payloads.some((payload) => payload["@type"] === "ContactPoint")).toBe(true);
+    expect(payloads.some((payload) => payload["@type"] === "MedicalBusiness")).toBe(true);
   });
 });
 

@@ -77,14 +77,172 @@
 }
 
 .contact-band {
-  margin-top: 36px;
+  display: grid;
+  gap: 18px;
   padding: clamp(24px, 4vw, 40px) 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
 
 .contact-clinics {
-  margin-top: 36px;
+  display: grid;
+  gap: 14px;
+}
+
+.contact-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
+  gap: clamp(30px, 5vw, 64px);
+  align-items: start;
+}
+
+.contact-panel {
+  position: sticky;
+  top: 100px;
+  display: grid;
+  gap: clamp(24px, 4vw, 36px);
+  min-width: 0;
+}
+
+.contact-phone {
+  width: fit-content;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.7rem);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.contact-phone:hover,
+.contact-phone:focus-visible,
+.contact-email:hover,
+.contact-email:focus-visible {
+  color: var(--accent);
+  outline: none;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.contact-email {
+  width: fit-content;
+  color: var(--foreground);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.contact-detail {
+  display: grid;
+  gap: 8px;
+}
+
+.contact-detail h2 {
+  color: var(--color-stone-soft);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.clinic-card {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.clinic-trigger {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 0;
+  text-align: left;
+}
+
+.clinic-trigger:hover,
+.clinic-trigger:focus-visible {
+  color: var(--accent);
+  outline: none;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.clinic-body {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+}
+
+.clinic-body a {
+  width: fit-content;
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.clinic-body a:hover,
+.clinic-body a:focus-visible {
+  color: var(--accent);
+  outline: none;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.contact-map-desktop {
+  min-height: 620px;
+}
+
+.contact-map-mobile {
+  display: none;
+}
+
+.clinic-map {
+  position: relative;
+  overflow: hidden;
+  min-height: min(70vh, 720px);
+  background: var(--color-bone-200);
+}
+
+.clinic-map iframe {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  border: 0;
+  filter: saturate(0.9) contrast(0.96);
+}
+
+.clinic-pins {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.clinic-pin {
+  position: absolute;
+  display: inline-grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 2px solid var(--color-bone-50);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+  font-weight: 800;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+}
+
+.clinic-pin[aria-pressed="true"] {
+  background: var(--color-ink);
+  color: var(--color-bone-50);
+}
+
+.clinic-pin:hover,
+.clinic-pin:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .contact-grid {
@@ -281,8 +439,34 @@
 }
 
 @media (max-width: 1024px) {
+  .contact-shell,
   .service-layout {
     grid-template-columns: 1fr;
+  }
+
+  .contact-panel {
+    position: static;
+  }
+
+  .contact-map-desktop {
+    display: none;
+  }
+
+  .contact-map-mobile {
+    display: block;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+  }
+
+  .contact-map-mobile summary {
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .contact-map-mobile .clinic-map {
+    min-height: 360px;
+    margin-top: 14px;
   }
 
   .service-layout__sidebar,

@@ -123,7 +123,10 @@ describe("getTabBarNodes", () => {
   });
 
   it("handles deeply nested tree by finding parent at any depth", () => {
-    const grandchildren = [makeNode("gc-1", "GC 1", { parentDocId: "doc-child" })];
+    const grandchildren = [
+      makeNode("gc-1", "GC 1", { parentDocId: "doc-child" }),
+      makeNode("gc-2", "GC 2", { parentDocId: "doc-child" }),
+    ];
     const child = makeNode("child", "Child", {
       isFolder: true,
       parentDocId: "doc-root",
@@ -136,5 +139,23 @@ describe("getTabBarNodes", () => {
     const result = getTabBarNodes(tree, page);
     expect(result).not.toBeNull();
     expect(result![0]!.slug).toBe("child");
+  });
+
+  it("returns null when folder has only one child", () => {
+    const children = [makeNode("child-1", "Child 1", { parentDocId: "doc-services" })];
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("services", { isFolder: true });
+
+    expect(getTabBarNodes(tree, page)).toBeNull();
+  });
+
+  it("returns null when leaf page has no siblings", () => {
+    const children = [makeNode("only-child", "Only Child", { parentDocId: "doc-services" })];
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("only-child", { parentDocId: "doc-services" });
+
+    expect(getTabBarNodes(tree, page)).toBeNull();
   });
 });

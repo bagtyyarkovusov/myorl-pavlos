@@ -63,6 +63,8 @@ export function toContactClinicDTO(clinic: StrapiClinic): ContactClinicDTO | nul
     addressHtml,
     phone: clinic.phone ?? null,
     email: clinic.email ?? null,
+    latitude: clinic.latitude ?? null,
+    longitude: clinic.longitude ?? null,
   };
 }
 

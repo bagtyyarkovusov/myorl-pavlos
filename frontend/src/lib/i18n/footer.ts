@@ -4,6 +4,7 @@ export type FooterStrings = {
   brandTagline: string;
   practiceLabel: string;
   patientsLabel: string;
+  companyLabel: string;
   contactLabel: string;
   bookOnlineLabel: string;
   sitemapLabel: string;
@@ -19,6 +20,7 @@ const STRINGS: Record<Locale, FooterStrings> = {
       "Ιδιωτικό ΩΡΛ ιατρείο του Δρ. Παύλου Τσολαρίδη, M.D. Εξυπηρέτηση ασθενών στην Αθήνα και διεθνώς από το 1998.",
     practiceLabel: "Ιατρείο",
     patientsLabel: "Ασθενείς",
+    companyLabel: "Εταιρεία",
     contactLabel: "Επικοινωνία",
     bookOnlineLabel: "Online ραντεβού",
     sitemapLabel: "Χάρτης ιστότοπου",
@@ -32,6 +34,7 @@ const STRINGS: Record<Locale, FooterStrings> = {
       "Частный ЛОР-кабинет доктора Павлоса Цоларидиса, M.D. Принимаем пациентов в Афинах и из-за рубежа с 1998 года.",
     practiceLabel: "Клиника",
     patientsLabel: "Пациентам",
+    companyLabel: "Компания",
     contactLabel: "Контакты",
     bookOnlineLabel: "Запись онлайн",
     sitemapLabel: "Карта сайта",

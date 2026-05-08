@@ -118,13 +118,37 @@ describe("SectionTabBar", () => {
   });
 
   it("uses navLabel for link text", () => {
-    const children = [makeNode("child", "Child Label", { parentDocId: "doc-parent" })];
+    const children = [
+      makeNode("child-a", "Child A Label", { parentDocId: "doc-parent" }),
+      makeNode("child-b", "Child B Label", { parentDocId: "doc-parent" }),
+    ];
     const parent = makeNode("parent", "Parent Label", { isFolder: true, children });
     const tree = [parent];
     const page = makePage("parent", { isFolder: true });
 
     render(<SectionTabBar navigation={tree} currentPage={page} />);
     expect(screen.getByText("Parent Label")).toBeTruthy();
-    expect(screen.getByText("Child Label")).toBeTruthy();
+    expect(screen.getByText("Child A Label")).toBeTruthy();
+    expect(screen.getByText("Child B Label")).toBeTruthy();
+  });
+
+  it("hides when a folder has only one child", () => {
+    const children = [makeNode("only-child", "Only Child", { parentDocId: "doc-parent" })];
+    const parent = makeNode("parent", "Parent Label", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("parent", { isFolder: true });
+
+    const { container } = render(<SectionTabBar navigation={tree} currentPage={page} />);
+    expect(container.querySelector("nav")).toBeNull();
+  });
+
+  it("hides when a leaf page has no siblings", () => {
+    const children = [makeNode("only-child", "Only Child", { parentDocId: "doc-parent" })];
+    const parent = makeNode("parent", "Parent Label", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("only-child", { parentDocId: "doc-parent" });
+
+    const { container } = render(<SectionTabBar navigation={tree} currentPage={page} />);
+    expect(container.querySelector("nav")).toBeNull();
   });
 });

@@ -439,6 +439,8 @@ describe("toContactClinicDTO", () => {
       address: "<p>123 Main St, Athens</p>",
       phone: "+302101234567",
       email: "clinic@example.com",
+      latitude: 37.9838,
+      longitude: 23.7275,
     };
     const result = mod.toContactClinicDTO(clinic);
     expect(result).not.toBeNull();
@@ -446,6 +448,8 @@ describe("toContactClinicDTO", () => {
     expect(result?.addressHtml).toBe("<p>123 Main St, Athens</p>");
     expect(result?.phone).toBe("+302101234567");
     expect(result?.email).toBe("clinic@example.com");
+    expect(result?.latitude).toBe(37.9838);
+    expect(result?.longitude).toBe(23.7275);
   });
 
   it("returns null for empty name", () => {

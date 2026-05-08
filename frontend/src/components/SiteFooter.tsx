@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { buildFooterLinks } from "@/lib/footer/build-footer-links";
 import { getFooterStrings } from "@/lib/i18n/footer";
 import {
   resolveContactEmail,
@@ -24,9 +25,6 @@ type SiteFooterProps = {
   socialLinks: SocialLinkItemDTO[];
 };
 
-const PRACTICE_SLUGS = ["yperesies", "epemvaseis", "diagnosi", "video"] as const;
-const PATIENTS_SLUGS = ["klinikes", "timokatalogos"] as const;
-
 export function SiteFooter({
   locale,
   navigation,
@@ -35,20 +33,11 @@ export function SiteFooter({
   socialLinks,
 }: SiteFooterProps) {
   const t = getFooterStrings(locale);
-  const flat = flattenNavigation(navigation);
+  const groups = buildFooterLinks(navigation);
 
-  const practiceLinks = PRACTICE_SLUGS.flatMap((slug) => {
-    const node = flat.find((n) => n.slug === slug);
-    return node ? [{ label: node.navLabel || node.title, href: node.href }] : [];
-  });
-
-  const patientsLinks = [
-    { label: t.bookOnlineLabel, href: appointmentHref },
-    ...PATIENTS_SLUGS.flatMap((slug) => {
-      const node = flat.find((n) => n.slug === slug);
-      return node ? [{ label: node.navLabel || node.title, href: node.href }] : [];
-    }),
-  ];
+  const practiceLinks = groups.services;
+  const patientsLinks = [{ label: t.bookOnlineLabel, href: appointmentHref }, ...groups.patients];
+  const companyLinks = groups.company;
 
   const year = new Date().getFullYear();
   const footerAddress = resolveFooterAddressLine(settings, locale);
@@ -71,27 +60,11 @@ export function SiteFooter({
           </div>
 
           <div className={styles["nav-cols"]}>
-            <div className={styles["link-col"]}>
-              <p className={styles["col-label"]}>{t.practiceLabel}</p>
-              <ul className={styles["link-list"]}>
-                {practiceLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href}>{link.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className={styles["link-col"]}>
-              <p className={styles["col-label"]}>{t.patientsLabel}</p>
-              <ul className={styles["link-list"]}>
-                {patientsLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href}>{link.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <FooterColumn label={t.practiceLabel} links={practiceLinks} />
+            <FooterColumn label={t.patientsLabel} links={patientsLinks} />
+            {companyLinks.length > 0 ? (
+              <FooterColumn label={t.companyLabel} links={companyLinks} />
+            ) : null}
           </div>
 
           <div className={styles["contact-col"]}>
@@ -139,8 +112,25 @@ export function SiteFooter({
   );
 }
 
-function flattenNavigation(nodes: NavigationNodeDTO[]): NavigationNodeDTO[] {
-  return nodes.flatMap((node) => [node, ...flattenNavigation(node.children)]);
+function FooterColumn({
+  label,
+  links,
+}: {
+  label: string;
+  links: { label: string; href: string }[];
+}) {
+  return (
+    <details className={styles["link-col"]}>
+      <summary className={styles["col-label"]}>{label}</summary>
+      <ul className={styles["link-list"]}>
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link href={link.href}>{link.label}</Link>
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
 }
 
 function SocialIcon({ name }: { name: string }) {

@@ -13,7 +13,7 @@ type ContentTypeSchema = {
   attributes: Record<string, unknown>;
 };
 
-const SEED_VERSION = 'v7';
+const SEED_VERSION = 'v8';
 const MARKER_KEY = 'hierarchy_ui_seed_version';
 
 type EditRow = Array<{ name: string; size: number }>;
@@ -159,6 +159,16 @@ const pageConfig: CMConfigOverride = {
       edit: { label: 'Menu order', description: 'Sort order among siblings (lower = first)', placeholder: '', visible: true, editable: true },
       list: { label: 'Order', searchable: false, sortable: true },
     },
+    footerCategory: {
+      edit: {
+        label: 'Footer category',
+        description: 'Which footer column this page appears in (services, patients, company)',
+        placeholder: '',
+        visible: true,
+        editable: true,
+      },
+      list: { label: 'Footer', searchable: true, sortable: true },
+    },
     articleAuthor: {
       edit: { label: 'Article author', description: '', placeholder: '', visible: true, editable: true },
       list: { label: 'Author', searchable: true, sortable: true },
@@ -191,12 +201,13 @@ const pageConfig: CMConfigOverride = {
     // Page admin configuration across Strapi upgrades, so keep the list view
     // to scalar/boolean fields and leave hierarchy browsing to the edit view
     // and Navigation plugin.
-    list: ['title', 'slug', 'pageType', 'layoutVariant', 'menuIndex', 'isFolder', 'hideFromMenu'],
+    list: ['title', 'slug', 'pageType', 'layoutVariant', 'menuIndex', 'isFolder', 'hideFromMenu', 'footerCategory'],
     edit: [
       [{ name: 'title', size: 6 }, { name: 'menuTitle', size: 6 }],
       [{ name: 'slug', size: 12 }],
       [{ name: 'pageType', size: 6 }, { name: 'layoutVariant', size: 6 }],
       [{ name: 'parentPage', size: 6 }, { name: 'menuIndex', size: 3 }, { name: 'isFolder', size: 3 }],
+      [{ name: 'footerCategory', size: 6 }, { name: 'hideFromMenu', size: 3 }, { name: 'externalUrl', size: 3 }],
       [{ name: 'hideFromMenu', size: 3 }, { name: 'externalUrl', size: 9 }],
       [{ name: 'childrenPages', size: 6 }, { name: 'tags', size: 6 }],
       [{ name: 'relatedPages', size: 6 }, { name: 'excerpt', size: 6 }],

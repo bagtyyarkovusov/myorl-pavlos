@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { sanitizeCmsHtml } from "./html";
+import { sanitizeCmsHtml, stripTags } from "./html";
 
 describe("sanitizeCmsHtml", () => {
   afterEach(() => {
@@ -46,5 +46,24 @@ describe("sanitizeCmsHtml", () => {
     expect(sanitizeCmsHtml('<a href="https://example.com" target="_blank">link</a>')).toContain(
       'rel="noopener noreferrer"',
     );
+  });
+});
+
+describe("stripTags", () => {
+  it("removes HTML tags and collapses whitespace", () => {
+    expect(stripTags("<p>Hello</p> <br> world")).toBe("Hello world");
+  });
+
+  it("handles nested tags", () => {
+    expect(stripTags('<div><a href="#">Link</a> <strong>text</strong></div>')).toBe("Link text");
+  });
+
+  it("returns empty string for empty input", () => {
+    expect(stripTags("")).toBe("");
+  });
+
+  it("returns empty string for null/undefined", () => {
+    expect(stripTags(null as unknown as string)).toBe("");
+    expect(stripTags(undefined as unknown as string)).toBe("");
   });
 });

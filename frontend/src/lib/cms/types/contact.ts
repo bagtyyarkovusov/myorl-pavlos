@@ -8,6 +8,8 @@ export type ContactClinicDTO = {
   addressHtml: string;
   phone?: string | null;
   email?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 export type StrapiContactDetail = {

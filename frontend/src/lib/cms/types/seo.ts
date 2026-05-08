@@ -8,6 +8,7 @@ export type SeoDTO = {
   metaDescription?: string | null;
   canonicalUrl?: string | null;
   ogImage?: MediaDTO | null;
+  schemaType?: string | null;
   robotsNoindex: boolean;
   robotsNofollow: boolean;
   sitemapExclude: boolean;
@@ -27,6 +28,7 @@ export type StrapiSeo = {
   metaDescription?: string | null;
   canonicalUrl?: string | null;
   ogImage?: StrapiMedia | null;
+  schemaType?: string | null;
   robotsNoindex?: boolean | null;
   robotsNofollow?: boolean | null;
   sitemapExclude?: boolean | null;

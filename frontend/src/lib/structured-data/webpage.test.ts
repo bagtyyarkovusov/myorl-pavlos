@@ -58,4 +58,22 @@ describe("buildWebPageLd", () => {
     const ld = buildWebPageLd(page, "https://myorl.example.com");
     expect(ld.url).toBe("https://myorl.example.com/el");
   });
+
+  it("uses schemaType override when provided in seo", () => {
+    const page: PageDTO = {
+      ...basePage,
+      seo: { ...basePage.seo, schemaType: "MedicalWebPage" },
+    };
+    const ld = buildWebPageLd(page, "https://myorl.example.com");
+    expect(ld["@type"]).toBe("MedicalWebPage");
+  });
+
+  it("defaults to WebPage when schemaType is not provided", () => {
+    const page: PageDTO = {
+      ...basePage,
+      seo: { ...basePage.seo, schemaType: null },
+    };
+    const ld = buildWebPageLd(page, "https://myorl.example.com");
+    expect(ld["@type"]).toBe("WebPage");
+  });
 });

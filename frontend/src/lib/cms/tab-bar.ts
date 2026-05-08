@@ -20,6 +20,7 @@ export function getTabBarNodes(
   if (page.isFolder) {
     const self = findNodeByDocumentId(tree, page.documentId);
     if (!self || self.children.length === 0) return null;
+    if (self.children.length <= 1) return null;
     return [self, ...self.children];
   }
 
@@ -28,6 +29,7 @@ export function getTabBarNodes(
 
   const parent = findNodeByDocumentId(tree, parentDocId);
   if (!parent) return null;
+  if (parent.children.length <= 1) return null;
 
   return [parent, ...parent.children];
 }

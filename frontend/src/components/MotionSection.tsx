@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type Transition } from "framer-motion";
-import { useEffect, useState, type ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 
 type MotionSectionProps = {
   id?: string;
@@ -28,6 +28,13 @@ export function MotionSection({
   children,
 }: MotionSectionProps) {
   const shouldAnimate = useDesktopMotion();
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
+  const animate = mounted && shouldAnimate;
 
   return (
     <motion.section
@@ -37,11 +44,11 @@ export function MotionSection({
       aria-labelledby={ariaLabelledBy}
       data-background={background}
       data-density={density}
-      data-motion={shouldAnimate ? "desktop" : "instant"}
-      initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
-      whileInView={shouldAnimate ? { opacity: 1, y: 0 } : undefined}
-      viewport={shouldAnimate ? { once: true } : undefined}
-      transition={shouldAnimate ? TRANSITION : { duration: 0 }}
+      data-motion={animate ? "desktop" : "instant"}
+      initial={animate ? { opacity: 0, y: 20 } : false}
+      whileInView={animate ? { opacity: 1, y: 0 } : undefined}
+      viewport={animate ? { once: true } : undefined}
+      transition={animate ? TRANSITION : { duration: 0 }}
     >
       {children}
     </motion.section>
@@ -49,29 +56,34 @@ export function MotionSection({
 }
 
 function useDesktopMotion(): boolean {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    if (typeof window.matchMedia !== "function") {
-      return;
-    }
-
-    const desktop = window.matchMedia("(min-width: 768px)");
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    const update = () => {
-      setEnabled(desktop.matches && !reduced.matches);
-    };
-
-    update();
-    desktop.addEventListener("change", update);
-    reduced.addEventListener("change", update);
-
-    return () => {
-      desktop.removeEventListener("change", update);
-      reduced.removeEventListener("change", update);
-    };
-  }, []);
+  const enabled = useSyncExternalStore(subscribeMotion, getMotionSnapshot, () => false);
 
   return enabled;
+}
+
+function getMotionSnapshot(): boolean {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
+  return (
+    window.matchMedia("(min-width: 768px)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+function subscribeMotion(callback: () => void): () => void {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return () => {};
+  }
+
+  const desktop = window.matchMedia("(min-width: 768px)");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  desktop.addEventListener("change", callback);
+  reduced.addEventListener("change", callback);
+
+  return () => {
+    desktop.removeEventListener("change", callback);
+    reduced.removeEventListener("change", callback);
+  };
 }

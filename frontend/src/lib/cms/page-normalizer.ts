@@ -120,6 +120,7 @@ export function toSeoDTO(seo: StrapiSeo | null | undefined): SeoDTO {
     metaDescription: seo?.metaDescription ?? null,
     canonicalUrl: seo?.canonicalUrl ?? null,
     ogImage: toMediaDTO(seo?.ogImage),
+    schemaType: seo?.schemaType ?? null,
     robotsNoindex: Boolean(seo?.robotsNoindex),
     robotsNofollow: Boolean(seo?.robotsNofollow),
     sitemapExclude: Boolean(seo?.sitemapExclude),

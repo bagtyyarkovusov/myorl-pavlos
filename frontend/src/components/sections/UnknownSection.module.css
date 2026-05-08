@@ -1,0 +1,22 @@
+.unknown-section {
+  padding: 2rem 0;
+  opacity: 0.6;
+}
+
+.unknown-label {
+  font-weight: 600;
+}
+
+.unknown-hint {
+  color: var(--stone, #5a6b7e);
+}
+
+.unknown-badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  background: var(--bone, #f6f8fb);
+  border-radius: 2px;
+  color: var(--stone, #5a6b7e);
+}

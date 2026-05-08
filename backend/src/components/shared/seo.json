@@ -49,6 +49,10 @@
         "yearly",
         "never"
       ]
+    },
+    "schemaType": {
+      "type": "string",
+      "description": "Override the top-level structured data @type (e.g. MedicalWebPage, AboutPage). Defaults to WebPage."
     }
   }
 }

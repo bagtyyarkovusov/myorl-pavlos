@@ -104,7 +104,8 @@ describe("HomeSectionRenderer", () => {
     } as SectionDTO);
 
     const { container } = render(<HomeSectionRenderer section={section} locale="el" />);
-    expect(container.querySelector("details")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Q1" })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByText("A1")).toBeDefined();
     expect(container.querySelectorAll("section")).toHaveLength(1);
   });
 

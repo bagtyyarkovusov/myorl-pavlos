@@ -44,10 +44,8 @@ jobs:
 
       - name: Deploy Backend
         run: |
-          railway link --project "$RAILWAY_PROJECT_ID" --environment "$RAILWAY_ENVIRONMENT"
+          railway link --project "$RAILWAY_PROJECT_ID" --environment "$RAILWAY_ENVIRONMENT" --service "$RAILWAY_BACKEND_SERVICE"
           railway up . \
-            --service "$RAILWAY_BACKEND_SERVICE" \
-            --environment "$RAILWAY_ENVIRONMENT" \
             --detach \
             --ci \
             --message "Deploy backend from GitHub Actions ${GITHUB_SHA}"
@@ -88,10 +86,8 @@ jobs:
 
       - name: Deploy Frontend
         run: |
-          railway link --project "$RAILWAY_PROJECT_ID" --environment "$RAILWAY_ENVIRONMENT"
+          railway link --project "$RAILWAY_PROJECT_ID" --environment "$RAILWAY_ENVIRONMENT" --service "$RAILWAY_FRONTEND_SERVICE"
           railway up . \
-            --service "$RAILWAY_FRONTEND_SERVICE" \
-            --environment "$RAILWAY_ENVIRONMENT" \
             --detach \
             --ci \
             --message "Deploy frontend from GitHub Actions ${GITHUB_SHA}"

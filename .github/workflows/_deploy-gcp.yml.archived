@@ -1,0 +1,57 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  # Re-run CI checks before deploying (gate)
+  ci-gate:
+    name: CI Gate
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: Deploy to GCP VM
+    needs: ci-gate
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/gcp_deploy
+          chmod 600 ~/.ssh/gcp_deploy
+          cat >> ~/.ssh/config <<EOF
+          Host gcp-prod
+            HostName ${{ secrets.GCP_VM_IP }}
+            User ${{ secrets.GCP_VM_USER }}
+            IdentityFile ~/.ssh/gcp_deploy
+            StrictHostKeyChecking no
+            UserKnownHostsFile /dev/null
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Deploy via SSH
+        run: |
+          ssh gcp-prod "cd ${{ secrets.GCP_PROJECT_PATH }} && bash scripts/deploy.sh"
+
+      - name: Smoke test public endpoints
+        run: |
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          echo "Testing ${SITE_URL} ..."
+          curl -sf --retry 5 --retry-delay 5 "${SITE_URL}" || exit 1
+          echo "Testing ${SITE_URL}/api ..."
+          curl -sf --retry 5 --retry-delay 5 "${SITE_URL}/api" || exit 1
+          echo "Smoke tests passed."
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Production deployment failed! Check logs above."

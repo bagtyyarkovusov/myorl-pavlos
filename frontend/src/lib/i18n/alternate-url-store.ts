@@ -30,3 +30,7 @@ export function subscribe(fn: Listener): () => void {
 export function getSnapshot(): AlternateUrlMap {
   return _alternateUrls;
 }
+
+export function getServerSnapshot(): AlternateUrlMap {
+  return {};
+}

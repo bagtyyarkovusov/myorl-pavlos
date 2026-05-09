@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
-import { subscribe, getSnapshot } from "@/lib/i18n/alternate-url-store";
+import { subscribe, getSnapshot, getServerSnapshot } from "@/lib/i18n/alternate-url-store";
 import type { Locale } from "@/lib/cms/types";
 
 import styles from "../../SiteHeaderClient.module.css";
@@ -38,7 +38,7 @@ type LocaleSwitcherProps = {
 
 export function LocaleSwitcher({ locale, languageLabel }: LocaleSwitcherProps) {
   const pathname = usePathname();
-  const alternateUrls = useSyncExternalStore(subscribe, getSnapshot);
+  const alternateUrls = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const locales = Object.keys(LOCALE_LABELS) as Locale[];
 
   return (

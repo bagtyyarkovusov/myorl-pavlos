@@ -1,10 +1,10 @@
-import type { FooterCategory, PageType, LayoutVariant, RenderMode } from "@gemini/shared-types";
+import type { PageType, LayoutVariant, RenderMode, FooterCategory } from "@gemini/shared-types";
 import type { Locale, MediaDTO, PageRefDTO } from "./common";
 import type { SectionDTO, StrapiSectionRaw } from "./sections";
 import type { SeoDTO, StrapiMedia, StrapiSeo } from "./seo";
 import type { TagDTO, StrapiTag } from "./tag";
 
-export type { FooterCategory, PageType, LayoutVariant, RenderMode };
+export type { PageType, LayoutVariant, RenderMode, FooterCategory };
 
 export type PageDTO = {
   documentId: string;
@@ -26,7 +26,7 @@ export type PageDTO = {
   isFolder: boolean;
   hideFromMenu: boolean;
   menuIndex: number;
-  footerCategory?: FooterCategory | null;
+  footerCategory?: FooterCategory;
   parentPage?: PageRefDTO | null;
   tags: TagDTO[];
   infoBlockBottom?: string | null;
@@ -52,7 +52,7 @@ export interface NavigationInput {
   excerpt?: string | null;
   featuredImage?: MediaDTO | null;
   imageCenter?: MediaDTO | null;
-  footerCategory?: FooterCategory | null;
+  footerCategory?: FooterCategory;
 }
 
 export type NavigationNodeDTO = NavigationInput & {

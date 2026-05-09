@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getSitemapPages } from "@/lib/cms/cms-api";
 import { hrefForPage } from "@/lib/cms/dto";
-import { getCmsConfig } from "@/lib/cms/env";
+import { getSiteUrl } from "@/lib/cms/site-url";
 import type { PageDTO } from "@/lib/cms/types";
 
 function buildAlternates(
@@ -19,7 +19,7 @@ function buildAlternates(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { siteUrl } = getCmsConfig();
+  const siteUrl = getSiteUrl();
 
   try {
     const pages = await getSitemapPages();

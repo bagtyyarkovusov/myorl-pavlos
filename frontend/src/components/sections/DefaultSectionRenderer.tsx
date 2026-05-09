@@ -189,10 +189,7 @@ export function DefaultSectionRenderer({
       );
     default:
       return (
-        <UnknownSection
-          section={section as { __component: string; heading?: string | null }}
-          sectionIndex={sectionIndex}
-        />
+        <UnknownSection section={section as { __component: string; heading?: string | null }} />
       );
   }
 }

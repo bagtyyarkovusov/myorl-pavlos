@@ -175,6 +175,34 @@ describe("toPageDTO", () => {
     expect(dto.seoTitle).toBe("About Us | Clinic");
   });
 
+  it("defaults seo.schemaType to null when unset", () => {
+    const dto = toPageDTO(contentPayload);
+    expect(dto.seo.schemaType).toBeNull();
+  });
+
+  it("preserves seo.schemaType override when set", () => {
+    const payload = {
+      ...contentPayload,
+      seo: { ...contentPayload.seo, schemaType: "MedicalWebPage" as const },
+    };
+    const dto = toPageDTO(payload);
+    expect(dto.seo.schemaType).toBe("MedicalWebPage");
+  });
+
+  it("normalizes null/undefined schemaType to null", () => {
+    const nullPayload = {
+      ...contentPayload,
+      seo: { ...contentPayload.seo, schemaType: null },
+    };
+    expect(toPageDTO(nullPayload).seo.schemaType).toBeNull();
+
+    const undefinedPayload = {
+      ...contentPayload,
+      seo: { ...contentPayload.seo, schemaType: undefined },
+    };
+    expect(toPageDTO(undefinedPayload).seo.schemaType).toBeNull();
+  });
+
   it("maps tags correctly", () => {
     const dto = toPageDTO(contentPayload);
 
@@ -290,6 +318,25 @@ describe("pageResponseSchema", () => {
   it("rejects a response with invalid locale", () => {
     const badFixture = {
       data: [{ documentId: "x", locale: "fr", slug: "x", title: "X" }],
+      meta: {},
+    };
+
+    expect(() => pageResponseSchema.parse(badFixture)).toThrow();
+  });
+
+  it("rejects an invalid seo.schemaType value", () => {
+    const badFixture = {
+      data: [
+        {
+          documentId: "x",
+          locale: "el",
+          slug: "x",
+          title: "X",
+          pageType: "content",
+          layoutVariant: "standard",
+          seo: { schemaType: "NotARealSchemaType" },
+        },
+      ],
       meta: {},
     };
 

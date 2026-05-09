@@ -1,9 +1,9 @@
 // import type { Core } from '@strapi/strapi';
 import { seedContentManagerConfig } from './bootstrap/content-manager-config';
+import { seedDesignSystemAudit } from './bootstrap/seed-design-system-audit';
 import { migrateSections } from './bootstrap/migrate-sections';
 import { seedNavigationConfig } from './bootstrap/navigation-config';
 import { seedNavigationPermissions } from './bootstrap/navigation-permissions';
-import { seedAuditPage } from './bootstrap/seed-audit-page';
 
 function shouldBootstrapMigrationToken(): boolean {
   const raw = process.env.STRAPI_ENABLE_MIGRATION_TOKEN_BOOTSTRAP?.trim().toLowerCase();
@@ -81,9 +81,9 @@ export default {
     }
 
     try {
-      await seedAuditPage(strapi);
+      await seedDesignSystemAudit(strapi);
     } catch (err) {
-      strapi.log.error('Failed to seed design-system-audit page', err);
+      strapi.log.error('Failed to seed design-system audit reference page', err);
     }
   },
 };

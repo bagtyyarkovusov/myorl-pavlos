@@ -22,6 +22,45 @@ describe("SectionRenderer", () => {
     expect(wrapper).toBeTruthy();
   });
 
+  it("dispatches an unknown __component to UnknownSection placeholder", () => {
+    const section = makeSection({
+      __component: "sections.brand-new" as never,
+      heading: "Coming Soon",
+    });
+    const { container } = render(<SectionRenderer section={section} index={0} />);
+
+    expect(container.querySelector('[data-section="unknown"]')).toBeTruthy();
+    expect(screen.getByText("Coming Soon")).toBeTruthy();
+    expect(screen.getByText("Content updating")).toBeTruthy();
+  });
+
+  it("preserves alternation cadence when an unknown section appears in a sequence", () => {
+    const known = makeSection({
+      __component: "sections.faq",
+      heading: "Known",
+      items: [],
+    } as SectionDTO);
+    const unknown = makeSection({
+      __component: "sections.brand-new" as never,
+      heading: "Unknown",
+    });
+
+    const { container: even } = render(<SectionRenderer section={unknown} index={0} />);
+    const { container: odd } = render(<SectionRenderer section={unknown} index={1} />);
+    const { container: knownOdd } = render(<SectionRenderer section={known} index={1} />);
+
+    // Unknown sections share the same alternation contract as known ones —
+    // index parity drives background, not the component type.
+    expect(even.querySelector("section")?.getAttribute("data-background")).toBe(
+      knownOdd.querySelector("section")?.getAttribute("data-background") === "white"
+        ? "bone"
+        : "white",
+    );
+    expect(odd.querySelector("section")?.getAttribute("data-background")).toBe(
+      knownOdd.querySelector("section")?.getAttribute("data-background"),
+    );
+  });
+
   it("renders a promo-slider section", () => {
     const section = makeSection({
       __component: "sections.promo-slider",

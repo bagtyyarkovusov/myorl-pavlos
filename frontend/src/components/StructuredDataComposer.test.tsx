@@ -1,12 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
 
 import { StructuredDataComposer } from "./StructuredDataComposer";
 import type { PageDTO } from "@/lib/cms/types";
 
-vi.mock("@/lib/cms/env", () => ({
-  getCmsConfig: () => ({ siteUrl: "https://myorl.gr" }),
-}));
+const SITE_URL = "https://myorl.gr";
 
 function makePage(overrides: Partial<PageDTO> = {}): PageDTO {
   return {
@@ -54,13 +52,13 @@ function makePage(overrides: Partial<PageDTO> = {}): PageDTO {
 
 describe("StructuredDataComposer", () => {
   it("emits exactly one script tag", () => {
-    const { container } = render(<StructuredDataComposer page={makePage()} />);
+    const { container } = render(<StructuredDataComposer page={makePage()} siteUrl={SITE_URL} />);
     const scripts = container.querySelectorAll('script[type="application/ld+json"]');
     expect(scripts).toHaveLength(1);
   });
 
   it("wraps all schemas in a single @graph array", () => {
-    const { container } = render(<StructuredDataComposer page={makePage()} />);
+    const { container } = render(<StructuredDataComposer page={makePage()} siteUrl={SITE_URL} />);
     const script = container.querySelector('script[type="application/ld+json"]')!;
     const ld = JSON.parse(script.textContent ?? "{}");
 
@@ -73,7 +71,7 @@ describe("StructuredDataComposer", () => {
 
   it("emits BreadcrumbList for non-home pages inside @graph", () => {
     const page = makePage({ slug: "yperesies" });
-    const { container } = render(<StructuredDataComposer page={page} />);
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
     const script = container.querySelector('script[type="application/ld+json"]')!;
     const ld = JSON.parse(script.textContent ?? "{}");
     const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
@@ -82,7 +80,7 @@ describe("StructuredDataComposer", () => {
 
   it("does not emit BreadcrumbList for home page", () => {
     const page = makePage({ slug: "index" });
-    const { container } = render(<StructuredDataComposer page={page} />);
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
     const script = container.querySelector('script[type="application/ld+json"]')!;
     const ld = JSON.parse(script.textContent ?? "{}");
     const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
@@ -101,7 +99,7 @@ describe("StructuredDataComposer", () => {
       ] as PageDTO["sections"],
     });
 
-    const { container } = render(<StructuredDataComposer page={page} />);
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
     const script = container.querySelector('script[type="application/ld+json"]')!;
     const ld = JSON.parse(script.textContent ?? "{}");
     const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
@@ -124,7 +122,7 @@ describe("StructuredDataComposer", () => {
       },
     });
 
-    const { container } = render(<StructuredDataComposer page={page} />);
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
     const script = container.querySelector('script[type="application/ld+json"]')!;
     const ld = JSON.parse(script.textContent ?? "{}");
     const webPage = ld["@graph"].find(

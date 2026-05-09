@@ -326,6 +326,65 @@ describe("HomePage", () => {
     expect(screen.queryByText("Follow Us")).toBeNull();
   });
 
+  it("dispatches an unknown section type through UnknownSection placeholder on home", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.brand-new" as never,
+          heading: "MARK_UNKNOWN",
+          intro: null,
+        } as unknown as PageDTO["sections"][number],
+      ],
+    };
+
+    const { container } = render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/appointment"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+
+    expect(container.querySelector('[data-section="unknown"]')).toBeTruthy();
+    expect(screen.getByText("MARK_UNKNOWN")).toBeTruthy();
+  });
+
+  it("renders without injected MenuAccessGrid when no promo-slider section is present", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.advantages",
+          heading: "MARK_ADVANTAGES",
+          intro: null,
+          items: [],
+        },
+      ],
+    };
+    const navigation = [makeNav("yperesies", "Services", 1)];
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/appointment"
+        navigation={navigation}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+
+    // MenuAccessGrid renders the navigation entries; without promo-slider the
+    // injection contract says the grid is suppressed.
+    expect(screen.queryByRole("link", { name: /Services/ })).toBeNull();
+  });
+
   it("renders six primary menu links after the first promo slider", () => {
     const homePage: PageDTO = {
       ...BASE_PAGE,
@@ -373,183 +432,117 @@ describe("HomePage", () => {
 });
 
 describe("ContactPage", () => {
-  it("renders contact from sections array", () => {
-    const contactPage: PageDTO = {
-      ...BASE_PAGE,
-      pageType: "contact",
-      layoutVariant: "contact",
-      title: "Contact Us",
-      sections: [
-        {
-          __component: "sections.contact" as const,
-          heading: "Get in Touch",
-          intro: null,
-          details: [{ type: "phone", valueHtml: "<p>+30 210 123 4567</p>" }],
-          clinics: [
-            { name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null },
-          ],
-        },
-      ],
-    };
+  const SETTINGS_WITH_ADDRESS: GlobalSettingsDTO = {
+    locale: "el",
+    address: "Λεωφ. Αλεξάνδρας 201, Αθήνα",
+    phoneTel: "+302106427000",
+    phoneDisplay: "+30 210 6427 000",
+    hours: null,
+  };
 
-    render(<ContactPage page={contactPage} />);
+  const CONTACT_PAGE: PageDTO = {
+    ...BASE_PAGE,
+    pageType: "contact",
+    layoutVariant: "contact",
+    title: "Contact Us",
+    sections: [
+      {
+        __component: "sections.contact" as const,
+        heading: "Get in Touch",
+        intro: null,
+        details: [
+          { type: "phone", valueHtml: "<p>+30 210 123 4567</p>" },
+          { type: "email", valueHtml: "<p>info@clinic.com</p>" },
+        ],
+        clinics: [
+          { name: "Athens", addressHtml: "<p>123 Main St</p>", phone: "+30 210 000", email: null },
+          {
+            name: "Thessaloniki",
+            addressHtml: "<p>456 Other St</p>",
+            phone: null,
+            email: "th@cl.com",
+          },
+        ],
+      },
+    ],
+  };
+
+  it("renders the section details inside the contact details column", () => {
+    render(<ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />);
     expect(screen.getByText("+30 210 123 4567")).toBeDefined();
+    expect(screen.getByText("info@clinic.com")).toBeDefined();
   });
 
-  it("renders contact details in a featured band", () => {
-    const contactPage: PageDTO = {
-      ...BASE_PAGE,
-      pageType: "contact",
-      layoutVariant: "contact",
-      title: "Contact Us",
-      sections: [
-        {
-          __component: "sections.contact" as const,
-          heading: "Get in Touch",
-          intro: null,
-          details: [
-            { type: "phone", valueHtml: "<p>+30 210 123 4567</p>" },
-            { type: "email", valueHtml: "<p>info@clinic.com</p>" },
-          ],
-          clinics: [
-            { name: "Athens", addressHtml: "<p>123 Main St</p>", phone: null, email: null },
-          ],
-        },
-      ],
-    };
-
-    const { container } = render(<ContactPage page={contactPage} />);
-    const band = container.querySelector("[data-contact-band]");
-    expect(band).toBeTruthy();
-  });
-
-  it("renders clinics in a separate grid section", () => {
-    const contactPage: PageDTO = {
-      ...BASE_PAGE,
-      pageType: "contact",
-      layoutVariant: "contact",
-      title: "Contact Us",
-      sections: [
-        {
-          __component: "sections.contact" as const,
-          heading: "Get in Touch",
-          intro: null,
-          details: [{ type: "phone", valueHtml: "<p>+30 210 123 4567</p>" }],
-          clinics: [
-            {
-              name: "Athens",
-              addressHtml: "<p>123 Main St</p>",
-              phone: "+30 210 000",
-              email: null,
-            },
-            {
-              name: "Thessaloniki",
-              addressHtml: "<p>456 Other St</p>",
-              phone: null,
-              email: "th@cl.com",
-            },
-          ],
-        },
-      ],
-    };
-
-    render(<ContactPage page={contactPage} />);
-    expect(screen.getByText("Athens")).toBeDefined();
-    expect(screen.getByText("Thessaloniki")).toBeDefined();
-  });
-
-  it("renders a split-screen clinic map with linked contact actions and synchronized pins", () => {
-    const contactPage: PageDTO = {
-      ...BASE_PAGE,
-      pageType: "contact",
-      layoutVariant: "contact",
-      title: "Contact Us",
-      sections: [
-        {
-          __component: "sections.contact" as const,
-          heading: "Get in Touch",
-          intro: null,
-          details: [{ type: "hours", valueHtml: "<p>Mon-Fri 09:00-21:00</p>" }],
-          clinics: [
-            {
-              name: "Athens",
-              addressHtml: "<p>123 Main St</p>",
-              phone: "+30 210 000",
-              email: "athens@clinic.com",
-              latitude: 37.9838,
-              longitude: 23.7275,
-            },
-            {
-              name: "Piraeus",
-              addressHtml: "<p>456 Port St</p>",
-              phone: "+30 210 111",
-              email: "piraeus@clinic.com",
-              latitude: 37.942,
-              longitude: 23.646,
-            },
-          ],
-        },
-      ],
-    };
-
-    const { container } = render(<ContactPage page={contactPage} />);
-
-    expect(container.querySelector("[data-contact-split='true']")).toBeTruthy();
-    expect(screen.getAllByRole("link", { name: "+30 210 000" })[0]!).toHaveAttribute(
-      "href",
-      "tel:+30210000",
+  it("renders the split-screen layout wrapper", () => {
+    const { container } = render(
+      <ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />,
     );
-    expect(screen.getAllByRole("link", { name: "athens@clinic.com" })[0]!).toHaveAttribute(
-      "href",
-      "mailto:athens@clinic.com",
-    );
-
-    // Map should be stable — centered on first mappable clinic, not changing on selection
-    expect(container.querySelector("[data-map-center='37.9838,23.7275']")).toBeTruthy();
-
-    // iframe should carry a secure referrer policy
-    const iframe = container.querySelector('iframe[title="Clinic map"]') as HTMLIFrameElement;
-    expect(iframe).toBeTruthy();
-    expect(iframe.getAttribute("referrerpolicy")).toBe("no-referrer-when-downgrade");
-
-    // No fake pins overlay
-    expect(container.querySelector("[aria-label='Clinic map pins']")).toBeNull();
-
-    // Selecting a clinic updates the panel highlight, not the map
-    const piraeusPanel = screen.getByRole("region", { name: "Piraeus details" });
-    fireEvent.click(screen.getByRole("button", { name: "Piraeus" }));
-    expect(piraeusPanel).toHaveAttribute("data-active", "true");
-    expect(screen.getByText("Map")).toBeDefined();
+    expect(container.querySelector("[data-contact-split]")).toBeTruthy();
   });
 
-  it("hides the map when clinics do not have coordinates", () => {
-    const contactPage: PageDTO = {
-      ...BASE_PAGE,
-      pageType: "contact",
-      layoutVariant: "contact",
-      title: "Contact Us",
-      sections: [
-        {
-          __component: "sections.contact" as const,
-          heading: "Get in Touch",
-          intro: null,
-          details: [],
-          clinics: [
-            {
-              name: "Athens",
-              addressHtml: "<p>123 Main St</p>",
-              phone: "+30 210 000",
-              email: null,
-            },
-          ],
-        },
-      ],
-    };
+  it("renders each clinic as an accordion toggle", () => {
+    render(<ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />);
+    expect(screen.getByRole("button", { name: /Athens/ })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    expect(screen.getByRole("button", { name: /Thessaloniki/ })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+  });
 
-    render(<ContactPage page={contactPage} />);
+  it("expands a clinic panel on click without changing the map iframe src", () => {
+    const { container } = render(
+      <ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />,
+    );
+    const map = container.querySelector("iframe[data-contact-map]");
+    expect(map).toBeTruthy();
+    const initialSrc = map!.getAttribute("src");
 
-    expect(screen.queryByRole("region", { name: "Clinic map" })).toBeNull();
-    expect(screen.getByRole("region", { name: "Athens details" })).toBeDefined();
+    const athensToggle = screen.getByRole("button", { name: /Athens/ });
+    fireEvent.click(athensToggle);
+    expect(athensToggle).toHaveAttribute("aria-expanded", "true");
+
+    const thessToggle = screen.getByRole("button", { name: /Thessaloniki/ });
+    fireEvent.click(thessToggle);
+
+    // Map iframe src is mounted once and never changes on selection (PRD #103).
+    expect(map!.getAttribute("src")).toBe(initialSrc);
+  });
+
+  it("renders phone/email links with tel: and mailto: schemes inside the expanded panel", () => {
+    render(<ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Athens/ }));
+    const phoneLink = screen.getByRole("link", { name: "+30 210 000" });
+    expect(phoneLink).toHaveAttribute("href", "tel:+30210000");
+
+    fireEvent.click(screen.getByRole("button", { name: /Thessaloniki/ }));
+    const emailLink = screen.getByRole("link", { name: "th@cl.com" });
+    expect(emailLink).toHaveAttribute("href", "mailto:th@cl.com");
+  });
+
+  it("hides the map block when global settings has no address", () => {
+    const { container } = render(
+      <ContactPage
+        page={CONTACT_PAGE}
+        globalSettings={{ ...SETTINGS_WITH_ADDRESS, address: null }}
+      />,
+    );
+    expect(container.querySelector("iframe[data-contact-map]")).toBeNull();
+  });
+
+  it("hides the map block when no globalSettings prop is passed", () => {
+    const { container } = render(<ContactPage page={CONTACT_PAGE} />);
+    expect(container.querySelector("iframe[data-contact-map]")).toBeNull();
+  });
+
+  it("does not render any <StructuredData> tags (composer is the single entry point)", () => {
+    const { container } = render(
+      <ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />,
+    );
+    expect(container.querySelector('script[type="application/ld+json"]')).toBeNull();
   });
 });
 

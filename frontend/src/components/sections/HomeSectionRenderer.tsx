@@ -1,18 +1,22 @@
-import { CmsHtml } from "@/components/CmsHtml";
-import { PageSection } from "@/components/PageSection";
-const HomePromoCarousel = dynamic(() =>
-  import("@/components/home/HomePromoCarousel").then((m) => m.HomePromoCarousel),
-);
 import dynamic from "next/dynamic";
 
-const HomeVideoTheater = dynamic(() =>
-  import("@/components/home/HomeVideoTheater").then((m) => m.HomeVideoTheater),
-);
+import { CmsHtml } from "@/components/CmsHtml";
+import { PageSection } from "@/components/PageSection";
 import { getHomeStrings } from "@/lib/i18n/home";
 import type { Locale, SectionDTO } from "@/lib/cms/types";
 
 import { DefaultSectionRenderer } from "./DefaultSectionRenderer";
 import styles from "./SectionRenderer.module.css";
+
+const HomePromoCarousel = dynamic(() =>
+  import("@/components/home/HomePromoCarousel").then((m) => m.HomePromoCarousel),
+);
+const HomeVideoTheater = dynamic(() =>
+  import("@/components/home/HomeVideoTheater").then((m) => m.HomeVideoTheater),
+);
+const HomeAdvantagesSection = dynamic(() =>
+  import("@/components/home/HomeAdvantagesSection").then((m) => m.HomeAdvantagesSection),
+);
 
 export function HomeSectionRenderer({
   section,
@@ -37,7 +41,7 @@ export function HomeSectionRenderer({
         />
       );
     case "sections.advantages":
-      return null;
+      return <HomeAdvantagesSection section={section} />;
     case "sections.linked-resources":
       return (
         <PageSection
@@ -49,7 +53,12 @@ export function HomeSectionRenderer({
           density="theater"
           width="contained"
         >
-          <DefaultSectionRenderer section={section} density="theater" locale={locale} />
+          <DefaultSectionRenderer
+            section={section}
+            density="theater"
+            locale={locale}
+            sectionIndex={index}
+          />
         </PageSection>
       );
     case "sections.video":
@@ -122,7 +131,12 @@ export function HomeSectionRenderer({
           sectionIndex={index}
           density="theater"
         >
-          <DefaultSectionRenderer section={section} density="theater" locale={locale} />
+          <DefaultSectionRenderer
+            section={section}
+            density="theater"
+            locale={locale}
+            sectionIndex={index}
+          />
         </PageSection>
       );
   }

@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { StructuredDataComposer } from "@/components/StructuredDataComposer";
+import { getSiteUrl } from "@/lib/cms/site-url";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
@@ -60,6 +61,7 @@ export function PageRenderer({
   const jsonLd = (
     <StructuredDataComposer
       page={page}
+      siteUrl={getSiteUrl()}
       globalSettings={globalSettings}
       homeTestimonials={homeTestimonials}
     />
@@ -137,7 +139,7 @@ export function PageRenderer({
     return (
       <>
         {jsonLd}
-        <ContactPage page={page} navigation={navigation} />
+        <ContactPage page={page} navigation={navigation} globalSettings={globalSettings} />
       </>
     );
   }

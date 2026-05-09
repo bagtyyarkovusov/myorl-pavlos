@@ -55,20 +55,21 @@ export function MotionSection({
   );
 }
 
-function useDesktopMotion(): boolean {
-  const enabled = useSyncExternalStore(subscribeMotion, getMotionSnapshot, () => false);
+// PRD #103 final motion contract: scroll-triggered fade-up runs only above the
+// desktop breakpoint (>1024px). Below that, sections render to final state
+// immediately. `prefers-reduced-motion: reduce` disables motion at any width.
+const DESKTOP_QUERY = "(min-width: 1024px)";
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
 
-  return enabled;
+function useDesktopMotion(): boolean {
+  return useSyncExternalStore(subscribeMotion, getMotionSnapshot, () => false);
 }
 
 function getMotionSnapshot(): boolean {
   if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
     return false;
   }
-  return (
-    window.matchMedia("(min-width: 768px)").matches &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
+  return window.matchMedia(DESKTOP_QUERY).matches && !window.matchMedia(REDUCED_QUERY).matches;
 }
 
 function subscribeMotion(callback: () => void): () => void {
@@ -76,8 +77,8 @@ function subscribeMotion(callback: () => void): () => void {
     return () => {};
   }
 
-  const desktop = window.matchMedia("(min-width: 768px)");
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const desktop = window.matchMedia(DESKTOP_QUERY);
+  const reduced = window.matchMedia(REDUCED_QUERY);
 
   desktop.addEventListener("change", callback);
   reduced.addEventListener("change", callback);

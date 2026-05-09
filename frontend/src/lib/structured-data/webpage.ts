@@ -13,6 +13,10 @@ export type WebPageLd = {
 /**
  * Builds a Schema.org `WebPage` JSON-LD object for a given page.
  *
+ * Honors `page.seo.schemaType` when set, swapping the `@type` to a WebPage
+ * subtype such as `MedicalWebPage`, `AboutPage`, `ContactPage`, or
+ * `CollectionPage`. Defaults to `WebPage` when no override is provided.
+ *
  * @param page - The current page DTO.
  * @param siteUrl - The canonical site URL.
  * @returns A `WebPage` JSON-LD object.
@@ -20,7 +24,7 @@ export type WebPageLd = {
 export function buildWebPageLd(page: PageDTO, siteUrl: string): WebPageLd {
   const result: WebPageLd = {
     "@context": "https://schema.org",
-    "@type": page.seo.schemaType || "WebPage",
+    "@type": page.seo.schemaType ?? "WebPage",
     name: page.title,
     url: new URL(hrefForPage(page), siteUrl).toString(),
     inLanguage: page.locale,

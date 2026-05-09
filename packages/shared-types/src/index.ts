@@ -60,6 +60,13 @@ export type SitemapChangeFrequency =
   | "yearly"
   | "never";
 
+export type PageSchemaType =
+  | "WebPage"
+  | "MedicalWebPage"
+  | "AboutPage"
+  | "ContactPage"
+  | "CollectionPage";
+
 // RenderMode is frontend-native and not derived from Strapi schema
 export type RenderMode = "cms" | "frontend-native";
 

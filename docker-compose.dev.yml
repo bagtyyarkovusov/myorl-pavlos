@@ -56,18 +56,16 @@ services:
       - ./backend/public/uploads:/app/public/uploads
 
   nextjs:
-    image: node:24-slim
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile.dev
     container_name: gemini-nextjs-dev
     working_dir: /app
     command:
       - sh
       - -c
       - |
-        if [ ! -f /tmp/.deps-installed ]; then
-          apt-get update && apt-get install -y libc6-dev && rm -rf /var/lib/apt/lists/*
-          touch /tmp/.deps-installed
-        fi
-        if [ ! -f node_modules/.package-lock.json ]; then
+        if [ ! -f node_modules/.package-lock.json ] || [ package-lock.json -nt node_modules/.package-lock.json ]; then
           npm install
         fi
         exec npm run dev

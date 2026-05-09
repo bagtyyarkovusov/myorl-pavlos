@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSyncExternalStore } from "react";
 
+import { subscribe, getSnapshot } from "@/lib/i18n/alternate-url-store";
 import type { Locale } from "@/lib/cms/types";
 
 import styles from "../../SiteHeaderClient.module.css";
@@ -13,13 +15,20 @@ const LOCALE_LABELS: Record<Locale, string> = {
 };
 
 function switchLocaleInPath(pathname: string, targetLocale: Locale): string {
-  // Replace the locale prefix (e.g. /el/foo → /ru/foo, /el → /ru)
   const localePattern = /^\/(el|ru)(\/|$)/;
   if (localePattern.test(pathname)) {
     return pathname.replace(localePattern, `/${targetLocale}$2`);
   }
-  // Fallback: prepend locale if path doesn't have one
   return `/${targetLocale}${pathname}`;
+}
+
+function resolveLocaleHref(
+  pathname: string | null,
+  targetLocale: Locale,
+  alternateUrls: Partial<Record<Locale, string>>,
+): string {
+  if (alternateUrls[targetLocale]) return alternateUrls[targetLocale];
+  return switchLocaleInPath(pathname ?? "/", targetLocale);
 }
 
 type LocaleSwitcherProps = {
@@ -29,6 +38,7 @@ type LocaleSwitcherProps = {
 
 export function LocaleSwitcher({ locale, languageLabel }: LocaleSwitcherProps) {
   const pathname = usePathname();
+  const alternateUrls = useSyncExternalStore(subscribe, getSnapshot);
   const locales = Object.keys(LOCALE_LABELS) as Locale[];
 
   return (
@@ -36,7 +46,7 @@ export function LocaleSwitcher({ locale, languageLabel }: LocaleSwitcherProps) {
       {locales.map((item) => (
         <Link
           key={item}
-          href={switchLocaleInPath(pathname ?? "/", item)}
+          href={resolveLocaleHref(pathname, item, alternateUrls)}
           hrefLang={item}
           aria-current={item === locale ? "page" : undefined}
         >

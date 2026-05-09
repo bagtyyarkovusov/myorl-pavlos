@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { act } from "react";
 
 import { LocaleSwitcher } from "./LocaleSwitcher";
 
@@ -9,9 +10,24 @@ vi.mock("next/navigation", () => ({
   usePathname: () => mockUsePathname(),
 }));
 
+let storeListeners: Array<() => void> = [];
+let storeSnapshot: Record<string, string> = {};
+
+vi.mock("@/lib/i18n/alternate-url-store", () => ({
+  subscribe: (fn: () => void) => {
+    storeListeners.push(fn);
+    return () => {
+      storeListeners = storeListeners.filter((l) => l !== fn);
+    };
+  },
+  getSnapshot: () => storeSnapshot,
+}));
+
 describe("LocaleSwitcher", () => {
   beforeEach(() => {
     mockUsePathname.mockReturnValue("/el");
+    storeListeners = [];
+    storeSnapshot = {};
   });
 
   afterEach(() => {
@@ -80,6 +96,44 @@ describe("LocaleSwitcher", () => {
 
     const ruLink = screen.getByText("RU").closest("a");
     expect(ruLink?.getAttribute("href")).toBe("/ru/blog/my-article");
+  });
+
+  it("uses alternate URL when available for target locale", () => {
+    storeSnapshot = { el: "/el/about", ru: "/ru/o-nas" };
+    mockUsePathname.mockReturnValue("/el/about");
+    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
+
+    const grLink = screen.getByText("GR").closest("a");
+    expect(grLink?.getAttribute("href")).toBe("/el/about");
+
+    const ruLink = screen.getByText("RU").closest("a");
+    expect(ruLink?.getAttribute("href")).toBe("/ru/o-nas");
+  });
+
+  it("falls back to pathname swap when alternate URL not available", () => {
+    storeSnapshot = {};
+    mockUsePathname.mockReturnValue("/el/services");
+    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
+
+    const ruLink = screen.getByText("RU").closest("a");
+    expect(ruLink?.getAttribute("href")).toBe("/ru/services");
+  });
+
+  it("reacts to alternate URL store updates", () => {
+    storeSnapshot = {};
+    mockUsePathname.mockReturnValue("/el/about");
+    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
+
+    const ruLinkBefore = screen.getByText("RU").closest("a");
+    expect(ruLinkBefore?.getAttribute("href")).toBe("/ru/about");
+
+    act(() => {
+      storeSnapshot = { el: "/el/about", ru: "/ru/o-nas" };
+      for (const fn of storeListeners) fn();
+    });
+
+    const ruLinkAfter = screen.getByText("RU").closest("a");
+    expect(ruLinkAfter?.getAttribute("href")).toBe("/ru/o-nas");
   });
 
   it("sets aria-label on container", () => {

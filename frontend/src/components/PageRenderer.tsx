@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { AlternateUrlsSetter } from "@/components/AlternateUrlsSetter";
 import { StructuredDataComposer } from "@/components/StructuredDataComposer";
 import { getSiteUrl } from "@/lib/cms/site-url";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
@@ -67,87 +68,47 @@ export function PageRenderer({
     />
   );
 
+  let layout: React.ReactNode;
+
   if (page.renderMode === "frontend-native") {
-    return (
-      <>
-        {jsonLd}
-        <FrontendNativePage page={page} testimonialsPage={testimonialsPage} />
-      </>
-    );
-  }
-
-  if (page.layoutVariant === "appointment-form") {
-    return (
-      <>
-        {jsonLd}
-        <AppointmentPage page={page} navigation={navigation} />
-      </>
-    );
-  }
-
-  if (DIRECTORY_LAYOUT_VARIANTS.has(page.layoutVariant)) {
-    return (
-      <>
-        {jsonLd}
-        <SectionIndexPage page={page} navigation={navigation} />
-      </>
-    );
-  }
-
-  if (page.pageType === "home") {
-    return (
-      <>
-        {jsonLd}
-        <HomePage
-          page={page}
-          appointmentHref={appointmentHref ?? `/${page.locale}`}
-          navigation={navigation}
-          settings={
-            globalSettings ?? {
-              locale: page.locale,
-              address: null,
-              phoneTel: null,
-              phoneDisplay: null,
-              hours: null,
-            }
+    layout = <FrontendNativePage page={page} testimonialsPage={testimonialsPage} />;
+  } else if (page.layoutVariant === "appointment-form") {
+    layout = <AppointmentPage page={page} navigation={navigation} />;
+  } else if (DIRECTORY_LAYOUT_VARIANTS.has(page.layoutVariant)) {
+    layout = <SectionIndexPage page={page} navigation={navigation} />;
+  } else if (page.pageType === "home") {
+    layout = (
+      <HomePage
+        page={page}
+        appointmentHref={appointmentHref ?? `/${page.locale}`}
+        navigation={navigation}
+        settings={
+          globalSettings ?? {
+            locale: page.locale,
+            address: null,
+            phoneTel: null,
+            phoneDisplay: null,
+            hours: null,
           }
-          homeTestimonials={homeTestimonials}
-        />
-      </>
+        }
+        homeTestimonials={homeTestimonials}
+      />
     );
-  }
-
-  if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
-    return (
-      <>
-        {jsonLd}
-        <QuestionListPage page={page} navigation={navigation} />
-      </>
-    );
-  }
-
-  if (page.pageType === "gallery") {
-    return (
-      <>
-        {jsonLd}
-        <GalleryPage page={page} navigation={navigation} />
-      </>
-    );
-  }
-
-  if (page.pageType === "contact") {
-    return (
-      <>
-        {jsonLd}
-        <ContactPage page={page} navigation={navigation} globalSettings={globalSettings} />
-      </>
-    );
+  } else if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
+    layout = <QuestionListPage page={page} navigation={navigation} />;
+  } else if (page.pageType === "gallery") {
+    layout = <GalleryPage page={page} navigation={navigation} />;
+  } else if (page.pageType === "contact") {
+    layout = <ContactPage page={page} navigation={navigation} globalSettings={globalSettings} />;
+  } else {
+    layout = <StandardPage page={page} navigation={navigation} />;
   }
 
   return (
     <>
+      <AlternateUrlsSetter urls={page.alternateUrls} />
       {jsonLd}
-      <StandardPage page={page} navigation={navigation} />
+      {layout}
     </>
   );
 }

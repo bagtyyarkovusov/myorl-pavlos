@@ -26,7 +26,8 @@ Single-context repo:
 │   ├── ADR-007-hybrid-tailwind-css-modules-styling-boundary.md
 │   └── ADR-008-dev-postgres-is-canonical-strapi-state-store.md
 ├── frontend/
-└── docs/agents/
+├── docs/agents/
+└── docs/architecture/  ← architecture deep-dives and analysis
 ```
 
 ## Use the glossary's vocabulary

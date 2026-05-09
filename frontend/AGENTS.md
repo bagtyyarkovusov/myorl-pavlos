@@ -1,6 +1,6 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-For project-wide context (GitNexus `gemini-export`, ADRs, Obsidian MOCs), see the repo [`.cursor/rules/`](../.cursor/rules) and [docs/obsidian/](../docs/obsidian/).
+For project-wide context (ADRs, Obsidian MOCs), see the repo [`.cursor/rules/`](../.cursor/rules) and [docs/obsidian/](../docs/obsidian/).
 
 # This is NOT the Next.js you know
 

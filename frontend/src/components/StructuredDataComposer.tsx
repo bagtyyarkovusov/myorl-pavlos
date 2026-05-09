@@ -8,6 +8,7 @@ import { getPageSchemas } from "@/lib/structured-data/seo-schema-map";
 import { buildVideoObjectLd } from "@/lib/structured-data/video-object";
 import { buildWebPageLd } from "@/lib/structured-data/webpage";
 import { buildWebSiteLd } from "@/lib/structured-data/website";
+import { buildContactRenderModel } from "@/lib/contact/contact-render-model";
 import type { GlobalSettingsDTO, PageDTO, SectionDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
@@ -33,7 +34,8 @@ function firstClinicPhone(sections: SectionDTO[]): string | undefined {
     (s): s is Extract<SectionDTO, { __component: "sections.contact" }> =>
       s.__component === "sections.contact",
   );
-  return contact?.clinics.find((c) => c.phone)?.phone ?? undefined;
+  if (!contact) return undefined;
+  return buildContactRenderModel(contact).primaryPhoneAction?.label ?? undefined;
 }
 
 /**

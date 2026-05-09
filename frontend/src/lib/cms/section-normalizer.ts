@@ -1,5 +1,6 @@
 import { normalizeOptionalText, optionalString } from "./text";
 import type { ContactClinicDTO, StrapiClinic, StrapiContactDetail } from "./types";
+import { isSupportedSectionComponent } from "@/lib/sections/section-definitions";
 import type {
   AccordionItemDTO,
   AdvantageItemDTO,
@@ -7,7 +8,6 @@ import type {
   GalleryItemDTO,
   LinkedResourceItemDTO,
   PromoSlideItemDTO,
-  SectionComponent,
   SectionDTO,
   SocialLinkItemDTO,
   StrapiSectionRaw,
@@ -16,19 +16,6 @@ import type {
 } from "./types/sections";
 import { toMediaDTO, toPageRefDTO } from "./page-normalizer";
 import type { StrapiMedia, StrapiPageRef, StrapiPagePayload } from "./types";
-
-const KNOWN_SECTION_COMPONENTS: ReadonlySet<SectionComponent> = new Set<SectionComponent>([
-  "sections.promo-slider",
-  "sections.linked-resources",
-  "sections.social-links",
-  "sections.video",
-  "sections.advantages",
-  "sections.accordion",
-  "sections.faq",
-  "sections.tabs",
-  "sections.gallery",
-  "sections.contact",
-]);
 
 /**
  * Transforms raw Strapi `pageSections` into a typed {@link SectionDTO} array.
@@ -69,11 +56,22 @@ export function toContactClinicDTO(clinic: StrapiClinic): ContactClinicDTO | nul
 }
 
 function toSectionDTO(raw: StrapiSectionRaw): SectionDTO | null {
-  const component = (raw.__component ?? "") as SectionComponent;
-  if (!KNOWN_SECTION_COMPONENTS.has(component)) return null;
-
+  const rawComponent = normalizeOptionalText(raw.__component);
   const heading = normalizeOptionalText(raw.heading);
   const intro = normalizeOptionalText(raw.intro);
+
+  if (!rawComponent) return null;
+
+  if (!isSupportedSectionComponent(rawComponent)) {
+    return {
+      __component: "sections.unknown",
+      originalComponent: rawComponent,
+      heading,
+      intro,
+    };
+  }
+
+  const component = rawComponent;
 
   switch (component) {
     case "sections.promo-slider":

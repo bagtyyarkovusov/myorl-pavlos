@@ -1,13 +1,5 @@
 import type { PageDTO, PageType, SectionDTO } from "@/lib/cms/types";
-
-const SECTION_SCHEMA_MAP: Record<string, string[]> = {
-  "sections.faq": ["FAQPage"],
-  "sections.video": ["VideoObject"],
-  "sections.gallery": ["ImageObject"],
-  // Contact sections contribute both ContactPoint AND MedicalBusiness so
-  // search engines can render rich call/visit affordances.
-  "sections.contact": ["ContactPoint", "MedicalBusiness"],
-};
+import { getSectionSchemaTypes } from "@/lib/sections/section-definitions";
 
 const PAGE_TYPE_SCHEMA_MAP: Partial<Record<PageType, string[]>> = {
   // The homepage always advertises the practice itself, even when the editor
@@ -24,11 +16,9 @@ export function getSectionSchemas(sections: SectionDTO[]): string[] {
   const schemaSet = new Set<string>();
 
   for (const section of sections) {
-    const schemas = SECTION_SCHEMA_MAP[section.__component];
-    if (schemas) {
-      for (const schema of schemas) {
-        schemaSet.add(schema);
-      }
+    const schemas = getSectionSchemaTypes(section.__component);
+    for (const schema of schemas) {
+      schemaSet.add(schema);
     }
   }
 

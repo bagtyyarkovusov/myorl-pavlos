@@ -58,6 +58,12 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
+.close:focus-visible {
+  outline: 3px solid var(--color-bone-50);
+  outline-offset: 3px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
 .nav {
   position: absolute;
   top: 50%;
@@ -77,6 +83,12 @@
 }
 
 .nav:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav:focus-visible {
+  outline: 3px solid var(--color-bone-50);
+  outline-offset: 3px;
   background: rgba(255, 255, 255, 0.3);
 }
 

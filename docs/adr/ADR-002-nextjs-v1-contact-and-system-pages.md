@@ -1,7 +1,7 @@
 # ADR-002: Launch Contact Pages Without Maps and Handle Core System Pages in Next.js
 
 ## Status
-Accepted
+Accepted; superseded in part by ADR-009
 
 ## Context
 The current contact content is strong enough for static cards, but clinic coordinates are still absent from the live semantic data. At the same time, `404`, `search-results`, and `sitemap` are layout behaviors that fit better as frontend-native routes than as CMS-authored page bodies.
@@ -32,3 +32,6 @@ For v1:
 
 ## Trade-offs
 This keeps the launch focused on stable content delivery instead of waiting for optional feature parity.
+
+## Superseded Scope
+ADR-009 supersedes the contact-map portion of this decision. Contact pages now intentionally support clinic maps when enough clinic location data exists. The system-page and social-link decisions in this ADR remain accepted.

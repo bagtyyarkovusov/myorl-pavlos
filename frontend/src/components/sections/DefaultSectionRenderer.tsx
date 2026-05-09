@@ -187,6 +187,8 @@ export function DefaultSectionRenderer({
           ))}
         </SectionGrid>
       );
+    case "sections.unknown":
+      return <UnknownSection section={section} />;
     default:
       return (
         <UnknownSection section={section as { __component: string; heading?: string | null }} />

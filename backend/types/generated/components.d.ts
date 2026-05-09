@@ -294,7 +294,15 @@ export interface SharedSeo extends Struct.ComponentSchema {
     robotsNofollow: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
     robotsNoindex: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    schemaType: Schema.Attribute.String;
+    schemaType: Schema.Attribute.Enumeration<
+      [
+        'WebPage',
+        'MedicalWebPage',
+        'AboutPage',
+        'ContactPage',
+        'CollectionPage',
+      ]
+    >;
     sitemapChangeFrequency: Schema.Attribute.Enumeration<
       ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never']
     >;

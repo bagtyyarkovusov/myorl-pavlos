@@ -163,12 +163,16 @@ describe("toSemanticSections", () => {
     expect(result).toEqual([]);
   });
 
-  it("rejects unknown __component", () => {
+  it("normalises unknown __component into sections.unknown", () => {
     const section = makeSectionRaw("blocks.unknown");
     const page = makePage({ pageType: "home", pageSections: [section] });
 
     const result = mod.toSemanticSections(page);
-    expect(result).toHaveLength(0);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      __component: "sections.unknown",
+      originalComponent: "blocks.unknown",
+    });
   });
 
   it("rejects null __component", () => {

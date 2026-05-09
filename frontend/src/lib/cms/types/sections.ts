@@ -81,6 +81,10 @@ export type SectionDTO =
       __component: "sections.contact";
       details: ContactDetailDTO[];
       clinics: ContactClinicDTO[];
+    })
+  | (SectionBase & {
+      __component: "sections.unknown";
+      originalComponent: string;
     });
 
 export type StrapiSectionRaw = {

@@ -21,6 +21,7 @@ vi.mock("@/lib/i18n/alternate-url-store", () => ({
     };
   },
   getSnapshot: () => storeSnapshot,
+  getServerSnapshot: () => ({}),
 }));
 
 describe("LocaleSwitcher", () => {

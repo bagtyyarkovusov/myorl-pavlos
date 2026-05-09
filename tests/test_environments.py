@@ -69,8 +69,9 @@ class TestComposeMatchesManifest(unittest.TestCase):
             pg["container_name"], env["container"], f"{name}: container_name drift"
         )
 
-        # Volume — match against the postgres data mount, not the whole list
-        data_mount = next(v for v in pg["volumes"] if "/var/lib/postgresql/data" in v)
+        # Volume — match against the postgres data mount, not the whole list.
+        # postgres:18 stores versioned data directories under /var/lib/postgresql.
+        data_mount = next(v for v in pg["volumes"] if "/var/lib/postgresql" in v)
         self.assertIn(env["volume"], data_mount, f"{name}: data volume drift")
 
         # Host port: present for dev/rehearsal, absent for prod

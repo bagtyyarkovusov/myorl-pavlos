@@ -81,6 +81,22 @@ docker exec gemini-strapi-dev npx strapi transfer \
 | `Schema mismatch` | Content-type structure differs | Strapi versions must match; run `npm run build` on both |
 | Missing media files | Files transferred but not linked | Re-run with `--only files`; check `public/uploads/` on prod |
 
+## Railway-Specific Notes
+
+The production Strapi backend on Railway uses a **persistent volume** for uploads
+(`strapi-backend-volume` mounted at `/app/public/uploads`). When promoting content:
+
+- **Database + files together:** Use `strapi transfer` with both content and files.
+- **Files only:** If you only added images in dev, use `--only files`.
+- **Railway is source of truth:** After the initial migration, always pull uploads
+  FROM Railway TO local (not the reverse) unless you are intentionally replacing
+  production media. See [railway-deployment.md](./railway-deployment.md) for the
+  `railway-pull-uploads-to-local.sh` script.
+
+> **Important:** `strapi transfer` requires both instances to be running and
+> `TRANSFER_TOKEN_SALT` to match. For bulk one-time syncs, the volume + SCP
+> approach in `railway-deployment.md` is often more reliable.
+
 ## Alternative: Full Database Cutover
 
 When you need to replace the entire production database (new deploy, major migration), use the [production-cutover.md](./production-cutover.md) runbook instead.

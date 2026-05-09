@@ -17,6 +17,12 @@ COPY ./frontend .
 COPY ./packages/shared-types /packages/shared-types
 COPY ./data/manifests /data/manifests
 
+ARG STRAPI_URL
+ARG NEXT_PUBLIC_SITE_URL
+ARG STRAPI_TOKEN
+ENV STRAPI_URL=$STRAPI_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV STRAPI_TOKEN=$STRAPI_TOKEN
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
@@ -42,5 +48,6 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]

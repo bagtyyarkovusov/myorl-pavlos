@@ -3,10 +3,17 @@ name: Deploy to Railway
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
-  group: railway-deploy
+  group: railway-production
   cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  RAILWAY_ENVIRONMENT: production
 
 jobs:
   ci-gate:
@@ -18,34 +25,44 @@ jobs:
     needs: ci-gate
     runs-on: ubuntu-latest
     environment: production
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_BACKEND_SERVICE: ${{ secrets.RAILWAY_BACKEND_SERVICE }}
+      STRAPI_PUBLIC_URL: ${{ secrets.STRAPI_PUBLIC_URL }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
+      - name: Validate deployment secrets
+        run: |
+          test -n "$RAILWAY_TOKEN"
+          test -n "$RAILWAY_BACKEND_SERVICE"
+          test -n "$STRAPI_PUBLIC_URL"
+
       - name: Deploy Backend
         run: |
           railway up . \
-            --service ${{ secrets.RAILWAY_BACKEND_SERVICE }} \
+            --service "$RAILWAY_BACKEND_SERVICE" \
+            --environment "$RAILWAY_ENVIRONMENT" \
             --detach \
-            --ci
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+            --ci \
+            --message "Deploy backend from GitHub Actions ${GITHUB_SHA}"
 
       - name: Wait for Backend Health
         run: |
-          BACKEND_URL="${{ secrets.STRAPI_PUBLIC_URL }}"
-          echo "Polling ${BACKEND_URL}/admin ..."
+          BACKEND_URL="$STRAPI_PUBLIC_URL"
+          echo "Polling ${BACKEND_URL}/admin/init ..."
           for i in $(seq 1 36); do
-            if curl -sf "${BACKEND_URL}/admin" >/dev/null 2>&1; then
-              echo "✓ Backend is healthy"
+            if curl -fsS "${BACKEND_URL}/admin/init" >/dev/null 2>&1; then
+              echo "Backend is healthy"
               exit 0
             fi
-            echo "Attempt $i/36 — not ready yet, waiting 10s..."
+            echo "Attempt $i/36: not ready yet, waiting 10s..."
             sleep 10
           done
-          echo "✗ Backend health check timed out after 6 minutes"
+          echo "Backend health check timed out after 6 minutes"
           exit 1
 
   deploy-frontend:
@@ -53,39 +70,53 @@ jobs:
     needs: deploy-backend
     runs-on: ubuntu-latest
     environment: production
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_FRONTEND_SERVICE: ${{ secrets.RAILWAY_FRONTEND_SERVICE }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
+      - name: Validate deployment secrets
+        run: |
+          test -n "$RAILWAY_TOKEN"
+          test -n "$RAILWAY_FRONTEND_SERVICE"
+
       - name: Deploy Frontend
         run: |
           railway up . \
-            --service ${{ secrets.RAILWAY_FRONTEND_SERVICE }} \
+            --service "$RAILWAY_FRONTEND_SERVICE" \
+            --environment "$RAILWAY_ENVIRONMENT" \
             --detach \
-            --ci
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+            --ci \
+            --message "Deploy frontend from GitHub Actions ${GITHUB_SHA}"
 
   smoke-test:
     name: Production Smoke Test
     needs: deploy-frontend
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+      STRAPI_PUBLIC_URL: ${{ secrets.STRAPI_PUBLIC_URL }}
     steps:
       - name: Test Frontend
         run: |
-          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          SITE_URL="$NEXT_PUBLIC_SITE_URL"
           echo "Smoke testing ${SITE_URL} ..."
-          curl -sf --retry 8 --retry-delay 8 "${SITE_URL}" || exit 1
-          echo "✓ Frontend reachable"
+          curl -fsS --retry 8 --retry-delay 8 "${SITE_URL}" >/dev/null
+          curl -fsS --retry 8 --retry-delay 8 "${SITE_URL}/el" >/dev/null
+          curl -fsS --retry 8 --retry-delay 8 "${SITE_URL}/api/health" | tee /tmp/frontend-health.json
+          grep -q '"ok":true' /tmp/frontend-health.json
+          echo "Frontend reachable and CMS health is OK"
 
       - name: Test API
         run: |
-          API_URL="${{ secrets.STRAPI_PUBLIC_URL }}"
+          API_URL="$STRAPI_PUBLIC_URL"
           echo "Smoke testing ${API_URL}/admin ..."
-          curl -sf --retry 8 --retry-delay 8 "${API_URL}/admin" || exit 1
-          echo "✓ API reachable"
+          curl -fsS --retry 8 --retry-delay 8 "${API_URL}/admin/init" >/dev/null
+          echo "API reachable"
 
       - name: Notify on Failure
         if: failure()

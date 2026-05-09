@@ -23,11 +23,11 @@ afterEach(() => {
 });
 
 describe("GET /api/health", () => {
-  it("returns ok when Strapi global endpoint responds", async () => {
+  it("returns ok when the Strapi pages endpoint responds", async () => {
     const { GET } = await import("./route");
 
     mockFetch.mockResolvedValueOnce(
-      mockStrapiResponse({ data: { id: 1, documentId: "global-1" } }),
+      mockStrapiResponse({ data: [{ id: 1, documentId: "page-1" }] }),
     );
 
     const response = await GET();

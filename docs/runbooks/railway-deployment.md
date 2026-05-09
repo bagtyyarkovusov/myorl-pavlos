@@ -83,8 +83,11 @@ railway add
 
 **Link config file (Phase 4)**
 ```
-strapi-backend  → Settings → Config as Code File → /railway.toml
-nextjs-frontend → Settings → Config as Code File → /railway.toml
+strapi-backend  → Settings → Root Directory → /backend
+strapi-backend  → Settings → Config as Code File → /backend/railway.toml
+
+nextjs-frontend → Settings → Root Directory → /
+nextjs-frontend → Settings → Config as Code File → /frontend/railway.toml
 ```
 
 **Generate domains (Phase 7)**
@@ -125,6 +128,81 @@ railway up . --service nextjs-frontend --detach --ci
 
 ---
 
+## Production Database & Uploads as Source of Truth
+
+After the initial Docker-to-Railway promotion, **Railway Postgres is the canonical
+database** and **Railway Volume (`strapi-backend-volume`) is the canonical uploads
+store**. Local Docker databases and `backend/public/uploads/` should be treated as
+disposable mirrors.
+
+### Uploads Volume Setup
+
+The `strapi-backend` service uses a Railway Volume mounted at `/app/public/uploads`
+to persist media files across deployments. Without this volume, every redeploy would
+wipe all uploaded images.
+
+**Current volume:**
+```
+strapi-backend-volume → /app/public/uploads · 4.9 GB max
+```
+
+To check volume status:
+```bash
+railway volume list
+```
+
+### Refresh local uploads from production
+
+To pull the current production uploads into your local dev environment:
+
+```bash
+./scripts/railway-pull-uploads-to-local.sh
+```
+
+This script:
+1. Creates a compressed archive of the Railway uploads volume
+2. Downloads it in chunks (Railway SSH bandwidth is ~150 KB/s)
+3. Extracts into `backend/public/uploads/`
+4. Verifies file counts match
+
+> **Warning:** This overwrites your local `backend/public/uploads/`. The script
+> creates a timestamped backup in `backups/` first.
+
+### Initial volume population (one-time)
+
+If you ever need to re-populate the volume (e.g., after creating a new one):
+
+```bash
+# From repo root — creates chunked tarball and uploads via SCP
+./scripts/railway-push-uploads-to-prod.sh
+```
+
+Or manually:
+```bash
+tar czf uploads.tar.gz -C backend/public uploads
+# Then SCP to Railway and extract into /app/public/uploads/
+```
+
+To refresh local Docker from production:
+
+```bash
+npm run db:pull:prod -- --force
+```
+
+This command:
+
+1. Takes a best-effort backup of the current local Docker database in `backups/`.
+2. Removes the local `pgdata_dev` Docker volume.
+3. Starts the local Postgres container.
+4. Dumps Railway Postgres using a Postgres 18 client.
+5. Restores that dump into local Docker Postgres.
+
+Do not push local Docker data back to production after this cutover unless you
+are intentionally doing a full production replacement with a fresh backup and a
+rollback plan.
+
+---
+
 ## Environment Variables
 
 ### Push `.env` changes to Railway
@@ -156,28 +234,34 @@ railway variables --service strapi-backend --set "DATABASE_PASSWORD=\${{Postgres
 
 ## `railway.toml` — Config as Code
 
-The repo root `railway.toml` defines both services in one file:
+Each app service has its own Railway config file:
 
 ```toml
-[project]
-name = "gemini-export"
-
-[services.strapi-backend]
-root = "./backend"
+# backend/railway.toml
+[build]
 builder = "DOCKERFILE"
-dockerfilePath = "./backend/Dockerfile"
+dockerfilePath = "Dockerfile"
 watchPatterns = ["/backend/**"]
+
+[deploy]
 healthcheckPath = "/admin"
 healthcheckTimeout = 120
 
-[services.nextjs-frontend]
-root = "."
+# frontend/railway.toml
+[build]
 builder = "DOCKERFILE"
-dockerfilePath = "./frontend/Dockerfile"
+dockerfilePath = "frontend/Dockerfile"
 watchPatterns = ["/frontend/**", "/packages/shared-types/**", "/data/manifests/**"]
+
+[deploy]
 healthcheckPath = "/"
 healthcheckTimeout = 120
 ```
+
+The frontend service root directory must stay at the repository root (`/`).
+Its Dockerfile copies `./frontend`, `./packages/shared-types`, and
+`./data/manifests`, so setting the Railway root directory to `/frontend` hides
+required build inputs and changes how `dockerfilePath` is resolved.
 
 ### What this gives you
 
@@ -293,7 +377,8 @@ railway redeploy --service strapi-backend --yes
    ```bash
    railway connect postgres < export.sql
    ```
-3. **Copy uploads** — use Strapi Media Library export/import, or attach a Railway Volume.
+3. **Copy uploads** — attach a Railway Volume to `strapi-backend` at `/app/public/uploads`,
+   then SCP or `strapi transfer --only files` to populate it.
 4. **Update DNS** to point at Railway domains.
 5. **Delete VM** after verifying everything works.
 

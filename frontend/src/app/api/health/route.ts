@@ -4,9 +4,12 @@ import { getCmsConfig } from "@/lib/cms/env";
 
 export async function GET() {
   const config = getCmsConfig();
+  const healthUrl = new URL(`${config.strapiUrl}/api/pages`);
+  healthUrl.searchParams.set("pagination[pageSize]", "1");
+  healthUrl.searchParams.set("fields[0]", "documentId");
 
   try {
-    const response = await fetch(`${config.strapiUrl}/api/global`, {
+    const response = await fetch(healthUrl, {
       headers: {
         Accept: "application/json",
         ...(config.strapiToken ? { Authorization: `Bearer ${config.strapiToken}` } : {}),

@@ -1,13 +1,16 @@
 # =============================================================================
 # Railway Config-as-Code — Next.js Frontend Service
 # =============================================================================
-# Place in frontend/ directory. Link in Railway dashboard via absolute path:
+# Place in frontend/ directory. Link in Railway dashboard via absolute path.
+# Keep the service Root Directory at the repository root because the Dockerfile
+# copies shared monorepo inputs from /frontend, /packages, and /data.
+#   Service Settings → Root Directory → /
 #   Service Settings → Config as Code File → /frontend/railway.toml
 # =============================================================================
 
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+dockerfilePath = "frontend/Dockerfile"
 watchPatterns = ["/frontend/**", "/packages/shared-types/**", "/data/manifests/**"]
 
 [deploy]

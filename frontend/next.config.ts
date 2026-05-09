@@ -57,6 +57,14 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 86400,
     dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
     remotePatterns: [
+      // Allow any Railway app subdomain (production + preview deploys)
+      {
+        protocol: "https",
+        hostname: "*.up.railway.app",
+        pathname: "/uploads/**",
+        search: "",
+      },
+      // Also allow the explicit STRAPI_URL when available at build time
       {
         protocol: process.env.STRAPI_URL?.startsWith("https") ? "https" : "http",
         hostname: ((): string => {

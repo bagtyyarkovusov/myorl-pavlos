@@ -144,6 +144,9 @@ WHERE locale = 'el'
 
 ## Capture
 
+The Docker rehearsal database runs the same PostgreSQL major version as Railway
+production. Recreate disposable rehearsal volumes after a major version bump.
+
 The orchestrator automatically saves the report to
 `artifacts/reports/postgres_rehearsal_explain_report.json`.
 

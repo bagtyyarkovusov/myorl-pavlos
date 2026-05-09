@@ -1,13 +1,13 @@
 services:
   postgres:
-    image: postgres:16
+    image: postgres:18
     container_name: gemini-pg-prod
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-strapi}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-strapi}
     volumes:
-      - pgdata-prod:/var/lib/postgresql/data
+      - pgdata-prod:/var/lib/postgresql
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-strapi} -d ${POSTGRES_DB:-strapi}"]

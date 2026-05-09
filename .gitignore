@@ -25,6 +25,7 @@ backend/.tmp/
 backend/.cache/
 
 # Generated migration / audit artefacts (re-run scripts to reproduce)
+backups/
 slug_parity_report.json
 slug_migration_errors.json
 nav_sync_report.json
@@ -73,5 +74,4 @@ test-results/
 playwright-report/
 playwright/.cache/
 .claude/worktrees/
-
 

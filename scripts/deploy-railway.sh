@@ -35,13 +35,18 @@ if ! railway status &> /dev/null; then
 fi
 
 log "Deploying strapi-backend..."
-railway up . --service strapi-backend --detach --ci
+railway up . \
+  --service strapi-backend \
+  --environment production \
+  --detach \
+  --ci \
+  --message "Deploy backend from local script"
 
 log "Waiting for backend health..."
 BACKEND_URL=$(railway variables --service strapi-backend --json 2>/dev/null | grep -o '"RAILWAY_PUBLIC_DOMAIN":"[^"]*"' | cut -d'"' -f4 || true)
 if [[ -n "$BACKEND_URL" ]]; then
   for i in $(seq 1 30); do
-    if curl -sf "https://${BACKEND_URL}/admin" >/dev/null 2>&1; then
+    if curl -sf "https://${BACKEND_URL}/admin/init" >/dev/null 2>&1; then
       log "Backend is healthy"
       break
     fi
@@ -53,6 +58,23 @@ else
 fi
 
 log "Deploying nextjs-frontend..."
-railway up . --service nextjs-frontend --detach --ci
+railway up . \
+  --service nextjs-frontend \
+  --environment production \
+  --detach \
+  --ci \
+  --message "Deploy frontend from local script"
+
+FRONTEND_URL=$(railway variables --service nextjs-frontend --json 2>/dev/null | grep -o '"RAILWAY_PUBLIC_DOMAIN":"[^"]*"' | cut -d'"' -f4 || true)
+if [[ -n "$FRONTEND_URL" ]]; then
+  log "Waiting for frontend health..."
+  for i in $(seq 1 30); do
+    if curl -sf "https://${FRONTEND_URL}/api/health" >/dev/null 2>&1; then
+      log "Frontend is healthy"
+      break
+    fi
+    sleep 5
+  done
+fi
 
 log "Deploy complete! Check Railway dashboard for status."

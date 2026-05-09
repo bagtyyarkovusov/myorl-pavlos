@@ -14,6 +14,7 @@ permissions:
 
 env:
   RAILWAY_ENVIRONMENT: production
+  RAILWAY_PROJECT_ID: 15ee9fee-9414-436f-b84d-4f0da9c8863c
 
 jobs:
   ci-gate:
@@ -44,6 +45,7 @@ jobs:
       - name: Deploy Backend
         run: |
           railway up . \
+            --project "$RAILWAY_PROJECT_ID" \
             --service "$RAILWAY_BACKEND_SERVICE" \
             --environment "$RAILWAY_ENVIRONMENT" \
             --detach \
@@ -87,6 +89,7 @@ jobs:
       - name: Deploy Frontend
         run: |
           railway up . \
+            --project "$RAILWAY_PROJECT_ID" \
             --service "$RAILWAY_FRONTEND_SERVICE" \
             --environment "$RAILWAY_ENVIRONMENT" \
             --detach \

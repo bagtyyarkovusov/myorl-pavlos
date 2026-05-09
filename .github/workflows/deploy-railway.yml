@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
       RAILWAY_BACKEND_SERVICE: ${{ secrets.RAILWAY_BACKEND_SERVICE }}
       STRAPI_PUBLIC_URL: ${{ secrets.STRAPI_PUBLIC_URL }}
     steps:
@@ -37,7 +37,7 @@ jobs:
 
       - name: Validate deployment secrets
         run: |
-          test -n "$RAILWAY_TOKEN"
+          test -n "$RAILWAY_API_TOKEN"
           test -n "$RAILWAY_BACKEND_SERVICE"
           test -n "$STRAPI_PUBLIC_URL"
 
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
       RAILWAY_FRONTEND_SERVICE: ${{ secrets.RAILWAY_FRONTEND_SERVICE }}
     steps:
       - uses: actions/checkout@v4
@@ -81,7 +81,7 @@ jobs:
 
       - name: Validate deployment secrets
         run: |
-          test -n "$RAILWAY_TOKEN"
+          test -n "$RAILWAY_API_TOKEN"
           test -n "$RAILWAY_FRONTEND_SERVICE"
 
       - name: Deploy Frontend

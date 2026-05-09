@@ -53,7 +53,11 @@ Are all still in force. Only the "ignore latitude/longitude" portion was superse
 
 ## Gaps
 
-None identified. All 9 Accepted ADRs are correctly implemented in the codebase.
+| ADR | Gap | Status |
+|-----|-----|--------|
+| **ADR-009** | Map rendering uses `globalSettings.address` instead of clinic coordinates/address fallback as decided. Coordinate logic exists in `contact-render-model.ts` but is not wired to `ContactPage.tsx`. | Known gap — documented in ADR-009 amendment (2026-05-09) |
+
+All other 8 Accepted ADRs are correctly implemented in the codebase.
 
 ## Related
 

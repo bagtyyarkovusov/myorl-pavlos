@@ -8,7 +8,7 @@
 
 | Service | Image | Port | Purpose |
 | --- | --- | --- | --- |
-| `postgres` | `postgres:16` | `5432` | PostgreSQL database |
+| `postgres` | `postgres:18` | `5432` | PostgreSQL database |
 | `strapi` | `./backend/Dockerfile` | `1337` | Strapi CMS backend |
 | `nextjs` | `./frontend/Dockerfile` | `3000` | Next.js frontend |
 
@@ -16,7 +16,7 @@
 
 | Service | Image | Port | Purpose |
 | --- | --- | --- | --- |
-| `postgres` | `postgres:16` | internal only | PostgreSQL database |
+| `postgres` | `postgres:18` | internal only | PostgreSQL database |
 | `strapi` | `./backend/Dockerfile` | internal only | Strapi CMS backend |
 | `nextjs` | `./frontend/Dockerfile` | internal only | Next.js frontend |
 | `caddy` | `caddy:2` | `80`, `443` | Reverse proxy + auto TLS |

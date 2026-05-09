@@ -6,7 +6,7 @@ Bilingual (Greek / Russian) medical website for an ENT clinic. Headless CMS mono
 
 | Layer | Technology |
 |-------|------------|
-| CMS | Strapi 5.42.1 + PostgreSQL 16 |
+| CMS | Strapi 5.42.1 + PostgreSQL 18 |
 | Frontend | Next.js 16 (App Router, Turbopack) + React 19 + TypeScript 5 |
 | Styling | Tailwind CSS v4 + CSS Modules |
 | Testing | Vitest + React Testing Library + Playwright |
@@ -52,8 +52,9 @@ This starts Strapi with SQLite and the Next.js dev server in parallel.
 ├── data/manifests/   # Machine-readable manifests (redirects, etc.)
 ├── docs/
 │   ├── adr/          # Architecture Decision Records
-│   ├── runbooks/     # Operational playbooks
-│   └── migration/    # MODX → Strapi migration documentation
+│   ├── architecture/ # System architecture deep dives
+│   ├── agents/       # Agent skill configuration
+│   └── runbooks/     # Operational playbooks
 ├── tests/            # Python acceptance tests for CI gates
 └── CONTEXT.md        # Domain glossary and canonical vocabulary
 ```
@@ -84,12 +85,13 @@ npm run dev:down
 - **Domain glossary** → [`CONTEXT.md`](./CONTEXT.md)
 - **Frontend-specific docs** → [`frontend/README.md`](./frontend/README.md)
 - **Backend-specific docs** → [`backend/README.md`](./backend/README.md)
-- **Obsidian knowledge base** → [`docs/obsidian/`](./docs/obsidian/)
+- **Architecture deep dives** → [`docs/architecture/`](./docs/architecture/)
 
 ## CI / CD
 
-GitHub Actions runs 4 jobs on every push:
-1. Frontend lint / typecheck / test / build
+GitHub Actions runs 5 jobs on every push:
+1. Frontend lint / typecheck / test / coverage / build
 2. Backend typecheck / build
-3. Python tools tests
-4. Docker image build
+3. Python tools tests (environment drift, port guard, backup runner, migration runner)
+4. Docker image build + compose validation
+5. Playwright E2E tests

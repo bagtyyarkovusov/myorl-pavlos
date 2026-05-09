@@ -1,6 +1,6 @@
 # System Architecture Overview
 
-> gemini-export is a bilingual (Greek/Russian) medical services website built as a monorepo with a Next.js 16 frontend, Strapi 5.42.1 CMS backend, and PostgreSQL 16 database.
+> gemini-export is a bilingual (Greek/Russian) medical services website built as a monorepo with a Next.js 16 frontend, Strapi 5.42.1 CMS backend, and PostgreSQL 18 database.
 
 ## Tech Stack
 
@@ -8,7 +8,7 @@
 |-------|-----------|---------|
 | CMS | Strapi | 5.42.1 |
 | Frontend | Next.js | 16.2+ (App Router, Turbopack) |
-| Database | PostgreSQL | 16 |
+| Database | PostgreSQL | 18 |
 | Container | Docker Compose | v3 |
 | Languages | TypeScript, Python 3.11+ |
 | Testing | Vitest, Playwright |
@@ -42,7 +42,7 @@
 └──────────────────────┬──────────────────────────────────────┘
                        │ PostgreSQL
 ┌──────────────────────▼──────────────────────────────────────┐
-│              PostgreSQL 16                                  │
+│              PostgreSQL 18                                  │
 │         (Dev / Rehearsal / Production)                      │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -97,10 +97,10 @@ All decisions are recorded as ADRs in `docs/adr/`:
 
 | Environment | Command | Database |
 |-------------|---------|----------|
-| Docker dev | `npm run dev` | PostgreSQL 16 (Docker) |
+| Docker dev | `npm run dev` | PostgreSQL 18 (Docker) |
 | Local dev | `npm run dev:local` | Native Node + SQLite (no-Docker fallback) |
 | Rehearsal | `python tools/orchestrate_rehearsal.py` | Disposable PostgreSQL |
-| Production | `docker-compose.prod.yml` | PostgreSQL 16 + Caddy TLS |
+| Production | `docker-compose.prod.yml` | PostgreSQL 18 + Caddy TLS |
 
 ## Bilingual Content Model
 

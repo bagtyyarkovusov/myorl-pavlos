@@ -29,7 +29,8 @@
 | [frontend.md](frontend.md) | Next.js App Router, CMS DTO layer, components |
 | [backend.md](backend.md) | Strapi CMS API, schema, configuration |
 | [data-flow.md](data-flow.md) | CMS → DTO → Page component pipeline |
-| [deployment.md](deployment.md) | Docker, environments, CI/CD |
+| [deployment.md](deployment.md) | Docker, environments, CI/CD overview |
+| [ci-cd-and-workflow.md](../runbooks/ci-cd-and-workflow.md) | Full CI/CD pipeline & workflow reference |
 | [adr-alignment.md](adr-alignment.md) | ADR-to-codebase alignment report |
 
 ## Deep dives
@@ -45,7 +46,7 @@
 
 ## Migration and ops
 
-- [../migration/](../migration/) — import policy, Strapi schema notes, i18n strategy
+- [slug-migration.md](slug-migration.md) — MODX slug parity history and redirect coverage
 - [../runbooks/](../runbooks/) — PostgreSQL backup/rehearsal, production deployment
 - [../../artifacts/reports/](../../artifacts/reports/) — generated reports
 

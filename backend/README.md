@@ -5,7 +5,7 @@ This directory contains the Strapi 5 headless CMS for the myORL website. It serv
 ## Stack
 
 - **Strapi 5.42.1** with the REST API
-- **PostgreSQL 16** — canonical dev database (see ADR-008)
+- **PostgreSQL 18** — canonical dev database (see ADR-008)
 - **SQLite** — fallback when running without Docker (`npm run dev:local`)
 
 ## Getting Started
@@ -32,7 +32,8 @@ This starts Strapi with SQLite on port 1337 and the Next.js dev server on port 3
 
 ## Environment Variables
 
-Copy `.env.example` in the project root to `.env` and set:
+Environment variables for local development are pre-configured in `docker-compose.dev.yml`.
+For production, set:
 
 | Variable | Purpose |
 |----------|---------|
@@ -47,7 +48,7 @@ Strapi's own secrets (App keys, JWT, API token salt) are pre-configured in `dock
 The CMS defines content types for:
 
 - **Page** — dynamic pages with a `pageSections` DynamicZone (see ADR-006)
-- **Home** — dedicated homepage singleton
+- **Global** — site-wide singleton (address, phone, hours)
 - **Tag** — taxonomy tags for content categorization
 - **Navigation** — menu structure via the Navigation plugin
 

@@ -1,6 +1,6 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-For project-wide context (ADRs, Obsidian MOCs), see the repo [`.cursor/rules/`](../.cursor/rules) and [docs/obsidian/](../docs/obsidian/).
+For project-wide context (ADRs, architecture MOCs), see [`docs/architecture/`](../docs/architecture/) and [`docs/adr/`](../docs/adr/).
 
 # This is NOT the Next.js you know
 

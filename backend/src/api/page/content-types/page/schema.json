@@ -230,21 +230,6 @@
         }
       }
     },
-    "footerCategory": {
-      "type": "enumeration",
-      "enum": [
-        "services",
-        "patients",
-        "company",
-        "none"
-      ],
-      "default": "none",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "articleAuthor": {
       "type": "string",
       "pluginOptions": {

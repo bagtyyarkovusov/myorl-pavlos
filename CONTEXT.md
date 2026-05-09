@@ -7,12 +7,12 @@ This document defines the canonical vocabulary for architecture discussions in t
 | Layer | Technology | Version |
 |-------|-----------|---------|
 | CMS | Strapi | 5.42.1 |
-| Frontend | Next.js | 15.3+ (App Router, Turbopack) |
-| Database | PostgreSQL | 16 |
+| Frontend | Next.js | 16.2+ (App Router, Turbopack) |
+| Database | PostgreSQL | 18 |
 | Container | Docker Compose | v3 |
 | Languages | TypeScript, Python 3.11+ |
 | Testing | Vitest, Playwright |
-| CSS | Tailwind CSS, SASS |
+| CSS | Tailwind CSS v4, CSS Modules |
 
 ---
 
@@ -115,9 +115,9 @@ The **canonical dev stack** runs in Docker Compose with hot reload on all servic
 
 | Service | Container | Image | Volume mount |
 |---------|-----------|-------|-------------|
-| PostgreSQL 16 | `gemini-pg` | `postgres:16` | `pgdata_dev` (persistent) |
+| PostgreSQL 18 | `gemini-pg` | `postgres:18` | `pgdata_dev` (persistent) |
 | Strapi 5 | `gemini-strapi-dev` | `node:20-alpine` | `./backend:/app` (hot reload), `strapi_node_modules` (named) |
-| Next.js 15 | `gemini-nextjs-dev` | `node:24-slim` | `./frontend:/app` (hot reload), `nextjs_node_modules` (named) |
+| Next.js 16 | `gemini-nextjs-dev` | `node:24-slim` | `./frontend:/app` (hot reload), `nextjs_node_modules` (named) |
 
 **Key behaviors:**
 - Code changes trigger auto-reload — no rebuild needed

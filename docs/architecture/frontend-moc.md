@@ -43,4 +43,4 @@
 - Flat locale routes: `/{locale}/{slug}` (see [../../frontend/README.md](../../frontend/README.md) and ADR-004).
 - [../../frontend/STRAPI_HOME_CHECKLIST.md](../../frontend/STRAPI_HOME_CHECKLIST.md) — Strapi home checklist
 
-**Related docs:** [../nextjs-content-readiness.md](../nextjs-content-readiness.md), [../NEXTJS_SLUG_REDIRECTS_REMINDER.md](../NEXTJS_SLUG_REDIRECTS_REMINDER.md)
+**Related docs:** [testing-strategy-deep-dive.md](testing-strategy-deep-dive.md), [cms-module.md](cms-module.md)

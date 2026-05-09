@@ -9,7 +9,7 @@
 ```yaml
 services:
   postgres:
-    image: postgres:16
+    image: postgres:18
     ports: ["55432:5432"]
     volumes: [pgdata_dev]
   
@@ -105,15 +105,12 @@ Fails fast with actionable errors.
 
 ## CI/CD Pipeline
 
-GitHub Actions (`.github/workflows/ci.yml`):
+See [`docs/runbooks/ci-cd-and-workflow.md`](../runbooks/ci-cd-and-workflow.md) for the complete pipeline reference.
 
-| Job | Steps |
-|-----|-------|
-| **frontend** | lint → typecheck → test (coverage) → build |
-| **backend** | typecheck → strapi build |
-| **python tools** | environment drift → port guard → backup runner → migration runner |
-| **docker** | build backend image → build frontend image → validate compose |
-| **e2e** | install → build → Playwright tests |
+Summary:
+- **CI** (`ci.yml`): frontend → backend → python tools → docker → e2e
+- **Deploy** (`deploy-railway.yml`): CI gate → backend → frontend → smoke test
+- **Platform:** Railway with config-as-code (`backend/railway.toml`, `frontend/railway.toml`)
 
 ## Port Allocation Contract
 

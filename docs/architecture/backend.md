@@ -114,7 +114,7 @@ Three seed scripts run on `strapi develop`/`start`:
 
 ## Database
 
-- **Primary**: PostgreSQL 16 (dev, rehearsal, production)
+- **Primary**: PostgreSQL 18 (dev, rehearsal, production)
 - **Fallback**: SQLite (`backend/.tmp/data.db`) for no-Docker local dev only (ADR-008)
 - **Migrations**: Forward-only SQL migrations in `backend/database/postgres-migrations/` (ADR-003)
 

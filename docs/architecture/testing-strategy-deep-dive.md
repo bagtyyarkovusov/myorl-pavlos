@@ -12,6 +12,11 @@
 | Page layouts | 1 | Layout snapshot tests |
 | Component library | 4 | Design-system + PageSection + CmsHtml + SectionRenderer |
 | Utility functions | 2 | proxy.test.ts, html.test.ts |
+| Structured data | 12 | SEO schema, breadcrumb, medical business, FAQ, video, etc. |
+| Contact / footer / sections | 6 | render models, definitions, footer links |
+| E2E | 4 | Playwright pages (home, CMS, testimonials, design system) |
+| Backend bootstrap | 3 | Migration, permissions, audit seed |
+| Python tools | 5 | Environment drift, port guard, backup runner, migration runner, CI/CD hardening |
 
 ## Site header tests (14)
 

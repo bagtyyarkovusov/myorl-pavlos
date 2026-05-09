@@ -150,7 +150,7 @@ production. Recreate disposable rehearsal volumes after a major version bump.
 The orchestrator automatically saves the report to
 `artifacts/reports/postgres_rehearsal_explain_report.json`.
 
-Link this report from `docs/audit.md` or the relevant ADR before launch.
+Link this report from the relevant ADR before launch.
 
 ## Production Readiness Gates
 

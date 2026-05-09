@@ -7,7 +7,7 @@
 | **Product / architecture decisions** | [`docs/adr/`](./adr/) (ADRs) | Ad-hoc notes or `.cursor` rules alone |
 | **What the system actually does** | Code — especially [`frontend/src/lib/cms/`](../frontend/src/lib/cms/) | MOCs (they are navigation, not a spec) |
 | **How the repo is structured** (human nav) | [`docs/architecture/`](./architecture/) | Decisions; always link to ADRs |
-| **Agent reminders** | [`.cursor/rules/`](../.cursor/rules/) | Replacing ADRs; they point here and to architecture/ADR paths |
+| **Agent reminders** | [`docs/agents/`](../agents/) | Agent skill configuration and domain rules |
 
 **Default workflow:** new or changed *rules* and *contracts* for the product are recorded in an **ADR** first; **architecture docs** get a link or short update; **Cursor rules** only summarize and point—never the only place a decision lives.
 
@@ -34,5 +34,5 @@ Architecture docs are for **navigation and discovery**, not a parallel decision 
 
 - **Name**: gemini-export (myORL)
 - **Repo**: `bagtyyarkovusov/gemini-export`
-- **Stack**: Next.js 16 + Strapi 5.42.1 + PostgreSQL 16
+- **Stack**: Next.js 16 + Strapi 5.42.1 + PostgreSQL 18
 - **Locales**: Greek (el), Russian (ru)

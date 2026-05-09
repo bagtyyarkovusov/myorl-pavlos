@@ -1,0 +1,72 @@
+.split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: 45fr 55fr;
+    align-items: start;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .column {
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+}
+
+.detailsBand {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .detailsBand {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.detailCard {
+  padding: 1rem 0;
+  border-top: 1px solid var(--stone-line, #e5e9ef);
+}
+
+.detailCard h2 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--stone, #5a6b7e);
+  margin: 0 0 0.5rem;
+}
+
+.mapColumn {
+  margin: 0;
+}
+
+.mapFrame {
+  width: 100%;
+  height: 320px;
+  border: 0;
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .mapFrame {
+    height: calc(100vh - 160px);
+    min-height: 480px;
+  }
+}

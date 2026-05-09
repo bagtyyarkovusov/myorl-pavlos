@@ -49,6 +49,7 @@ export function SectionRenderer({
         density={density}
         locale={locale}
         galleryMode={galleryMode}
+        sectionIndex={index}
       />
     </PageSection>
   );

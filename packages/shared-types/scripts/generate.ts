@@ -46,13 +46,26 @@ async function main() {
     seoComponent.attributes.sitemapChangeFrequency.enum,
   );
 
+  const pageSchemaType = toUnionType(
+    "PageSchemaType",
+    seoComponent.attributes.schemaType.enum,
+  );
+
   const header = `// Auto-generated from Strapi schemas. Do not edit manually.\n// Regenerate via: npm run generate --prefix packages/shared-types\n\n`;
 
   const renderMode = `// RenderMode is frontend-native and not derived from Strapi schema\nexport type RenderMode = "cms" | "frontend-native";\n`;
 
   const output =
     header +
-    [pageType, layoutVariant, sectionComponent, footerCategory, sitemapChangeFrequency, renderMode].join("\n\n") +
+    [
+      pageType,
+      layoutVariant,
+      sectionComponent,
+      footerCategory,
+      sitemapChangeFrequency,
+      pageSchemaType,
+      renderMode,
+    ].join("\n\n") +
     "\n";
 
   await writeFile(OUTFILE, output, "utf-8");

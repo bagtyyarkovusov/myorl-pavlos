@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import type { PageType, LayoutVariant, SectionComponent, RenderMode, SitemapChangeFrequency } from "./index";
+import type {
+  PageType,
+  LayoutVariant,
+  SectionComponent,
+  RenderMode,
+  SitemapChangeFrequency,
+  FooterCategory,
+  PageSchemaType,
+} from "./index";
 
 describe("PageType union", () => {
   it("accepts all expected literal values", () => {
@@ -82,5 +90,25 @@ describe("SitemapChangeFrequency union", () => {
       "never",
     ];
     expect(values).toHaveLength(7);
+  });
+});
+
+describe("FooterCategory union", () => {
+  it("accepts all expected literal values", () => {
+    const values: FooterCategory[] = ["services", "patients", "company", "none"];
+    expect(values).toHaveLength(4);
+  });
+});
+
+describe("PageSchemaType union", () => {
+  it("accepts all expected literal values", () => {
+    const values: PageSchemaType[] = [
+      "WebPage",
+      "MedicalWebPage",
+      "AboutPage",
+      "ContactPage",
+      "CollectionPage",
+    ];
+    expect(values).toHaveLength(5);
   });
 });

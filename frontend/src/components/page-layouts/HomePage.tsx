@@ -1,12 +1,17 @@
-import { Fragment } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
-import { HomeAdvantagesSection } from "@/components/home/HomeAdvantagesSection";
 import { HomeTestimonialsTeaser } from "@/components/home/HomeTestimonialsTeaser";
 import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getHomeStrings } from "@/lib/i18n/home";
+import {
+  sortHomeSections,
+  INJECTED_MENU_ACCESS_GRID,
+  INJECTED_TESTIMONIALS_TEASER,
+  INJECTED_VISIT_MAP,
+} from "@/lib/home/section-order";
 import type { GlobalSettingsDTO, NavigationNodeDTO, SectionDTO } from "@/lib/cms/types";
+import type { InjectedMarker } from "@/lib/home/section-order";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 import type { PageLayoutProps } from "./_shared";
 
@@ -17,7 +22,9 @@ type HomePageProps = PageLayoutProps & {
   homeTestimonials?: HomeTestimonialsPayload | null;
 };
 
-type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
+function isInjected(entry: SectionDTO | InjectedMarker): entry is InjectedMarker {
+  return "__injected" in entry;
+}
 
 export function HomePage({
   page,
@@ -28,12 +35,7 @@ export function HomePage({
 }: HomePageProps) {
   const t = getHomeStrings(page.locale);
   const heroMedia = page.imageCenter ?? page.featuredImage ?? null;
-  const firstPromoIndex = page.sections.findIndex(
-    (section) => section.__component === "sections.promo-slider",
-  );
-  const advantagesSection = page.sections.find(
-    (section): section is AdvantagesSection => section.__component === "sections.advantages",
-  );
+  const sorted = sortHomeSections(page.sections);
 
   return (
     <>
@@ -47,40 +49,46 @@ export function HomePage({
           ctaLabel={t.heroCtaLabel}
         />
 
-        {page.sections.map((section, index) => {
-          const shouldRenderMenuAccess =
-            section.__component === "sections.promo-slider" && index === firstPromoIndex;
-
-          if (shouldRenderMenuAccess) {
-            return (
-              <Fragment key={`${section.__component}-${index}`}>
-                <SectionRenderer
-                  context="home"
-                  section={section}
-                  locale={page.locale}
-                  index={index}
-                />
-                <MenuAccessGrid navigation={navigation} locale={page.locale} />
-                {advantagesSection ? <HomeAdvantagesSection section={advantagesSection} /> : null}
-              </Fragment>
-            );
+        {sorted.map((entry, index) => {
+          if (isInjected(entry)) {
+            switch (entry.__injected) {
+              case INJECTED_MENU_ACCESS_GRID:
+                return (
+                  <MenuAccessGrid
+                    key={entry.__injected}
+                    navigation={navigation}
+                    locale={page.locale}
+                  />
+                );
+              case INJECTED_TESTIMONIALS_TEASER:
+                return homeTestimonials ? (
+                  <HomeTestimonialsTeaser
+                    key={entry.__injected}
+                    locale={page.locale}
+                    payload={homeTestimonials}
+                  />
+                ) : null;
+              case INJECTED_VISIT_MAP:
+                return (
+                  <HomeVisitMapSection
+                    key={entry.__injected}
+                    locale={page.locale}
+                    settings={settings}
+                  />
+                );
+            }
           }
 
           return (
-            <Fragment key={`${section.__component}-${index}`}>
-              <SectionRenderer
-                context="home"
-                section={section}
-                locale={page.locale}
-                index={index}
-              />
-              {section.__component === "sections.video" && homeTestimonials ? (
-                <HomeTestimonialsTeaser locale={page.locale} payload={homeTestimonials} />
-              ) : null}
-            </Fragment>
+            <SectionRenderer
+              key={`${entry.__component}-${index}`}
+              context="home"
+              section={entry}
+              locale={page.locale}
+              index={index}
+            />
           );
         })}
-        <HomeVisitMapSection locale={page.locale} settings={settings} />
       </div>
     </>
   );

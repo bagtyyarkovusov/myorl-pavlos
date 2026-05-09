@@ -1,14 +1,14 @@
-import type { SitemapChangeFrequency } from "@gemini/shared-types";
+import type { PageSchemaType, SitemapChangeFrequency } from "@gemini/shared-types";
 import type { MediaDTO } from "./common";
 
-export type { SitemapChangeFrequency };
+export type { PageSchemaType, SitemapChangeFrequency };
 
 export type SeoDTO = {
   metaTitle?: string | null;
   metaDescription?: string | null;
   canonicalUrl?: string | null;
   ogImage?: MediaDTO | null;
-  schemaType?: string | null;
+  schemaType?: PageSchemaType | null;
   robotsNoindex: boolean;
   robotsNofollow: boolean;
   sitemapExclude: boolean;
@@ -28,7 +28,7 @@ export type StrapiSeo = {
   metaDescription?: string | null;
   canonicalUrl?: string | null;
   ogImage?: StrapiMedia | null;
-  schemaType?: string | null;
+  schemaType?: PageSchemaType | null;
   robotsNoindex?: boolean | null;
   robotsNofollow?: boolean | null;
   sitemapExclude?: boolean | null;

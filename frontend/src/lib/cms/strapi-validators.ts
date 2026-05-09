@@ -37,7 +37,9 @@ const zodSeo = z
     metaDescription: z.string().nullish(),
     canonicalUrl: z.string().nullish(),
     ogImage: zodMedia,
-    schemaType: z.string().nullish(),
+    schemaType: z
+      .enum(["WebPage", "MedicalWebPage", "AboutPage", "ContactPage", "CollectionPage"])
+      .nullish(),
     robotsNoindex: z.boolean().nullish(),
     robotsNofollow: z.boolean().nullish(),
     sitemapExclude: z.boolean().nullish(),
@@ -74,6 +76,7 @@ export const zodPageEntity = z
     isFolder: z.boolean().nullish(),
     hideFromMenu: z.boolean().nullish(),
     menuIndex: z.number().nullish(),
+    footerCategory: z.enum(["services", "patients", "company", "none"]).nullish(),
     parentPage: zodPageRef,
     tags: z.array(zodTag).nullish(),
     infoBlockBottom: z.string().nullish(),

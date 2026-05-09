@@ -1,22 +1,32 @@
 import { StructuredData } from "@/components/StructuredData";
-import { getCmsConfig } from "@/lib/cms/env";
+import { buildContactPointLd } from "@/lib/structured-data/contact-point";
+import { buildFaqPageLd } from "@/lib/structured-data/faq";
+import { buildImageObjectLd } from "@/lib/structured-data/image-object";
+import { buildMedicalBusinessLd } from "@/lib/structured-data/medical-business";
+import { buildPageBreadcrumbLd } from "@/lib/structured-data/page-breadcrumbs";
+import { getPageSchemas } from "@/lib/structured-data/seo-schema-map";
+import { buildVideoObjectLd } from "@/lib/structured-data/video-object";
 import { buildWebPageLd } from "@/lib/structured-data/webpage";
 import { buildWebSiteLd } from "@/lib/structured-data/website";
-import { buildPageBreadcrumbLd } from "@/lib/structured-data/page-breadcrumbs";
-import { buildFaqPageLd } from "@/lib/structured-data/faq";
-import { buildVideoObjectLd } from "@/lib/structured-data/video-object";
-import { buildImageObjectLd } from "@/lib/structured-data/image-object";
-import { buildContactPointLd } from "@/lib/structured-data/contact-point";
-import { buildMedicalBusinessLd } from "@/lib/structured-data/medical-business";
-import { getPageSchemas } from "@/lib/structured-data/seo-schema-map";
-import type { PageDTO, SectionDTO, GlobalSettingsDTO } from "@/lib/cms/types";
+import type { GlobalSettingsDTO, PageDTO, SectionDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
 type StructuredDataComposerProps = {
   page: PageDTO;
+  /** Canonical site origin. Required so the composer never reads server-only env. */
+  siteUrl: string;
+  /** Brand name used for `WebSite` and `MedicalBusiness`. */
+  brandName?: string;
+  /** Localised label for the home crumb in `BreadcrumbList`. */
+  homeLabel?: string;
+  /** Optional global Strapi settings (drives MedicalBusiness phone/address). */
   globalSettings?: GlobalSettingsDTO | null;
+  /** Optional home testimonials (drives MedicalBusiness aggregateRating). */
   homeTestimonials?: HomeTestimonialsPayload | null;
 };
+
+const DEFAULT_BRAND_NAME = "MyORL";
+const DEFAULT_HOME_LABEL = "Home";
 
 function firstClinicPhone(sections: SectionDTO[]): string | undefined {
   const contact = sections.find(
@@ -29,21 +39,27 @@ function firstClinicPhone(sections: SectionDTO[]): string | undefined {
 /**
  * Page-level JSON-LD entry point.
  *
- * Emits exactly one `<script type="application/ld+json">` containing a merged
- * `@graph` array. Layouts MUST NOT render their own `<StructuredData>` tags.
+ * Always emits `WebSite`, `WebPage` (honoring `seo.schemaType`), and
+ * `BreadcrumbList` (except on the home page). Section-driven and
+ * page-type-driven schemas are added per the {@link getPageSchemas} map.
+ *
+ * Layouts MUST NOT render their own `<StructuredData>` tags — pass any
+ * layout-specific inputs through props on this component instead.
  */
 export function StructuredDataComposer({
   page,
+  siteUrl,
+  brandName = DEFAULT_BRAND_NAME,
+  homeLabel = DEFAULT_HOME_LABEL,
   globalSettings,
   homeTestimonials,
 }: StructuredDataComposerProps) {
-  const config = getCmsConfig();
   const blocks: Record<string, unknown>[] = [];
 
-  blocks.push(buildWebSiteLd(config.siteUrl, "MyORL"));
-  blocks.push(buildWebPageLd(page, config.siteUrl));
+  blocks.push(buildWebSiteLd(siteUrl, brandName));
+  blocks.push(buildWebPageLd(page, siteUrl));
 
-  const breadcrumbLd = buildPageBreadcrumbLd(page);
+  const breadcrumbLd = buildPageBreadcrumbLd(page, siteUrl, homeLabel);
   if (breadcrumbLd) {
     blocks.push(breadcrumbLd);
   }
@@ -105,8 +121,8 @@ export function StructuredDataComposer({
 
     blocks.push(
       buildMedicalBusinessLd({
-        siteUrl: config.siteUrl,
-        name: "MyORL",
+        siteUrl,
+        name: brandName,
         description: page.seo.metaDescription ?? undefined,
         telephone: globalSettings?.phoneTel ?? firstClinicPhone(page.sections) ?? undefined,
         address: globalSettings?.address ?? undefined,

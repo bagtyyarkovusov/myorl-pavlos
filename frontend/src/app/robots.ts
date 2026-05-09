@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 
-import { getCmsConfig } from "@/lib/cms/env";
+import { getSiteUrl } from "@/lib/cms/site-url";
 
 export default function robots(): MetadataRoute.Robots {
-  const { siteUrl } = getCmsConfig();
+  const siteUrl = getSiteUrl();
 
   return {
     rules: {

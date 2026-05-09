@@ -134,10 +134,13 @@ read -rp "Press ENTER once both services are created..."
 # -----------------------------------------------------------------------------
 info "Step 4/7: Link railway.toml Config File"
 
-warn "Each service must point to the shared railway.toml. In the dashboard:"
+warn "Each service must point to its own railway.toml. In the dashboard:"
 echo ""
-echo "  strapi-backend → Settings → Config as Code File → /railway.toml"
-echo "  nextjs-frontend → Settings → Config as Code File → /railway.toml"
+echo "  strapi-backend  → Settings → Root Directory → /backend"
+echo "  strapi-backend  → Settings → Config as Code File → /backend/railway.toml"
+echo ""
+echo "  nextjs-frontend → Settings → Root Directory → /frontend"
+echo "  nextjs-frontend → Settings → Config as Code File → /frontend/railway.toml"
 echo ""
 read -rp "Press ENTER once config files are linked..."
 

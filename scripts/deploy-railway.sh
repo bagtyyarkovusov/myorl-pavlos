@@ -35,13 +35,13 @@ if ! railway status &> /dev/null; then
 fi
 
 log "Deploying strapi-backend..."
-railway up backend --service strapi-backend --path-as-root --detach --ci
+railway up . --service strapi-backend --detach --ci
 
 log "Waiting for backend health..."
-BACKEND_URL=$(railway variables --service strapi-backend --json 2>/dev/null | grep -o '"STRAPI_CORS_ORIGINS":"[^"]*"' | cut -d'"' -f4 || true)
+BACKEND_URL=$(railway variables --service strapi-backend --json 2>/dev/null | grep -o '"RAILWAY_PUBLIC_DOMAIN":"[^"]*"' | cut -d'"' -f4 || true)
 if [[ -n "$BACKEND_URL" ]]; then
   for i in $(seq 1 30); do
-    if curl -sf "${BACKEND_URL}/admin" >/dev/null 2>&1; then
+    if curl -sf "https://${BACKEND_URL}/admin" >/dev/null 2>&1; then
       log "Backend is healthy"
       break
     fi

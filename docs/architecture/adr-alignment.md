@@ -14,7 +14,7 @@
 | **ADR-006** | Accepted | DynamicZone as single section container | `backend/src/api/page/content-types/page/schema.json` has single `pageSections` DynamicZone with all 10 section components; no dedicated `faqSection`, `accordionSection`, etc. fields | ✅ Aligned |
 | **ADR-007** | Accepted | Hybrid Tailwind v4 + CSS Modules | `frontend/src/app/globals.css` has `@theme` block + `:root` semantic aliases; CSS Modules co-located with components; `cn()` utility in `frontend/src/lib/utils.ts` | ✅ Aligned |
 | **ADR-008** | Accepted | Dev Postgres is canonical Strapi state store | `tools/environments.py` defines dev Postgres; `tools/orchestrate_rehearsal.py` exports from dev Postgres, fails fast if not running; SQLite path exists as fallback only | ✅ Aligned |
-| **ADR-009** | Accepted | Clinic maps on contact pages | `sections.contact` schema includes `latitude` and `longitude` fields; `toContactSection()` in normalizer passes coordinates; frontend ContactPage renders map when data exists | ✅ Aligned |
+| **ADR-009** | Accepted | Clinic maps on contact pages | `sections.contact` schema includes `latitude` and `longitude` fields; `toContactSection()` in normalizer passes coordinates; `contact-render-model.ts` has coordinate-first logic | ⚠️ Partially aligned — map renders from `globalSettings.address`; coordinate logic not wired to `ContactPage.tsx` |
 
 ## Superseded Scope
 

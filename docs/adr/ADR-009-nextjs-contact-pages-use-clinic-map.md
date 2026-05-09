@@ -27,6 +27,16 @@ Concretely:
 - No new backend map-provider field is introduced for this decision.
 - `not-found`, `search-results`, and `sitemap` remain frontend-native behaviors as decided in ADR-002.
 
+## Amendment (2026-05-09)
+
+The current implementation renders the clinic map from `globalSettings.address` rather than from clinic coordinates or clinic address fallback as specified above. The coordinate-first logic (`buildContactMapModel`) exists in `frontend/src/lib/contact/contact-render-model.ts` but is consumed only by `StructuredDataComposer.tsx` and tests — not by `ContactPage.tsx` for map rendering.
+
+This is a known gap between the ADR decision and the page renderer. The schema and normalizer are correct; the wiring to the page layout is pending. Until fixed, the effective behavior is:
+
+- Map renders from `globalSettings.address` when present.
+- Clinic coordinates are normalized and available in the DTO but not used for map rendering.
+- Static clinic cards render correctly regardless of map data availability.
+
 ## Alternatives Considered
 
 - Keep ADR-002 as-is and remove map rendering.

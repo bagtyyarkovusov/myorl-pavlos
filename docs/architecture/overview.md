@@ -98,7 +98,7 @@ All decisions are recorded as ADRs in `docs/adr/`:
 | Environment | Command | Database |
 |-------------|---------|----------|
 | Docker dev | `npm run dev` | PostgreSQL 16 (Docker) |
-| Local dev | `npm run dev:local` | PostgreSQL 16 (Docker) + native Node |
+| Local dev | `npm run dev:local` | Native Node + SQLite (no-Docker fallback) |
 | Rehearsal | `python tools/orchestrate_rehearsal.py` | Disposable PostgreSQL |
 | Production | `docker-compose.prod.yml` | PostgreSQL 16 + Caddy TLS |
 

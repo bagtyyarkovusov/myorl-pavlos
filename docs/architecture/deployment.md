@@ -130,7 +130,7 @@ GitHub Actions (`.github/workflows/ci.yml`):
 
 ```bash
 npm run dev           # Full Docker dev stack
-npm run dev:local     # Native Node + Docker PostgreSQL
+npm run dev:local     # Native Node + SQLite (no-Docker fallback)
 npm run dev:db        # PostgreSQL only
 npm run dev:down      # Stop Docker stack
 ```

@@ -1,14 +1,3 @@
-/* Section header spacing overrides */
-.resource-section :global(header) {
-  margin-bottom: 2rem;
-  gap: 1.25rem;
-}
-
-.resource-section :global(header h2) {
-  line-height: 1;
-  text-wrap: balance;
-}
-
 /* ── Hairline grid container ── */
 
 .resource-list {
@@ -55,13 +44,13 @@
 .resource-row__visual {
   display: block;
   min-width: 0;
-  align-self: stretch;
+  align-self: center;
 }
 
 .resource-row__frame {
   aspect-ratio: 1 / 1 !important;
-  height: 100%;
-  width: auto;
+  width: 100%;
+  height: auto;
 }
 
 /* ── Text body ── */
@@ -185,10 +174,6 @@
 /* ── 768px+: larger type, arrow visible ── */
 
 @media (min-width: 768px) {
-  .resource-section :global(header) {
-    margin-bottom: 3rem;
-  }
-
   .resource-row__link {
     gap: 16px;
     padding: 16px;
@@ -209,7 +194,7 @@
   }
 
   .resource-row__arrow {
-    display: inline-flex;
+    display: none;
   }
 }
 

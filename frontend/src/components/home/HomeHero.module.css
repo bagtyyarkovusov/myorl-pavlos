@@ -3,7 +3,7 @@
   isolation: isolate;
   overflow: hidden;
   background: transparent;
-  padding: clamp(60px, 8vw, 120px) 0 clamp(54px, 7vw, 96px);
+  padding: clamp(60px, 8vw, 120px) 1rem clamp(54px, 7vw, 96px);
 }
 
 .hero-section::before {
@@ -49,8 +49,9 @@
 
 .hero-title {
   width: 100%;
-  max-width: 18rem;
-  overflow-wrap: anywhere;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  hyphens: auto;
   color: var(--foreground);
   font-family: var(--font-display);
   font-size: 2.62rem;
@@ -61,8 +62,10 @@
 
 .hero-lead {
   width: 100%;
-  max-width: 20rem;
+  max-width: 100%;
   margin-top: 20px;
+  overflow-wrap: break-word;
+  hyphens: auto;
   color: var(--muted);
   font-size: 1.04rem;
   line-height: 1.65;
@@ -124,6 +127,10 @@
 }
 
 @media (min-width: 560px) {
+  .hero-section {
+    padding-inline: 1.5rem;
+  }
+
   .hero-title {
     max-width: 38rem;
     font-size: 3.3rem;
@@ -165,6 +172,10 @@
 }
 
 @media (min-width: 1024px) {
+  .hero-section {
+    padding-inline: 0;
+  }
+
   .hero-grid {
     grid-template-columns: minmax(0, 0.96fr) minmax(22.5rem, 0.76fr);
     gap: 64px;

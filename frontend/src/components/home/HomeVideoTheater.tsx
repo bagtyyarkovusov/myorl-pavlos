@@ -63,7 +63,7 @@ export function HomeVideoTheater({
       className={`${styles["video-teaser-section"]} ${styles["video-section"]}`}
       header={null}
     >
-      <Link href={ctaHref} className={styles["video-teaser"]}>
+      <div className={styles["video-teaser"]}>
         <div className={styles["video-card"]}>
           {primaryVideo && (
             <>
@@ -104,20 +104,22 @@ export function HomeVideoTheater({
                 />
               )}
               <div className={styles["video-card__overlay"]} />
-              <div className={styles["video-card__copy"]}>
-                <h2>{title}</h2>
-                <span>{intro}</span>
-                <strong>
-                  <span className={styles["video-card__play"]} aria-hidden="true">
-                    ▶
-                  </span>
-                  {ctaLabel}
-                </strong>
-              </div>
+              <Link href={ctaHref} className={styles["video-card__link"]}>
+                <div className={styles["video-card__copy"]}>
+                  <h2>{title}</h2>
+                  <span>{intro}</span>
+                  <strong>
+                    <span className={styles["video-card__play"]} aria-hidden="true">
+                      ▶
+                    </span>
+                    {ctaLabel}
+                  </strong>
+                </div>
+              </Link>
             </>
           )}
         </div>
-      </Link>
+      </div>
     </PageSection>
   );
 }

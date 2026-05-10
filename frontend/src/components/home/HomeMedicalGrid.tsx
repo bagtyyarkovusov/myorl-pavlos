@@ -26,10 +26,7 @@ export function HomeMedicalGrid({
   if (items.length === 0) return null;
 
   return (
-    <PageSection
-      className={styles["resource-section"]}
-      heading={intro ? { title, intro } : { title }}
-    >
+    <PageSection rhythm="compact" className={styles["resource-section"]} header={null}>
       <ol className={styles["resource-list"]} role="list">
         {items.slice(0, 6).map((item, index) => {
           const href = resolveResourceHref(item, locale);
@@ -54,10 +51,7 @@ export function HomeMedicalGrid({
                   {item.description ? (
                     <CmsHtml className={styles["resource-row__text"]} html={item.description} />
                   ) : null}
-                  <span className={styles["resource-row__cta"]}>
-                    {learnMoreLabel}
-                    <span aria-hidden="true"> →</span>
-                  </span>
+                  <span className={styles["resource-row__cta"]}>{learnMoreLabel}</span>
                 </div>
 
                 <span className={styles["resource-row__arrow"]} aria-hidden="true">

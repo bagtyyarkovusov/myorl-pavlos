@@ -75,6 +75,7 @@ export function HomeTestimonialsTeaserQuotes({
               <blockquote className={styles.cardBody} cite={googleMapsUrl}>
                 <div className={cn(styles.textWrapper, showFade && styles.fadeActive)}>
                   <p
+                    id={`testimonial-text-${i}`}
                     ref={(el) => {
                       if (el) {
                         textRefs.current.set(i, el);
@@ -94,6 +95,7 @@ export function HomeTestimonialsTeaserQuotes({
                     className={styles.expandBtn}
                     onClick={() => toggleCard(i)}
                     aria-expanded={isExpanded}
+                    aria-controls={`testimonial-text-${i}`}
                   >
                     {isExpanded ? collapseLabel : expandLabel}
                   </button>

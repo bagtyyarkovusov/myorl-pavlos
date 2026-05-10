@@ -118,7 +118,7 @@ Reuses `ci.yml` via `workflow_call`. All 5 CI jobs must pass before deployment b
 |------|--------|
 | CLI | `npm install -g @railway/cli` |
 | Validation | Assert `RAILWAY_TOKEN`, `RAILWAY_BACKEND_SERVICE`, `STRAPI_PUBLIC_URL` exist |
-| Deploy | `railway up . --service <backend> --detach --ci` |
+| Deploy | `railway up --service <backend> --detach` |
 | Health poll | `GET /admin/init` every 10s, up to 6 min |
 
 - **Environment:** `production`
@@ -130,7 +130,7 @@ Reuses `ci.yml` via `workflow_call`. All 5 CI jobs must pass before deployment b
 |------|--------|
 | Depends on | `deploy-backend` (must be healthy) |
 | Validation | Assert `RAILWAY_TOKEN`, `RAILWAY_FRONTEND_SERVICE` exist |
-| Deploy | `railway up . --service <frontend> --detach --ci` |
+| Deploy | `railway up --service <frontend> --detach` |
 
 - **Config-as-code:** `frontend/railway.toml`
 - **Important:** Railway service Root Directory must be `/` (not `/frontend`) because the Dockerfile copies from monorepo root.

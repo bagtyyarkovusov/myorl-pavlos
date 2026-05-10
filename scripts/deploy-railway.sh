@@ -35,11 +35,10 @@ if ! railway status &> /dev/null; then
 fi
 
 log "Deploying strapi-backend..."
-railway up . \
+railway up \
   --service strapi-backend \
   --environment production \
   --detach \
-  --ci \
   --message "Deploy backend from local script"
 
 log "Waiting for backend health..."
@@ -58,11 +57,10 @@ else
 fi
 
 log "Deploying nextjs-frontend..."
-railway up . \
+railway up \
   --service nextjs-frontend \
   --environment production \
   --detach \
-  --ci \
   --message "Deploy frontend from local script"
 
 FRONTEND_URL=$(railway variables --service nextjs-frontend --json 2>/dev/null | grep -o '"RAILWAY_PUBLIC_DOMAIN":"[^"]*"' | cut -d'"' -f4 || true)

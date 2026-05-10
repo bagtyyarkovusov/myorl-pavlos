@@ -17,6 +17,9 @@ const HomeVideoTheater = dynamic(() =>
 const HomeAdvantagesSection = dynamic(() =>
   import("@/components/home/HomeAdvantagesSection").then((m) => m.HomeAdvantagesSection),
 );
+const HomeMedicalGrid = dynamic(() =>
+  import("@/components/home/HomeMedicalGrid").then((m) => m.HomeMedicalGrid),
+);
 
 export function HomeSectionRenderer({
   section,
@@ -44,22 +47,14 @@ export function HomeSectionRenderer({
       return <HomeAdvantagesSection section={section} />;
     case "sections.linked-resources":
       return (
-        <PageSection
-          heading={{
-            title: section.heading || t.journalTitleLine1,
-            intro: section.intro || t.journalIntro,
-          }}
-          sectionIndex={index}
-          density="theater"
-          width="contained"
-        >
-          <DefaultSectionRenderer
-            section={section}
-            density="theater"
-            locale={locale}
-            sectionIndex={index}
-          />
-        </PageSection>
+        <HomeMedicalGrid
+          title={section.heading || t.journalTitleLine1}
+          intro={section.intro || t.journalIntro}
+          items={section.items}
+          locale={locale}
+          learnMoreLabel={t.learnMore}
+          viewAllLabel={t.viewAll}
+        />
       );
     case "sections.video":
       return (

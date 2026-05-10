@@ -3,7 +3,6 @@ import { CmsHtml } from "@/components/CmsHtml";
 import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
 import type { LinkedResourceItemDTO } from "@/lib/cms/types";
-import { cn } from "@/lib/utils";
 
 import styles from "./HomeMedicalGrid.module.css";
 
@@ -17,6 +16,8 @@ type HomeMedicalGridProps = {
 };
 
 export function HomeMedicalGrid({
+  title,
+  intro,
   items,
   locale,
   learnMoreLabel,
@@ -25,48 +26,40 @@ export function HomeMedicalGrid({
   if (items.length === 0) return null;
 
   return (
-    <PageSection className={styles["resource-section"]} header={null}>
-      <ol className={styles["resource-list"]}>
-        {items.map((item, index) => {
+    <PageSection
+      className={styles["resource-section"]}
+      heading={intro ? { title, intro } : { title }}
+    >
+      <ol className={styles["resource-list"]} role="list">
+        {items.slice(0, 6).map((item, index) => {
           const href = resolveResourceHref(item, locale);
-          const mobileCap = 6;
-          const shownOnMobile = Math.min(items.length, mobileCap);
-          const lastMobileRowStart = Math.floor((shownOnMobile - 1) / 2) * 2;
-          const isBeyondMobileCap = index >= mobileCap;
-          const isMobileLastGridRow = index >= lastMobileRowStart && index < shownOnMobile;
 
           return (
-            <li
-              className={cn(
-                styles["resource-row"],
-                isBeyondMobileCap && styles["resource-row--beyond-mobile-cap"],
-                isMobileLastGridRow && styles["resource-row--mobile-last-row"],
-              )}
-              key={`${item.title ?? "resource"}-${index}`}
-            >
-              <Link href={href}>
+            <li className={styles["resource-row"]} key={`${item.title ?? "resource"}-${index}`}>
+              <Link href={href} className={styles["resource-row__link"]}>
                 <span className={styles["resource-row__visual"]}>
-                  <span className={styles["resource-row__media"]} aria-hidden="true">
-                    {item.image ? (
-                      <MediaFrame
-                        media={item.image}
-                        alt={item.image.alternativeText || item.title || ""}
-                        variant="wide"
-                        className={styles["resource-row__frame"]}
-                        sizes="(max-width: 479px) 42vw, (max-width: 767px) 112px, (max-width: 859px) 152px, (max-width: 1023px) 176px, 200px"
-                      />
-                    ) : (
-                      <span className={styles["resource-row__placeholder"]} />
-                    )}
-                  </span>
+                  <MediaFrame
+                    media={item.image}
+                    alt={item.image?.alternativeText || item.title || ""}
+                    variant="wide"
+                    className={styles["resource-row__frame"]}
+                    sizes="(max-width: 639px) 80px, (max-width: 1023px) 50vw, 180px"
+                  />
                 </span>
+
                 <div className={styles["resource-row__body"]}>
-                  <strong>{item.title ?? "Clinical resource"}</strong>
-                  <CmsHtml className={styles["resource-row__text"]} html={item.description} />
+                  {item.title ? (
+                    <h3 className={styles["resource-row__title"]}>{item.title}</h3>
+                  ) : null}
+                  {item.description ? (
+                    <CmsHtml className={styles["resource-row__text"]} html={item.description} />
+                  ) : null}
                   <span className={styles["resource-row__cta"]}>
-                    {learnMoreLabel} <span aria-hidden="true">→</span>
+                    {learnMoreLabel}
+                    <span aria-hidden="true"> →</span>
                   </span>
                 </div>
+
                 <span className={styles["resource-row__arrow"]} aria-hidden="true">
                   →
                 </span>
@@ -78,7 +71,8 @@ export function HomeMedicalGrid({
 
       {items.length > 6 ? (
         <Link href={`/${locale}/yperesies`} className={styles["resource-view-all"]}>
-          {viewAllLabel} <span aria-hidden="true">→</span>
+          {viewAllLabel}
+          <span aria-hidden="true"> →</span>
         </Link>
       ) : null}
     </PageSection>

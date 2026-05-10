@@ -33,17 +33,6 @@ const items: LinkedResourceItemDTO[] = [
 
 describe("HomeMedicalGrid", () => {
   it("uses CMS alternativeText when available", () => {
-    render(
-      <HomeMedicalGrid
-        title="Services"
-        intro="Our services"
-        items={items}
-        locale="el"
-        learnMoreLabel="Learn more"
-        viewAllLabel="View all"
-      />,
-    );
-
     const { container } = render(
       <HomeMedicalGrid
         title="Services"
@@ -63,17 +52,6 @@ describe("HomeMedicalGrid", () => {
   });
 
   it("falls back to item title when alternativeText is missing", () => {
-    render(
-      <HomeMedicalGrid
-        title="Services"
-        intro="Our services"
-        items={items}
-        locale="el"
-        learnMoreLabel="Learn more"
-        viewAllLabel="View all"
-      />,
-    );
-
     const { container } = render(
       <HomeMedicalGrid
         title="Services"
@@ -90,5 +68,117 @@ describe("HomeMedicalGrid", () => {
     );
     expect(rhinoImg).toBeDefined();
     expect(rhinoImg?.getAttribute("alt")).toBe("Rhinoplasty");
+  });
+
+  it("renders the section title", () => {
+    render(
+      <HomeMedicalGrid
+        title="Medical Services"
+        intro="Our comprehensive medical services"
+        items={items}
+        locale="el"
+        learnMoreLabel="Learn more"
+        viewAllLabel="View all"
+      />,
+    );
+    expect(screen.getByRole("heading", { level: 2, name: "Medical Services" })).toBeInTheDocument();
+  });
+
+  it("renders the intro text when provided", () => {
+    render(
+      <HomeMedicalGrid
+        title="Medical Services"
+        intro="Our comprehensive medical services"
+        items={items}
+        locale="el"
+        learnMoreLabel="Learn more"
+        viewAllLabel="View all"
+      />,
+    );
+    expect(screen.getByText("Our comprehensive medical services")).toBeInTheDocument();
+  });
+
+  it("renders title-only header when intro is not provided", () => {
+    render(
+      <HomeMedicalGrid
+        title="Medical Services"
+        items={items}
+        locale="el"
+        learnMoreLabel="Learn more"
+        viewAllLabel="View all"
+      />,
+    );
+    expect(screen.getByRole("heading", { level: 2, name: "Medical Services" })).toBeInTheDocument();
+    expect(screen.queryByText("Our comprehensive medical services")).not.toBeInTheDocument();
+  });
+
+  it("returns null when items array is empty", () => {
+    const { container } = render(
+      <HomeMedicalGrid
+        title="Medical Services"
+        items={[]}
+        locale="el"
+        learnMoreLabel="Learn more"
+        viewAllLabel="View all"
+      />,
+    );
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("renders the view-all link when there are more than 6 items", () => {
+    const manyItems = Array.from({ length: 7 }, (_, i) => ({
+      title: `Service ${i + 1}`,
+      description: "Description",
+      targetUrl: null,
+      targetPage: null,
+      image: null,
+    }));
+
+    render(
+      <HomeMedicalGrid
+        title="Medical Services"
+        items={manyItems}
+        locale="el"
+        learnMoreLabel="Learn more"
+        viewAllLabel="View all services"
+      />,
+    );
+    expect(screen.getByRole("link", { name: /view all services/i })).toBeInTheDocument();
+  });
+
+  it("renders at most 6 items and shows the view-all link when more are passed", () => {
+    const manyItems = Array.from({ length: 8 }, (_, i) => ({
+      title: `Service ${i + 1}`,
+      description: "Description",
+      targetUrl: null,
+      targetPage: null,
+      image: null,
+    }));
+
+    render(
+      <HomeMedicalGrid
+        title="Medical Services"
+        items={manyItems}
+        locale="el"
+        learnMoreLabel="Learn more"
+        viewAllLabel="View all services"
+      />,
+    );
+    const listItems = screen.getAllByRole("listitem");
+    expect(listItems).toHaveLength(6);
+    expect(screen.getByRole("link", { name: /view all services/i })).toBeInTheDocument();
+  });
+
+  it("does not render the view-all link when there are 6 or fewer items", () => {
+    render(
+      <HomeMedicalGrid
+        title="Medical Services"
+        items={items}
+        locale="el"
+        learnMoreLabel="Learn more"
+        viewAllLabel="View all services"
+      />,
+    );
+    expect(screen.queryByRole("link", { name: /view all services/i })).not.toBeInTheDocument();
   });
 });

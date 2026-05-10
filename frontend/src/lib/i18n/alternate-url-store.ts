@@ -31,6 +31,8 @@ export function getSnapshot(): AlternateUrlMap {
   return _alternateUrls;
 }
 
+const EMPTY_SNAPSHOT: AlternateUrlMap = {};
+
 export function getServerSnapshot(): AlternateUrlMap {
-  return {};
+  return EMPTY_SNAPSHOT;
 }

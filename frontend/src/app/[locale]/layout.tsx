@@ -10,6 +10,8 @@ import { getPageResult, getSite } from "@/lib/cms/cms-api";
 import { isLocale } from "@/lib/cms/types";
 import type { SectionDTO, SocialLinkItemDTO } from "@/lib/cms/types";
 
+export const dynamic = "force-dynamic";
+
 type LocaleLayoutProps = {
   children: React.ReactNode;
   params: Promise<{

@@ -109,7 +109,7 @@ describe("HomeSectionRenderer", () => {
     expect(container.querySelectorAll("section")).toHaveLength(1);
   });
 
-  it("renders linked resources once and renders HTML descriptions as content", () => {
+  it("renders linked resources once and renders HTML descriptions as content", async () => {
     const section = makeSection({
       __component: "sections.linked-resources",
       heading: "Resources",
@@ -131,16 +131,24 @@ describe("HomeSectionRenderer", () => {
       ],
     } as SectionDTO);
 
-    render(<HomeSectionRenderer section={section} locale="el" />);
+    const { container } = render(<HomeSectionRenderer section={section} locale="el" />);
+
+    // Allow dynamic import to resolve
+    await waitFor(() => {
+      expect(container.querySelector("ol[role='list']")).toBeTruthy();
+    });
 
     expect(screen.getAllByText("Resource 1")).toHaveLength(1);
     expect(screen.getByRole("heading", { name: "Resources" })).toBeDefined();
     expect(screen.getByText("Text one")).toBeDefined();
     expect(screen.queryByText("<p>Text one</p>")).toBeNull();
-    expect(screen.getByRole("link", { name: "Resource 1" })).toHaveAttribute("href", "/el/sitemap");
-    expect(screen.getByRole("link", { name: "Resource 2" })).toHaveAttribute("href", "/el/sitemap");
-    expect(document.querySelector("article[data-card]")?.getAttribute("data-density")).toBe(
-      "theater",
+    expect(screen.getByRole("link", { name: /resource 1/i })).toHaveAttribute(
+      "href",
+      "/el/sitemap",
+    );
+    expect(screen.getByRole("link", { name: /resource 2/i })).toHaveAttribute(
+      "href",
+      "/el/sitemap",
     );
   });
 

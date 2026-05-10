@@ -4,6 +4,8 @@ import { seedDesignSystemAudit } from './bootstrap/seed-design-system-audit';
 import { migrateSections } from './bootstrap/migrate-sections';
 import { seedNavigationConfig } from './bootstrap/navigation-config';
 import { seedNavigationPermissions } from './bootstrap/navigation-permissions';
+import { seedGlobal } from './bootstrap/seed-global';
+import { suppressIndexRenames } from './register/suppress-index-renames';
 
 function shouldBootstrapMigrationToken(): boolean {
   const raw = process.env.STRAPI_ENABLE_MIGRATION_TOKEN_BOOTSTRAP?.trim().toLowerCase();
@@ -17,7 +19,13 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  async register({ strapi }/*: { strapi: Core.Strapi }*/) {
+    try {
+      await suppressIndexRenames(strapi);
+    } catch (err) {
+      strapi.log.error('Failed to suppress Strapi index rename migrations', err);
+    }
+  },
 
   /**
    * An asynchronous bootstrap function that runs before
@@ -84,6 +92,12 @@ export default {
       await seedDesignSystemAudit(strapi);
     } catch (err) {
       strapi.log.error('Failed to seed design-system audit reference page', err);
+    }
+
+    try {
+      await seedGlobal(strapi);
+    } catch (err) {
+      strapi.log.error('Failed to seed Global content type entries', err);
     }
   },
 };

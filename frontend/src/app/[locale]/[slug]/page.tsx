@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { PageRenderer } from "@/components/PageRenderer";
 import { getPage, getSite } from "@/lib/cms/cms-api";
 import { getSitemapPages } from "@/lib/cms/cms-api";
 import { toPageMetadata } from "@/lib/cms/metadata";
-import { isLocale } from "@/lib/cms/types";
+import { isLocale, type PageDTO, type NavigationNodeDTO } from "@/lib/cms/types";
 import { parsePageParam } from "@/lib/testimonials/paginate";
 
 type CmsPageProps = {
@@ -55,6 +56,23 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
   }
 
   const [page, { navigation }] = await Promise.all([getPage(locale, slug), getSite(locale)]);
+
+  return (
+    <Suspense fallback={<PageRenderer page={page} navigation={navigation} testimonialsPage={1} />}>
+      <CmsPageContent page={page} navigation={navigation} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function CmsPageContent({
+  page,
+  navigation,
+  searchParams,
+}: {
+  page: PageDTO;
+  navigation: NavigationNodeDTO[];
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const sp = searchParams ? await searchParams : {};
   const testimonialsPage = parsePageParam(sp.page);
 

@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       RAILWAY_BACKEND_SERVICE: ${{ secrets.RAILWAY_BACKEND_SERVICE }}
       STRAPI_PUBLIC_URL: ${{ secrets.STRAPI_PUBLIC_URL }}
     steps:
@@ -38,14 +38,15 @@ jobs:
 
       - name: Validate deployment secrets
         run: |
-          test -n "$RAILWAY_API_TOKEN"
+          test -n "$RAILWAY_TOKEN"
           test -n "$RAILWAY_BACKEND_SERVICE"
           test -n "$STRAPI_PUBLIC_URL"
 
       - name: Deploy Backend
         run: |
-          echo | railway link --project "$RAILWAY_PROJECT_ID" --environment "$RAILWAY_ENVIRONMENT" --service "$RAILWAY_BACKEND_SERVICE"
           railway up . \
+            --service "$RAILWAY_BACKEND_SERVICE" \
+            --environment "$RAILWAY_ENVIRONMENT" \
             --detach \
             --ci \
             --message "Deploy backend from GitHub Actions ${GITHUB_SHA}"
@@ -71,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       RAILWAY_FRONTEND_SERVICE: ${{ secrets.RAILWAY_FRONTEND_SERVICE }}
     steps:
       - uses: actions/checkout@v4
@@ -81,13 +82,14 @@ jobs:
 
       - name: Validate deployment secrets
         run: |
-          test -n "$RAILWAY_API_TOKEN"
+          test -n "$RAILWAY_TOKEN"
           test -n "$RAILWAY_FRONTEND_SERVICE"
 
       - name: Deploy Frontend
         run: |
-          echo | railway link --project "$RAILWAY_PROJECT_ID" --environment "$RAILWAY_ENVIRONMENT" --service "$RAILWAY_FRONTEND_SERVICE"
           railway up . \
+            --service "$RAILWAY_FRONTEND_SERVICE" \
+            --environment "$RAILWAY_ENVIRONMENT" \
             --detach \
             --ci \
             --message "Deploy frontend from GitHub Actions ${GITHUB_SHA}"

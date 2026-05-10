@@ -76,3 +76,4 @@ playwright/.cache/
 .claude/worktrees/
 
 .opencode/
+.playwright-mcp/

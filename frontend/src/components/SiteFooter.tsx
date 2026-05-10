@@ -16,6 +16,7 @@ import type {
 } from "@/lib/cms/types";
 
 import styles from "./SiteFooter.module.css";
+import { FooterColumn } from "./FooterColumn";
 
 type SiteFooterProps = {
   locale: Locale;
@@ -131,27 +132,6 @@ export function SiteFooter({
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterColumn({
-  label,
-  links,
-}: {
-  label: string;
-  links: { label: string; href: string }[];
-}) {
-  return (
-    <details className={styles["link-col"]}>
-      <summary className={styles["col-label"]}>{label}</summary>
-      <ul className={styles["link-list"]}>
-        {links.map((link, index) => (
-          <li key={`${link.href}-${index}`}>
-            <SmartLink href={link.href}>{link.label}</SmartLink>
-          </li>
-        ))}
-      </ul>
-    </details>
   );
 }
 

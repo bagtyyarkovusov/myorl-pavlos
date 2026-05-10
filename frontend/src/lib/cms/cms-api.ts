@@ -137,6 +137,7 @@ export async function getPage(locale: Locale, slug: string): Promise<PageDTO> {
  */
 export type SiteContext = {
   navigation: NavigationNodeDTO[];
+  footerNavigation: NavigationNodeDTO[];
   settings: GlobalSettingsDTO;
 };
 
@@ -160,24 +161,26 @@ async function loadSite(locale: Locale): Promise<SiteContext> {
       populate: NAVIGATION_POPULATE,
       cacheTags: ["navigation:" + locale, "pages"],
     })
-    .then((pages) => buildNavigationTree(pages, locale));
+    .then((pages) => ({
+      navigation: buildNavigationTree(pages, locale),
+      footerNavigation: buildNavigationTree(pages, locale, { includeHidden: true }),
+    }));
 
   const settingsPromise = gateway.fetchOne("/api/global", globalResponseSchema, {
     locale,
   });
 
-  const [navigationResult, settingsResult] = await Promise.allSettled([
-    pagesPromise,
-    settingsPromise,
-  ]);
+  const [pagesResult, settingsResult] = await Promise.allSettled([pagesPromise, settingsPromise]);
 
-  const navigation = navigationResult.status === "fulfilled" ? navigationResult.value : [];
+  const navigation = pagesResult.status === "fulfilled" ? pagesResult.value.navigation : [];
+  const footerNavigation =
+    pagesResult.status === "fulfilled" ? pagesResult.value.footerNavigation : [];
   const settings =
     settingsResult.status === "fulfilled" && settingsResult.value !== null
       ? settingsResult.value
       : buildFallbackSettings(locale);
 
-  return { navigation, settings };
+  return { navigation, footerNavigation, settings };
 }
 
 /**

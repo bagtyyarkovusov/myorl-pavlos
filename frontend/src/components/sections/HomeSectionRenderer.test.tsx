@@ -139,7 +139,7 @@ describe("HomeSectionRenderer", () => {
     });
 
     expect(screen.getAllByText("Resource 1")).toHaveLength(1);
-    expect(screen.getByRole("heading", { name: "Resources" })).toBeDefined();
+    expect(screen.queryByRole("heading", { name: "Resources" })).toBeNull();
     expect(screen.getByText("Text one")).toBeDefined();
     expect(screen.queryByText("<p>Text one</p>")).toBeNull();
     expect(screen.getByRole("link", { name: /resource 1/i })).toHaveAttribute(

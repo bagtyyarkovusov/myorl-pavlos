@@ -92,7 +92,7 @@ echo "[push] Backing up Railway production database..."
 docker run --rm \
   -v "${BACKUP_DIR}:/backup" \
   postgres:18 \
-  pg_dump "$railway_db_url" -Fc --no-acl --no-owner -f "/backup/${prod_backup}"
+  pg_dump "$railway_db_url" -Fc --no-acl --no-owner -f "/backup/$(basename "${prod_backup}")"
 
 echo "[push] Saved production backup: ${prod_backup}"
 

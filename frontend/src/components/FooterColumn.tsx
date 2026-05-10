@@ -26,6 +26,9 @@ export function FooterColumn({
   const [isOpen, setIsOpen] = React.useState(true);
 
   React.useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) {
+      return;
+    }
     const mql = window.matchMedia("(max-width: 767.98px)");
     const update = () => setIsOpen(!mql.matches);
     update();

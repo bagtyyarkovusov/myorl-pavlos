@@ -45,6 +45,7 @@ jobs:
       - name: Deploy Backend
         run: |
           railway up . \
+            --project "$RAILWAY_PROJECT_ID" \
             --service "$RAILWAY_BACKEND_SERVICE" \
             --environment "$RAILWAY_ENVIRONMENT" \
             --detach \
@@ -88,6 +89,7 @@ jobs:
       - name: Deploy Frontend
         run: |
           railway up . \
+            --project "$RAILWAY_PROJECT_ID" \
             --service "$RAILWAY_FRONTEND_SERVICE" \
             --environment "$RAILWAY_ENVIRONMENT" \
             --detach \

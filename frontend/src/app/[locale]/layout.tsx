@@ -27,7 +27,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     notFound();
   }
 
-  const { navigation, settings } = await getSite(locale);
+  const { navigation, footerNavigation, settings } = await getSite(locale);
   const appointmentHref = findAppointmentHref(navigation, locale);
 
   const socialLinks = await getSocialLinks(locale);
@@ -40,7 +40,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       <main id="main-content">{children}</main>
       <SiteFooter
         locale={locale}
-        navigation={navigation}
+        navigation={footerNavigation}
         settings={settings}
         appointmentHref={appointmentHref}
         socialLinks={socialLinks}

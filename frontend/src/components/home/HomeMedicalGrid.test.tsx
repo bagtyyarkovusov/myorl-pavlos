@@ -70,7 +70,7 @@ describe("HomeMedicalGrid", () => {
     expect(rhinoImg?.getAttribute("alt")).toBe("Rhinoplasty");
   });
 
-  it("renders the section title", () => {
+  it("suppresses the section header to sit flush against adjacent sections", () => {
     render(
       <HomeMedicalGrid
         title="Medical Services"
@@ -81,35 +81,24 @@ describe("HomeMedicalGrid", () => {
         viewAllLabel="View all"
       />,
     );
-    expect(screen.getByRole("heading", { level: 2, name: "Medical Services" })).toBeInTheDocument();
-  });
-
-  it("renders the intro text when provided", () => {
-    render(
-      <HomeMedicalGrid
-        title="Medical Services"
-        intro="Our comprehensive medical services"
-        items={items}
-        locale="el"
-        learnMoreLabel="Learn more"
-        viewAllLabel="View all"
-      />,
-    );
-    expect(screen.getByText("Our comprehensive medical services")).toBeInTheDocument();
-  });
-
-  it("renders title-only header when intro is not provided", () => {
-    render(
-      <HomeMedicalGrid
-        title="Medical Services"
-        items={items}
-        locale="el"
-        learnMoreLabel="Learn more"
-        viewAllLabel="View all"
-      />,
-    );
-    expect(screen.getByRole("heading", { level: 2, name: "Medical Services" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { level: 2, name: "Medical Services" }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText("Our comprehensive medical services")).not.toBeInTheDocument();
+  });
+
+  it("still renders title-only header metadata inside cards", () => {
+    render(
+      <HomeMedicalGrid
+        title="Medical Services"
+        intro="Our comprehensive medical services"
+        items={items}
+        locale="el"
+        learnMoreLabel="Learn more"
+        viewAllLabel="View all"
+      />,
+    );
+    expect(screen.getByRole("heading", { level: 3, name: "Tonsillectomy" })).toBeInTheDocument();
   });
 
   it("returns null when items array is empty", () => {

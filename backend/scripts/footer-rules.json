@@ -1,0 +1,20 @@
+{
+  "_comment": "Mapping of page slug → footerCategory. Valid categories: services, patients, company, none. Only pages listed here will be updated. Pages with current value != 'none' are skipped unless --force is used.",
+
+  "yperesies": "services",
+  "pathiseis": "services",
+  "epemvaseis": "services",
+  "orl-exetasi": "services",
+  "diagnosi": "services",
+
+  "klinikes": "patients",
+  "timokatalogos": "patients",
+  "kleiste-randevou-online": "patients",
+  "odigies-prin-xeirourgeio": "patients",
+  "anazitisi-apotelesmaton": "patients",
+
+  "viografiko": "company",
+  "epikoinonia": "company",
+  "video": "company",
+  "privacy-policy": "company"
+}

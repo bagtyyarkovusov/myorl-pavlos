@@ -49,7 +49,7 @@ export function HomePromoCarousel({
 }: HomePromoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
-  /** After any explicit user control, interval autoplay stops until the component remounts (e.g. revisit page). */
+  /** After any explicit user control, interval autoplay pauses until manually resumed. */
   const [autoplayEnabled, setAutoplayEnabled] = useState(true);
   const dragStartRef = useRef<{ x: number; y: number } | null>(null);
   const isPausedRef = useRef(false);
@@ -68,31 +68,32 @@ export function HomePromoCarousel({
 
   const totalSlides = slides.length;
 
-  const stopAutoplayForever = useCallback(() => setAutoplayEnabled(false), []);
+  const pauseAutoplay = useCallback(() => setAutoplayEnabled(false), []);
+  const toggleAutoplay = useCallback(() => setAutoplayEnabled((prev) => !prev), []);
 
   const goTo = useCallback(
     (index: number) => {
-      stopAutoplayForever();
+      pauseAutoplay();
       if (index === currentIndex || totalSlides === 0) return;
       setDirection(index > currentIndex ? 1 : -1);
       setCurrentIndex(index);
     },
-    [currentIndex, stopAutoplayForever, totalSlides],
+    [currentIndex, pauseAutoplay, totalSlides],
   );
 
   const goNext = useCallback(() => {
     if (totalSlides <= 1) return;
-    stopAutoplayForever();
+    pauseAutoplay();
     setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
-  }, [stopAutoplayForever, totalSlides]);
+  }, [pauseAutoplay, totalSlides]);
 
   const goPrev = useCallback(() => {
     if (totalSlides <= 1) return;
-    stopAutoplayForever();
+    pauseAutoplay();
     setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-  }, [stopAutoplayForever, totalSlides]);
+  }, [pauseAutoplay, totalSlides]);
 
   useEffect(() => {
     if (totalSlides <= 1 || shouldReduceMotion || !autoplayEnabled) return;
@@ -155,7 +156,7 @@ export function HomePromoCarousel({
         goPrev();
       }
     } else if (event.pointerType !== "mouse") {
-      stopAutoplayForever();
+      pauseAutoplay();
     }
   }
 
@@ -355,6 +356,15 @@ export function HomePromoCarousel({
                 tabIndex={-1}
               />
             ))}
+            <button
+              type="button"
+              onClick={toggleAutoplay}
+              className={styles["autoplay-toggle"]}
+              aria-label={autoplayEnabled ? "Pause autoplay" : "Resume autoplay"}
+              title={autoplayEnabled ? "Pause autoplay" : "Resume autoplay"}
+            >
+              {autoplayEnabled ? <PauseIcon /> : <PlayIcon />}
+            </button>
           </div>
         ) : null}
       </div>
@@ -445,6 +455,22 @@ function ChevronRightIcon() {
       aria-hidden="true"
     >
       <path d="M9 18l6-6-6-6" />
+    </svg>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  );
+}
+
+function PauseIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
     </svg>
   );
 }

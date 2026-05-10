@@ -16,6 +16,7 @@ import type {
 } from "@/lib/cms/types";
 
 import styles from "./SiteFooter.module.css";
+import { FooterColumn } from "./FooterColumn";
 
 type SiteFooterProps = {
   locale: Locale;
@@ -24,6 +25,21 @@ type SiteFooterProps = {
   appointmentHref: string;
   socialLinks: SocialLinkItemDTO[];
 };
+
+function isExternalUrl(href: string): boolean {
+  return /^https?:\/\//.test(href);
+}
+
+function SmartLink({ href, children }: { href: string; children: React.ReactNode }) {
+  if (isExternalUrl(href)) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    );
+  }
+  return <Link href={href}>{children}</Link>;
+}
 
 export function SiteFooter({
   locale,
@@ -40,10 +56,16 @@ export function SiteFooter({
   const companyLinks = groups.company;
 
   const year = new Date().getFullYear();
+
   const footerAddress = resolveFooterAddressLine(settings, locale);
   const phoneDisplay = resolvePhoneDisplay(settings);
   const phoneTel = resolvePhoneTel(settings);
   const email = resolveContactEmail();
+
+  const hasPractice = practiceLinks.length > 0;
+  const hasPatients = patientsLinks.length > 0;
+  const hasCompany = companyLinks.length > 0;
+  const navColCount = [hasPractice, hasPatients, hasCompany].filter(Boolean).length;
 
   return (
     <footer className={styles["site-footer"]}>
@@ -59,12 +81,13 @@ export function SiteFooter({
             <p className={styles["brand-tagline"]}>{t.brandTagline}</p>
           </div>
 
-          <div className={styles["nav-cols"]}>
-            <FooterColumn label={t.practiceLabel} links={practiceLinks} />
-            <FooterColumn label={t.patientsLabel} links={patientsLinks} />
-            {companyLinks.length > 0 ? (
-              <FooterColumn label={t.companyLabel} links={companyLinks} />
-            ) : null}
+          <div
+            className={styles["nav-cols"]}
+            data-col-count={navColCount > 0 ? String(navColCount) : undefined}
+          >
+            {hasPractice ? <FooterColumn label={t.practiceLabel} links={practiceLinks} /> : null}
+            {hasPatients ? <FooterColumn label={t.patientsLabel} links={patientsLinks} /> : null}
+            {hasCompany ? <FooterColumn label={t.companyLabel} links={companyLinks} /> : null}
           </div>
 
           <div className={styles["contact-col"]}>
@@ -80,8 +103,8 @@ export function SiteFooter({
               </address>
               {socialLinks.length > 0 ? (
                 <ul className={styles["social-list"]} aria-label="Social media">
-                  {socialLinks.map((link) => (
-                    <li key={link.url}>
+                  {socialLinks.map((link, index) => (
+                    <li key={`${link.url}-${index}`}>
                       <a
                         href={link.url}
                         target="_blank"
@@ -100,8 +123,8 @@ export function SiteFooter({
         </div>
 
         <div className={styles["site-footer__bottom"]}>
-          <p>
-            © {year} {t.copyright}
+          <p suppressHydrationWarning>
+            &copy; {year} {t.copyright}
           </p>
           <Link href={`/${locale}/sitemap`} className={styles["bottom-link"]}>
             {t.sitemapLabel}
@@ -109,27 +132,6 @@ export function SiteFooter({
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterColumn({
-  label,
-  links,
-}: {
-  label: string;
-  links: { label: string; href: string }[];
-}) {
-  return (
-    <details className={styles["link-col"]}>
-      <summary className={styles["col-label"]}>{label}</summary>
-      <ul className={styles["link-list"]}>
-        {links.map((link) => (
-          <li key={link.href}>
-            <Link href={link.href}>{link.label}</Link>
-          </li>
-        ))}
-      </ul>
-    </details>
   );
 }
 

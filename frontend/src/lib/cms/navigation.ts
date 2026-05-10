@@ -17,9 +17,14 @@ import type {
  * @param locale - The locale to filter by.
  * @returns Root nodes of the navigation tree, each with nested `children`.
  */
-export function buildNavigationTree(pages: NavigationInput[], locale: Locale): NavigationNodeDTO[] {
+export function buildNavigationTree(
+  pages: NavigationInput[],
+  locale: Locale,
+  options?: { includeHidden?: boolean },
+): NavigationNodeDTO[] {
+  const includeHidden = options?.includeHidden ?? false;
   const scopedPages = pages
-    .filter((page) => page.locale === locale && !page.hideFromMenu)
+    .filter((page) => page.locale === locale && (includeHidden || !page.hideFromMenu))
     .sort(compareNavigationItems);
 
   const nodes = new Map<string, NavigationNodeDTO>();

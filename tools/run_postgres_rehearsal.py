@@ -10,7 +10,7 @@ choice and a forced index-only choice
 
 Assumptions made by this script:
 
-- A disposable PG container named ``gemini-pg-rehearsal`` is already running
+- A disposable PG container named ``myorl-pg-rehearsal`` is already running
   with database ``strapi_rehearsal`` and user ``strapi``. Provision per the
   runbook before invoking this script.
 - Strapi has been booted once against that PG so the schema is materialized.

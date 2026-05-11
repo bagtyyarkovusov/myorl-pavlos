@@ -1,6 +1,6 @@
 # Domain Glossary
 
-This document defines the canonical vocabulary for architecture discussions in the gemini-export project. Use these terms exactly — do not drift into synonyms.
+This document defines the canonical vocabulary for architecture discussions in the myorl-pavlos project. Use these terms exactly — do not drift into synonyms.
 
 ## Tech Stack
 
@@ -18,7 +18,7 @@ This document defines the canonical vocabulary for architecture discussions in t
 
 ## Rehearsal Environment
 
-A **disposable, isolated PostgreSQL database** used to validate query plans, data strictness, and migration correctness before production deployment. The rehearsal environment uses a fixed host port (`55532`) and a dedicated Docker container (`gemini-pg-rehearsal`) to prevent collisions with native PostgreSQL (`5432`) and dev Docker (`55432`).
+A **disposable, isolated PostgreSQL database** used to validate query plans, data strictness, and migration correctness before production deployment. The rehearsal environment uses a fixed host port (`55532`) and a dedicated Docker container (`myorl-pg-rehearsal`) to prevent collisions with native PostgreSQL (`5432`) and dev Docker (`55432`).
 
 The rehearsal environment is provisioned declaratively via `docker-compose.rehearsal.yml` and orchestrated by `tools/orchestrate_rehearsal.py`.
 
@@ -73,7 +73,7 @@ The **codified enforcement module** for the Forward-Only Migration policy. Lives
 
 ## SQLite Fallback Store
 
-The **local SQLite database** (`backend/.tmp/data.db`) used for fast development without Docker (`npm run dev:local`). It is a convenience fallback, not a source of truth. The canonical `Strapi State` store for dev and rehearsal is **dev Postgres** (`gemini-pg`). See ADR-008.
+The **local SQLite database** (`backend/.tmp/data.db`) used for fast development without Docker (`npm run dev:local`). It is a convenience fallback, not a source of truth. The canonical `Strapi State` store for dev and rehearsal is **dev Postgres** (`myorl-pg`). See ADR-008.
 
 ## Strapi State
 
@@ -103,9 +103,9 @@ The **fixed port mapping** that prevents collisions. PostgreSQL host ports are o
 | `3000` | Next.js frontend (dev hot reload via HMR) |
 | `1337` | Strapi CMS backend (dev hot reload) |
 | `5432` | Native/system PostgreSQL (`auto.tm` project) |
-| `55432` | Dev Docker PostgreSQL (`gemini-pg`, `pgdata_dev` volume) |
-| `55532` | Rehearsal Docker PostgreSQL (`gemini-pg-rehearsal`, `pgdata-rehearsal` volume) |
-| _internal_ | Production Docker PostgreSQL (`gemini-pg-prod`, `pgdata-prod` volume) — no host exposure |
+| `55432` | Dev Docker PostgreSQL (`myorl-pg`, `pgdata_dev` volume) |
+| `55532` | Rehearsal Docker PostgreSQL (`myorl-pg-rehearsal`, `pgdata-rehearsal` volume) |
+| _internal_ | Production Docker PostgreSQL (`myorl-pg-prod`, `pgdata-prod` volume) — no host exposure |
 
 This contract is enforced by the Port Guard module via the manifest.
 
@@ -115,14 +115,14 @@ The **canonical dev stack** runs in Docker Compose with hot reload on all servic
 
 | Service | Container | Image | Volume mount |
 |---------|-----------|-------|-------------|
-| PostgreSQL 18 | `gemini-pg` | `postgres:18` | `pgdata_dev` (persistent) |
-| Strapi 5 | `gemini-strapi-dev` | `node:20-alpine` | `./backend:/app` (hot reload), `strapi_node_modules` (named) |
-| Next.js 16 | `gemini-nextjs-dev` | `node:24-slim` | `./frontend:/app` (hot reload), `nextjs_node_modules` (named) |
+| PostgreSQL 18 | `myorl-pg` | `postgres:18` | `pgdata_dev` (persistent) |
+| Strapi 5 | `myorl-strapi-dev` | `node:20-alpine` | `./backend:/app` (hot reload), `strapi_node_modules` (named) |
+| Next.js 16 | `myorl-nextjs-dev` | `node:24-slim` | `./frontend:/app` (hot reload), `nextjs_node_modules` (named) |
 
 **Key behaviors:**
 - Code changes trigger auto-reload — no rebuild needed
 - `node_modules` persist in named volumes across restarts
-- `npm install` in running container (`docker exec gemini-strapi-dev npm install <pkg>`), or remove `node_modules/.package-lock.json` sentinel + restart
+- `npm install` in running container (`docker exec myorl-strapi-dev npm install <pkg>`), or remove `node_modules/.package-lock.json` sentinel + restart
 - Only rebuild with `--build` when `Dockerfile` changes (base image, system deps)
 - Images served via Next.js `rewrites()` proxy: `/uploads/*` → Strapi (port 1337)
 - Strapi connects to Next.js on `http://localhost:3000` for preview

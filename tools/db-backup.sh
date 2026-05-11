@@ -3,7 +3,7 @@ set -euo pipefail
 
 BACKUP_DIR="${BACKUP_DIR:-backups}"
 RETENTION_DAYS="${RETENTION_DAYS:-30}"
-CONTAINER="${POSTGRES_CONTAINER:-gemini-pg-prod}"
+CONTAINER="${POSTGRES_CONTAINER:-myorl-pg-prod}"
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 BACKUP_FILE="${BACKUP_DIR}/strapi_${TIMESTAMP}.sql.gz"
 

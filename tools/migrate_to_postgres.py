@@ -348,7 +348,7 @@ def main() -> int:
                 # Assume shell-access production with manual copy step
                 log("No --production-url provided; using shell-access path.")
                 log("After export, copy the tarball to your production server and run:")
-                log(f"  docker exec gemini-strapi-prod npm run strapi import -- --file /path/to/{args.export_file.name}")
+                log(f"  docker exec myorl-strapi-prod npm run strapi import -- --file /path/to/{args.export_file.name}")
                 result = migrate_shell_access(
                     args.source, args.target, args.export_file, args.dry_run
                 )

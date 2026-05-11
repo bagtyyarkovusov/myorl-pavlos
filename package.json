@@ -1,5 +1,5 @@
 {
-  "name": "gemini-export",
+  "name": "myorl-pavlos",
   "private": true,
   "description": "myORL medical website — Strapi CMS + Next.js frontend monorepo",
   "scripts": {
@@ -10,8 +10,8 @@
     "build": "npm run build --prefix backend && npm run build --prefix frontend",
     "start": "docker compose -f docker-compose.dev.yml up",
     "stop": "docker compose -f docker-compose.dev.yml down",
-    "transfer:push": "docker exec gemini-strapi-dev npx strapi transfer --to ${STRAPI_PROD_URL} --to-token ${STRAPI_TRANSFER_TOKEN} --force",
-    "transfer:pull": "docker exec gemini-strapi-dev npx strapi transfer --from ${STRAPI_PROD_URL} --from-token ${STRAPI_TRANSFER_TOKEN} --force",
+    "transfer:push": "docker exec myorl-strapi-dev npx strapi transfer --to ${STRAPI_PROD_URL} --to-token ${STRAPI_TRANSFER_TOKEN} --force",
+    "transfer:pull": "docker exec myorl-strapi-dev npx strapi transfer --from ${STRAPI_PROD_URL} --from-token ${STRAPI_TRANSFER_TOKEN} --force",
     "test": "npm run test --prefix frontend",
     "lint": "npm run lint --prefix frontend",
     "typecheck": "npm run typecheck --prefix frontend",

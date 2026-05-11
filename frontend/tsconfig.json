@@ -22,7 +22,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@gemini/shared-types": ["../packages/shared-types/src/index.ts"]
+      "@myorl-pavlos/shared-types": ["../packages/shared-types/src/index.ts"]
     }
   },
   "include": [

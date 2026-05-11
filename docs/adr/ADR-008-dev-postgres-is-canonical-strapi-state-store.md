@@ -6,7 +6,7 @@ Accepted
 ## Context
 Two stores could hold `Strapi State` in the dev environment:
 
-- **Dev Postgres** (`gemini-pg`, `pgdata_dev` volume) — what `npm run dev` writes to.
+- **Dev Postgres** (`myorl-pg`, `pgdata_dev` volume) — what `npm run dev` writes to.
 - **SQLite** (`backend/.tmp/data.db`) — what `npm run dev:local` writes to (Strapi's default), and what `tools/orchestrate_rehearsal.py` historically exported *from*.
 
 If a developer ran `npm run dev`, edited content in the admin panel, then ran the rehearsal pipeline — the rehearsal exported stale data from SQLite, not their actual edits. The `Rehearsal Environment` was supposed to validate cutover safety; it could quietly validate the wrong dataset.
@@ -19,7 +19,7 @@ Row-count verification showed both stores held identical content at decision tim
 SQLite (`backend/.tmp/data.db`) remains a supported **no-Docker fallback** for local development only. It is explicitly excluded from the rehearsal pipeline and must not be treated as a source of truth for any migration or cutover operation.
 
 Concretely:
-- `tools/orchestrate_rehearsal.py` exports from dev Postgres (`gemini-pg`) instead of SQLite.
+- `tools/orchestrate_rehearsal.py` exports from dev Postgres (`myorl-pg`) instead of SQLite.
 - The orchestrator **fails fast** if dev Postgres is not running, with an actionable message (`npm run dev:db` to start it).
 - `SQLITE_FALLBACK_PATH` lives in `tools/environments.py` for tools that need it, but no environment definition carries a `sqlite_source` field.
 - `npm run dev:local` continues to work for contributors who prefer not to run Docker.

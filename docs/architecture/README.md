@@ -1,4 +1,4 @@
-# Architecture Overview (gemini-export)
+# Architecture Overview (myorl-pavlos)
 
 > Maps where decisions and boundaries live. **ADRs are canonical;** this note only links to them.
 

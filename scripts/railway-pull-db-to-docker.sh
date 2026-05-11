@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COMPOSE_FILE="${COMPOSE_FILE:-${ROOT_DIR}/docker-compose.dev.yml}"
 POSTGRES_SERVICE="${POSTGRES_SERVICE:-Postgres}"
-LOCAL_CONTAINER="${LOCAL_CONTAINER:-gemini-pg}"
+LOCAL_CONTAINER="${LOCAL_CONTAINER:-myorl-pg}"
 LOCAL_DB="${LOCAL_DB:-strapi}"
 LOCAL_USER="${LOCAL_USER:-strapi}"
 COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "${ROOT_DIR}")}"
@@ -25,10 +25,10 @@ local pgdata volume before restoring.
 Environment overrides:
   POSTGRES_SERVICE   Railway database service name, default: Postgres
   COMPOSE_FILE       Compose file, default: docker-compose.dev.yml
-  LOCAL_CONTAINER    Local postgres container, default: gemini-pg
+  LOCAL_CONTAINER    Local postgres container, default: myorl-pg
   LOCAL_DB           Local database name, default: strapi
   LOCAL_USER         Local database user, default: strapi
-  LOCAL_VOLUME       Docker volume to recreate, default: gemini-export_pgdata_dev
+  LOCAL_VOLUME       Docker volume to recreate, default: myorl-pavlos_pgdata_dev
 USAGE
 }
 

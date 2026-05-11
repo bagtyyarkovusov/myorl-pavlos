@@ -164,7 +164,7 @@ def cmd_backup(target_name: str, *, uploads: bool, schema_only: bool, data_only:
         uploads_path = BACKUPS_DIR / f"uploads_{_timestamp()}.tar.gz"
         up_result = _run([
             "docker", "run", "--rm",
-            "-v", "gemini-export_uploads:/data",
+            "-v", "myorl-pavlos_uploads:/data",
             "-v", f"{BACKUPS_DIR}:/backup",
             "alpine", "tar", "czf", f"/backup/{uploads_path.name}", "-C", "/data", ".",
         ], timeout=120)
@@ -249,7 +249,7 @@ def cmd_restore(target_name: str, *, file: Path, force: bool, uploads_file: Path
         print(f"  Restoring uploads from {uploads_file.name}...")
         up_result = _run([
             "docker", "run", "--rm",
-            "-v", "gemini-export_uploads:/data",
+            "-v", "myorl-pavlos_uploads:/data",
             "-v", f"{uploads_file.parent}:/backup",
             "alpine", "tar", "xzf", f"/backup/{uploads_file.name}", "-C", "/data",
         ], timeout=120)

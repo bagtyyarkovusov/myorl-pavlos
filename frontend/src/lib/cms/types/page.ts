@@ -1,4 +1,9 @@
-import type { PageType, LayoutVariant, RenderMode, FooterCategory } from "@gemini/shared-types";
+import type {
+  PageType,
+  LayoutVariant,
+  RenderMode,
+  FooterCategory,
+} from "@myorl-pavlos/shared-types";
 import type { Locale, MediaDTO, PageRefDTO } from "./common";
 import type { SectionDTO, StrapiSectionRaw } from "./sections";
 import type { SeoDTO, StrapiMedia, StrapiSeo } from "./seo";

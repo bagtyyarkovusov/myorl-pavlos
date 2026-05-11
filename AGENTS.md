@@ -2,7 +2,7 @@
 
 ### Issue tracker
 
-GitHub Issues on `bagtyyarkovusov/gemini-export`. See `docs/agents/issue-tracker.md`.
+GitHub Issues on `bagtyyarkovusov/myorl-pavlos`. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

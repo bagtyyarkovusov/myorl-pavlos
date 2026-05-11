@@ -64,13 +64,13 @@ All content is bilingual (Greek `el` and Russian `ru`) using Strapi's i18n plugi
 
 ```bash
 # Enter the running Strapi container
-docker exec -it gemini-strapi-dev sh
+docker exec -it myorl-strapi-dev sh
 
 # Run Strapi CLI commands inside the container
-docker exec gemini-strapi-dev npx strapi <command>
+docker exec myorl-strapi-dev npx strapi <command>
 
 # Generate TypeScript types from the content model
-docker exec gemini-strapi-dev npx strapi ts:generate-types
+docker exec myorl-strapi-dev npx strapi ts:generate-types
 
 # Build the admin panel (for production)
 npm run build --prefix backend

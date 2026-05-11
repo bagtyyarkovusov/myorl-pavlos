@@ -32,7 +32,7 @@ Architecture docs are for **navigation and discovery**, not a parallel decision 
 
 ## Project identity
 
-- **Name**: gemini-export (myORL)
-- **Repo**: `bagtyyarkovusov/gemini-export`
+- **Name**: myorl-pavlos (myORL)
+- **Repo**: `bagtyyarkovusov/myorl-pavlos`
 - **Stack**: Next.js 16 + Strapi 5.42.1 + PostgreSQL 18
 - **Locales**: Greek (el), Russian (ru)

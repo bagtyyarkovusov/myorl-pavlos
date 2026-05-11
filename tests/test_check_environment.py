@@ -85,7 +85,7 @@ class TestRunChecks(unittest.TestCase):
 class TestCheckContainerConflict(unittest.TestCase):
     def test_fake_container_name(self):
         # Use a container name that almost certainly does not exist
-        result = check_container_conflict("gemini-pg-definitely-not-running-12345")
+        result = check_container_conflict("myorl-pg-definitely-not-running-12345")
         # This may fail if Docker is not installed, which is acceptable
         if result.passed:
             self.assertIn("No conflicting container", result.message)

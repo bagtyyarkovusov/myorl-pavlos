@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:18
-    container_name: gemini-pg
+    container_name: myorl-pg
     environment:
       POSTGRES_USER: strapi
       POSTGRES_PASSWORD: strapi
@@ -18,7 +18,7 @@ services:
 
   strapi:
     image: node:20-alpine
-    container_name: gemini-strapi-dev
+    container_name: myorl-strapi-dev
     working_dir: /app
     command:
       - sh
@@ -59,7 +59,7 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile.dev
-    container_name: gemini-nextjs-dev
+    container_name: myorl-nextjs-dev
     working_dir: /app
     command:
       - sh

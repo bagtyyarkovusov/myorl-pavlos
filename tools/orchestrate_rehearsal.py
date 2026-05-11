@@ -15,7 +15,7 @@ Runs the full rehearsal pipeline end-to-end:
 Interface:
   python3 tools/orchestrate_rehearsal.py [--keep-running]
 
-Requires the dev Postgres container (`gemini-pg`) to be running. Start it
+Requires the dev Postgres container (`myorl-pg`) to be running. Start it
 with `npm run dev:db` (or `npm run dev` for the full stack) before invoking
 the orchestrator. The implementation fails fast if it is not running.
 """

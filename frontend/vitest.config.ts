@@ -20,7 +20,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@gemini/shared-types": path.resolve(__dirname, "../packages/shared-types/src/index.ts"),
+      "@myorl-pavlos/shared-types": path.resolve(
+        __dirname,
+        "../packages/shared-types/src/index.ts",
+      ),
       "server-only": path.resolve(__dirname, "./vitest.server-only-shim.ts"),
     },
   },

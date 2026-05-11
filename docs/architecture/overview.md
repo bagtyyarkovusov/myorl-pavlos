@@ -1,6 +1,6 @@
 # System Architecture Overview
 
-> gemini-export is a bilingual (Greek/Russian) medical services website built as a monorepo with a Next.js 16 frontend, Strapi 5.42.1 CMS backend, and PostgreSQL 18 database.
+> myorl-pavlos is a bilingual (Greek/Russian) medical services website built as a monorepo with a Next.js 16 frontend, Strapi 5.42.1 CMS backend, and PostgreSQL 18 database.
 
 ## Tech Stack
 
@@ -90,8 +90,8 @@ All decisions are recorded as ADRs in `docs/adr/`:
 | `3000` | Next.js frontend (dev) |
 | `1337` | Strapi CMS backend (dev) |
 | `5432` | Native/system PostgreSQL (other projects) |
-| `55432` | Dev Docker PostgreSQL (`gemini-pg`) |
-| `55532` | Rehearsal Docker PostgreSQL (`gemini-pg-rehearsal`) |
+| `55432` | Dev Docker PostgreSQL (`myorl-pg`) |
+| `55532` | Rehearsal Docker PostgreSQL (`myorl-pg-rehearsal`) |
 
 ## Environments
 

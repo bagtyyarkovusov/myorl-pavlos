@@ -4,7 +4,7 @@ set -euo pipefail
 # =============================================================================
 # Daily Backup Script for Production Database & Uploads
 # =============================================================================
-# Recommended cron: 0 3 * * * /home/USER/gemini-export/scripts/backup.sh
+# Recommended cron: 0 3 * * * /home/USER/myorl-pavlos/scripts/backup.sh
 # =============================================================================
 
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -47,7 +47,7 @@ log "Database backup saved: db-${TIMESTAMP}.sql.gz"
 UPLOADS_VOLUME="$(docker compose -f "${COMPOSE_FILE}" ps -q strapi 2>/dev/null || true)"
 if [ -n "$UPLOADS_VOLUME" ]; then
   log "Backing up Strapi uploads..."
-  docker run --rm -v gemini-export_uploads:/data -v "${BACKUP_DIR}:/backup" alpine \
+  docker run --rm -v myorl-pavlos_uploads:/data -v "${BACKUP_DIR}:/backup" alpine \
     tar czf "/backup/uploads-${TIMESTAMP}.tar.gz" -C /data .
   log "Uploads backup saved: uploads-${TIMESTAMP}.tar.gz"
 fi

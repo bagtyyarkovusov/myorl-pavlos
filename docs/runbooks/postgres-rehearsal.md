@@ -14,7 +14,7 @@ python3 tools/orchestrate_rehearsal.py
 This single command runs the entire pipeline:
 1. Preflight guard (port/container/database checks)
 2. Export full Strapi state from SQLite
-3. Start rehearsal PostgreSQL (`gemini-pg-rehearsal` on port `55532`)
+3. Start rehearsal PostgreSQL (`myorl-pg-rehearsal` on port `55532`)
 4. Import into PostgreSQL
 5. Apply forward-only index migrations
 6. Run EXPLAIN ANALYZE on hot paths
@@ -184,8 +184,8 @@ explicitly supports it. Do not commit real tokens.
 | Port | Owner |
 |------|-------|
 | `5432` | Native/system PostgreSQL |
-| `55432` | Dev Docker (`gemini-pg`) |
-| `55532` | Rehearsal Docker (`gemini-pg-rehearsal`) |
+| `55432` | Dev Docker (`myorl-pg`) |
+| `55532` | Rehearsal Docker (`myorl-pg-rehearsal`) |
 
 Keep SQLite as the default local store unless the team explicitly decides to
 switch the committed development defaults.

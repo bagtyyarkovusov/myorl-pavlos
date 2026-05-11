@@ -110,14 +110,14 @@ class TestFrontendUsesSharedPackage(unittest.TestCase):
 
     def test_frontend_imports_page_type_from_shared(self):
         result = subprocess.run(
-            ["grep", "-rn", r"from.*@gemini/shared-types", "frontend/src/"],
+            ["grep", "-rn", r"from.*@myorl-pavlos/shared-types", "frontend/src/"],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
         )
         self.assertTrue(
             result.returncode == 0 and len(result.stdout.strip()) > 0,
-            "Frontend should import from @gemini/shared-types",
+            "Frontend should import from @myorl-pavlos/shared-types",
         )
 
     def test_frontend_page_type_no_longer_defined_locally(self):
@@ -171,15 +171,15 @@ class TestSharedTypesTestsPass(unittest.TestCase):
 
 
 class TestFrontendPathAliasConfigured(unittest.TestCase):
-    """Implicit: frontend must resolve @gemini/shared-types via path alias."""
+    """Implicit: frontend must resolve @myorl-pavlos/shared-types via path alias."""
 
     def test_frontend_tsconfig_has_shared_types_path(self):
         content = read_file("frontend", "tsconfig.json")
-        self.assertIn("@gemini/shared-types", content)
+        self.assertIn("@myorl-pavlos/shared-types", content)
 
     def test_frontend_vitest_config_has_shared_types_alias(self):
         content = read_file("frontend", "vitest.config.ts")
-        self.assertIn("@gemini/shared-types", content)
+        self.assertIn("@myorl-pavlos/shared-types", content)
 
 
 if __name__ == "__main__":

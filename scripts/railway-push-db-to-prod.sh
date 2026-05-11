@@ -12,7 +12,7 @@ set -euo pipefail
 #
 # Environment overrides:
 #   POSTGRES_SERVICE   Railway database service name, default: Postgres
-#   LOCAL_CONTAINER    Local postgres container, default: gemini-pg
+#   LOCAL_CONTAINER    Local postgres container, default: myorl-pg
 #   LOCAL_DB           Local database name, default: strapi
 #   LOCAL_USER         Local database user, default: strapi
 #   BACKUP_DIR         Backup directory, default: ./backups
@@ -20,7 +20,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 POSTGRES_SERVICE="${POSTGRES_SERVICE:-Postgres}"
-LOCAL_CONTAINER="${LOCAL_CONTAINER:-gemini-pg}"
+LOCAL_CONTAINER="${LOCAL_CONTAINER:-myorl-pg}"
 LOCAL_DB="${LOCAL_DB:-strapi}"
 LOCAL_USER="${LOCAL_USER:-strapi}"
 BACKUP_DIR="${BACKUP_DIR:-${ROOT_DIR}/backups}"

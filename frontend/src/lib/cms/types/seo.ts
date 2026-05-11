@@ -1,4 +1,4 @@
-import type { PageSchemaType, SitemapChangeFrequency } from "@gemini/shared-types";
+import type { PageSchemaType, SitemapChangeFrequency } from "@myorl-pavlos/shared-types";
 import type { MediaDTO } from "./common";
 
 export type { PageSchemaType, SitemapChangeFrequency };

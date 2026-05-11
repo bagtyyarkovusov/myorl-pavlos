@@ -18,17 +18,17 @@ class TestResolveTarget(unittest.TestCase):
     def test_dev(self):
         t = _resolve_target("dev")
         self.assertEqual(t.name, "dev")
-        self.assertEqual(t.container, "gemini-pg")
+        self.assertEqual(t.container, "myorl-pg")
         self.assertEqual(t.db_name, "strapi")
 
     def test_rehearsal(self):
         t = _resolve_target("rehearsal")
-        self.assertEqual(t.container, "gemini-pg-rehearsal")
+        self.assertEqual(t.container, "myorl-pg-rehearsal")
         self.assertEqual(t.db_name, "strapi_rehearsal")
 
     def test_production(self):
         t = _resolve_target("production")
-        self.assertEqual(t.container, "gemini-pg-prod")
+        self.assertEqual(t.container, "myorl-pg-prod")
         self.assertEqual(t.db_name, "strapi")
 
 

@@ -44,14 +44,14 @@ The **single source of truth** for deployment target identity lives in `tools/en
 ENVIRONMENTS = {
     "dev": {
         "host_port": 55432,
-        "container_name": "gemini-pg",
+        "container_name": "myorl-pg",
         "volume_name": "pgdata_dev",
         "db_name": "strapi",
         "compose_file": "docker-compose.dev.yml",
     },
     "rehearsal": {
         "host_port": 55532,
-        "container_name": "gemini-pg-rehearsal",
+        "container_name": "myorl-pg-rehearsal",
         "volume_name": "pgdata-rehearsal",
         "db_name": "strapi_rehearsal",
         "compose_file": "docker-compose.rehearsal.yml",
@@ -119,8 +119,8 @@ Summary:
 | `3000` | Next.js frontend (dev HMR) |
 | `1337` | Strapi CMS backend (dev) |
 | `5432` | Native/system PostgreSQL (other projects) |
-| `55432` | Dev Docker PostgreSQL (`gemini-pg`) |
-| `55532` | Rehearsal Docker PostgreSQL (`gemini-pg-rehearsal`) |
+| `55432` | Dev Docker PostgreSQL (`myorl-pg`) |
+| `55532` | Rehearsal Docker PostgreSQL (`myorl-pg-rehearsal`) |
 | internal | Production PostgreSQL (no host exposure) |
 
 ## Local Development Commands

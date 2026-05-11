@@ -1,4 +1,4 @@
-import type { SectionComponent } from "@gemini/shared-types";
+import type { SectionComponent } from "@myorl-pavlos/shared-types";
 import type { MediaDTO, PageRefDTO } from "./common";
 import type { ContactClinicDTO, ContactDetailDTO } from "./contact";
 

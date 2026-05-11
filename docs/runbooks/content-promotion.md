@@ -20,7 +20,7 @@ etc.) without full database cutover.
 
 ```bash
 # On the production server
-docker exec gemini-strapi-prod npx strapi transfer --to-token generate
+docker exec myorl-strapi-prod npx strapi transfer --to-token generate
 ```
 
 Or create one in the Strapi admin panel: Settings → Transfer Tokens → Create.
@@ -31,7 +31,7 @@ Copy the generated token — you'll need it for the push command.
 
 ```bash
 # From the dev machine
-docker exec gemini-strapi-dev npx strapi transfer \
+docker exec myorl-strapi-dev npx strapi transfer \
   --to https://myorl.gr \
   --to-token <production-transfer-token> \
   --force
@@ -41,7 +41,7 @@ docker exec gemini-strapi-dev npx strapi transfer \
 
 ```bash
 # From the dev machine — pull production content into dev
-docker exec gemini-strapi-dev npx strapi transfer \
+docker exec myorl-strapi-dev npx strapi transfer \
   --from https://myorl.gr \
   --from-token <production-transfer-token> \
   --force
@@ -51,14 +51,14 @@ docker exec gemini-strapi-dev npx strapi transfer \
 
 ```bash
 # Content only (no files, no config)
-docker exec gemini-strapi-dev npx strapi transfer \
+docker exec myorl-strapi-dev npx strapi transfer \
   --to https://myorl.gr \
   --to-token <token> \
   --only content \
   --force
 
 # Files only
-docker exec gemini-strapi-dev npx strapi transfer \
+docker exec myorl-strapi-dev npx strapi transfer \
   --to https://myorl.gr \
   --to-token <token> \
   --only files \

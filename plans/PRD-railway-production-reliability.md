@@ -95,7 +95,7 @@ Tests must verify external behavior, not implementation details. For this work:
 
 ### Testing approach
 
-- **Backend (strapi):** Integration tests against the rehearsal Docker PostgreSQL (`gemini-pg-rehearsal` on port `55532`). Spin up a Strapi instance via `docker-compose.rehearsal.yml` with the seed script injected, then query `/api/global` and check logs.
+- **Backend (strapi):** Integration tests against the rehearsal Docker PostgreSQL (`myorl-pg-rehearsal` on port `55532`). Spin up a Strapi instance via `docker-compose.rehearsal.yml` with the seed script injected, then query `/api/global` and check logs.
 - **Frontend (next.js):** Use existing Playwright infrastructure in `frontend/e2e/`. Add assertions for status codes and check that CMS-provided content appears instead of the fallback.
 - **Migration runner:** Extend `tests/test_migration_runner.py` with test cases for the new `status` check against a remote database.
 

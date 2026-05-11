@@ -47,7 +47,7 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 docker compose -f docker-compose.prod.yml logs -f
 
 # Create admin user (first time only)
-docker exec -it gemini-strapi-prod npm run strapi admin:create-user
+docker exec -it myorl-strapi-prod npm run strapi admin:create-user
 ```
 
 ## Strapi Admin
@@ -90,5 +90,5 @@ curl -s http://localhost:1337/admin/init | python3 -m json.tool
 curl -s http://localhost:3000
 
 # PostgreSQL
-docker exec gemini-pg-prod pg_isready -U strapi -d strapi
+docker exec myorl-pg-prod pg_isready -U strapi -d strapi
 ```

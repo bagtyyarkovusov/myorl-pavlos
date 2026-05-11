@@ -18,7 +18,7 @@ set -euo pipefail
 #   ./scripts/setup-railway.sh
 # =============================================================================
 
-PROJECT_NAME="gemini-export"
+PROJECT_NAME="myorl-pavlos"
 ENV_FILE="$(cd "$(dirname "$0")/.." && pwd)/.env"
 
 RED='\033[0;31m'

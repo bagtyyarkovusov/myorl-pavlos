@@ -34,7 +34,7 @@ class Environment(TypedDict, total=False):
 ENVIRONMENTS: dict[str, Environment] = {
     "dev": {
         "host_port": 55432,
-        "container": "gemini-pg",
+        "container": "myorl-pg",
         "volume": "pgdata_dev",
         "db_name": "strapi",
         "db_user": "strapi",
@@ -43,7 +43,7 @@ ENVIRONMENTS: dict[str, Environment] = {
     },
     "rehearsal": {
         "host_port": 55532,
-        "container": "gemini-pg-rehearsal",
+        "container": "myorl-pg-rehearsal",
         "volume": "pgdata-rehearsal",
         "db_name": "strapi_rehearsal",
         "db_user": "strapi",
@@ -52,7 +52,7 @@ ENVIRONMENTS: dict[str, Environment] = {
     },
     "production": {
         "host_port": None,  # internal-network only, no host exposure
-        "container": "gemini-pg-prod",
+        "container": "myorl-pg-prod",
         "volume": "pgdata-prod",
         "db_name": "strapi",
         "db_user": "strapi",

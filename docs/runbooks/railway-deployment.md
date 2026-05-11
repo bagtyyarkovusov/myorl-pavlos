@@ -1,6 +1,6 @@
 # Railway Production Deployment Runbook
 
-This runbook covers deploying the **gemini-export** stack (Next.js + Strapi + PostgreSQL) to [Railway](https://railway.app) using the **CLI-first** approach.
+This runbook covers deploying the **myorl-pavlos** stack (Next.js + Strapi + PostgreSQL) to [Railway](https://railway.app) using the **CLI-first** approach.
 
 > The repository includes `railway.toml` (config-as-code), `scripts/setup-railway.sh` (one-time setup), and `scripts/deploy-railway.sh` (day-to-day deploys).
 
@@ -10,7 +10,7 @@ This runbook covers deploying the **gemini-export** stack (Next.js + Strapi + Po
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│              Railway Project (gemini-export)             │
+│              Railway Project (myorl-pavlos)             │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐ │
 │  │  PostgreSQL │◄───│    Strapi   │◄───│   Next.js   │ │
 │  │  (managed)  │    │   Backend   │    │   Frontend  │ │

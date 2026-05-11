@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:18
-    container_name: gemini-pg-rehearsal
+    container_name: myorl-pg-rehearsal
     environment:
       POSTGRES_USER: strapi
       POSTGRES_PASSWORD: strapi

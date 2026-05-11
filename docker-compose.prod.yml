@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:18
-    container_name: gemini-pg-prod
+    container_name: myorl-pg-prod
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-strapi}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -21,7 +21,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: gemini-strapi-prod
+    container_name: myorl-strapi-prod
     environment:
       HOST: 0.0.0.0
       PORT: 1337
@@ -53,7 +53,7 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-    container_name: gemini-nextjs-prod
+    container_name: myorl-nextjs-prod
     environment:
       STRAPI_URL: ${STRAPI_URL:-http://strapi:1337}
       STRAPI_TOKEN: ${STRAPI_TOKEN}
@@ -67,7 +67,7 @@ services:
 
   caddy:
     image: caddy:2
-    container_name: gemini-caddy-prod
+    container_name: myorl-caddy-prod
     environment:
       CADDY_DOMAIN: ${CADDY_DOMAIN}
     ports:

@@ -158,9 +158,9 @@ Brings up the full Docker Compose stack:
 
 | Service | Container | Image | Port | Volume |
 |---------|-----------|-------|------|--------|
-| PostgreSQL | `gemini-pg` | `postgres:18` | `55432:5432` | `pgdata_dev` |
-| Strapi | `gemini-strapi-dev` | `node:20-alpine` | `1337:1337` | `./backend:/app` |
-| Next.js | `gemini-nextjs-dev` | `node:24-slim` (Dockerfile.dev) | `3000:3000` | `./frontend:/app` |
+| PostgreSQL | `myorl-pg` | `postgres:18` | `55432:5432` | `pgdata_dev` |
+| Strapi | `myorl-strapi-dev` | `node:20-alpine` | `1337:1337` | `./backend:/app` |
+| Next.js | `myorl-nextjs-dev` | `node:24-slim` (Dockerfile.dev) | `3000:3000` | `./frontend:/app` |
 
 **Key behaviors:**
 - Hot reload on all services via bind mounts

@@ -31,7 +31,7 @@ This creates an export tarball at `artifacts/exports/strapi-export-*.tar.gz`.
 
 ```bash
 scp artifacts/exports/strapi-export-*.tar.gz \
-  user@production-server:/opt/gemini-export/
+  user@production-server:/opt/myorl-pavlos/
 ```
 
 ### 3. Back Up Production Database
@@ -39,21 +39,21 @@ scp artifacts/exports/strapi-export-*.tar.gz \
 Before overwriting, back up the existing production database:
 
 ```bash
-ssh user@production-server "cd /opt/gemini-export && bash tools/db-backup.sh"
+ssh user@production-server "cd /opt/myorl-pavlos && bash tools/db-backup.sh"
 ```
 
 ### 4. Import on Production
 
 ```bash
 ssh user@production-server \
-  "docker exec gemini-strapi-prod npm run strapi import -- --file /opt/gemini-export/strapi-export-*.tar.gz --force"
+  "docker exec myorl-strapi-prod npm run strapi import -- --file /opt/myorl-pavlos/strapi-export-*.tar.gz --force"
 ```
 
 ### 5. Verify
 
 ```bash
 ssh user@production-server \
-  "docker exec gemini-pg-prod psql -U strapi -d strapi -c 'SELECT COUNT(*) FROM pages WHERE published_at IS NOT NULL;'"
+  "docker exec myorl-pg-prod psql -U strapi -d strapi -c 'SELECT COUNT(*) FROM pages WHERE published_at IS NOT NULL;'"
 ```
 
 ## Path B: Platform-Managed (Railway, Render, etc.)
@@ -114,13 +114,13 @@ psql "$DATABASE_URL" -c "SELECT COUNT(*) FROM pages WHERE published_at IS NOT NU
 
 ```bash
 # Stop services
-ssh user@production-server "cd /opt/gemini-export && docker compose -f docker-compose.prod.yml down"
+ssh user@production-server "cd /opt/myorl-pavlos && docker compose -f docker-compose.prod.yml down"
 
 # Restore from backup
-ssh user@production-server "docker exec -i gemini-pg-prod psql -U strapi -d strapi < backups/strapi_YYYYMMDD_HHMMSS.sql"
+ssh user@production-server "docker exec -i myorl-pg-prod psql -U strapi -d strapi < backups/strapi_YYYYMMDD_HHMMSS.sql"
 
 # Restart
-ssh user@production-server "cd /opt/gemini-export && docker compose -f docker-compose.prod.yml up -d"
+ssh user@production-server "cd /opt/myorl-pavlos && docker compose -f docker-compose.prod.yml up -d"
 ```
 
 ### Platform-Managed

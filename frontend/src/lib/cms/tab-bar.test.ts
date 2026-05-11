@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { NavigationNodeDTO, PageDTO } from "./types";
-import { getTabBarNodes } from "./tab-bar";
+import { getTabBarNodes, getTabBarConfig } from "./tab-bar";
 
 function makeNode(
   slug: string,
@@ -157,5 +157,91 @@ describe("getTabBarNodes", () => {
     const page = makePage("only-child", { parentDocId: "doc-services" });
 
     expect(getTabBarNodes(tree, page)).toBeNull();
+  });
+});
+
+describe("getTabBarConfig", () => {
+  it("returns visible + overflow when leaf siblings exceed maxVisible", () => {
+    const children = Array.from({ length: 10 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("child-5", { parentDocId: "doc-services" });
+
+    const config = getTabBarConfig(tree, page);
+    expect(config).not.toBeNull();
+    // Visible is siblings only (parent excluded for leaf), capped at maxVisible
+    expect(config!.visible.length).toBeLessThanOrEqual(6);
+    // Overflow = remaining siblings beyond maxVisible
+    expect(config!.overflow.length).toBe(10 - 6);
+    expect(config!.isLeaf).toBe(true);
+  });
+
+  it("returns no overflow when leaf siblings fit within maxVisible", () => {
+    const children = [
+      makeNode("a", "A", { parentDocId: "doc-services" }),
+      makeNode("b", "B", { parentDocId: "doc-services" }),
+      makeNode("c", "C", { parentDocId: "doc-services" }),
+    ];
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("a", { parentDocId: "doc-services" });
+
+    const config = getTabBarConfig(tree, page);
+    expect(config).not.toBeNull();
+    expect(config!.visible.length).toBe(3); // 3 siblings, under limit
+    expect(config!.overflow.length).toBe(0);
+    expect(config!.isLeaf).toBe(true);
+  });
+
+  it("promotes active leaf page into visible set when it would be in overflow", () => {
+    const children = Array.from({ length: 10 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("child-8", { parentDocId: "doc-services" });
+
+    const config = getTabBarConfig(tree, page);
+    expect(config).not.toBeNull();
+    // child-8 should be in visible (promoted from position 8 to last visible slot)
+    expect(config!.visible.map((n) => n.slug)).toContain("child-8");
+    expect(config!.visible.length).toBe(6);
+  });
+
+  it("returns folder tabs with self first and no isLeaf", () => {
+    const children = Array.from({ length: 8 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("services", { isFolder: true });
+
+    const config = getTabBarConfig(tree, page);
+    expect(config).not.toBeNull();
+    expect(config!.visible[0]!.slug).toBe("services");
+    expect(config!.visible.length).toBe(6);
+    expect(config!.overflow.length).toBe(3); // 9 total - 6 visible
+    expect(config!.isLeaf).toBe(false);
+  });
+
+  it("returns null for orphan pages (delegates to getTabBarNodes)", () => {
+    const tree = [makeNode("about", "About")];
+    const page = makePage("about");
+    expect(getTabBarConfig(tree, page)).toBeNull();
+  });
+
+  it("accepts custom maxVisible", () => {
+    const children = Array.from({ length: 8 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-parent" }),
+    );
+    const parent = makeNode("parent", "Parent", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("child-0", { parentDocId: "doc-parent" });
+
+    const config = getTabBarConfig(tree, page, 3);
+    expect(config!.visible.length).toBe(3);
+    expect(config!.overflow.length).toBe(5); // 8 siblings - 3 visible
   });
 });

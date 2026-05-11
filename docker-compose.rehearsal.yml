@@ -18,3 +18,4 @@ services:
 
 volumes:
   pgdata-rehearsal:
+    name: myorl-pavlos_pgdata-rehearsal

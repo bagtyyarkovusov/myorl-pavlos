@@ -27,6 +27,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@testing-library/user-event": "^14.6.1",
     "husky": "^9.1.7"
   }
 }

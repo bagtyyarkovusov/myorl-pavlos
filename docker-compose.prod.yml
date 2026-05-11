@@ -86,9 +86,13 @@ services:
 
 volumes:
   pgdata-prod:
+    name: myorl-pavlos_pgdata-prod
   uploads:
+    name: myorl-pavlos_uploads
   caddy-data:
+    name: myorl-pavlos_caddy-data
   caddy-config:
+    name: myorl-pavlos_caddy-config
 
 networks:
   internal:

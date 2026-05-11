@@ -3,6 +3,7 @@ import { PageHero } from "@/components/PageHero";
 import { PageSection } from "@/components/PageSection";
 import { SectionTabBar } from "@/components/SectionTabBar";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
+import { getPageStrings } from "@/lib/i18n/page";
 import type { SectionDTO } from "@/lib/cms/types";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import styles from "./_shared.module.css";
@@ -38,6 +39,7 @@ export function StandardPage({ page, navigation = [] }: PageLayoutProps) {
 }
 
 function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
+  const t = getPageStrings(page.locale);
   const variant = page.layoutVariant === "specialized-article" ? "specialized" : "encyclopedia";
   const headings = extractHeadings(page.content);
   const contentWithHeadingIds = addHeadingIds(page.content, headings);
@@ -51,8 +53,8 @@ function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
       <PageHero
         page={page}
         variant={variant === "specialized" ? "journal" : "compact"}
-        breadcrumbs={buildBreadcrumbs(page)}
-        metadata={buildArticleMetadata(page, variant)}
+        breadcrumbs={buildBreadcrumbs(page, t.home)}
+        metadata={buildArticleMetadata(page, variant, t)}
       />
       <SectionTabBar navigation={navigation} currentPage={page} />
       <main className={styles["reference-layout"]} data-article-layout={variant}>
@@ -77,8 +79,8 @@ function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
         </article>
         <aside className={styles["reference-layout__sidebar"]}>
           {headings.length > 0 ? (
-            <nav aria-label="Article contents" className={styles["reference-nav"]}>
-              <p>Contents</p>
+            <nav aria-label={t.contents} className={styles["reference-nav"]}>
+              <p>{t.contents}</p>
               {headings.map((heading) => (
                 <a href={`#${heading.id}`} key={heading.id}>
                   {heading.text}
@@ -87,14 +89,14 @@ function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
             </nav>
           ) : null}
           {variant === "specialized" && page.articleAuthor ? (
-            <section className={styles["reference-panel"]} aria-label="Author">
-              <p>Author</p>
+            <section className={styles["reference-panel"]} aria-label={t.author}>
+              <p>{t.author}</p>
               <strong>{page.articleAuthor}</strong>
             </section>
           ) : null}
           {relatedLinks.length > 0 ? (
-            <section className={styles["reference-panel"]} aria-label="Related topics">
-              <p>Related topics</p>
+            <section className={styles["reference-panel"]} aria-label={t.relatedTopics}>
+              <p>{t.relatedTopics}</p>
               {relatedLinks.map((link) => (
                 <a href={link.href} key={`${link.href}-${link.label}`}>
                   {link.label}
@@ -103,17 +105,17 @@ function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
             </section>
           ) : null}
           {page.sources ? (
-            <section className={styles["reference-panel"]} aria-label="Sources">
-              <p>Sources</p>
+            <section className={styles["reference-panel"]} aria-label={t.sources}>
+              <p>{t.sources}</p>
               <CmsHtml html={page.sources} variant={variant} />
             </section>
           ) : null}
         </aside>
       </main>
       <details className={styles["reference-mobile-panel"]}>
-        <summary>Article details</summary>
+        <summary>{t.articleDetails}</summary>
         {headings.length > 0 ? (
-          <nav aria-label="Article contents mobile">
+          <nav aria-label={t.articleDetails}>
             {headings.map((heading) => (
               <a href={`#${heading.id}`} key={heading.id}>
                 {heading.text}
@@ -127,6 +129,7 @@ function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
 }
 
 function ServiceArticlePage({ page, navigation = [] }: PageLayoutProps) {
+  const t = getPageStrings(page.locale);
   const sectionLinks = page.sections
     .map((section, index) => ({
       id: `section-${index + 1}`,
@@ -139,8 +142,8 @@ function ServiceArticlePage({ page, navigation = [] }: PageLayoutProps) {
       <PageHero
         page={page}
         variant="cinematic"
-        breadcrumbs={buildBreadcrumbs(page)}
-        cta={{ label: "Book consultation", href: `/${page.locale}/appointment` }}
+        breadcrumbs={buildBreadcrumbs(page, t.home)}
+        cta={{ label: t.bookConsultation, href: `/${page.locale}/appointment` }}
       />
       <SectionTabBar navigation={navigation} currentPage={page} />
       <main className={styles["service-layout"]} data-service-layout="true">
@@ -167,8 +170,8 @@ function ServiceArticlePage({ page, navigation = [] }: PageLayoutProps) {
         </article>
         <aside className={styles["service-layout__sidebar"]}>
           {sectionLinks.length > 0 ? (
-            <nav aria-label="Article sections" className={styles["service-nav"]}>
-              <p>Sections</p>
+            <nav aria-label={t.sections} className={styles["service-nav"]}>
+              <p>{t.sections}</p>
               {sectionLinks.map((link) => (
                 <a href={`#${link.id}`} key={link.id}>
                   {link.label}
@@ -176,20 +179,17 @@ function ServiceArticlePage({ page, navigation = [] }: PageLayoutProps) {
               ))}
             </nav>
           ) : null}
-          <a className={styles["service-cta"]} href={`/${page.locale}/appointment`}>
-            Book consultation
-          </a>
         </aside>
       </main>
       <a className={styles["service-cta-mobile"]} href={`/${page.locale}/appointment`}>
-        Book consultation
+        {t.bookConsultation}
       </a>
     </>
   );
 }
 
-function buildBreadcrumbs(page: PageLayoutProps["page"]) {
-  const breadcrumbs = [{ label: "Home", href: `/${page.locale}` }];
+function buildBreadcrumbs(page: PageLayoutProps["page"], homeLabel: string) {
+  const breadcrumbs = [{ label: homeLabel, href: `/${page.locale}` }];
 
   if (page.parentPage?.slug && page.parentPage.title) {
     breadcrumbs.push({
@@ -204,6 +204,7 @@ function buildBreadcrumbs(page: PageLayoutProps["page"]) {
 function buildArticleMetadata(
   page: PageLayoutProps["page"],
   variant: "encyclopedia" | "specialized",
+  t: ReturnType<typeof getPageStrings>,
 ): string[] {
   const metadata = [estimateReadingTime(page.content)];
   if (variant === "specialized") {
@@ -211,11 +212,11 @@ function buildArticleMetadata(
       metadata.push(page.articleAuthor);
     }
     if (page.sources) {
-      metadata.push("Sources included");
+      metadata.push(t.sourcesIncluded);
     }
     return metadata;
   }
-  metadata.push("Updated clinical review");
+  metadata.push(t.updatedClinicalReview);
   return metadata;
 }
 

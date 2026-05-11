@@ -178,7 +178,7 @@ describe("StandardPage", () => {
 
     expect(document.querySelector("[data-hero-variant='cinematic']")).toBeTruthy();
     expect(document.querySelector("[data-service-layout='true']")).toBeTruthy();
-    expect(screen.getByRole("navigation", { name: "Article sections" })).toBeDefined();
+    expect(screen.getByRole("navigation", { name: "Ενότητες" })).toBeDefined();
     expect(screen.getByRole("link", { name: "What to expect" })).toHaveAttribute(
       "href",
       "#section-1",
@@ -221,7 +221,7 @@ describe("StandardPage", () => {
 
     expect(document.querySelector("[data-hero-variant='compact']")).toBeTruthy();
     expect(document.querySelector("[data-article-layout='encyclopedia']")).toBeTruthy();
-    const articleContents = screen.getByRole("navigation", { name: "Article contents" });
+    const articleContents = screen.getByRole("navigation", { name: "Περιεχόμενα" });
     expect(articleContents).toBeDefined();
     expect(within(articleContents).getByRole("link", { name: "Diagnosis" })).toHaveAttribute(
       "href",

@@ -87,5 +87,8 @@ services:
 
 volumes:
   pgdata_dev:
+    name: myorl-pavlos_pgdata_dev
   strapi_node_modules:
+    name: myorl-pavlos_strapi_node_modules
   nextjs_node_modules:
+    name: myorl-pavlos_nextjs_node_modules

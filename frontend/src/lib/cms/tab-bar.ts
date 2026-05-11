@@ -34,6 +34,69 @@ export function getTabBarNodes(
   return [parent, ...parent.children];
 }
 
+/** Maximum number of visible tabs before overflowing into a "More" dropdown. */
+export const MAX_VISIBLE_TABS = 6;
+
+export type TabBarConfig = {
+  /** Tabs rendered directly in the nav bar (at most MAX_VISIBLE_TABS). */
+  visible: NavigationNodeDTO[];
+  /** Remaining tabs hidden behind the "More +N" dropdown. */
+  overflow: NavigationNodeDTO[];
+  /** Index of the active page within the combined [visible, ...overflow] set, or -1. */
+  activeIndex: number;
+  /** Whether the page is a leaf under a parent (show back-link). */
+  isLeaf: boolean;
+};
+
+/**
+ * Derives a paginated tab-bar configuration with visible and overflow sets.
+ *
+ * For leaf pages the parent is excluded from tabs (the back-link handles
+ * parent navigation). The active page is guaranteed to be in the visible set.
+ *
+ * For folder pages the first tab is the folder itself, followed by children.
+ *
+ * @param tree - Full navigation tree for the current locale.
+ * @param page - The current page DTO.
+ * @param maxVisible - Max visible tabs (defaults to MAX_VISIBLE_TABS).
+ */
+export function getTabBarConfig(
+  tree: NavigationNodeDTO[],
+  page: PageDTO,
+  maxVisible: number = MAX_VISIBLE_TABS,
+): TabBarConfig | null {
+  const allNodes = getTabBarNodes(tree, page);
+  if (!allNodes || allNodes.length === 0) return null;
+
+  if (page.isFolder) {
+    const visible = allNodes.slice(0, maxVisible);
+    const overflow = allNodes.slice(maxVisible);
+    const activeIdx = allNodes.findIndex((n) => n.documentId === page.documentId);
+    return { visible, overflow, activeIndex: activeIdx, isLeaf: false };
+  }
+
+  // Leaf page: allNodes = [parent, ...siblings]. Exclude parent from tabs.
+  const siblings = allNodes.slice(1);
+  const activeIdx = siblings.findIndex((n) => n.documentId === page.documentId);
+
+  // Ensure the active page is in the visible set.
+  let visible: typeof siblings;
+  let overflow: typeof siblings;
+  if (siblings.length <= maxVisible) {
+    visible = siblings;
+    overflow = [];
+  } else if (activeIdx < maxVisible) {
+    visible = siblings.slice(0, maxVisible);
+    overflow = siblings.slice(maxVisible);
+  } else {
+    // Active page is beyond the visible window — promote it.
+    visible = [...siblings.slice(0, maxVisible - 1), siblings[activeIdx]];
+    overflow = [...siblings.slice(maxVisible - 1, activeIdx), ...siblings.slice(activeIdx + 1)];
+  }
+
+  return { visible, overflow, activeIndex: activeIdx, isLeaf: true };
+}
+
 function findNodeByDocumentId(
   nodes: NavigationNodeDTO[],
   documentId: string,

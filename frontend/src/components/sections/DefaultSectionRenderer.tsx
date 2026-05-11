@@ -6,6 +6,7 @@ import { SectionGrid } from "@/components/SectionGrid";
 import { Card } from "@/components/design-system";
 import { toSocialLinkDTO } from "@/lib/cms/dto";
 import type { Density } from "@/lib/cms/density";
+import { getPageStrings } from "@/lib/i18n/page";
 import type { Locale, MediaDTO, SectionDTO } from "@/lib/cms/types";
 
 import { DisclosureList, TabsPanel } from "./DisclosurePanels";
@@ -42,6 +43,7 @@ export function DefaultSectionRenderer({
   galleryMode?: "cards" | "lightbox";
   sectionIndex?: number;
 }) {
+  const t = getPageStrings(locale);
   switch (section.__component) {
     case "sections.promo-slider":
       return (
@@ -54,7 +56,7 @@ export function DefaultSectionRenderer({
               <ResponsiveImage media={slide.image} alt={slide.title ?? ""} />
               {slide.title ? <h3>{slide.title}</h3> : null}
               <CmsHtml html={slide.description} />
-              {slide.targetUrl ? <a href={slide.targetUrl}>Open</a> : null}
+              {slide.targetUrl ? <a href={slide.targetUrl}>{t.openLabel}</a> : null}
             </article>
           ))}
         </SectionGrid>
@@ -70,7 +72,7 @@ export function DefaultSectionRenderer({
               href={resolveResourceHref(item, locale)}
               image={item.image}
               density={density}
-              ctaLabel="Open"
+              ctaLabel={t.openLabel}
             />
           ))}
         </SectionGrid>

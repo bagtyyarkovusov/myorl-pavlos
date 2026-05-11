@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { SectionTabBar } from "./SectionTabBar";
 import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
@@ -92,7 +93,8 @@ describe("SectionTabBar", () => {
     const nav = screen.getByRole("navigation");
     expect(nav).toBeTruthy();
 
-    const links = screen.getAllByRole("link");
+    // For folder pages: self + 2 children = 3 links, no back-link
+    const links = within(nav).getAllByRole("link");
     expect(links).toHaveLength(3);
     expect(links[0]).toHaveAttribute("href", "/el/services");
     expect(links[1]).toHaveAttribute("href", "/el/intro");
@@ -150,5 +152,94 @@ describe("SectionTabBar", () => {
 
     const { container } = render(<SectionTabBar navigation={tree} currentPage={page} />);
     expect(container.querySelector("nav")).toBeNull();
+  });
+
+  it("renders back-link for leaf pages under a folder", () => {
+    const children = [
+      makeNode("a", "AAA", { parentDocId: "doc-parent" }),
+      makeNode("b", "BBB", { parentDocId: "doc-parent" }),
+    ];
+    const parent = makeNode("parent", "Parent", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("a", { parentDocId: "doc-parent" });
+
+    render(<SectionTabBar navigation={tree} currentPage={page} />);
+
+    const backLink = screen.getByRole("link", { name: /Parent/ });
+    expect(backLink).toBeTruthy();
+    expect(backLink).toHaveAttribute("href", "/el/parent");
+  });
+
+  it("does not show back-link for folder pages", () => {
+    const children = [
+      makeNode("a", "AAA", { parentDocId: "doc-parent" }),
+      makeNode("b", "BBB", { parentDocId: "doc-parent" }),
+    ];
+    const parent = makeNode("parent", "Parent", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("parent", { isFolder: true });
+
+    render(<SectionTabBar navigation={tree} currentPage={page} />);
+
+    // The back-link text starts with "←" — should not exist for folders
+    const backLink = screen.queryByRole("link", { name: /←/ });
+    expect(backLink).toBeNull();
+  });
+
+  it("shows More+N button when siblings exceed visible limit", () => {
+    const children = Array.from({ length: 10 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("child-5", { parentDocId: "doc-services" });
+
+    render(<SectionTabBar navigation={tree} currentPage={page} />);
+
+    const moreButton = screen.getByRole("button", { name: /Περισσότερα/i });
+    expect(moreButton).toBeTruthy();
+  });
+
+  it("opens dropdown on more-button click and shows overflow items", async () => {
+    const children = Array.from({ length: 10 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("child-0", { parentDocId: "doc-services" });
+
+    const user = userEvent.setup();
+    render(<SectionTabBar navigation={tree} currentPage={page} />);
+
+    const moreButton = screen.getByRole("button", { name: /Περισσότερα/i });
+    await user.click(moreButton);
+
+    const options = screen.getAllByRole("option");
+    // 10 siblings - 6 visible = 4 overflow
+    expect(options.length).toBe(4);
+  });
+
+  it("closes dropdown on outside click", async () => {
+    const children = Array.from({ length: 10 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("child-0", { parentDocId: "doc-services" });
+
+    const user = userEvent.setup();
+    const { container } = render(
+      <div>
+        <SectionTabBar navigation={tree} currentPage={page} />
+        <button data-outside>outside</button>
+      </div>,
+    );
+
+    const moreButton = screen.getByRole("button", { name: /Περισσότερα/i });
+    await user.click(moreButton);
+    expect(screen.getAllByRole("option").length).toBeGreaterThan(0);
+
+    await user.click(screen.getByRole("button", { name: "outside" }));
+    expect(screen.queryByRole("option")).toBeNull();
   });
 });

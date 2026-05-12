@@ -51,6 +51,10 @@
   --hero-glow: rgba(37, 99, 168, 0.055);
   --stripe-alt: #dde4ef;
 
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-full: 999px;
+
   --density-body-scanning: 0.9375rem;
   --density-body-focused: 1rem;
   --density-body-theater: 1.125rem;
@@ -67,7 +71,9 @@
   --section-padding-focused: var(--spacing-section-focused);
   --section-padding-theater: var(--spacing-section-theater);
   --motion-duration-fast: 150ms;
+  --motion-duration-default: 200ms;
   --motion-duration-standard: 500ms;
+  --motion-ease-default: ease;
   --motion-ease-out: ease-out;
 }
 
@@ -180,7 +186,7 @@ img {
   max-width: 100%;
   overflow-x: auto;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border-spacing: 0;
   background: var(--surface);
   -webkit-overflow-scrolling: touch;

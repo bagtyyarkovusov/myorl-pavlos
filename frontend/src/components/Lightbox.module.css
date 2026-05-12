@@ -51,7 +51,7 @@
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .close:hover {
@@ -79,7 +79,7 @@
   color: white;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .nav:hover {

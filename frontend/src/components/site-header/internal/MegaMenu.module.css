@@ -117,7 +117,7 @@
 .nav-panel__cta .cta-arrow {
   display: inline-block;
   transform: translateX(2px);
-  transition: transform 200ms ease;
+  transition: transform var(--motion-duration-default) var(--motion-ease-default);
 }
 
 .nav-panel__cta:hover .cta-arrow {
@@ -146,7 +146,7 @@
   border-bottom: 1px solid var(--line);
   padding: 14px 0;
   transition:
-    color 150ms ease,
+    color var(--motion-duration-fast) var(--motion-ease-default),
     transform 200ms cubic-bezier(0.2, 0, 0, 1);
 }
 

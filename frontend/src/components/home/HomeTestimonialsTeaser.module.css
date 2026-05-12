@@ -111,11 +111,11 @@
   letter-spacing: -0.02em;
   box-shadow: 0 2px 14px var(--shadow-ink-soft, rgba(15, 42, 74, 0.08));
   transition:
-    transform 0.15s ease,
-    box-shadow 0.2s ease,
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
+    transform var(--motion-duration-fast) var(--motion-ease-default),
+    box-shadow var(--motion-duration-default) var(--motion-ease-default),
+    background-color var(--motion-duration-fast) var(--motion-ease-default),
+    border-color var(--motion-duration-fast) var(--motion-ease-default),
+    color var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .actions .actionBtn:hover,
@@ -145,10 +145,10 @@
 @media (prefers-reduced-motion: reduce) {
   .actions .actionBtn {
     transition:
-      background-color 0.15s ease,
-      border-color 0.15s ease,
-      color 0.15s ease,
-      box-shadow 0.15s ease;
+      background-color var(--motion-duration-fast) var(--motion-ease-default),
+      border-color var(--motion-duration-fast) var(--motion-ease-default),
+      color var(--motion-duration-fast) var(--motion-ease-default),
+      box-shadow var(--motion-duration-fast) var(--motion-ease-default);
   }
 
   .actions .actionBtn:hover,

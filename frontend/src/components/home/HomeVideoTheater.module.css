@@ -27,7 +27,7 @@
 
 .video-teaser {
   display: block;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--color-bone-50);
 }
 
@@ -186,7 +186,7 @@
   gap: clamp(8px, 2vw, 12px);
   min-height: clamp(44px, 10vw, 48px);
   margin-top: clamp(4px, 1vw, 8px);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--color-bone-50);
   color: var(--foreground);
   padding: 0 clamp(14px, 3.5vw, 18px) 0 clamp(5px, 1.5vw, 7px);

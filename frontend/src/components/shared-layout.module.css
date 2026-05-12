@@ -5,7 +5,7 @@
 
 .content-card {
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--surface-glass);
   padding: clamp(22px, 3vw, 34px);
 }
@@ -51,11 +51,11 @@
   align-items: center;
   gap: 6px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   padding: 8px 14px;
   font-size: 0.85rem;
   white-space: nowrap;
-  transition: border-color 0.15s ease;
+  transition: border-color var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .inline-pill:hover {
@@ -66,4 +66,25 @@
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* Hairline grid — container gets left border, cells get right + bottom.
+   Components compose this and add their own grid-template-columns + last-row
+   overrides. */
+.hairline-grid {
+  border-left: 1px solid var(--color-stone-line, #d7dfeb);
+}
+
+.hairline-grid__cell {
+  border-right: 1px solid var(--color-stone-line, #d7dfeb);
+  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
+}
+
+/* Stripe placeholder — diagonal stripe pattern for empty media slots.
+   Identical to design-system .ph-stripe; available here for modules that
+   already compose from shared-layout. */
+.stripe-placeholder {
+  background:
+    repeating-linear-gradient(135deg, var(--color-bone-200) 0 10px, var(--stripe-alt) 10px 20px),
+    var(--surface-soft);
 }

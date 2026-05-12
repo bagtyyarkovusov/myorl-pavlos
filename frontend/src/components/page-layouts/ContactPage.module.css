@@ -41,7 +41,7 @@
 
 .detailCard {
   padding: 1rem 0;
-  border-top: 1px solid var(--stone-line, #e5e9ef);
+  border-top: 1px solid var(--line, #d7dfeb);
 }
 
 .detailCard h2 {
@@ -49,7 +49,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--stone, #5a6b7e);
+  color: var(--muted, #5a6b7e);
   margin: 0 0 0.5rem;
 }
 

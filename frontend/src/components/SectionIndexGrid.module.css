@@ -6,23 +6,9 @@
 }
 
 .filter-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--line, #d7dfeb);
-  border-radius: 999px;
-  padding: 8px 14px;
-  background: transparent;
-  font-size: 0.85rem;
-  white-space: nowrap;
+  composes: inline-pill from "./shared-layout.module.css";
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease;
-}
-
-.filter-pill:hover {
-  border-color: var(--accent);
+  background: transparent;
 }
 
 .filter-pill--active {
@@ -132,7 +118,7 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   color: var(--color-stone, #5a6b7e);
   font-size: 0.9rem;
   transition:
@@ -178,7 +164,7 @@
   place-items: center;
   width: 48px;
   height: 48px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: rgba(15, 42, 74, 0.82);
   color: #fff;
   font-size: 1rem;
@@ -198,7 +184,7 @@
   min-height: 44px;
   margin-top: 24px;
   border: 1px solid var(--color-stone-line, #d7dfeb);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   padding: 0 18px;
   background: transparent;
   color: var(--foreground);

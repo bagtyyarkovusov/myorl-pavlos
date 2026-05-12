@@ -89,7 +89,7 @@
   place-items: center;
   width: clamp(34px, 8vw, 38px);
   height: clamp(34px, 8vw, 38px);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   border: 1.5px solid rgba(251, 252, 254, 0.9);
   font-family: var(--font-display);
   font-size: clamp(1.05rem, 2.8vw, 1.18rem);
@@ -201,12 +201,12 @@
   width: clamp(34px, 9vw, 36px);
   height: clamp(34px, 9vw, 36px);
   place-items: center;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: rgba(251, 252, 254, 0.08);
   color: rgba(251, 252, 254, 0.78);
   transition:
-    background 200ms ease,
-    color 200ms ease;
+    background var(--motion-duration-default) var(--motion-ease-default),
+    color var(--motion-duration-default) var(--motion-ease-default);
 }
 
 .social-list a:hover,
@@ -449,7 +449,7 @@
   font-size: 1.1em;
   line-height: 1;
   opacity: 0.6;
-  transition: opacity 200ms ease;
+  transition: opacity var(--motion-duration-default) var(--motion-ease-default);
 }
 
 .link-col[open] summary::after {

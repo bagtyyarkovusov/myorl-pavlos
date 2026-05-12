@@ -20,8 +20,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1px;
-  border: 1px solid var(--stone-line, #d7dfeb);
-  background-color: var(--stone-line, #d7dfeb);
+  border: 1px solid var(--line, #d7dfeb);
+  background-color: var(--line, #d7dfeb);
   width: 100%;
   box-sizing: border-box;
 }
@@ -111,11 +111,11 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--motion-duration-default) var(--motion-ease-default);
 }
 
 .expandBtn:hover {
-  color: var(--trust, #2563a8);
+  color: var(--accent, #2563a8);
 }
 
 /* ── Meta row ──────────────────────────────── */
@@ -126,13 +126,13 @@
   gap: 0.5rem 0.75rem;
   align-items: baseline;
   font-size: 0.75rem;
-  color: var(--stone, #5a6b7e);
-  border-top: 1px solid var(--stone-line, #d7dfeb);
+  color: var(--muted, #5a6b7e);
+  border-top: 1px solid var(--line, #d7dfeb);
 }
 
 .metaTime {
   font-size: 0.6875rem;
-  color: var(--stone-soft, #8594a6);
+  color: var(--color-stone-soft, #8594a6);
 }
 
 /* ── Desktop: 2×2, 5th card fills full row ── */

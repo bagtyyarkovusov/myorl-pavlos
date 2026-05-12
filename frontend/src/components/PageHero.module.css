@@ -80,7 +80,7 @@
 .breadcrumbs span:not(:last-child)::after {
   content: "/";
   margin-left: 8px;
-  color: var(--line-strong);
+  color: var(--color-stone, #5a6b7e);
 }
 
 .title {
@@ -147,7 +147,7 @@
 .metadata li:not(:last-child)::after {
   content: "/";
   margin-left: 18px;
-  color: var(--line-strong);
+  color: var(--color-stone, #5a6b7e);
 }
 
 .portrait {
@@ -170,7 +170,7 @@
   width: fit-content;
   margin-top: 4px;
   border: 1px solid color-mix(in srgb, var(--color-bone-50) 55%, transparent);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--color-bone-50);
   padding: 12px 18px;
   color: var(--color-ink);

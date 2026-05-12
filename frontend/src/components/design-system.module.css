@@ -2,7 +2,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--surface-soft);
 }
 
@@ -27,7 +27,7 @@
   bottom: 16px;
   left: 16px;
   border: 1px solid var(--media-frame-label-border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--surface-glass);
   padding: 5px 7px;
   backdrop-filter: blur(10px);

@@ -11,9 +11,9 @@
   font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 500;
-  color: var(--trust, var(--accent-ink));
+  color: var(--accent, var(--accent-ink));
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .back-link:hover,
@@ -53,24 +53,24 @@
   font-family: var(--font-sans);
   font-size: 0.88rem;
   font-weight: 500;
-  color: var(--ink, #111);
+  color: var(--foreground, #0f2a4a);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   background: none;
   cursor: pointer;
   text-underline-offset: 4px;
   transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
+    color var(--motion-duration-fast) var(--motion-ease-default),
+    border-color var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .tab:hover {
-  color: var(--trust, var(--accent-ink));
+  color: var(--accent, var(--accent-ink));
 }
 
 .tab--active {
-  color: var(--trust, var(--accent-ink));
-  border-bottom-color: var(--trust, var(--accent));
+  color: var(--accent, var(--accent-ink));
+  border-bottom-color: var(--accent);
   scroll-margin-inline: 16px;
 }
 
@@ -94,7 +94,7 @@
   border-right: 4px solid transparent;
   border-top: 5px solid currentColor;
   margin-top: 2px;
-  transition: transform 0.15s ease;
+  transition: transform var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .more-button[aria-expanded="true"]::after {
@@ -111,8 +111,8 @@
   overflow-y: auto;
   margin-top: 4px;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--bg, #ffffff);
+  border-radius: var(--radius-md);
+  background: var(--surface, #fbfcfe);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   list-style: none;
   padding: 8px 0;
@@ -121,7 +121,7 @@
 .dropdown-item {
   display: block;
   padding: 10px 16px;
-  color: var(--ink, #111);
+  color: var(--foreground, #0f2a4a);
   font-family: var(--font-sans);
   font-size: 0.88rem;
   text-decoration: none;
@@ -132,13 +132,13 @@
 
 .dropdown-item:hover,
 .dropdown-item:focus-visible {
-  background: var(--surface-glass, #f5f5f5);
-  color: var(--trust, var(--accent-ink));
+  background: var(--surface-glass, rgba(251, 252, 254, 0.82));
+  color: var(--accent, var(--accent-ink));
   outline: none;
 }
 
 .dropdown-item--active {
-  color: var(--trust, var(--accent-ink));
+  color: var(--accent, var(--accent-ink));
   font-weight: 600;
 }
 
@@ -151,6 +151,6 @@
   bottom: 1px;
   width: 32px;
   pointer-events: none;
-  background: linear-gradient(to right, transparent, var(--bg, #ffffff));
+  background: linear-gradient(to right, transparent, var(--surface, #fbfcfe));
   opacity: 1;
 }

@@ -46,7 +46,7 @@
 
 .tag-list li {
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   color: var(--accent-ink);
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -60,7 +60,7 @@
 
 .gallery-grid img {
   width: 100%;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .card-list {
@@ -73,7 +73,7 @@
 
 .gallery-grid img {
   width: 100%;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .contact-band {
@@ -225,7 +225,7 @@
   height: 36px;
   place-items: center;
   border: 2px solid var(--color-bone-50);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--accent);
   color: var(--accent-ink);
   cursor: pointer;
@@ -258,14 +258,14 @@
 
 .note-block {
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--surface-glass);
   padding: clamp(22px, 3vw, 34px);
 }
 
 .sources-block {
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--surface-glass);
   padding: clamp(22px, 3vw, 34px);
 }
@@ -326,7 +326,7 @@
   min-height: 48px;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--color-ink);
   padding: 12px 18px;
   color: var(--color-bone-50);

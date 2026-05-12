@@ -11,28 +11,27 @@
 /* ── Liney grid: hairline-bordered cells ── */
 
 .credibility-band {
+  composes: hairline-grid from "../shared-layout.module.css";
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 0;
   padding: 0;
   list-style: none;
-  border-left: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
 .credibility-card {
+  composes: hairline-grid__cell from "../shared-layout.module.css";
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
   min-width: 0;
-  border-right: 1px solid var(--color-stone-line, #d7dfeb);
-  border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
   background: transparent;
   padding: 12px 8px;
   text-align: center;
   text-wrap: balance;
-  transition: background 200ms ease;
+  transition: background var(--motion-duration-default) var(--motion-ease-default);
 }
 
 .credibility-card:hover {

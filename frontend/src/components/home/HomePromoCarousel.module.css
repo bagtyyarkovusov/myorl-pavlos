@@ -69,13 +69,11 @@
 }
 
 .media-placeholder {
+  composes: stripe-placeholder from "../shared-layout.module.css";
   display: grid;
   height: 100%;
   min-height: 220px;
   place-items: center;
-  background:
-    repeating-linear-gradient(135deg, var(--color-bone-200) 0 10px, var(--stripe-alt) 10px 20px),
-    var(--surface-soft);
 }
 
 .media-placeholder span {
@@ -181,16 +179,16 @@
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: rgba(228, 237, 248, 0.6);
   color: var(--color-stone);
   padding: 0;
   cursor: pointer;
   transition:
     transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
-    color 200ms ease,
-    background 200ms ease,
-    box-shadow 200ms ease;
+    color var(--motion-duration-default) var(--motion-ease-default),
+    background var(--motion-duration-default) var(--motion-ease-default),
+    box-shadow var(--motion-duration-default) var(--motion-ease-default);
 }
 
 .round-button:hover,
@@ -254,9 +252,9 @@
     0 6px 18px rgba(15, 42, 74, 0.04);
   transition:
     transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
-    background 200ms ease,
+    background var(--motion-duration-default) var(--motion-ease-default),
     box-shadow 220ms ease,
-    color 200ms ease;
+    color var(--motion-duration-default) var(--motion-ease-default);
 }
 
 /* Image column; entire card is the tab button — thumb is non-interactive layout only */
@@ -286,12 +284,10 @@
 }
 
 .topic-tab__placeholder {
+  composes: stripe-placeholder from "../shared-layout.module.css";
   display: block;
   height: 100%;
   min-height: 54px;
-  background:
-    repeating-linear-gradient(135deg, var(--color-bone-200) 0 10px, var(--stripe-alt) 10px 20px),
-    var(--surface-soft);
 }
 
 .topic-tab__index,
@@ -470,16 +466,16 @@
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: rgba(228, 237, 248, 0.6);
   color: var(--color-stone);
   padding: 0;
   cursor: pointer;
   transition:
     transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
-    color 200ms ease,
-    background 200ms ease,
-    box-shadow 200ms ease;
+    color var(--motion-duration-default) var(--motion-ease-default),
+    background var(--motion-duration-default) var(--motion-ease-default),
+    box-shadow var(--motion-duration-default) var(--motion-ease-default);
 }
 
 .autoplay-toggle:hover,
@@ -530,7 +526,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(215, 223, 235, 0.86);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background: rgba(251, 252, 254, 0.92);
   color: var(--color-stone);
   font-family: var(--font-mono);

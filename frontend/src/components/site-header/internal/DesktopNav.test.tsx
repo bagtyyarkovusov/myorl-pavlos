@@ -16,6 +16,7 @@ const items = [
     menuIndex: 0,
     hideFromMenu: false,
     isFolder: false,
+    layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
     children: [],
@@ -32,6 +33,7 @@ const items = [
     menuIndex: 1,
     hideFromMenu: false,
     isFolder: true,
+    layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
     children: [
@@ -47,6 +49,7 @@ const items = [
         menuIndex: 0,
         hideFromMenu: false,
         isFolder: false,
+        layoutVariant: "standard",
         parentPage: null,
         externalUrl: null,
         children: [],

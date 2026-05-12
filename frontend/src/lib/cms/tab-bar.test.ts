@@ -19,6 +19,7 @@ function makeNode(
     parentPage: opts.parentDocId ? { documentId: opts.parentDocId, slug: null, title: null } : null,
     externalUrl: null,
     isFolder: opts.isFolder ?? false,
+    layoutVariant: "standard",
     excerpt: null,
     href: `/el/${slug}`,
     children: opts.children ?? [],
@@ -146,6 +147,18 @@ describe("getTabBarNodes", () => {
     const parent = makeNode("services", "Services", { isFolder: true, children });
     const tree = [parent];
     const page = makePage("services", { isFolder: true });
+
+    expect(getTabBarNodes(tree, page)).toBeNull();
+  });
+
+  it("returns null when parent is not a folder (standalone page under structural parent)", () => {
+    const children = [
+      makeNode("child-1", "Child 1", { parentDocId: "doc-standard-parent" }),
+      makeNode("child-2", "Child 2", { parentDocId: "doc-standard-parent" }),
+    ];
+    const parent = makeNode("standard-parent", "Standard Parent", { isFolder: false, children });
+    const tree = [parent];
+    const page = makePage("child-1", { parentDocId: "doc-standard-parent" });
 
     expect(getTabBarNodes(tree, page)).toBeNull();
   });

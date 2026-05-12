@@ -1,24 +1,24 @@
 .tab-bar-wrapper {
   position: relative;
-  margin-bottom: clamp(28px, 4vw, 48px);
+  margin-bottom: clamp(28px, 4vw, var(--spacing-section-scanning, 48px));
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 500;
-  color: var(--accent, var(--accent-ink));
+  color: var(--accent);
   text-decoration: none;
   transition: color var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .back-link:hover,
 .back-link:focus-visible {
-  color: var(--accent);
+  color: var(--color-trust-ink);
   outline: none;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -26,22 +26,25 @@
 
 .tab-bar {
   display: flex;
-  gap: 24px;
+  gap: clamp(18px, 3vw, 32px);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
   border-bottom: 1px solid var(--line);
-  padding-bottom: 0;
-}
-
-@media (min-width: 768px) {
-  .tab-bar {
-    gap: 32px;
-  }
 }
 
 .tab-bar::-webkit-scrollbar {
-  display: none;
+  height: 4px;
+}
+
+.tab-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tab-bar::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: var(--radius-full);
 }
 
 .tab {
@@ -53,7 +56,7 @@
   font-family: var(--font-sans);
   font-size: 0.88rem;
   font-weight: 500;
-  color: var(--foreground, #0f2a4a);
+  color: var(--foreground);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   background: none;
@@ -65,11 +68,11 @@
 }
 
 .tab:hover {
-  color: var(--accent, var(--accent-ink));
+  color: var(--accent);
 }
 
 .tab--active {
-  color: var(--accent, var(--accent-ink));
+  color: var(--accent);
   border-bottom-color: var(--accent);
   scroll-margin-inline: 16px;
 }
@@ -109,11 +112,13 @@
   min-width: 220px;
   max-height: 360px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
   margin-top: 4px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--surface, #fbfcfe);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgba(15, 42, 74, 0.1);
   list-style: none;
   padding: 8px 0;
 }
@@ -121,28 +126,28 @@
 .dropdown-item {
   display: block;
   padding: 10px 16px;
-  color: var(--foreground, #0f2a4a);
+  color: var(--foreground);
   font-family: var(--font-sans);
   font-size: 0.88rem;
   text-decoration: none;
   transition:
-    background-color 0.1s ease,
-    color 0.1s ease;
+    background-color var(--motion-duration-fast) var(--motion-ease-default),
+    color var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .dropdown-item:hover,
 .dropdown-item:focus-visible {
   background: var(--surface-glass, rgba(251, 252, 254, 0.82));
-  color: var(--accent, var(--accent-ink));
+  color: var(--accent);
   outline: none;
 }
 
 .dropdown-item--active {
-  color: var(--accent, var(--accent-ink));
+  color: var(--accent);
   font-weight: 600;
 }
 
-/* Fade gradient for scroll affordance — always visible. */
+/* Fade gradient for scroll affordance — on the right edge of the tab bar. */
 .tab-bar-wrapper::after {
   content: "";
   position: absolute;
@@ -151,6 +156,5 @@
   bottom: 1px;
   width: 32px;
   pointer-events: none;
-  background: linear-gradient(to right, transparent, var(--surface, #fbfcfe));
-  opacity: 1;
+  background: linear-gradient(to right, transparent, var(--background, #f6f8fb));
 }

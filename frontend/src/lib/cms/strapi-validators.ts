@@ -65,8 +65,14 @@ export const zodPageEntity = z
     slug: z.string(),
     title: z.string(),
     menuTitle: z.string().nullish(),
-    pageType: z.string(),
-    layoutVariant: z.string(),
+    pageType: z
+      .string()
+      .nullish()
+      .transform((v) => v ?? "content"),
+    layoutVariant: z
+      .string()
+      .nullish()
+      .transform((v) => v ?? "default"),
     seo: zodSeo,
     content: z.string().nullish(),
     excerpt: z.string().nullish(),

@@ -73,7 +73,7 @@ export function PageRenderer({
   if (page.renderMode === "frontend-native") {
     layout = <FrontendNativePage page={page} testimonialsPage={testimonialsPage} />;
   } else if (page.layoutVariant === "appointment-form") {
-    layout = <AppointmentPage page={page} navigation={navigation} />;
+    layout = <AppointmentPage page={page} />;
   } else if (DIRECTORY_LAYOUT_VARIANTS.has(page.layoutVariant)) {
     layout = <SectionIndexPage page={page} navigation={navigation} />;
   } else if (page.pageType === "home") {
@@ -95,13 +95,13 @@ export function PageRenderer({
       />
     );
   } else if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
-    layout = <QuestionListPage page={page} navigation={navigation} />;
+    layout = <QuestionListPage page={page} />;
   } else if (page.pageType === "gallery") {
-    layout = <GalleryPage page={page} navigation={navigation} />;
+    layout = <GalleryPage page={page} />;
   } else if (page.pageType === "contact") {
-    layout = <ContactPage page={page} navigation={navigation} globalSettings={globalSettings} />;
+    layout = <ContactPage page={page} globalSettings={globalSettings} />;
   } else {
-    layout = <StandardPage page={page} navigation={navigation} />;
+    layout = <StandardPage page={page} />;
   }
 
   return (

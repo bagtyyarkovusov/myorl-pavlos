@@ -1,15 +1,13 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { ContactClinicAccordion } from "@/components/contact/ContactClinicAccordion";
 import { PageSection } from "@/components/PageSection";
-import { SectionTabBar } from "@/components/SectionTabBar";
 import { mapEmbedSrcFromAddress } from "@/lib/site/contact-fallbacks";
-import type { GlobalSettingsDTO, NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
+import type { GlobalSettingsDTO, PageDTO } from "@/lib/cms/types";
 import { PageHeader } from "./_shared";
 import styles from "./ContactPage.module.css";
 
 type ContactPageProps = {
   page: PageDTO;
-  navigation?: NavigationNodeDTO[];
   /**
    * Optional global Strapi settings. The contact map iframe `src` is derived
    * from `globalSettings.address` once on mount and never re-renders on
@@ -18,7 +16,7 @@ type ContactPageProps = {
   globalSettings?: GlobalSettingsDTO | null;
 };
 
-export function ContactPage({ page, navigation = [], globalSettings }: ContactPageProps) {
+export function ContactPage({ page, globalSettings }: ContactPageProps) {
   const contactSection = page.sections.find((s) => s.__component === "sections.contact");
   const detailsBlock =
     contactSection?.__component === "sections.contact" ? contactSection.details : [];
@@ -30,7 +28,6 @@ export function ContactPage({ page, navigation = [], globalSettings }: ContactPa
   return (
     <PageSection>
       <PageHeader page={page} />
-      <SectionTabBar navigation={navigation} currentPage={page} />
       <CmsHtml html={page.content} />
 
       <div className={styles.split} data-contact-split>

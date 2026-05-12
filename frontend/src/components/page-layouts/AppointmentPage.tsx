@@ -1,16 +1,14 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { ButtonLink } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
-import { SectionTabBar } from "@/components/SectionTabBar";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import styles from "./_shared.module.css";
 
-export function AppointmentPage({ page, navigation = [] }: PageLayoutProps) {
+export function AppointmentPage({ page }: PageLayoutProps) {
   return (
     <PageSection>
       <PageHeader page={page} kicker="appointment" />
-      <SectionTabBar navigation={navigation} currentPage={page} />
       <CmsHtml html={page.content} />
       <section className={styles["content-card"]} aria-label="Contact options">
         <h2>Get in touch</h2>

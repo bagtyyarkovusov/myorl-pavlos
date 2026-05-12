@@ -81,6 +81,7 @@ function makeNav(slug: string, label: string, index = 0): NavigationNodeDTO {
     parentPage: null,
     externalUrl: null,
     isFolder: false,
+    layoutVariant: "standard",
     excerpt: null,
     featuredImage: null,
     imageCenter: null,
@@ -114,11 +115,8 @@ describe("StandardPage", () => {
     expect(screen.getByText("A short excerpt")).toBeDefined();
   });
 
-  it("accepts navigation prop for future tab bar use", () => {
-    const nav = [makeNav("child-1", "Child 1")];
-    render(
-      <StandardPage page={{ ...BASE_PAGE, title: "Parent", isFolder: true }} navigation={nav} />,
-    );
+  it("renders without navigation prop", () => {
+    render(<StandardPage page={{ ...BASE_PAGE, title: "Parent", isFolder: true }} />);
     expect(screen.getByRole("heading", { name: "Parent" })).toBeDefined();
   });
 
@@ -178,7 +176,6 @@ describe("StandardPage", () => {
 
     expect(document.querySelector("[data-hero-variant='cinematic']")).toBeTruthy();
     expect(document.querySelector("[data-service-layout='true']")).toBeTruthy();
-    expect(screen.getByRole("navigation", { name: "Ενότητες" })).toBeDefined();
     expect(screen.getByRole("link", { name: "What to expect" })).toHaveAttribute(
       "href",
       "#section-1",

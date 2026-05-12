@@ -27,6 +27,7 @@ function makeChild(
     parentPage: { documentId: "doc-parent", slug: null, title: null },
     externalUrl: null,
     isFolder: false,
+    layoutVariant: "standard",
     excerpt: opts.excerpt ?? null,
     featuredImage: opts.imageUrl
       ? { url: opts.imageUrl, alternativeText: label, width: 1200, height: 800 }

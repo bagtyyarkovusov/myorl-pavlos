@@ -1,44 +1,48 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { PageHero } from "@/components/PageHero";
 import { PageSection } from "@/components/PageSection";
-import { SectionTabBar } from "@/components/SectionTabBar";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getPageStrings } from "@/lib/i18n/page";
 import type { SectionDTO } from "@/lib/cms/types";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import styles from "./_shared.module.css";
 
-export function StandardPage({ page, navigation = [] }: PageLayoutProps) {
+export function StandardPage({ page }: PageLayoutProps) {
   if (page.layoutVariant === "service-article") {
-    return <ServiceArticlePage page={page} navigation={navigation} />;
+    return <ServiceArticlePage page={page} />;
   }
 
   if (
     page.layoutVariant === "encyclopedia-article" ||
     page.layoutVariant === "specialized-article"
   ) {
-    return <ReferenceArticlePage page={page} navigation={navigation} />;
+    return <ReferenceArticlePage page={page} />;
   }
 
   return (
     <PageSection>
       <PageHeader page={page} />
-      <SectionTabBar navigation={navigation} currentPage={page} />
-      <CmsHtml html={page.content} />
-      {page.sections.map((section, index) => (
-        <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
-      ))}
-      {page.infoBlockBottom ? (
-        <CmsHtml html={page.infoBlockBottom} className={`cms-html ${styles["note-block"]}`} />
-      ) : null}
-      {page.sources ? (
-        <CmsHtml html={page.sources} className={`cms-html ${styles["sources-block"]}`} />
-      ) : null}
+      <div className={styles["prose-shell"]}>
+        <CmsHtml html={page.content} />
+        {page.sections.map((section, index) => (
+          <SectionRenderer
+            key={`${section.__component}-${index}`}
+            section={section}
+            index={index}
+          />
+        ))}
+        {page.infoBlockBottom ? (
+          <CmsHtml html={page.infoBlockBottom} className={`cms-html ${styles["note-block"]}`} />
+        ) : null}
+        {page.sources ? (
+          <CmsHtml html={page.sources} className={`cms-html ${styles["sources-block"]}`} />
+        ) : null}
+      </div>
     </PageSection>
   );
 }
 
-function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
+function ReferenceArticlePage({ page }: PageLayoutProps) {
   const t = getPageStrings(page.locale);
   const variant = page.layoutVariant === "specialized-article" ? "specialized" : "encyclopedia";
   const headings = extractHeadings(page.content);
@@ -56,7 +60,6 @@ function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
         breadcrumbs={buildBreadcrumbs(page, t.home)}
         metadata={buildArticleMetadata(page, variant, t)}
       />
-      <SectionTabBar navigation={navigation} currentPage={page} />
       <main className={styles["reference-layout"]} data-article-layout={variant}>
         <article className={styles["reference-layout__content"]}>
           <CmsHtml html={contentWithHeadingIds} variant={variant} />
@@ -128,7 +131,7 @@ function ReferenceArticlePage({ page, navigation = [] }: PageLayoutProps) {
   );
 }
 
-function ServiceArticlePage({ page, navigation = [] }: PageLayoutProps) {
+function ServiceArticlePage({ page }: PageLayoutProps) {
   const t = getPageStrings(page.locale);
   const sectionLinks = page.sections
     .map((section, index) => ({
@@ -145,7 +148,6 @@ function ServiceArticlePage({ page, navigation = [] }: PageLayoutProps) {
         breadcrumbs={buildBreadcrumbs(page, t.home)}
         cta={{ label: t.bookConsultation, href: `/${page.locale}/appointment` }}
       />
-      <SectionTabBar navigation={navigation} currentPage={page} />
       <main className={styles["service-layout"]} data-service-layout="true">
         <article className={styles["service-layout__content"]}>
           <CmsHtml html={page.content} variant="service" />

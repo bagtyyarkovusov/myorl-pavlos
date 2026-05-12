@@ -22,6 +22,7 @@ function makeNode(
     parentPage: opts.parentDocId ? { documentId: opts.parentDocId, slug: null, title: null } : null,
     externalUrl: null,
     isFolder: opts.isFolder ?? false,
+    layoutVariant: "standard",
     excerpt: null,
     href: `/el/${slug}`,
     children: opts.children ?? [],

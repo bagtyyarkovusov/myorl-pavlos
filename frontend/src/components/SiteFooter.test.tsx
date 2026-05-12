@@ -26,6 +26,7 @@ function makePage(overrides: Partial<NavigationInput>): NavigationInput {
     parentPage: overrides.parentPage ?? null,
     externalUrl: overrides.externalUrl ?? null,
     isFolder: overrides.isFolder ?? false,
+    layoutVariant: overrides.layoutVariant ?? "standard",
     excerpt: overrides.excerpt ?? null,
     featuredImage: overrides.featuredImage ?? null,
     imageCenter: overrides.imageCenter ?? null,

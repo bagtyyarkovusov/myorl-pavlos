@@ -16,6 +16,7 @@ const items = [
     menuIndex: 0,
     hideFromMenu: false,
     isFolder: false,
+    layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
     children: [],

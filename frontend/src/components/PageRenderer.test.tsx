@@ -241,6 +241,7 @@ function makeNavNode(slug: string, navLabel: string, menuIndex = 0): NavigationN
     parentPage: null,
     externalUrl: null,
     isFolder: false,
+    layoutVariant: "standard",
     excerpt: null,
     featuredImage: null,
     imageCenter: null,

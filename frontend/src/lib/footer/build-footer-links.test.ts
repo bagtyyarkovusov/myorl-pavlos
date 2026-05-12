@@ -14,6 +14,7 @@ function makeNode(overrides: Partial<NavigationNodeDTO>): NavigationNodeDTO {
     menuIndex: overrides.menuIndex ?? 0,
     hideFromMenu: false,
     isFolder: false,
+    layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
     excerpt: null,

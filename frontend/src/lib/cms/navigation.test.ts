@@ -15,6 +15,7 @@ function makePage(overrides: Partial<NavigationInput> = {}): NavigationInput {
     parentPage: null,
     externalUrl: null,
     isFolder: false,
+    layoutVariant: "standard",
     excerpt: null,
     ...overrides,
   };

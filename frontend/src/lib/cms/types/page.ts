@@ -54,6 +54,7 @@ export interface NavigationInput {
   parentPage?: PageRefDTO | null;
   externalUrl?: string | null;
   isFolder: boolean;
+  layoutVariant: LayoutVariant;
   excerpt?: string | null;
   featuredImage?: MediaDTO | null;
   imageCenter?: MediaDTO | null;

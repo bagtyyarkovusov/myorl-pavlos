@@ -29,6 +29,7 @@ export function getTabBarNodes(
 
   const parent = findNodeByDocumentId(tree, parentDocId);
   if (!parent) return null;
+  if (!parent.isFolder) return null;
   if (parent.children.length <= 1) return null;
 
   return [parent, ...parent.children];

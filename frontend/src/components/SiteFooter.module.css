@@ -258,7 +258,7 @@
 
 /* ── Stacked layout: tablet portrait & down (matches site 768bp) ── */
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .site-footer__inner {
     padding-top: clamp(28px, 7vw, 44px);
     padding-bottom: max(1.75rem, calc(env(safe-area-inset-bottom, 0px) + 2rem));
@@ -320,7 +320,7 @@
 
 /* ── Small phones: tighter nav density; centered contact block ── */
 
-@media (max-width: 479.98px) {
+@media (max-width: 480px) {
   .site-footer__grid {
     gap: var(--footer-stack-gap);
   }
@@ -475,7 +475,7 @@
   }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .link-col {
     border-top: 1px solid var(--footer-divider-subtle);
     padding-top: 0.5rem;

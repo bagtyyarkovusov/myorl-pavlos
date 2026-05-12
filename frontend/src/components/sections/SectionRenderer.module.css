@@ -362,7 +362,7 @@
   color: var(--accent);
 }
 
-@media (min-width: 721px) {
+@media (min-width: 720px) {
   .social-strip {
     display: flex;
     align-items: center;
@@ -385,7 +385,7 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

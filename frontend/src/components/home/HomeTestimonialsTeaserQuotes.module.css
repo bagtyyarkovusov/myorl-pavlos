@@ -161,7 +161,7 @@
 }
 
 /* ── Mobile: 2×2, hide items 5+ ────────────── */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   .gridItem:nth-child(n + 5) {
     display: none;
   }

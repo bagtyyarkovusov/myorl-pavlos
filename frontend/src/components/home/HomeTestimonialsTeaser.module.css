@@ -5,7 +5,7 @@
    ═══════════════════════════════════════════════ */
 
 /* ── Section container — wider on mobile than default tight ── */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   .section > div {
     width: calc(100vw - 2rem);
     max-width: none;

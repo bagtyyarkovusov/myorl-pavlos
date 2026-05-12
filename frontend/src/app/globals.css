@@ -75,6 +75,15 @@
   --motion-duration-standard: 500ms;
   --motion-ease-default: ease;
   --motion-ease-out: ease-out;
+
+  /* Canonical breakpoint scale (reference; CSS custom properties can't be
+     used in @media queries yet, but these document the intended values). */
+  --breakpoint-xs: 360px;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1180px;
+  --breakpoint-2xl: 1280px;
 }
 
 html {

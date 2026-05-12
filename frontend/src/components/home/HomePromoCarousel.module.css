@@ -537,7 +537,7 @@
 }
 
 /* Below desktop mosaic: hairline frame only around the hero slide; controls + progress stay full-width */
-@media (max-width: 859.98px) {
+@media (max-width: 860px) {
   .topic-directory {
     gap: 10px;
   }
@@ -651,7 +651,7 @@
   }
 }
 
-@media (min-width: 560px) and (max-width: 859.98px) {
+@media (min-width: 560px) and (max-width: 860px) {
   .topic-feature__copy {
     padding: 20px;
   }
@@ -677,7 +677,7 @@
   }
 }
 
-@media (min-width: 720px) and (max-width: 859.98px) {
+@media (min-width: 720px) and (max-width: 860px) {
   .topic-feature__media {
     height: clamp(196px, 30svh, 308px);
   }

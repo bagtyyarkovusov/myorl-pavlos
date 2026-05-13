@@ -32,6 +32,9 @@ export function getTabBarNodes(
   if (!parent.isFolder) return null;
   if (parent.children.length <= 1) return null;
 
+  // Section-hub children: just siblings, no parent tab.
+  if (parent.layoutVariant === "section-hub") return parent.children;
+
   return [parent, ...parent.children];
 }
 
@@ -76,6 +79,26 @@ export function getTabBarConfig(
     return { visible, overflow, activeIndex: activeIdx, isLeaf: false };
   }
 
+  // Leaf page under a section-hub folder: allNodes are already just siblings.
+  // Treat like a folder (no back-link, no parent exclusion), but promote
+  // the active page into the visible window so it is never hidden.
+  if (!page.isFolder && page.parentPage?.documentId) {
+    const parentNode = findNodeByDocumentId(tree, page.parentPage.documentId);
+    if (parentNode?.layoutVariant === "section-hub") {
+      const activeIdx = allNodes.findIndex((n) => n.documentId === page.documentId);
+      let visible: typeof allNodes;
+      let overflow: typeof allNodes;
+      if (allNodes.length <= maxVisible || activeIdx < maxVisible) {
+        visible = allNodes.slice(0, maxVisible);
+        overflow = allNodes.slice(maxVisible);
+      } else {
+        visible = [...allNodes.slice(0, maxVisible - 1), allNodes[activeIdx]];
+        overflow = [...allNodes.slice(maxVisible - 1, activeIdx), ...allNodes.slice(activeIdx + 1)];
+      }
+      return { visible, overflow, activeIndex: activeIdx, isLeaf: false };
+    }
+  }
+
   // Leaf page: allNodes = [parent, ...siblings]. Exclude parent from tabs.
   const siblings = allNodes.slice(1);
   const activeIdx = siblings.findIndex((n) => n.documentId === page.documentId);
@@ -98,7 +121,19 @@ export function getTabBarConfig(
   return { visible, overflow, activeIndex: activeIdx, isLeaf: true };
 }
 
-function findNodeByDocumentId(
+/**
+ * Returns true when `page` is a leaf whose parent folder uses the section-hub
+ * layout variant, meaning it should render with a persistent sibling tab bar.
+ */
+export function isSectionHubChild(tree: NavigationNodeDTO[], page: PageDTO): boolean {
+  if (page.isFolder) return false;
+  const parentDocId = page.parentPage?.documentId;
+  if (!parentDocId) return false;
+  const parent = findNodeByDocumentId(tree, parentDocId);
+  return parent?.layoutVariant === "section-hub";
+}
+
+export function findNodeByDocumentId(
   nodes: NavigationNodeDTO[],
   documentId: string,
 ): NavigationNodeDTO | null {

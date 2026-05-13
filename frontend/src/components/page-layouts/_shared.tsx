@@ -13,30 +13,27 @@ export function PageHeader({ page, kicker }: { page: PageDTO; kicker?: string | 
   const kickerText = kicker === null ? null : (kicker ?? readableVariant(page.layoutVariant));
 
   return (
-    <header className={`${styles["page-hero"]} ${media ? "" : styles["page-hero--text-only"]}`}>
-      <div>
-        <span className={styles["accent-hairline"]} data-accent aria-hidden="true" />
-        {kickerText ? (
-          <p className="font-mono text-xs font-medium uppercase text-stone-soft">{kickerText}</p>
-        ) : null}
-        <h1>{page.title}</h1>
-        {page.excerpt ? <p className={styles.excerpt}>{page.excerpt}</p> : null}
-        {page.tags.length > 0 ? (
-          <ul className={styles["tag-list"]} aria-label="Tags">
-            {page.tags.map((tag) => (
-              <li key={tag.slug}>{tag.name}</li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
+    <header className={styles["page-hero"]}>
       {media ? (
         <MediaFrame
           media={media}
           alt={media.alternativeText ?? page.title}
-          label="clinical content"
           eager
-          variant="portrait"
+          variant="wide"
+          className={styles["page-hero__image"]}
         />
+      ) : null}
+      {kickerText ? (
+        <p className="font-mono text-xs font-medium uppercase text-stone-soft">{kickerText}</p>
+      ) : null}
+      <h1>{page.title}</h1>
+      {page.excerpt ? <p className={styles.excerpt}>{page.excerpt}</p> : null}
+      {page.tags.length > 0 ? (
+        <ul className={styles["tag-list"]} aria-label="Tags">
+          {page.tags.map((tag) => (
+            <li key={tag.slug}>{tag.name}</li>
+          ))}
+        </ul>
       ) : null}
     </header>
   );

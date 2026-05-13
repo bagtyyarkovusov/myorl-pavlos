@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { unstable_rethrow } from "next/navigation";
 
 export default function ErrorPage({
   error,
@@ -9,6 +10,8 @@ export default function ErrorPage({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  unstable_rethrow(error);
+
   useEffect(() => {
     console.error("Application Error:", error);
   }, [error]);

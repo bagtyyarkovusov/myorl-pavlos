@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { PageRenderer } from "@/components/PageRenderer";
@@ -7,6 +7,7 @@ import { getPage, getSite } from "@/lib/cms/cms-api";
 import { getSitemapPages } from "@/lib/cms/cms-api";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { isLocale, type PageDTO, type NavigationNodeDTO } from "@/lib/cms/types";
+import { findNodeByDocumentId } from "@/lib/cms/tab-bar";
 import { parsePageParam } from "@/lib/testimonials/paginate";
 
 type CmsPageProps = {
@@ -56,6 +57,13 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
   }
 
   const [page, { navigation }] = await Promise.all([getPage(locale, slug), getSite(locale)]);
+
+  // Section-hub folder pages redirect to their first child.
+  if (page.layoutVariant === "section-hub" && page.isFolder) {
+    const self = findNodeByDocumentId(navigation, page.documentId);
+    const firstChild = self?.children[0];
+    if (firstChild) redirect(firstChild.href);
+  }
 
   return (
     <Suspense fallback={<PageRenderer page={page} navigation={navigation} testimonialsPage={1} />}>

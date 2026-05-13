@@ -4,6 +4,8 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
 import { SectionIndexPage } from "./SectionIndexPage";
+import { SectionHubPage } from "./SectionHubPage";
+import { PageBody, extractHeadings, addHeadingIds, extractRelatedLinks } from "./PageBody";
 import { AppointmentPage } from "./AppointmentPage";
 import { ContactPage } from "./ContactPage";
 import { GalleryPage } from "./GalleryPage";
@@ -91,10 +93,11 @@ function makeNav(slug: string, label: string, index = 0): NavigationNodeDTO {
 }
 
 describe("PageHeader", () => {
-  it("renders accent hairline decoration", () => {
+  it("renders title in the page hero header", () => {
     render(<StandardPage page={{ ...BASE_PAGE, title: "Accent Test" }} />);
     const header = screen.getByRole("banner");
-    expect(header.querySelector("[data-accent]")).toBeTruthy();
+    expect(header.querySelector("h1")).toBeTruthy();
+    expect(header.querySelector("h1")?.textContent).toBe("Accent Test");
   });
 
   it("renders kicker text from layout variant", () => {
@@ -126,9 +129,11 @@ describe("StandardPage", () => {
     expect(screen.getByText("Body text")).toBeDefined();
   });
 
-  it("renders section wrapper", () => {
+  it("wraps header and body in a page shell div with container", () => {
     const { container } = render(<StandardPage page={BASE_PAGE} />);
-    expect(container.querySelector("section")).toBeTruthy();
+    const shell = container.firstElementChild;
+    expect(shell?.tagName.toLowerCase()).toBe("div");
+    expect(shell?.querySelector(".container")).toBeTruthy();
   });
 
   it("renders page sections through SectionRenderer", () => {
@@ -751,6 +756,394 @@ describe("SectionIndexPage", () => {
     render(<SectionIndexPage page={page} navigation={nav} />);
 
     expect(document.querySelector('[data-index-variant="video-grid"]')).toBeTruthy();
+  });
+});
+
+describe("SectionHubPage", () => {
+  it("renders page header as fallback when folder has no children in tree", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "doc-rinoplastiki",
+      layoutVariant: "section-hub",
+      isFolder: true,
+      title: "Rhinoplasty",
+      slug: "rinoplastiki",
+    };
+
+    // Empty tree — findNodeByDocumentId returns null, no first child
+    render(<SectionHubPage page={page} navigation={[]} />);
+
+    expect(screen.getByRole("heading", { name: "Rhinoplasty" })).toBeDefined();
+    expect(screen.queryByRole("navigation")).toBeNull();
+  });
+
+  it("renders page title and tab bar for a section-hub child page", () => {
+    const children = [
+      makeNav("rinoplastiki-eisagogi", "Introduction"),
+      makeNav("sygxroni-leitourgiki-rinoplastiki", "Modern Techniques"),
+      makeNav("vimata-sti-xeirourgiki-rinoplastikis", "Surgical Steps"),
+    ];
+    const nav = [
+      {
+        ...makeNav("rinoplastiki", "Rhinoplasty"),
+        documentId: "doc-rinoplastiki",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-rinoplastiki-eisagogi",
+      layoutVariant: "service-article",
+      isFolder: false,
+      title: "Introduction",
+      slug: "rinoplastiki-eisagogi",
+      parentPage: { documentId: "doc-rinoplastiki", slug: null, title: null },
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    expect(screen.getByRole("heading", { name: "Introduction" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "Modern Techniques" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "Surgical Steps" })).toBeDefined();
+  });
+
+  it("does not render a back-link for section-hub child page", () => {
+    const children = [makeNav("child-a", "Child A"), makeNav("child-b", "Child B")];
+    const nav = [
+      {
+        ...makeNav("folder", "Folder"),
+        documentId: "doc-folder",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-child-a",
+      layoutVariant: "service-article",
+      isFolder: false,
+      title: "Child A",
+      slug: "child-a",
+      parentPage: { documentId: "doc-folder", slug: null, title: null },
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    expect(screen.queryByText(/←/)).toBeNull();
+    expect(screen.getByRole("navigation")).toBeDefined();
+  });
+
+  it("renders without navigation prop (empty state)", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "section-hub",
+      isFolder: true,
+      title: "Orphan Hub",
+    };
+
+    render(<SectionHubPage page={page} />);
+
+    expect(screen.getByRole("heading", { name: "Orphan Hub" })).toBeDefined();
+    // No tab bar when getTabBarConfig returns null (orphan)
+    expect(screen.queryByRole("navigation")).toBeNull();
+  });
+
+  it("marks the active child tab with aria-current", () => {
+    const children = [makeNav("child-a", "Child A"), makeNav("child-b", "Child B")];
+    const nav = [
+      {
+        ...makeNav("folder", "Folder"),
+        documentId: "doc-folder",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-child-a",
+      layoutVariant: "service-article",
+      isFolder: false,
+      title: "Child A",
+      slug: "child-a",
+      parentPage: { documentId: "doc-folder", slug: null, title: null },
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    const selfTab = screen.getByRole("link", { name: "Child A" });
+    expect(selfTab.getAttribute("aria-current")).toBe("page");
+  });
+
+  it("shows More dropdown when siblings exceed maxVisible", () => {
+    const children = Array.from({ length: 12 }, (_, i) => makeNav(`child-${i}`, `Child ${i}`));
+    const nav = [
+      {
+        ...makeNav("folder", "Folder"),
+        documentId: "doc-folder",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-child-8",
+      layoutVariant: "service-article",
+      isFolder: false,
+      title: "Child 8",
+      slug: "child-8",
+      parentPage: { documentId: "doc-folder", slug: null, title: null },
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    const moreButton = screen.getByRole("button", { name: /Περισσότερα/ });
+    expect(moreButton).toBeDefined();
+  });
+
+  it("renders page body content below the tab bar", () => {
+    const children = [
+      makeNav("child-a", "Child A"),
+      makeNav("child-b", "Child B"),
+      makeNav("child-c", "Child C"),
+    ];
+    const nav = [
+      {
+        ...makeNav("folder", "Folder"),
+        documentId: "doc-folder",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-child-a",
+      layoutVariant: "standard",
+      isFolder: false,
+      title: "Child A",
+      slug: "child-a",
+      content: "<p>This is the page body content</p>",
+      parentPage: { documentId: "doc-folder", slug: null, title: null },
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    expect(screen.getByText("This is the page body content")).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Child A" })).toBeDefined();
+    expect(screen.getByRole("navigation")).toBeDefined();
+  });
+
+  it("renders sections below the tab bar for section-hub child", () => {
+    const children = [makeNav("child-a", "Child A")];
+    const nav = [
+      {
+        ...makeNav("folder", "Folder"),
+        documentId: "doc-folder",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-child-a",
+      layoutVariant: "standard",
+      isFolder: false,
+      title: "Child A",
+      slug: "child-a",
+      content: "<p>Intro</p>",
+      parentPage: { documentId: "doc-folder", slug: null, title: null },
+      sections: [
+        {
+          __component: "sections.faq",
+          heading: "FAQ",
+          items: [{ question: "A question?", answer: "An answer" }],
+        },
+      ],
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    expect(screen.getByText("A question?")).toBeDefined();
+  });
+});
+
+describe("PageBody", () => {
+  it("renders default prose content and sections", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "standard",
+      content: "<p>Default body</p>",
+      sections: [
+        {
+          __component: "sections.faq",
+          heading: "FAQ",
+          items: [{ question: "Q", answer: "A" }],
+        },
+      ],
+      infoBlockBottom: "<p>Note</p>",
+      sources: "<p>Sources</p>",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(screen.getByText("Default body")).toBeDefined();
+    expect(screen.getByText("Q")).toBeDefined();
+    expect(screen.getByText("Note")).toBeDefined();
+    expect(screen.getByText("Sources")).toBeDefined();
+  });
+
+  it("renders service-article body with service layout", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "service-article",
+      content: "<p>Service content</p>",
+      sections: [
+        {
+          __component: "sections.faq",
+          heading: "What to expect",
+          items: [{ question: "How long?", answer: "<p>One visit</p>" }],
+        },
+      ],
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[data-service-layout='true']")).toBeTruthy();
+    expect(screen.getByText("Service content").closest("div")?.getAttribute("data-variant")).toBe(
+      "service",
+    );
+    expect(screen.getByRole("link", { name: "What to expect" })).toHaveAttribute(
+      "href",
+      "#section-1",
+    );
+  });
+
+  it("renders reference article body with TOC sidebar", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      content: "<h2>Diagnosis</h2><p>Reference body</p><h3>Imaging</h3>",
+      sections: [
+        {
+          __component: "sections.linked-resources",
+          heading: "Related topics",
+          items: [
+            {
+              title: "Nasal guide",
+              description: null,
+              image: null,
+              targetPage: {
+                documentId: "related-nasal-guide",
+                slug: "nasal-guide",
+                title: "Nasal guide",
+              },
+              targetUrl: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[data-article-layout='encyclopedia']")).toBeTruthy();
+    expect(screen.getByText("Reference body").closest("div")?.getAttribute("data-variant")).toBe(
+      "encyclopedia",
+    );
+    const toc = screen.getByRole("navigation", { name: "Περιεχόμενα" });
+    expect(within(toc).getByRole("link", { name: "Diagnosis" })).toHaveAttribute(
+      "href",
+      "#diagnosis",
+    );
+    expect(screen.getByRole("link", { name: "Nasal guide" })).toBeDefined();
+  });
+
+  it("renders specialized article body with author and sources in sidebar", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "specialized-article",
+      content: "<h2>Evidence</h2><p>Research body</p>",
+      articleAuthor: "Dr Expert, MD",
+      sources: "<ol><li>Journal source</li></ol>",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[data-article-layout='specialized']")).toBeTruthy();
+    expect(screen.getByText("Research body").closest("div")?.getAttribute("data-variant")).toBe(
+      "specialized",
+    );
+    expect(screen.getByText("Dr Expert, MD")).toBeDefined();
+    expect(screen.getByText("Journal source")).toBeDefined();
+  });
+});
+
+describe("extractHeadings", () => {
+  it("extracts h2 and h3 headings with unique ids", () => {
+    const html = "<h2>First</h2><p>text</p><h3>Nested</h3><h2>First</h2>";
+    const headings = extractHeadings(html);
+    expect(headings).toHaveLength(3);
+    expect(headings[0]).toEqual({ id: "first", text: "First" });
+    expect(headings[1]).toEqual({ id: "nested", text: "Nested" });
+    expect(headings[2]).toEqual({ id: "first-2", text: "First" });
+  });
+
+  it("returns empty array for null html", () => {
+    expect(extractHeadings(null)).toEqual([]);
+  });
+});
+
+describe("addHeadingIds", () => {
+  it("adds id attributes to headings without existing ids", () => {
+    const html = "<h2>First</h2><p>text</p><h3>Second</h3>";
+    const headings = extractHeadings(html);
+    const result = addHeadingIds(html, headings);
+    expect(result).toBe('<h2 id="first">First</h2><p>text</p><h3 id="second">Second</h3>');
+  });
+
+  it("skips headings that already have an id", () => {
+    const html = '<h2 id="existing">Skip</h2><h2>Add</h2>';
+    const headings = extractHeadings(html);
+    const result = addHeadingIds(html, headings);
+    expect(result).toBe('<h2 id="existing">Skip</h2><h2 id="add">Add</h2>');
+  });
+});
+
+describe("extractRelatedLinks", () => {
+  it("extracts links from linked-resources sections", () => {
+    const sections = [
+      {
+        __component: "sections.linked-resources" as const,
+        heading: "Related",
+        items: [
+          {
+            title: "Resource 1",
+            description: null,
+            image: null,
+            targetPage: { documentId: "r1", slug: "resource-1", title: "Resource 1" },
+            targetUrl: null,
+          },
+          {
+            title: null,
+            description: null,
+            image: null,
+            targetPage: null,
+            targetUrl: "/external",
+          },
+        ],
+      },
+    ];
+    const links = extractRelatedLinks(sections, "el");
+    expect(links).toEqual([
+      { label: "Resource 1", href: "/el/resource-1" },
+      { label: "Related topic", href: "/external" },
+    ]);
   });
 });
 

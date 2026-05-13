@@ -1,6 +1,8 @@
 .tab-bar-wrapper {
   position: relative;
-  margin-bottom: clamp(28px, 4vw, var(--spacing-section-scanning, 48px));
+  margin-bottom: clamp(18px, 3vw, 36px);
+  min-width: 0;
+  width: 100%;
 }
 
 .back-link {
@@ -28,10 +30,13 @@
   display: flex;
   gap: clamp(18px, 3vw, 32px);
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
   border-bottom: 1px solid var(--line);
+  padding-inline: 2px clamp(16px, 3vw, 28px);
+  scroll-padding-inline: 4px clamp(16px, 3vw, 28px);
 }
 
 .tab-bar::-webkit-scrollbar {
@@ -69,6 +74,16 @@
 
 .tab:hover {
   color: var(--accent);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.tab:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .tab--active {
@@ -154,7 +169,7 @@
   top: 0;
   right: 0;
   bottom: 1px;
-  width: 32px;
+  width: clamp(28px, 8vw, 48px);
   pointer-events: none;
-  background: linear-gradient(to right, transparent, var(--background, #f6f8fb));
+  background: linear-gradient(to right, rgba(246, 248, 251, 0), var(--background, #f6f8fb) 55%);
 }

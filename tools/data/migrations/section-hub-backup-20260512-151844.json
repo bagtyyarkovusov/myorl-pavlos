@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1705,
+    "document_id": "qrqbrvdczgpaww71fwvg3od5",
+    "locale": "el",
+    "slug": "rinoplastiki",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 1748,
+    "document_id": "g5erxrpzv3ool4dztm27ovvk",
+    "locale": "el",
+    "slug": "metamosxeusi-mallion",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 1781,
+    "document_id": "pad4hur71wvlio05yourjuwx",
+    "locale": "el",
+    "slug": "pathiseis-stomatos",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 1818,
+    "document_id": "nkgl6v5e8j0u9d9hnodffo12",
+    "locale": "ru",
+    "slug": "skoliosi-rinikou-diafragmatos-stravo-dafragma",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 1827,
+    "document_id": "jd59fet2vsa9lc9cg0i437dn",
+    "locale": "ru",
+    "slug": "ypertrofia-rinikon-kogxon",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 1852,
+    "document_id": "pad4hur71wvlio05yourjuwx",
+    "locale": "ru",
+    "slug": "pathiseis-stomatos",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 1919,
+    "document_id": "t5p48kwy6ynfbuzbxtb3lcyi",
+    "locale": "el",
+    "slug": "parotida-ypognathios-adenas",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 1972,
+    "document_id": "nkgl6v5e8j0u9d9hnodffo12",
+    "locale": "el",
+    "slug": "skoliosi-rinikou-diafragmatos-stravo-dafragma",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 2042,
+    "document_id": "qrqbrvdczgpaww71fwvg3od5",
+    "locale": "ru",
+    "slug": "rinoplastiki",
+    "layout_variant": "specialized-article"
+  },
+  {
+    "id": 2046,
+    "document_id": "g5erxrpzv3ool4dztm27ovvk",
+    "locale": "ru",
+    "slug": "metamosxeusi-mallion",
+    "layout_variant": "specialized-article"
+  }
+]

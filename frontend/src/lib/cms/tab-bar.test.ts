@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { NavigationNodeDTO, PageDTO } from "./types";
-import { getTabBarNodes, getTabBarConfig } from "./tab-bar";
+import { getTabBarNodes, getTabBarConfig, isSectionHubChild, MAX_VISIBLE_TABS } from "./tab-bar";
 
 function makeNode(
   slug: string,
@@ -123,6 +123,24 @@ describe("getTabBarNodes", () => {
     expect(getTabBarNodes(tree, page)).toBeNull();
   });
 
+  it("returns self + children for section-hub folder pages (not excluded like section-index)", () => {
+    const children = [
+      makeNode("child-1", "Child 1", { parentDocId: "doc-services" }),
+      makeNode("child-2", "Child 2", { parentDocId: "doc-services" }),
+      makeNode("child-3", "Child 3", { parentDocId: "doc-services" }),
+    ];
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page: PageDTO = {
+      ...makePage("services", { isFolder: true }),
+      layoutVariant: "section-hub",
+    };
+
+    const result = getTabBarNodes(tree, page);
+    expect(result).not.toBeNull();
+    expect(result!.map((n) => n.slug)).toEqual(["services", "child-1", "child-2", "child-3"]);
+  });
+
   it("handles deeply nested tree by finding parent at any depth", () => {
     const grandchildren = [
       makeNode("gc-1", "GC 1", { parentDocId: "doc-child" }),
@@ -170,6 +188,65 @@ describe("getTabBarNodes", () => {
     const page = makePage("only-child", { parentDocId: "doc-services" });
 
     expect(getTabBarNodes(tree, page)).toBeNull();
+  });
+
+  it("returns just siblings (no parent) for leaf page under section-hub folder", () => {
+    const children = [
+      makeNode("child-1", "Child 1", { parentDocId: "doc-services" }),
+      makeNode("child-2", "Child 2", { parentDocId: "doc-services" }),
+      makeNode("child-3", "Child 3", { parentDocId: "doc-services" }),
+    ];
+    const parent: NavigationNodeDTO = {
+      ...makeNode("services", "Services", { isFolder: true, children }),
+      layoutVariant: "section-hub",
+    };
+    const tree = [parent];
+    const page = makePage("child-2", { parentDocId: "doc-services" });
+
+    const result = getTabBarNodes(tree, page);
+    expect(result).not.toBeNull();
+    // Should be just siblings, no parent tab
+    expect(result!.map((n) => n.slug)).toEqual(["child-1", "child-2", "child-3"]);
+  });
+});
+
+describe("isSectionHubChild", () => {
+  it("returns true for a leaf page under a section-hub folder", () => {
+    const parent: NavigationNodeDTO = {
+      ...makeNode("folder", "Folder", { isFolder: true, children: [] }),
+      layoutVariant: "section-hub",
+    };
+    const tree = [parent];
+    const page = makePage("leaf", { parentDocId: "doc-folder" });
+    expect(isSectionHubChild(tree, page)).toBe(true);
+  });
+
+  it("returns false for folder pages", () => {
+    const tree: NavigationNodeDTO[] = [];
+    const page = makePage("folder", { isFolder: true });
+    expect(isSectionHubChild(tree, page)).toBe(false);
+  });
+
+  it("returns false for orphan pages (no parent)", () => {
+    const tree: NavigationNodeDTO[] = [];
+    const page = makePage("orphan");
+    expect(isSectionHubChild(tree, page)).toBe(false);
+  });
+
+  it("returns false when parent is not section-hub", () => {
+    const parent: NavigationNodeDTO = {
+      ...makeNode("folder", "Folder", { isFolder: true, children: [] }),
+      layoutVariant: "standard",
+    };
+    const tree = [parent];
+    const page = makePage("leaf", { parentDocId: "doc-folder" });
+    expect(isSectionHubChild(tree, page)).toBe(false);
+  });
+
+  it("returns false when parent not found in tree", () => {
+    const tree: NavigationNodeDTO[] = [];
+    const page = makePage("leaf", { parentDocId: "doc-missing" });
+    expect(isSectionHubChild(tree, page)).toBe(false);
   });
 });
 
@@ -256,5 +333,62 @@ describe("getTabBarConfig", () => {
     const config = getTabBarConfig(tree, page, 3);
     expect(config!.visible.length).toBe(3);
     expect(config!.overflow.length).toBe(5); // 8 siblings - 3 visible
+  });
+
+  it("returns isLeaf=false and no back-link for section-hub folder pages", () => {
+    const children = Array.from({ length: 10 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page: PageDTO = {
+      ...makePage("services", { isFolder: true }),
+      layoutVariant: "section-hub",
+    };
+
+    const config = getTabBarConfig(tree, page);
+    expect(config).not.toBeNull();
+    expect(config!.isLeaf).toBe(false);
+    // Self is first visible tab
+    expect(config!.visible[0]!.slug).toBe("services");
+    expect(config!.visible.length).toBe(MAX_VISIBLE_TABS);
+    expect(config!.overflow.length).toBe(11 - MAX_VISIBLE_TABS);
+  });
+
+  it("returns isLeaf=false for section-hub child pages (no back-link)", () => {
+    const children = Array.from({ length: 8 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent: NavigationNodeDTO = {
+      ...makeNode("services", "Services", { isFolder: true, children }),
+      layoutVariant: "section-hub",
+    };
+    const tree = [parent];
+    const page = makePage("child-3", { parentDocId: "doc-services" });
+
+    const config = getTabBarConfig(tree, page);
+    expect(config).not.toBeNull();
+    expect(config!.isLeaf).toBe(false);
+    // Tabs are just siblings, no parent
+    expect(config!.visible.map((n) => n.slug)).not.toContain("services");
+    expect(config!.visible.map((n) => n.slug)).toContain("child-3");
+  });
+
+  it("promotes active section-hub child into visible set", () => {
+    const children = Array.from({ length: 10 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent: NavigationNodeDTO = {
+      ...makeNode("services", "Services", { isFolder: true, children }),
+      layoutVariant: "section-hub",
+    };
+    const tree = [parent];
+    const page = makePage("child-8", { parentDocId: "doc-services" });
+
+    const config = getTabBarConfig(tree, page);
+    expect(config).not.toBeNull();
+    expect(config!.visible.map((n) => n.slug)).toContain("child-8");
+    expect(config!.visible.length).toBe(6);
+    expect(config!.isLeaf).toBe(false);
   });
 });

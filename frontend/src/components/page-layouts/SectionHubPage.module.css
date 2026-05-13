@@ -1,0 +1,24 @@
+/* Keeps hero + tabs aligned with hub container; gap replaces page-hero bottom margin between tabs. */
+.hubChrome {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.5vw, 26px);
+  min-width: 0;
+}
+
+.hubChrome > :first-child {
+  margin-bottom: 0;
+}
+
+/* Article/service shells ship large vertical margins; inside a hub, `.page-shell`
+   already pads the page — keep the slot from adding stack-up below the tab bar. */
+.hubBodySlot {
+  min-width: 0;
+}
+
+.hubBodySlot :global(main[data-article-layout]),
+.hubBodySlot :global(main[data-service-layout="true"]) {
+  margin-inline: auto;
+  margin-block-start: clamp(8px, 1.5vw, 22px);
+  margin-block-end: clamp(28px, 5vw, 72px);
+}

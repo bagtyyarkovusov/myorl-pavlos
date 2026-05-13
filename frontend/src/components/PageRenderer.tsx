@@ -3,6 +3,7 @@ import { AlternateUrlsSetter } from "@/components/AlternateUrlsSetter";
 import { StructuredDataComposer } from "@/components/StructuredDataComposer";
 import { getSiteUrl } from "@/lib/cms/site-url";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
+import { isSectionHubChild } from "@/lib/cms/tab-bar";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
 const DIRECTORY_LAYOUT_VARIANTS = new Set<PageDTO["layoutVariant"]>([
@@ -29,6 +30,9 @@ const HomePage = dynamic(() =>
 );
 const QuestionListPage = dynamic(() =>
   import("@/components/page-layouts/QuestionListPage").then((m) => m.QuestionListPage),
+);
+const SectionHubPage = dynamic(() =>
+  import("@/components/page-layouts/SectionHubPage").then((m) => m.SectionHubPage),
 );
 const SectionIndexPage = dynamic(() =>
   import("@/components/page-layouts/SectionIndexPage").then((m) => m.SectionIndexPage),
@@ -76,6 +80,8 @@ export function PageRenderer({
     layout = <AppointmentPage page={page} />;
   } else if (DIRECTORY_LAYOUT_VARIANTS.has(page.layoutVariant)) {
     layout = <SectionIndexPage page={page} navigation={navigation} />;
+  } else if (page.layoutVariant === "section-hub" || isSectionHubChild(navigation, page)) {
+    layout = <SectionHubPage page={page} navigation={navigation} />;
   } else if (page.pageType === "home") {
     layout = (
       <HomePage

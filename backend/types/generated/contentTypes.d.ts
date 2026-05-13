@@ -596,6 +596,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'search-results',
         'sitemap',
         'specialized-article',
+        'section-hub',
         'contact',
         'testimonials-index',
       ]

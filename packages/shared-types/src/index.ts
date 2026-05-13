@@ -30,6 +30,7 @@ export type LayoutVariant =
   | "search-results"
   | "sitemap"
   | "specialized-article"
+  | "section-hub"
   | "contact"
   | "testimonials-index";
 

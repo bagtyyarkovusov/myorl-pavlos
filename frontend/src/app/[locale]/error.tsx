@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { unstable_rethrow } from "next/navigation";
 
 export default function LocaleErrorPage({
   error,
@@ -9,6 +10,8 @@ export default function LocaleErrorPage({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  unstable_rethrow(error);
+
   useEffect(() => {
     console.error("Locale Route Error:", error);
   }, [error]);

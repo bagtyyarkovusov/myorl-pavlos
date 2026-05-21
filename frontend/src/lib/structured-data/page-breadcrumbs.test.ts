@@ -21,6 +21,8 @@ const basePage: PageDTO = {
   isFolder: false,
   hideFromMenu: false,
   menuIndex: 0,
+  relatedPages: [],
+  relatedTopics: [],
   tags: [],
   alternateUrls: {},
   sections: [],

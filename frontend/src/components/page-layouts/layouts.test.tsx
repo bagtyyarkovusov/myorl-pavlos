@@ -11,7 +11,7 @@ import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
 import { SectionIndexPage } from "./SectionIndexPage";
 import { SectionHubPage } from "./SectionHubPage";
-import { PageBody, extractHeadings, addHeadingIds, extractRelatedLinks } from "./PageBody";
+import { PageBody, extractHeadings, addHeadingIds, relatedTopicHref } from "./PageBody";
 import { AppointmentPage } from "./AppointmentPage";
 import { ContactPage } from "./ContactPage";
 import { GalleryPage } from "./GalleryPage";
@@ -67,6 +67,8 @@ const BASE_PAGE: PageDTO = {
   hideFromMenu: false,
   menuIndex: 0,
   parentPage: null,
+  relatedPages: [],
+  relatedTopics: [],
   tags: [],
   infoBlockBottom: null,
   articleAuthor: null,
@@ -134,6 +136,41 @@ describe("StandardPage", () => {
     render(<StandardPage page={{ ...BASE_PAGE, content: "<p>Body text</p>" }} />);
 
     expect(screen.getByText("Body text")).toBeDefined();
+  });
+
+  it("uses a two-column aside layout for standard pages with headings", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          layoutVariant: "standard",
+          content: "<h2>Symptoms</h2><p>Body text</p>",
+        }}
+      />,
+    );
+
+    const main = document.querySelector("main[data-prose-layout='standard']");
+    expect(main).toBeTruthy();
+    expect(within(main as HTMLElement).getByRole("link", { name: "Symptoms" })).toHaveAttribute(
+      "href",
+      "#symptoms",
+    );
+  });
+
+  it("uses a two-column aside layout for standard pages with related topics only", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          layoutVariant: "standard",
+          content: "<p>Flat body</p>",
+          relatedTopics: [{ documentId: "r1", slug: "peer", title: "Peer article" }],
+        }}
+      />,
+    );
+
+    expect(document.querySelector("main[data-prose-layout='standard']")).toBeTruthy();
+    expect(screen.getByRole("region", { name: "Σχετικά θέματα" })).toBeTruthy();
   });
 
   it("wraps header and body in a page shell div with container", () => {
@@ -206,23 +243,11 @@ describe("StandardPage", () => {
           title: "Sinus Encyclopedia",
           layoutVariant: "encyclopedia-article",
           content: "<h2>Diagnosis</h2><p>Reference body</p><h3>Imaging</h3>",
-          sections: [
+          relatedTopics: [
             {
-              __component: "sections.linked-resources",
-              heading: "Related topics",
-              items: [
-                {
-                  title: "Nasal guide",
-                  description: null,
-                  image: null,
-                  targetPage: {
-                    documentId: "related-nasal-guide",
-                    slug: "nasal-guide",
-                    title: "Nasal guide",
-                  },
-                  targetUrl: null,
-                },
-              ],
+              documentId: "related-nasal-guide",
+              slug: "nasal-guide",
+              title: "Nasal guide",
             },
           ],
         }}
@@ -243,7 +268,7 @@ describe("StandardPage", () => {
     expect(screen.getByText("Reference body").closest("div")?.getAttribute("data-variant")).toBe(
       "encyclopedia",
     );
-    expect(screen.getByRole("link", { name: "Nasal guide" })).toBeDefined();
+    expect(screen.getAllByRole("link", { name: "Nasal guide" }).length).toBeGreaterThanOrEqual(1);
   });
 
   it("routes specialized articles through journal hero, author sidebar, sources, and callouts", () => {
@@ -644,6 +669,63 @@ describe("QuestionListPage", () => {
 
     render(<QuestionListPage page={faqPage} />);
     expect(screen.getByText("What is ORL?")).toBeDefined();
+    expect(screen.queryByText("service faq")).toBeNull();
+  });
+
+  it("renders appointment closure band without layout-variant kicker", () => {
+    const faqPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "accordion",
+      layoutVariant: "service-accordion",
+      title: "Child Anesthesia",
+      sections: [
+        {
+          __component: "sections.accordion",
+          items: [{ title: "Intro", content: "<p>Body</p>" }],
+        },
+      ],
+    };
+
+    render(
+      <QuestionListPage page={faqPage} navigation={[makeNav("appointment", "Appointment", 99)]} />,
+    );
+
+    expect(
+      screen.getByText("Έχετε ακόμη απορίες; Κλείστε ραντεβού για να τις συζητήσουμε."),
+    ).toBeDefined();
+    expect(screen.getByRole("link", { name: "Κλείσε ραντεβού" })).toHaveAttribute(
+      "href",
+      "/el/appointment",
+    );
+    expect(screen.queryByText("service accordion")).toBeNull();
+  });
+
+  it("renders breadcrumbs when parentPage is set", () => {
+    const faqPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "accordion",
+      layoutVariant: "service-accordion",
+      title: "Child Anesthesia",
+      parentPage: {
+        documentId: "parent-1",
+        slug: "pediatric-orl",
+        title: "Pediatric ORL",
+      },
+      sections: [
+        {
+          __component: "sections.accordion",
+          items: [{ title: "Intro", content: "<p>Body</p>" }],
+        },
+      ],
+    };
+
+    render(<QuestionListPage page={faqPage} />);
+
+    expect(screen.getByRole("navigation", { name: "Breadcrumbs" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "Pediatric ORL" })).toHaveAttribute(
+      "href",
+      "/el/pediatric-orl",
+    );
   });
 
   it("renders multiple section types through SectionRenderer", () => {
@@ -844,10 +926,11 @@ describe("SectionIndexPage", () => {
 
     expect(screen.getByRole("heading", { name: "Videos" })).toBeDefined();
     expect(screen.getByRole("heading", { name: "Clinic Tour" })).toBeDefined();
-    expect(screen.getByRole("link", { name: "Διαβάστε περισσότερα" })).toHaveAttribute(
-      "href",
-      "/el/tour",
-    );
+    expect(screen.queryByRole("link", { name: "Σχετικό άρθρο" })).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Αναπαραγωγή βίντεο: Clinic Tour" }));
+
+    expect(screen.getByRole("link", { name: "Σχετικό άρθρο" })).toHaveAttribute("href", "/el/tour");
   });
 
   it("renders tag filter pills derived from child navigation tags", () => {
@@ -1284,23 +1367,11 @@ describe("PageBody", () => {
       ...BASE_PAGE,
       layoutVariant: "encyclopedia-article",
       content: "<h2>Diagnosis</h2><p>Reference body</p><h3>Imaging</h3>",
-      sections: [
+      relatedTopics: [
         {
-          __component: "sections.linked-resources",
-          heading: "Related topics",
-          items: [
-            {
-              title: "Nasal guide",
-              description: null,
-              image: null,
-              targetPage: {
-                documentId: "related-nasal-guide",
-                slug: "nasal-guide",
-                title: "Nasal guide",
-              },
-              targetUrl: null,
-            },
-          ],
+          documentId: "related-nasal-guide",
+          slug: "nasal-guide",
+          title: "Nasal guide",
         },
       ],
     };
@@ -1320,7 +1391,7 @@ describe("PageBody", () => {
         .getByRole("link", { name: "Diagnosis" })
         .getAttribute("href"),
     ).toBe("#diagnosis");
-    expect(screen.getByRole("link", { name: "Nasal guide" })).toBeDefined();
+    expect(screen.getAllByRole("link", { name: "Nasal guide" }).length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders specialized article body with author and sources in sidebar", () => {
@@ -1374,35 +1445,93 @@ describe("addHeadingIds", () => {
   });
 });
 
-describe("extractRelatedLinks", () => {
-  it("extracts links from linked-resources sections", () => {
-    const sections = [
-      {
-        __component: "sections.linked-resources" as const,
-        heading: "Related",
-        items: [
-          {
-            title: "Resource 1",
-            description: null,
-            image: null,
-            targetPage: { documentId: "r1", slug: "resource-1", title: "Resource 1" },
-            targetUrl: null,
+describe("relatedTopicHref", () => {
+  it("builds locale-prefixed hrefs for related topics", () => {
+    expect(
+      relatedTopicHref({ documentId: "r1", slug: "nasal-guide", title: "Nasal guide" }, "el"),
+    ).toBe("/el/nasal-guide");
+    expect(relatedTopicHref({ documentId: "home", slug: "index", title: "Home" }, "el")).toBe(
+      "/el",
+    );
+  });
+});
+
+describe("relatedTopics panel", () => {
+  it("renders service-article related topics in the sidebar", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "service-article",
+      content: "<p>Service content</p>",
+      relatedTopics: [{ documentId: "r1", slug: "follow-up", title: "Follow up" }],
+    };
+
+    render(<PageBody page={page} />);
+
+    const serviceAside = document.querySelector("[data-service-layout='true'] aside");
+    expect(serviceAside).toBeTruthy();
+    expect(
+      within(serviceAside as HTMLElement).getByRole("link", { name: "Follow up" }),
+    ).toHaveAttribute("href", "/el/follow-up");
+    const relatedRegion = within(serviceAside as HTMLElement).getByRole("region", {
+      name: "Σχετικά θέματα",
+    });
+    expect(within(relatedRegion).getByRole("navigation")).toBeTruthy();
+  });
+
+  it("renders encyclopedia related topics with labelled region and nav", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      content: "<h2>Diagnosis</h2><p>Reference body</p>",
+      relatedTopics: [{ documentId: "r1", slug: "follow-up", title: "Follow up" }],
+    };
+
+    render(<PageBody page={page} />);
+
+    const relatedRegion = screen.getByRole("region", { name: "Σχετικά θέματα" });
+    expect(relatedRegion).toHaveAttribute("aria-labelledby", "related-topics-heading");
+    expect(within(relatedRegion).getByRole("navigation")).toBeTruthy();
+  });
+
+  it("renders related topic thumbnails when featuredImage is set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      content: "<h2>Diagnosis</h2><p>Reference body</p>",
+      relatedTopics: [
+        {
+          documentId: "r1",
+          slug: "follow-up",
+          title: "Follow up",
+          featuredImage: {
+            url: "https://cdn.example/follow-up.jpg",
+            alternativeText: "Follow up preview",
+            width: 400,
+            height: 300,
           },
-          {
-            title: null,
-            description: null,
-            image: null,
-            targetPage: null,
-            targetUrl: "/external",
-          },
-        ],
-      },
-    ];
-    const links = extractRelatedLinks(sections, "el");
-    expect(links).toEqual([
-      { label: "Resource 1", href: "/el/resource-1" },
-      { label: "Related topic", href: "/external" },
-    ]);
+        },
+      ],
+    };
+
+    render(<PageBody page={page} />);
+
+    const relatedRegion = screen.getByRole("region", { name: "Σχετικά θέματα" });
+    expect(within(relatedRegion).getByRole("img", { name: "Follow up preview" })).toBeTruthy();
+    const link = within(relatedRegion).getByRole("link");
+    expect(link).toHaveAttribute("href", "/el/follow-up");
+    expect(link).toHaveTextContent("Follow up");
+  });
+
+  it("hides related topics panel when the list is empty", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      content: "<h2>Diagnosis</h2><p>Reference body</p>",
+      relatedTopics: [],
+    };
+
+    render(<PageBody page={page} />);
+    expect(screen.queryByRole("region", { name: "Σχετικά θέματα" })).toBeNull();
   });
 });
 

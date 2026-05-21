@@ -13,14 +13,19 @@ type TabsPanelProps = {
 
 type DisclosureListProps = {
   items: Array<[string | null | undefined, string | null | undefined]>;
+  mode?: "multi" | "single";
 };
 
-export function DisclosureList({ items }: DisclosureListProps) {
+export function DisclosureList({ items, mode = "multi" }: DisclosureListProps) {
   const componentId = useId();
   const [openIndexes, setOpenIndexes] = useState<Set<number>>(() => new Set());
 
   function toggle(index: number) {
     setOpenIndexes((current) => {
+      if (mode === "single") {
+        return current.has(index) ? new Set() : new Set([index]);
+      }
+
       const next = new Set(current);
       if (next.has(index)) {
         next.delete(index);
@@ -50,7 +55,7 @@ export function DisclosureList({ items }: DisclosureListProps) {
               onClick={() => toggle(index)}
               type="button"
             >
-              <span>{title}</span>
+              <span className={styles["disclosure__title"]}>{title}</span>
               <span className={styles["disclosure__chevron"]} data-chevron aria-hidden="true" />
             </button>
             <div
@@ -135,7 +140,7 @@ export function TabsPanel({ items }: TabsPanelProps) {
         </div>
       </div>
       <div className={styles["tabs__mobile"]} data-testid="tabs-mobile-accordion">
-        <DisclosureList items={items.map((item) => [item.title, item.content])} />
+        <DisclosureList items={items.map((item) => [item.title, item.content])} mode="single" />
       </div>
     </div>
   );

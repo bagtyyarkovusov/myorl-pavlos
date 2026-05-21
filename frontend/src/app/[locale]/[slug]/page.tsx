@@ -7,6 +7,7 @@ import { getPage, getSite } from "@/lib/cms/cms-api";
 import { getSitemapPages } from "@/lib/cms/cms-api";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
+import { withRelatedTopics } from "@/lib/cms/related-topics";
 import { isLocale, type PageDTO, type NavigationNodeDTO } from "@/lib/cms/types";
 import { findNodeByDocumentId } from "@/lib/cms/tab-bar";
 import { parsePageParam } from "@/lib/testimonials/paginate";
@@ -61,10 +62,11 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
     getPage(locale, slug),
     getSite(locale),
   ]);
+  const pageWithRelatedTopics = withRelatedTopics(page, directoryNavigation);
 
   // Section-hub folder pages redirect to their first child.
-  if (page.layoutVariant === "section-hub" && page.isFolder) {
-    const self = findNodeByDocumentId(navigation, page.documentId);
+  if (pageWithRelatedTopics.layoutVariant === "section-hub" && pageWithRelatedTopics.isFolder) {
+    const self = findNodeByDocumentId(navigation, pageWithRelatedTopics.documentId);
     const firstChild = self?.children[0];
     if (firstChild) redirect(firstChild.href);
   }
@@ -73,17 +75,20 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
     <Suspense
       fallback={
         <PageRenderer
-          page={page}
+          page={pageWithRelatedTopics}
           navigation={navigation}
           directoryNavigation={directoryNavigation}
           testimonialsPage={1}
           directoryPage={1}
-          directoryHref={hrefForLocaleSlug(page.locale, page.slug)}
+          directoryHref={hrefForLocaleSlug(
+            pageWithRelatedTopics.locale,
+            pageWithRelatedTopics.slug,
+          )}
         />
       }
     >
       <CmsPageContent
-        page={page}
+        page={pageWithRelatedTopics}
         navigation={navigation}
         directoryNavigation={directoryNavigation}
         searchParams={searchParams}

@@ -13,9 +13,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 from import_video_entries import (  # noqa: E402
     ModxVideoCard,
     _normalize_categories,
-    _resolve_related_article,
-    _slug_from_article_url,
     scrape_modx_video_page,
+)
+from video_entry_related_article import (  # noqa: E402
+    ArticleLinkInput,
+    resolve_related_article,
+    slug_from_article_url,
 )
 
 SAMPLE_HTML = """
@@ -45,10 +48,10 @@ SAMPLE_HTML = """
 class ImportVideoEntriesTest(unittest.TestCase):
     def test_slug_from_article_url_decodes_path(self) -> None:
         self.assertEqual(
-            _slug_from_article_url("https://myorl.gr/roxalito-ypniki-apnoia"),
+            slug_from_article_url("https://myorl.gr/roxalito-ypniki-apnoia"),
             "roxalito-ypniki-apnoia",
         )
-        self.assertIsNone(_slug_from_article_url("http://myorl.gr/#"))
+        self.assertIsNone(slug_from_article_url("http://myorl.gr/#"))
 
     def test_normalize_categories_splits_tokens(self) -> None:
         self.assertEqual(
@@ -77,9 +80,14 @@ class ImportVideoEntriesTest(unittest.TestCase):
             "el": {},
             "ru": {"roxalito-ypniki-apnoia": "doc-ru"},
         }
-        document_id, legacy = _resolve_related_article(card, pages, {"el": {}, "ru": {}})
-        self.assertEqual(document_id, "doc-ru")
-        self.assertEqual(legacy, card.article_url)
+        result = resolve_related_article(
+            ArticleLinkInput(locale=card.locale, article_url=card.article_url),
+            pages_by_slug=pages,
+            redirects={"el": {}, "ru": {}},
+            alias_index={"el": {}, "ru": {}},
+        )
+        self.assertEqual(result.document_id, "doc-ru")
+        self.assertEqual(result.legacy_url, card.article_url)
 
 
 if __name__ == "__main__":

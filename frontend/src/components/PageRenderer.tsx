@@ -123,7 +123,7 @@ export function PageRenderer({
       />
     );
   } else if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
-    layout = <QuestionListPage page={page} />;
+    layout = <QuestionListPage page={page} navigation={navigation} />;
   } else if (page.pageType === "gallery") {
     layout = <GalleryPage page={page} />;
   } else if (page.pageType === "contact") {

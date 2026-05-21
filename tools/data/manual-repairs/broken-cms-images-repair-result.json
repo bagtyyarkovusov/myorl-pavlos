@@ -1,0 +1,43 @@
+{
+  "okCount": 6,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "ml7c4v5s98d13flurmre521t",
+      "locale": "ru",
+      "slug": "igmoritida",
+      "itemCount": 1
+    },
+    {
+      "documentId": "ml7c4v5s98d13flurmre521t",
+      "locale": "ru",
+      "slug": "igmoritida",
+      "itemCount": 1
+    },
+    {
+      "documentId": "gsal64tpo5n2xzduimtxaxpg",
+      "locale": "ru",
+      "slug": "rinikoi-polypodes",
+      "itemCount": 1
+    },
+    {
+      "documentId": "gsal64tpo5n2xzduimtxaxpg",
+      "locale": "ru",
+      "slug": "rinikoi-polypodes",
+      "itemCount": 1
+    },
+    {
+      "documentId": "yrkfbgd2yby64x206ksrzg6k",
+      "locale": "ru",
+      "slug": "roxalito-ypniki-apnoia",
+      "itemCount": 1
+    },
+    {
+      "documentId": "yrkfbgd2yby64x206ksrzg6k",
+      "locale": "ru",
+      "slug": "roxalito-ypniki-apnoia",
+      "itemCount": 1
+    }
+  ],
+  "errors": []
+}

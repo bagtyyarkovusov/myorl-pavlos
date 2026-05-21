@@ -17,4 +17,6 @@ export type PageRefDTO = {
   documentId: string;
   slug?: string | null;
   title?: string | null;
+  /** Resolved preview: `imageCenter`, else `featuredImage`, when populated from Strapi or navigation. */
+  featuredImage?: MediaDTO | null;
 };

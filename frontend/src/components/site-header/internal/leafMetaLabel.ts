@@ -5,7 +5,7 @@ export function leafMetaLabel(
   parent: NavigationNodeDTO,
   topicsLabel: (count: number) => string = (count) => `${count} topics`,
 ): string | null {
-  if (child.children.length > 0) {
+  if (child.children.length > 1) {
     return topicsLabel(child.children.length);
   }
   const excerpt = child.excerpt?.trim();

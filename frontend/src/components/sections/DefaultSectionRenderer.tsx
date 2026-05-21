@@ -36,12 +36,14 @@ export function DefaultSectionRenderer({
   locale = "el",
   galleryMode = "cards",
   sectionIndex = 0,
+  disclosureMode = "multi",
 }: {
   section: SectionDTO;
   density?: Density;
   locale?: Locale;
   galleryMode?: "cards" | "lightbox";
   sectionIndex?: number;
+  disclosureMode?: "multi" | "single";
 }) {
   const t = getPageStrings(locale);
   switch (section.__component) {
@@ -135,13 +137,19 @@ export function DefaultSectionRenderer({
     case "sections.accordion":
       return (
         <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.accordion"]}>
-          <DisclosureList items={section.items.map((item) => [item.title, item.content])} />
+          <DisclosureList
+            items={section.items.map((item) => [item.title, item.content])}
+            mode={disclosureMode}
+          />
         </SectionGrid>
       );
     case "sections.faq":
       return (
         <SectionGrid columns={SECTION_COLUMN_DEFAULTS["sections.faq"]}>
-          <DisclosureList items={section.items.map((item) => [item.question, item.answer])} />
+          <DisclosureList
+            items={section.items.map((item) => [item.question, item.answer])}
+            mode={disclosureMode}
+          />
         </SectionGrid>
       );
     case "sections.tabs":

@@ -23,6 +23,7 @@
 }
 
 .hubBodySlot :global(main[data-article-layout]),
+.hubBodySlot :global(main[data-prose-layout="standard"]),
 .hubBodySlot :global(main[data-service-layout="true"]) {
   margin-inline: auto;
   margin-block-start: clamp(8px, 1.5vw, 22px);
@@ -31,7 +32,8 @@
 
 /* Hub service / reference articles: one continuous band from tabs into body. */
 .hubBodySlot :global(main[data-hub-child="true"][data-service-layout="true"]),
-.hubBodySlot :global(main[data-hub-child="true"][data-article-layout]) {
+.hubBodySlot :global(main[data-hub-child="true"][data-article-layout]),
+.hubBodySlot :global(main[data-hub-child="true"][data-prose-layout="standard"]) {
   margin-block-start: clamp(10px, 1.9vw, 26px);
 }
 
@@ -40,6 +42,8 @@
   gap: clamp(22px, 3.25vw, 44px);
 }
 
-.hubBodySlot :global(main[data-hub-child="true"][data-article-layout] .reference-layout__content) {
+.hubBodySlot :global(main[data-hub-child="true"][data-article-layout] .reference-layout__content),
+.hubBodySlot
+  :global(main[data-hub-child="true"][data-prose-layout="standard"] .reference-layout__content) {
   gap: clamp(22px, 3.25vw, 42px);
 }

@@ -154,6 +154,19 @@ describe("MegaMenu", () => {
     expect(screen.getByText("2 topics")).toBeDefined();
   });
 
+  it("uses the provided localized count label for parent children", () => {
+    render(
+      <MegaMenu
+        item={mockItem}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel="Overview"
+        topicsLabel={(count) => `${count} θέματα`}
+      />,
+    );
+
+    expect(screen.getByText("2 θέματα")).toBeDefined();
+  });
+
   it("renders excerpt meta text for leaf pages", () => {
     render(
       <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,

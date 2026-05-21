@@ -42,12 +42,23 @@ describe("leafMetaLabel", () => {
     expect(leafMetaLabel(node, makeParent(), topicsLabel)).toBe("2 topics");
   });
 
-  it("returns singular child count", () => {
+  it("falls back to excerpt instead of returning a singular child count", () => {
     const node = makeNode({
       documentId: "p",
+      excerpt: "Video library overview",
       children: [makeNode({ documentId: "c1" })],
     });
-    expect(leafMetaLabel(node, makeParent(), topicsLabel)).toBe("1 topics");
+    expect(leafMetaLabel(node, makeParent(), topicsLabel)).toBe("Video library overview");
+  });
+
+  it("returns null for a single-child parent without descriptive text", () => {
+    const node = makeNode({
+      documentId: "p",
+      title: "Videos",
+      navLabel: "Videos",
+      children: [makeNode({ documentId: "c1" })],
+    });
+    expect(leafMetaLabel(node, makeParent(), topicsLabel)).toBeNull();
   });
 
   it("returns excerpt for leaf with excerpt", () => {

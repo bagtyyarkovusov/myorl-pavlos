@@ -194,6 +194,36 @@ export function upgradeImageOnlyParagraphs(html: string): string {
   );
 }
 
+const BROKEN_IMG_SRC_PATTERN = /^\s*$|^file:|msohtmlclip/i;
+
+function readImgSrc(tag: string): string {
+  const match = tag.match(/\bsrc\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+  return (match?.[1] ?? match?.[2] ?? match?.[3] ?? "").trim();
+}
+
+function isValidImgSrc(src: string): boolean {
+  return src.length > 0 && !BROKEN_IMG_SRC_PATTERN.test(src);
+}
+
+/** Remove Word paste artifacts and other `<img>` tags that cannot render. */
+export function removeBrokenImages(html: string): string {
+  if (!html.includes("<img")) {
+    return html;
+  }
+
+  let result = html.replace(/<img\b[^>]*>/gi, (tag) => {
+    if (/msohtmlclip/i.test(tag)) {
+      return "";
+    }
+    return isValidImgSrc(readImgSrc(tag)) ? tag : "";
+  });
+
+  result = result.replace(/<figure class="cms-html__figure">\s*<\/figure>/gi, "");
+  result = result.replace(/<p(?:\s[^>]*)?>\s*<\/p>/gi, "");
+
+  return result;
+}
+
 export function sanitizeCmsHtml(html: string | null | undefined): string {
   if (!html) {
     return "";
@@ -206,7 +236,7 @@ export function sanitizeCmsHtml(html: string | null | undefined): string {
     FORBID_TAGS: ["style", "script", "font"],
     FORBID_ATTR: ["style"],
   });
-  return upgradeImageOnlyParagraphs(sanitized);
+  return upgradeImageOnlyParagraphs(removeBrokenImages(sanitized));
 }
 
 /**

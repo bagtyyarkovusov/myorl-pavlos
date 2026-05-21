@@ -83,6 +83,8 @@ const BASE_PAGE: PageDTO = {
   hideFromMenu: false,
   menuIndex: 0,
   parentPage: null,
+  relatedPages: [],
+  relatedTopics: [],
   tags: [],
   infoBlockBottom: null,
   articleAuthor: null,

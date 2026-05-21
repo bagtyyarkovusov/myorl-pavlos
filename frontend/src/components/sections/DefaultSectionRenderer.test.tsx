@@ -342,4 +342,25 @@ describe("DefaultSectionRenderer", () => {
     expect(trigger).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText("Content").closest(".prose-luxury")).toBeTruthy();
   });
+
+  it("keeps only one accordion panel open in single mode", () => {
+    const section = makeSection({
+      __component: "sections.accordion",
+      heading: "Accordion",
+      items: [
+        { title: "Item 1", content: "<p>One</p>" },
+        { title: "Item 2", content: "<p>Two</p>" },
+      ],
+    } as SectionDTO);
+
+    render(<DefaultSectionRenderer section={section} disclosureMode="single" />);
+
+    const [first, second] = screen.getAllByRole("button");
+    fireEvent.click(first);
+    expect(first).toHaveAttribute("aria-expanded", "true");
+
+    fireEvent.click(second);
+    expect(second).toHaveAttribute("aria-expanded", "true");
+    expect(first).toHaveAttribute("aria-expanded", "false");
+  });
 });

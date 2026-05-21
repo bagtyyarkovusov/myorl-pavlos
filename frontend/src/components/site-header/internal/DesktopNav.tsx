@@ -25,6 +25,7 @@ type DesktopNavProps = {
   overviewLinkLabel: string;
   featureBlurb: string;
   primaryNavLabel: string;
+  topicsLabel: (count: number) => string;
 };
 
 export function DesktopNav({
@@ -39,6 +40,7 @@ export function DesktopNav({
   overviewLinkLabel,
   featureBlurb,
   primaryNavLabel,
+  topicsLabel,
 }: DesktopNavProps) {
   const activeMenu = openMenuId ? (items.find((n) => n.documentId === openMenuId) ?? null) : null;
 
@@ -81,6 +83,7 @@ export function DesktopNav({
               item={activeMenu}
               featureBlurb={featureBlurb}
               overviewLinkLabel={overviewLinkLabel}
+              topicsLabel={topicsLabel}
             />
           ) : null}
         </div>

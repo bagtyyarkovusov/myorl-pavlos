@@ -41,6 +41,16 @@ describe("Accessibility audit — interactive components meet WCAG AA contracts"
       const region = document.getElementById(panelId)!;
       expect(region.getAttribute("role")).toBe("region");
     });
+
+    it("single mode keeps only one panel open at a time", () => {
+      render(<DisclosureList items={items} mode="single" />);
+      const [first, second] = screen.getAllByRole("button");
+      fireEvent.click(first);
+      expect(first.getAttribute("aria-expanded")).toBe("true");
+      fireEvent.click(second);
+      expect(second.getAttribute("aria-expanded")).toBe("true");
+      expect(first.getAttribute("aria-expanded")).toBe("false");
+    });
   });
 
   describe("TabsPanel", () => {

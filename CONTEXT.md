@@ -32,14 +32,40 @@ _Avoid_: video page, YouTube page, video block list
 A local browsing label for grouping **Video Entries** within a **Video Directory**.
 _Avoid_: site tag, article taxonomy, global category
 
+**Accordion Page**:
+A medical article whose body is a collapsible question-and-answer list rendered from a `sections.accordion` block in `pageSections`.
+_Avoid_: FAQ page (when items use accordion item shape), tab page, flat article
+
+**FAQ Page**:
+A services or information page whose structured Q&A list lives in `sections.faq` within `pageSections`, often alongside prose in `page.content`.
+_Avoid_: accordion page (when items use title/content accordion shape), flat article without disclosures
+
+**Related Topics**:
+Contextual cross-links shown alongside an article to help readers continue within the same medical subject — not a site-wide “popular articles” promo block.
+_Avoid_: popular articles, global carousel, recommended posts
+_See_: [ADR-010](../docs/adr/ADR-010-related-topics-replace-popular-articles.md)
+
+**Related Pages**:
+The editor-managed `relatedPages` relation on a **Page** that defines its **Related Topics** when manual curation is needed.
+_Avoid_: linked-resources section (for article cross-links), popular articles list
+
 ## Relationships
 
 - A **Video Entry** may point to zero or one **Related Article**.
 - Localized **Video Entries** may represent the same underlying video while preserving per-locale title, tags, visibility, and **Related Article**.
-- A **Related Article** should be an internal page relation when the historical link can be resolved; unresolved historical links remain fallback evidence, not the preferred reader path.
+- A **Related Article** must be an internal page relation before the Video Directory shows a reader-facing link; `legacyArticleUrl` is migration evidence only and is not converted into runtime URLs.
 - A **Video Directory** plays **Video Entries** inline and remains the first restoration target before article-page embeds.
 - A **Video Category** belongs to the video library and should not be treated as the site-wide article taxonomy.
 - The first **Video Directory** restoration should migrate the historical video set, with unresolved **Related Articles** treated as cleanup work rather than migration blockers.
+- **Related Topics** replace the legacy MODX global “popular articles” pattern: links must be contextual to the page the reader is on, not identical sitewide discovery.
+- **Related Topics** are distinct from a **Related Article** on a **Video Entry** (one video → one deeper page) and from home-only editorial promo blocks.
+- **Related Topics** use a hybrid curation model: auto-suggest from shared tags and parent section, with editors overriding via **Related Pages** when needed.
+- **Related Topics** render in the article sidebar on desktop and in a mobile-friendly panel when the sidebar is hidden — not as a sitewide bottom carousel.
+- **Related Topics** appear on long-form medical article layouts: `encyclopedia-article`, `specialized-article`, and `service-article` — not on FAQ, accordion, contact, or directory index pages.
+- When **Related Pages** is empty, **Related Topics** auto-suggest from shared tags first, then fill remaining slots from sibling pages under the same parent section, up to six links. Editor-curated **Related Pages** replace auto-suggest entirely when present.
+- On article pages, **`sections.linked-resources`** is retired after a one-time migration into **Related Pages**; the section remains for home editorial grids only.
+- Auto-suggested **Related Topics** exclude the current page, parent hub/index pages, menu-hidden pages, and non-article layout variants — only other long-form medical articles qualify.
+- When no **Related Topics** resolve, hide the panel entirely — do not render an empty heading on desktop or mobile.
 
 ---
 

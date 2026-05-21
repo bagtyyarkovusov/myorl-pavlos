@@ -37,33 +37,19 @@ function toVideoCategories(value: unknown): VideoCategoryDTO[] {
 }
 
 /**
- * Resolves the href readers should use for a video entry's related article button.
+ * Resolves the href for a Video Entry's Related Article CTA.
+ *
+ * Only a resolved CMS `relatedArticle` relation is exposed to readers.
+ * `legacyArticleUrl` is migration evidence and is not used at runtime.
  */
 export function resolveVideoEntryArticleHref(
-  entry: Pick<VideoEntryDTO, "locale" | "relatedArticle" | "legacyArticleUrl">,
+  entry: Pick<VideoEntryDTO, "locale" | "relatedArticle">,
 ): string | null {
-  if (entry.relatedArticle?.slug) {
-    return hrefForLocaleSlug(entry.locale, entry.relatedArticle.slug);
-  }
-
-  const legacy = normalizeOptionalText(entry.legacyArticleUrl);
-  if (!legacy || legacy === "#" || legacy.endsWith("/#") || legacy.endsWith("#")) {
+  if (!entry.relatedArticle?.slug) {
     return null;
   }
 
-  try {
-    const url = new URL(legacy, "https://myorl.gr");
-    const path = url.pathname.replace(/\/$/, "");
-    if (!path || path === "/") return null;
-
-    const segments = path.split("/").filter(Boolean);
-    const slug = segments.at(-1);
-    if (!slug) return null;
-
-    return hrefForLocaleSlug(entry.locale, decodeURIComponent(slug));
-  } catch {
-    return null;
-  }
+  return hrefForLocaleSlug(entry.locale, entry.relatedArticle.slug);
 }
 
 export function toVideoEntryDTO(raw: StrapiVideoEntryPayload): VideoEntryDTO {

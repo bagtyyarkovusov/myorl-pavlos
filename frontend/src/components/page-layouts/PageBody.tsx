@@ -1,8 +1,10 @@
 import { CmsHtml } from "@/components/CmsHtml";
+import { MediaFrame } from "@/components/design-system";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getPageStrings } from "@/lib/i18n/page";
+import { hrefForLocaleSlug } from "@/lib/cms/navigation";
+import type { PageRefDTO, PageDTO } from "@/lib/cms/types";
 import { cn } from "@/lib/utils";
-import type { SectionDTO, PageDTO } from "@/lib/cms/types";
 import styles from "./_shared.module.css";
 
 type PageBodyProps = {
@@ -23,15 +25,34 @@ export function PageBody({ page, proseStackGap = "default", hubChild = false }: 
   ) {
     return <ReferenceArticleBody page={page} hubChild={hubChild} />;
   }
-  return <DefaultPageBody page={page} proseStackGap={proseStackGap} />;
+  return <DefaultPageBody page={page} proseStackGap={proseStackGap} hubChild={hubChild} />;
 }
 
 type DefaultPageBodyProps = {
   page: PageDTO;
   proseStackGap: "default" | "compact";
+  hubChild?: boolean;
 };
 
-function DefaultPageBody({ page, proseStackGap }: DefaultPageBodyProps) {
+function hasProseAside(page: PageDTO): boolean {
+  return page.relatedTopics.length > 0 || extractHeadings(page.content).length > 0;
+}
+
+function DefaultPageBody({ page, proseStackGap, hubChild = false }: DefaultPageBodyProps) {
+  if (hasProseAside(page)) {
+    return (
+      <ArticleAsideBody
+        page={page}
+        hubChild={hubChild}
+        cmsVariant="luxury"
+        sectionDensity="focused"
+        layoutAttribute="data-prose-layout"
+        layoutValue="standard"
+        showAuthor={false}
+      />
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -55,6 +76,7 @@ function DefaultPageBody({ page, proseStackGap }: DefaultPageBodyProps) {
 
 function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
   const t = getPageStrings(page.locale);
+  const relatedTopics = page.relatedTopics;
   const sectionLinks = page.sections
     .map((section, index) => ({
       id: `section-${index + 1}`,
@@ -76,9 +98,19 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
       </details>
     ) : null;
 
+  const mobileRelatedTopics =
+    relatedTopics.length > 0 ? (
+      <RelatedTopicsMobilePanel
+        locale={page.locale}
+        topics={relatedTopics}
+        label={t.relatedTopics}
+      />
+    ) : null;
+
   return (
     <>
       {mobileSectionNav}
+      {mobileRelatedTopics}
       <main
         className={styles["service-layout"]}
         data-hub-child={hubChild ? "true" : undefined}
@@ -116,6 +148,13 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
               ))}
             </nav>
           ) : null}
+          {relatedTopics.length > 0 ? (
+            <RelatedTopicsPanel
+              locale={page.locale}
+              topics={relatedTopics}
+              label={t.relatedTopics}
+            />
+          ) : null}
         </aside>
       </main>
       <a className={styles["service-cta-mobile"]} href={`/${page.locale}/appointment`}>
@@ -126,11 +165,44 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
 }
 
 function ReferenceArticleBody({ page, hubChild = false }: PageBodyProps) {
-  const t = getPageStrings(page.locale);
   const variant = page.layoutVariant === "specialized-article" ? "specialized" : "encyclopedia";
+
+  return (
+    <ArticleAsideBody
+      page={page}
+      hubChild={hubChild}
+      cmsVariant={variant}
+      sectionDensity={variant === "encyclopedia" ? "scanning" : "focused"}
+      layoutAttribute="data-article-layout"
+      layoutValue={variant}
+      showAuthor={variant === "specialized"}
+    />
+  );
+}
+
+type ArticleAsideBodyProps = {
+  page: PageDTO;
+  hubChild?: boolean;
+  cmsVariant: "luxury" | "encyclopedia" | "specialized";
+  sectionDensity: "scanning" | "focused";
+  layoutAttribute: "data-article-layout" | "data-prose-layout";
+  layoutValue: string;
+  showAuthor: boolean;
+};
+
+function ArticleAsideBody({
+  page,
+  hubChild = false,
+  cmsVariant,
+  sectionDensity,
+  layoutAttribute,
+  layoutValue,
+  showAuthor,
+}: ArticleAsideBodyProps) {
+  const t = getPageStrings(page.locale);
   const headings = extractHeadings(page.content);
   const contentWithHeadingIds = addHeadingIds(page.content, headings);
-  const relatedLinks = extractRelatedLinks(page.sections, page.locale);
+  const relatedTopics = page.relatedTopics;
   const bodySections = page.sections.filter(
     (section) => section.__component !== "sections.linked-resources",
   );
@@ -149,36 +221,51 @@ function ReferenceArticleBody({ page, hubChild = false }: PageBodyProps) {
       </details>
     ) : null;
 
+  const mobileRelatedTopics =
+    relatedTopics.length > 0 ? (
+      <RelatedTopicsMobilePanel
+        locale={page.locale}
+        topics={relatedTopics}
+        label={t.relatedTopics}
+      />
+    ) : null;
+
+  const layoutProps = {
+    [layoutAttribute]: layoutValue,
+    "data-hub-child": hubChild ? "true" : undefined,
+  };
+
   return (
     <>
       {mobileToc}
-      <main
-        className={styles["reference-layout"]}
-        data-article-layout={variant}
-        data-hub-child={hubChild ? "true" : undefined}
-      >
+      {mobileRelatedTopics}
+      <main className={styles["reference-layout"]} {...layoutProps}>
         <article className={styles["reference-layout__content"]}>
-          <CmsHtml html={contentWithHeadingIds} variant={variant} />
+          <CmsHtml html={contentWithHeadingIds} variant={cmsVariant} />
           {bodySections.map((section, index) => (
             <SectionRenderer
               key={`${section.__component}-${index}`}
               id={`section-${index + 1}`}
               section={section}
               index={index}
-              density={variant === "encyclopedia" ? "scanning" : "focused"}
+              density={sectionDensity}
             />
           ))}
           {page.infoBlockBottom ? (
             <CmsHtml
               html={page.infoBlockBottom}
               className={styles["note-block"]}
-              variant={variant}
+              variant={cmsVariant}
             />
           ) : null}
           {page.sources ? (
             <section className={styles["sources-footer"]} aria-label={t.sources}>
               <p className={styles["sources-footer__label"]}>{t.sources}</p>
-              <CmsHtml html={page.sources} className={styles["sources-block"]} variant={variant} />
+              <CmsHtml
+                html={page.sources}
+                className={styles["sources-block"]}
+                variant={cmsVariant}
+              />
             </section>
           ) : null}
         </article>
@@ -193,26 +280,90 @@ function ReferenceArticleBody({ page, hubChild = false }: PageBodyProps) {
               ))}
             </nav>
           ) : null}
-          {variant === "specialized" && page.articleAuthor ? (
+          {showAuthor && page.articleAuthor ? (
             <section className={styles["reference-panel"]} aria-label={t.author}>
               <p>{t.author}</p>
               <strong>{page.articleAuthor}</strong>
             </section>
           ) : null}
-          {relatedLinks.length > 0 ? (
-            <section className={styles["reference-panel"]} aria-label={t.relatedTopics}>
-              <p>{t.relatedTopics}</p>
-              {relatedLinks.map((link) => (
-                <a href={link.href} key={`${link.href}-${link.label}`}>
-                  {link.label}
-                </a>
-              ))}
-            </section>
+          {relatedTopics.length > 0 ? (
+            <RelatedTopicsPanel
+              locale={page.locale}
+              topics={relatedTopics}
+              label={t.relatedTopics}
+            />
           ) : null}
         </aside>
       </main>
     </>
   );
+}
+
+type RelatedTopicsPanelProps = {
+  locale: PageDTO["locale"];
+  topics: PageRefDTO[];
+  label: string;
+};
+
+function RelatedTopicsPanel({ locale, topics, label }: RelatedTopicsPanelProps) {
+  return (
+    <section className={styles["related-topics-panel"]} aria-labelledby="related-topics-heading">
+      <p id="related-topics-heading">{label}</p>
+      <nav>
+        {topics.map((topic) => (
+          <RelatedTopicLink key={topic.documentId} locale={locale} topic={topic} />
+        ))}
+      </nav>
+    </section>
+  );
+}
+
+function RelatedTopicsMobilePanel({ locale, topics, label }: RelatedTopicsPanelProps) {
+  return (
+    <details
+      className={`${styles["reference-mobile-panel"]} ${styles["related-topics-mobile-panel"]}`}
+    >
+      <summary>{label}</summary>
+      <nav aria-label={label}>
+        {topics.map((topic) => (
+          <RelatedTopicLink key={topic.documentId} locale={locale} topic={topic} />
+        ))}
+      </nav>
+    </details>
+  );
+}
+
+function RelatedTopicLink({ locale, topic }: { locale: PageDTO["locale"]; topic: PageRefDTO }) {
+  const title = topic.title || "Related topic";
+  const media = topic.featuredImage;
+  const hasImage = Boolean(media?.url);
+
+  return (
+    <a
+      href={relatedTopicHref(topic, locale)}
+      className={styles["related-topics-panel__link"]}
+      data-has-image={hasImage ? "true" : undefined}
+      lang={locale}
+    >
+      {hasImage ? (
+        <span className={styles["related-topics-panel__thumb"]}>
+          <MediaFrame
+            media={media}
+            alt={media?.alternativeText || title}
+            variant="wide"
+            className={styles["related-topics-panel__frame"]}
+            sizes="72px"
+          />
+        </span>
+      ) : null}
+      <span className={styles["related-topics-panel__title"]}>{title}</span>
+    </a>
+  );
+}
+
+function relatedTopicHref(topic: PageRefDTO, locale: PageDTO["locale"]): string {
+  if (!topic.slug) return "#";
+  return hrefForLocaleSlug(locale, topic.slug);
 }
 
 type HeadingLink = {
@@ -263,17 +414,5 @@ function slugify(value: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-function extractRelatedLinks(sections: SectionDTO[], locale: string) {
-  return sections.flatMap((section) => {
-    if (section.__component !== "sections.linked-resources") {
-      return [];
-    }
-    return section.items.map((item) => ({
-      label: item.title || item.targetPage?.title || "Related topic",
-      href: item.targetUrl || (item.targetPage?.slug ? `/${locale}/${item.targetPage.slug}` : "#"),
-    }));
-  });
-}
-
-export { extractHeadings, addHeadingIds, slugify, stripTags, extractRelatedLinks };
+export { extractHeadings, addHeadingIds, slugify, stripTags, relatedTopicHref };
 export type { HeadingLink };

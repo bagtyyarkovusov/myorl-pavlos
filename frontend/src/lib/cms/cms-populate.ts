@@ -17,6 +17,13 @@
 export const PAGE_POPULATE = {
   seo: { populate: ["ogImage"] },
   parentPage: { fields: ["documentId", "slug", "title"] },
+  relatedPages: {
+    fields: ["documentId", "slug", "title"],
+    populate: {
+      featuredImage: true,
+      imageCenter: true,
+    },
+  },
   localizations: { fields: ["documentId", "locale", "slug", "title"] },
   tags: { fields: ["name", "slug"] },
   featuredImage: true,

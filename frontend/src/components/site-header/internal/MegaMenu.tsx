@@ -8,9 +8,10 @@ type MegaMenuProps = {
   item: NavigationNodeDTO;
   featureBlurb: string;
   overviewLinkLabel: string;
+  topicsLabel?: (count: number) => string;
 };
 
-export function MegaMenu({ item, featureBlurb, overviewLinkLabel }: MegaMenuProps) {
+export function MegaMenu({ item, featureBlurb, overviewLinkLabel, topicsLabel }: MegaMenuProps) {
   return (
     <div className={styles["nav-panel__grid"]}>
       <div className={styles["nav-panel__feature"]}>
@@ -25,7 +26,7 @@ export function MegaMenu({ item, featureBlurb, overviewLinkLabel }: MegaMenuProp
       </div>
       <div className={styles["nav-panel__links"]}>
         {item.children.slice(0, 12).map((child, index) => {
-          const meta = leafMetaLabel(child, item);
+          const meta = leafMetaLabel(child, item, topicsLabel);
           return (
             <div
               key={child.documentId}

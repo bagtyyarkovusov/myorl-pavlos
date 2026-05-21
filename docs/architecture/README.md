@@ -13,6 +13,7 @@
 - [ADR-007 — Hybrid Tailwind v4 + CSS Modules styling](../adr/ADR-007-hybrid-tailwind-css-modules-styling.md)
 - [ADR-008 — Dev Postgres is canonical Strapi state store](../adr/ADR-008-dev-postgres-is-canonical-strapi-state-store.md)
 - [ADR-009 — Clinic maps on Next.js contact pages](../adr/ADR-009-nextjs-contact-pages-use-clinic-map.md)
+- [ADR-010 — Related Topics replace legacy Popular Articles](../adr/ADR-010-related-topics-replace-popular-articles.md)
 
 ## Code boundaries (enforced in practice)
 

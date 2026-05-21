@@ -11,16 +11,23 @@ import re
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Any
-from urllib import parse, request
+from urllib import request
 from urllib.error import URLError
 
 from strapi_client import StrapiClient, load_strapi_env_from_dotenv
+from video_entry_related_article import (
+    ArticleLinkInput,
+    build_alias_to_document_id,
+    fetch_pages_by_slug,
+    load_redirect_targets,
+    normalize_legacy_article_url,
+    resolve_related_article,
+)
 
 logger = logging.getLogger("import_video_entries")
 
 ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT_PATH = ROOT / "data" / "source" / "checkpoints" / "video_entries_modx.json"
-REDIRECTS_PATH = ROOT / "data" / "manifests" / "slug_redirects_next.json"
 
 MODX_URLS = {
     "el": "https://myorl.gr/video",
@@ -98,103 +105,12 @@ def scrape_modx_video_page(url: str, locale: str) -> list[ModxVideoCard]:
     return cards
 
 
-def _slug_from_article_url(url: str) -> str | None:
-    if not url or url.endswith("#") or url.endswith("/#"):
-        return None
-    try:
-        parsed = parse.urlparse(url)
-        segments = [segment for segment in parsed.path.split("/") if segment]
-        if not segments:
-            return None
-        return parse.unquote(segments[-1]).strip()
-    except ValueError:
-        return None
-
-
-def _load_redirect_targets() -> dict[str, dict[str, str]]:
-    """Map locale -> old slug -> canonical Strapi slug."""
-    if not REDIRECTS_PATH.is_file():
-        return {"el": {}, "ru": {}}
-    payload = json.loads(REDIRECTS_PATH.read_text(encoding="utf-8"))
-    out: dict[str, dict[str, str]] = {"el": {}, "ru": {}}
-    for row in payload.get("redirects", []):
-        locale = row.get("locale")
-        if locale not in out:
-            continue
-        target = row.get("strapiSlugAscii") or row.get("modxAlias")
-        if not target:
-            continue
-        for variant in row.get("fromPathVariants", []):
-            slug = _slug_from_article_url(variant if variant.startswith("http") else f"https://myorl.gr{variant}")
-            if slug:
-                out[locale][slug] = target
-        alias = row.get("modxAlias")
-        if alias:
-            out[locale][alias] = target
-    return out
-
-
-def _fetch_pages_by_slug(client: StrapiClient) -> dict[str, dict[str, str]]:
-    pages: dict[str, dict[str, str]] = {"el": {}, "ru": {}}
-    for locale in ("el", "ru"):
-        page = 1
-        while True:
-            resp = client.get(
-                "/api/pages",
-                **{
-                    "locale": locale,
-                    "pagination[page]": page,
-                    "pagination[pageSize]": 100,
-                    "fields[0]": "slug",
-                    "fields[1]": "documentId",
-                    "status": "published",
-                },
-            )
-            data = resp.get("data") or []
-            for entry in data:
-                slug = entry.get("slug")
-                document_id = entry.get("documentId")
-                if slug and document_id:
-                    pages[locale][slug] = document_id
-            pagination = (resp.get("meta") or {}).get("pagination") or {}
-            if page >= int(pagination.get("pageCount") or 1):
-                break
-            page += 1
-    return pages
-
-
-def _resolve_related_article(
-    card: ModxVideoCard,
-    pages_by_slug: dict[str, dict[str, str]],
-    redirects: dict[str, dict[str, str]],
-) -> tuple[str | None, str | None]:
-    slug = _slug_from_article_url(card.article_url)
-    legacy = card.article_url or None
-    if not slug:
-        return None, legacy
-
-    for locale in (card.locale, "el", "ru"):
-        mapped = redirects.get(locale, {}).get(slug, slug)
-        document_id = pages_by_slug.get(locale, {}).get(mapped)
-        if document_id:
-            return document_id, legacy
-
-    return None, legacy
-
-
 def _extract_document_id(response: dict[str, Any]) -> str:
     data = response.get("data") or {}
     document_id = data.get("documentId") or data.get("id")
     if not document_id:
         raise RuntimeError(f"Missing documentId in Strapi response: {response}")
     return str(document_id)
-
-
-def _normalize_legacy_article_url(url: str | None) -> str | None:
-    if not url:
-        return None
-    decoded = parse.unquote(url.strip())
-    return decoded or None
 
 
 def _entry_payload(card: ModxVideoCard, related_article: str | None) -> dict[str, Any]:
@@ -204,7 +120,7 @@ def _entry_payload(card: ModxVideoCard, related_article: str | None) -> dict[str
         "youtubeUrl": f"https://www.youtube.com/watch?v={card.youtube_id}",
         "categories": card.categories,
         "sortOrder": card.sort_order,
-        "legacyArticleUrl": _normalize_legacy_article_url(card.article_url),
+        "legacyArticleUrl": normalize_legacy_article_url(card.article_url),
     }
     if related_article:
         payload["relatedArticle"] = related_article
@@ -266,10 +182,12 @@ def import_video_entries(
     if client.dry_run:
         pages_by_slug = {"el": {}, "ru": {}}
         existing = {}
+        alias_index = {"el": {}, "ru": {}}
     else:
-        pages_by_slug = _fetch_pages_by_slug(client)
+        pages_by_slug = fetch_pages_by_slug(client)
         existing = _fetch_existing_by_youtube(client)
-    redirects = _load_redirect_targets()
+        alias_index = build_alias_to_document_id()
+    redirects = load_redirect_targets()
 
     stats = {
         "created": 0,
@@ -288,7 +206,14 @@ def import_video_entries(
 
         primary_locale = "el" if "el" in locale_cards else "ru"
         primary = locale_cards[primary_locale]
-        related_primary, legacy = _resolve_related_article(primary, pages_by_slug, redirects)
+        primary_result = resolve_related_article(
+            ArticleLinkInput(locale=primary.locale, article_url=primary.article_url),
+            pages_by_slug=pages_by_slug,
+            redirects=redirects,
+            alias_index=alias_index,
+        )
+        related_primary = primary_result.document_id
+        legacy = primary_result.legacy_url or primary.article_url or None
         if not related_primary and legacy and legacy not in ("#",):
             stats["unresolved_articles"] += 1
 
@@ -305,7 +230,14 @@ def import_video_entries(
         for locale, card in locale_cards.items():
             if locale == primary_locale:
                 continue
-            related, legacy_other = _resolve_related_article(card, pages_by_slug, redirects)
+            locale_result = resolve_related_article(
+                ArticleLinkInput(locale=card.locale, article_url=card.article_url),
+                pages_by_slug=pages_by_slug,
+                redirects=redirects,
+                alias_index=alias_index,
+            )
+            related = locale_result.document_id
+            legacy_other = locale_result.legacy_url or card.article_url or None
             if not related and legacy_other and legacy_other not in ("#",):
                 stats["unresolved_articles"] += 1
             client.put(

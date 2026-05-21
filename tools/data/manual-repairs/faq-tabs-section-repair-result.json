@@ -1,0 +1,31 @@
+{
+  "okCount": 4,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "jdsakp5pldnhyiu5bv60mbii",
+      "locale": "el",
+      "slug": "yperesies",
+      "itemCount": 7
+    },
+    {
+      "documentId": "jdsakp5pldnhyiu5bv60mbii",
+      "locale": "ru",
+      "slug": "yperesies",
+      "itemCount": 7
+    },
+    {
+      "documentId": "jwo4jdihc76be0oi75wk0lnx",
+      "locale": "ru",
+      "slug": "amygdales-adenoeideis-ekvlastiseis",
+      "itemCount": 0
+    },
+    {
+      "documentId": "xwg9ip1n5dli5ec7ndd6yi3p",
+      "locale": "ru",
+      "slug": "botulinotherapia-ru",
+      "itemCount": 2
+    }
+  ],
+  "errors": []
+}

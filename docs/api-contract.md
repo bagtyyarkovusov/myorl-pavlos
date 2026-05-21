@@ -171,6 +171,8 @@ type PageDTO = {
   hideFromMenu: boolean;
   menuIndex: number;
   parentPage?: PageRefDTO | null;
+  relatedPages: PageRefDTO[];
+  relatedTopics: PageRefDTO[];
   tags: TagDTO[];
   infoBlockBottom?: string | null;
   articleAuthor?: string | null;
@@ -180,6 +182,8 @@ type PageDTO = {
   sections: SectionDTO[];
 };
 ```
+
+`relatedPages` comes from the Strapi relation field. `relatedTopics` is resolved at request time per [ADR-010](./adr/ADR-010-related-topics-replace-popular-articles.md): editor picks when `relatedPages` is non-empty, otherwise auto-suggest from shared tags and sibling articles (max 6).
 
 ### SectionDTO
 

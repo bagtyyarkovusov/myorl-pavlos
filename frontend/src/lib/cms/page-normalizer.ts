@@ -82,17 +82,32 @@ function resolveMediaUrl(url: string, strapiUrl?: string): string {
 }
 
 /**
+ * Resolves the preview image for a page reference (center crop preferred).
+ */
+export function resolvePageRefMedia(
+  ref: Pick<StrapiPageRef, "imageCenter" | "featuredImage">,
+  strapiUrl?: string,
+): MediaDTO | null {
+  return toMediaDTO(ref.imageCenter ?? ref.featuredImage, strapiUrl);
+}
+
+/**
  * Normalises a Strapi page reference into a {@link PageRefDTO}.
  *
  * @param ref - Raw Strapi page reference.
+ * @param strapiUrl - Base URL for resolving relative media paths.
  * @returns A minimal page reference DTO, or `null` if no document ID.
  */
-export function toPageRefDTO(ref: StrapiPageRef | null | undefined): PageRefDTO | null {
+export function toPageRefDTO(
+  ref: StrapiPageRef | null | undefined,
+  strapiUrl?: string,
+): PageRefDTO | null {
   if (!ref?.documentId) return null;
   return {
     documentId: ref.documentId,
     slug: ref.slug ?? null,
     title: ref.title ?? null,
+    featuredImage: resolvePageRefMedia(ref, strapiUrl),
   };
 }
 
@@ -233,7 +248,11 @@ export function toPageDTO(page: StrapiPagePayload, config?: CmsConfig): PageDTO 
     hideFromMenu: Boolean(page.hideFromMenu),
     menuIndex: Number(page.menuIndex ?? 0),
     footerCategory: page.footerCategory ?? "none",
-    parentPage: toPageRefDTO(page.parentPage),
+    parentPage: toPageRefDTO(page.parentPage, effective.strapiUrl),
+    relatedPages: (page.relatedPages ?? [])
+      .map((ref) => toPageRefDTO(ref, effective.strapiUrl))
+      .filter((value): value is PageRefDTO => value !== null),
+    relatedTopics: [],
     tags: (page.tags ?? []).map(toTagDTO).filter((value): value is TagDTO => value !== null),
     infoBlockBottom: page.infoBlockBottom ?? null,
     articleAuthor: page.articleAuthor ?? null,

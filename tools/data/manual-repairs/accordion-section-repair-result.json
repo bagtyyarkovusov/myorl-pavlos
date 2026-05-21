@@ -1,0 +1,115 @@
+{
+  "okCount": 18,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "h91e3z6ikow2nr8p97k5r0lk",
+      "locale": "el",
+      "slug": "afairesi-amygdalwn",
+      "itemCount": 2
+    },
+    {
+      "documentId": "h91e3z6ikow2nr8p97k5r0lk",
+      "locale": "ru",
+      "slug": "afairesi-amygdalwn",
+      "itemCount": 10
+    },
+    {
+      "documentId": "ytyqvzdorkvcqaar0fh78lob",
+      "locale": "el",
+      "slug": "allergiki-rinitida-paidia",
+      "itemCount": 8
+    },
+    {
+      "documentId": "ytyqvzdorkvcqaar0fh78lob",
+      "locale": "ru",
+      "slug": "allergiki-rinitida-paidia",
+      "itemCount": 8
+    },
+    {
+      "documentId": "ifhut06wvfjzk85chctslxbw",
+      "locale": "el",
+      "slug": "endoskopiki-xeirourgiki-rinos-fess",
+      "itemCount": 1
+    },
+    {
+      "documentId": "s0xdvhtm58zxky95ju5yehpm",
+      "locale": "el",
+      "slug": "geniki-anaisthisia-gia-to-paidi-sas",
+      "itemCount": 9
+    },
+    {
+      "documentId": "s0xdvhtm58zxky95ju5yehpm",
+      "locale": "ru",
+      "slug": "geniki-anaisthisia-gia-to-paidi-sas",
+      "itemCount": 9
+    },
+    {
+      "documentId": "ml7c4v5s98d13flurmre521t",
+      "locale": "el",
+      "slug": "igmoritida",
+      "itemCount": 6
+    },
+    {
+      "documentId": "bsuslnw4e1q3vnr4ym3pmxbf",
+      "locale": "el",
+      "slug": "kysti-thyrioglossikou-porou",
+      "itemCount": 5
+    },
+    {
+      "documentId": "bsuslnw4e1q3vnr4ym3pmxbf",
+      "locale": "ru",
+      "slug": "kysti-thyrioglossikou-porou",
+      "itemCount": 5
+    },
+    {
+      "documentId": "ookwcuma6lt0koqk123dcd70",
+      "locale": "el",
+      "slug": "loimoxeis-aytion",
+      "itemCount": 16
+    },
+    {
+      "documentId": "ookwcuma6lt0koqk123dcd70",
+      "locale": "ru",
+      "slug": "loimoxeis-aytion",
+      "itemCount": 19
+    },
+    {
+      "documentId": "vmyxiw5z7pzy12a7j6lyvsty",
+      "locale": "ru",
+      "slug": "pathiseis-fonitikon-xordon",
+      "itemCount": 10
+    },
+    {
+      "documentId": "gsal64tpo5n2xzduimtxaxpg",
+      "locale": "el",
+      "slug": "rinikoi-polypodes",
+      "itemCount": 1
+    },
+    {
+      "documentId": "e0p9zmqcaegsn3g12ry8tnhd",
+      "locale": "el",
+      "slug": "rinitida",
+      "itemCount": 10
+    },
+    {
+      "documentId": "yv09o1x42ubffjze8oqkgnz5",
+      "locale": "el",
+      "slug": "rinorragies",
+      "itemCount": 5
+    },
+    {
+      "documentId": "yv09o1x42ubffjze8oqkgnz5",
+      "locale": "ru",
+      "slug": "rinorragies",
+      "itemCount": 5
+    },
+    {
+      "documentId": "janag6p6g80f3n3r1873r63w",
+      "locale": "el",
+      "slug": "traxilikes-diogkoseis",
+      "itemCount": 5
+    }
+  ],
+  "errors": []
+}

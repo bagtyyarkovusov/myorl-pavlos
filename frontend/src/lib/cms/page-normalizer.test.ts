@@ -54,6 +54,7 @@ describe("PAGE_POPULATE", () => {
   it("has the expected Strapi populate shape", () => {
     expect(PAGE_POPULATE).toHaveProperty("seo");
     expect(PAGE_POPULATE).toHaveProperty("parentPage");
+    expect(PAGE_POPULATE).toHaveProperty("relatedPages");
     expect(PAGE_POPULATE).toHaveProperty("localizations");
     expect(PAGE_POPULATE).toHaveProperty("tags");
     expect(PAGE_POPULATE).toHaveProperty("pageSections");
@@ -218,7 +219,47 @@ describe("toPageDTO", () => {
       documentId: "home123",
       slug: "index",
       title: "Home",
+      featuredImage: null,
     });
+  });
+
+  it("maps relatedPages references correctly", () => {
+    const dto = toPageDTO({
+      ...contentPayload,
+      relatedPages: [
+        { documentId: "rel1", slug: "follow-up", title: "Follow up" },
+        { documentId: "", slug: "skip", title: "Skip" },
+      ],
+    });
+
+    expect(dto.relatedPages).toEqual([
+      { documentId: "rel1", slug: "follow-up", title: "Follow up", featuredImage: null },
+    ]);
+  });
+
+  it("maps relatedPages preview images from imageCenter or featuredImage", () => {
+    const dto = toPageDTO({
+      ...contentPayload,
+      relatedPages: [
+        {
+          documentId: "rel1",
+          slug: "follow-up",
+          title: "Follow up",
+          featuredImage: { url: "/uploads/hero.jpg", width: 400, height: 300 },
+        },
+        {
+          documentId: "rel2",
+          slug: "center-crop",
+          title: "Center crop",
+          imageCenter: { url: "/uploads/center.jpg", width: 200, height: 200 },
+          featuredImage: { url: "/uploads/hero.jpg", width: 400, height: 300 },
+        },
+      ],
+    });
+
+    expect(dto.relatedPages[0]?.featuredImage?.url).toContain("/uploads/hero.jpg");
+    expect(dto.relatedPages[1]?.featuredImage?.url).toContain("/uploads/center.jpg");
+    expect(dto.relatedTopics).toEqual([]);
   });
 
   it("produces absolute alternateUrls by default via getCmsConfig fallback", () => {

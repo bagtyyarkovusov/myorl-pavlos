@@ -24,6 +24,8 @@ const zodPageRef = z
     slug: z.string().nullish(),
     title: z.string().nullish(),
     locale: z.string().nullish(),
+    featuredImage: zodMedia,
+    imageCenter: zodMedia,
   })
   .nullish();
 
@@ -85,6 +87,7 @@ export const zodPageEntity = z
     menuIndex: z.number().nullish(),
     footerCategory: z.enum(["services", "patients", "company", "none"]).nullish(),
     parentPage: zodPageRef,
+    relatedPages: z.array(zodPageRef).nullish(),
     tags: z.array(zodTag).nullish(),
     infoBlockBottom: z.string().nullish(),
     articleAuthor: z.string().nullish(),

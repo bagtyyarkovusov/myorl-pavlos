@@ -74,6 +74,7 @@ const baseProps = {
   overviewLinkLabel: "Overview",
   featureBlurb: "",
   primaryNavLabel: "Main navigation",
+  topicsLabel: (count: number) => `${count} topics`,
 };
 
 describe("DesktopNav", () => {

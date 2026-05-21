@@ -34,6 +34,10 @@ export type PageDTO = {
   menuIndex: number;
   footerCategory?: FooterCategory;
   parentPage?: PageRefDTO | null;
+  /** Editor-managed cross-links from Strapi `relatedPages`. */
+  relatedPages: PageRefDTO[];
+  /** Resolved reader-facing Related Topics (manual or auto-suggested). */
+  relatedTopics: PageRefDTO[];
   tags: TagDTO[];
   infoBlockBottom?: string | null;
   articleAuthor?: string | null;
@@ -85,6 +89,8 @@ export type StrapiPageRef = {
   locale?: Locale | string | null;
   slug?: string | null;
   title?: string | null;
+  featuredImage?: StrapiMedia | null;
+  imageCenter?: StrapiMedia | null;
 };
 
 export type StrapiLocalization = {
@@ -122,6 +128,6 @@ export type StrapiPagePayload = {
   pageSections?: StrapiSectionRaw[] | null;
   localizations?: StrapiLocalization[] | null;
   legacySourceResourceId?: unknown;
-  relatedPages?: unknown;
+  relatedPages?: StrapiPageRef[] | null;
   childrenPages?: unknown;
 };

@@ -33,6 +33,7 @@ export type PageStrings = {
   paginationLast: string;
   directoryClosureCopy: string;
   directoryClosureCta: string;
+  questionListClosureCopy: string;
   videoReadMore: string;
   videoPlayLabel: string;
   videoDirectoryEmpty: string;
@@ -71,7 +72,8 @@ const STRINGS: Record<Locale, PageStrings> = {
     directoryClosureCopy:
       "Δεν είστε σίγουροι ποια εξέταση χρειάζεστε; Θα σας καθοδηγήσουμε στο ραντεβού.",
     directoryClosureCta: "Κλείστε ραντεβού",
-    videoReadMore: "Διαβάστε περισσότερα",
+    questionListClosureCopy: "Έχετε ακόμη απορίες; Κλείστε ραντεβού για να τις συζητήσουμε.",
+    videoReadMore: "Σχετικό άρθρο",
     videoPlayLabel: "Αναπαραγωγή βίντεο",
     videoDirectoryEmpty: "Δεν υπάρχουν διαθέσιμα βίντεο ακόμη.",
   },
@@ -113,7 +115,8 @@ const STRINGS: Record<Locale, PageStrings> = {
     directoryClosureCopy:
       "Не уверены, какое обследование вам нужно? На приёме мы подскажем следующий шаг.",
     directoryClosureCta: "Записаться на приём",
-    videoReadMore: "Читать далее",
+    questionListClosureCopy: "Остались вопросы? Запишитесь на приём — обсудим их лично.",
+    videoReadMore: "Связанная статья",
     videoPlayLabel: "Воспроизвести видео",
     videoDirectoryEmpty: "Видео пока недоступны.",
   },

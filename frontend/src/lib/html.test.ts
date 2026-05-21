@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { sanitizeCmsHtml, stripTags, upgradeImageOnlyParagraphs } from "./html";
+import { removeBrokenImages, sanitizeCmsHtml, stripTags, upgradeImageOnlyParagraphs } from "./html";
 
 describe("sanitizeCmsHtml", () => {
   afterEach(() => {
@@ -60,6 +60,24 @@ describe("sanitizeCmsHtml", () => {
   it("leaves paragraphs that mix text and images unchanged", () => {
     const input = '<p>See <img src="/b.jpg" alt=""> for detail.</p>';
     expect(sanitizeCmsHtml(input)).not.toContain("cms-html__figure");
+  });
+
+  it("removes Word paste artifacts that lose their src during sanitization", () => {
+    const input =
+      '<p>Intro</p><p><img alt="" height="15" src="file:///C:/Temp/msohtmlclip1/01/clip.gif" title="Нажмите и перетащите" width="15"></p>' +
+      '<p><img alt="" src="/uploads/img2.jpg" width="800"></p>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).not.toContain("перетащите");
+    expect(result).not.toContain('height="15"');
+    expect(result).toContain("/uploads/img2.jpg");
+    expect(result).toContain('<figure class="cms-html__figure">');
+  });
+});
+
+describe("removeBrokenImages", () => {
+  it("drops img tags without a usable src", () => {
+    const input = '<p><img alt="" height="15" title="placeholder" width="15"></p><p>Body</p>';
+    expect(removeBrokenImages(input)).toBe("<p>Body</p>");
   });
 });
 

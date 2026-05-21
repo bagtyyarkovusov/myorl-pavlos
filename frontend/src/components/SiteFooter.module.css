@@ -11,7 +11,6 @@
 
   background: var(--color-ink, #0f2a4a);
   color: var(--color-bone-50, #fbfcfe);
-  margin-top: clamp(48px, 9vw, 88px);
 }
 
 .site-footer__inner {

@@ -755,18 +755,28 @@ def gate_stale_html_placeholders(resources: list[dict[str, Any]]) -> dict[str, A
     trivial_hash_re = re.compile(r"""<a\b[^>]*\bhref\s*=\s*["']\s*#\s*["']""", re.IGNORECASE)
     empty_href_re = re.compile(r"""<a\b[^>]*\bhref\s*=\s*["']\s*["']""", re.IGNORECASE)
     empty_img_src_re = re.compile(r"""<img\b[^>]*\bsrc\s*=\s*["']\s*["']""", re.IGNORECASE)
+    broken_img_src_re = re.compile(
+        r"""<img\b[^>]*\bsrc\s*=\s*["'](?:file:[^"']*|[^"']*msohtmlclip[^"']*)["']""",
+        re.IGNORECASE,
+    )
+    missing_img_src_re = re.compile(r"""<img\b(?![^>]*\bsrc\s*=)[^>]*>""", re.IGNORECASE)
 
     modx_samples: list[dict[str, Any]] = []
     trivial_hash_samples: list[dict[str, Any]] = []
     empty_href_samples: list[dict[str, Any]] = []
     empty_img_samples: list[dict[str, Any]] = []
+    broken_img_src_samples: list[dict[str, Any]] = []
+    missing_img_src_samples: list[dict[str, Any]] = []
     modx_total = 0
     trivial_total = 0
     empty_href_total = 0
     empty_img_total = 0
+    broken_img_src_total = 0
+    missing_img_src_total = 0
 
     def _scan_blob(rid: Any, field: str, blob: str) -> None:
         nonlocal modx_total, trivial_total, empty_href_total, empty_img_total
+        nonlocal broken_img_src_total, missing_img_src_total
         if not blob:
             return
         if "[[~" in blob:
@@ -788,6 +798,14 @@ def gate_stale_html_placeholders(resources: list[dict[str, Any]]) -> dict[str, A
             empty_img_total += 1
             if len(empty_img_samples) < 50:
                 empty_img_samples.append({"id": rid, "field": field, "match": m.group(0)[:160]})
+        for m in broken_img_src_re.finditer(blob):
+            broken_img_src_total += 1
+            if len(broken_img_src_samples) < 50:
+                broken_img_src_samples.append({"id": rid, "field": field, "match": m.group(0)[:160]})
+        for m in missing_img_src_re.finditer(blob):
+            missing_img_src_total += 1
+            if len(missing_img_src_samples) < 50:
+                missing_img_src_samples.append({"id": rid, "field": field, "match": m.group(0)[:160]})
 
     for resource in resources:
         rid = resource.get("id")
@@ -817,6 +835,10 @@ def gate_stale_html_placeholders(resources: list[dict[str, Any]]) -> dict[str, A
         "empty_href_samples": empty_href_samples,
         "empty_img_src_total": empty_img_total,
         "empty_img_src_samples": empty_img_samples,
+        "broken_img_src_total": broken_img_src_total,
+        "broken_img_src_samples": broken_img_src_samples,
+        "missing_img_src_total": missing_img_src_total,
+        "missing_img_src_samples": missing_img_src_samples,
     }
     findings: list[str] = []
     if modx_total:
@@ -827,8 +849,19 @@ def gate_stale_html_placeholders(resources: list[dict[str, Any]]) -> dict[str, A
         findings.append(f"{empty_href_total} empty ``href`` anchor(s) remain")
     if empty_img_total:
         findings.append(f"{empty_img_total} ``<img>`` tag(s) with empty ``src`` remain")
+    if broken_img_src_total:
+        findings.append(f"{broken_img_src_total} ``<img>`` tag(s) with Word/local ``file://`` or ``msohtmlclip`` ``src`` remain")
+    if missing_img_src_total:
+        findings.append(f"{missing_img_src_total} ``<img>`` tag(s) without a ``src`` attribute remain")
 
-    total_signal = modx_total + trivial_total + empty_href_total + empty_img_total
+    total_signal = (
+        modx_total
+        + trivial_total
+        + empty_href_total
+        + empty_img_total
+        + broken_img_src_total
+        + missing_img_src_total
+    )
     return {"status": "warning" if total_signal else "ok", "findings": findings, "details": details}
 
 

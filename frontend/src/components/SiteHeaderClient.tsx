@@ -92,6 +92,7 @@ export function SiteHeaderClient({
               overviewLinkLabel={t.sectionOverviewLink}
               featureBlurb={featureBlurb}
               primaryNavLabel={t.primaryNavLabel}
+              topicsLabel={t.topicsLabel}
             />
 
             <div className={styles["header-actions"]}>

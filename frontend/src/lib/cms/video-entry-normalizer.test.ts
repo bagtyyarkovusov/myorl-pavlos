@@ -23,31 +23,28 @@ describe("toVideoEntryDTO", () => {
 });
 
 describe("resolveVideoEntryArticleHref", () => {
-  it("prefers related article slug over legacy URL", () => {
+  it("returns a locale-prefixed path when relatedArticle is resolved", () => {
     const href = resolveVideoEntryArticleHref({
       locale: "el",
       relatedArticle: { documentId: "p1", slug: "igmoritida", title: "Γαμορίτιδα" },
-      legacyArticleUrl: "http://myorl.gr/old-slug",
     });
 
     expect(href).toBe("/el/igmoritida");
   });
 
-  it("maps legacy myorl.gr paths to locale-prefixed routes", () => {
+  it("returns null when relatedArticle is missing", () => {
     const href = resolveVideoEntryArticleHref({
       locale: "ru",
       relatedArticle: null,
-      legacyArticleUrl: "https://myorl.gr/roxalito-ypniki-apnoia",
     });
 
-    expect(href).toBe("/ru/roxalito-ypniki-apnoia");
+    expect(href).toBeNull();
   });
 
-  it("suppresses broken hash-only legacy links", () => {
+  it("returns null when relatedArticle has no slug", () => {
     const href = resolveVideoEntryArticleHref({
       locale: "el",
-      relatedArticle: null,
-      legacyArticleUrl: "http://myorl.gr/#",
+      relatedArticle: { documentId: "p1", slug: null, title: "Untitled" },
     });
 
     expect(href).toBeNull();

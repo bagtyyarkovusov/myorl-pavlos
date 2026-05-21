@@ -9,12 +9,19 @@ stripped without dropping surrounding text.
 from __future__ import annotations
 
 import re
+import sys
 import urllib.parse
 import warnings
+from pathlib import Path
 from typing import Any
 
 from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 
+_TOOLS_ROOT = Path(__file__).resolve().parents[1]
+if str(_TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(_TOOLS_ROOT))
+
+from cms_html_cleanup import remove_broken_images
 from internal_link_rewrite import (
     _is_legacy_host,
     _legacy_host_set,
@@ -188,6 +195,11 @@ def cleanup_dead_html(
         return raw_html or ""
     if "<" not in raw_html:
         return raw_html
+    low = raw_html.lower()
+    if "<img" not in low and "<a" not in low:
+        return raw_html
+
+    raw_html = remove_broken_images(raw_html)
     low = raw_html.lower()
     if "<img" not in low and "<a" not in low:
         return raw_html

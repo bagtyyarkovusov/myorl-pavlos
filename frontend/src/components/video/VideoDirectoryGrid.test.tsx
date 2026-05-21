@@ -30,18 +30,28 @@ const entries: VideoEntryDTO[] = [
   },
 ];
 
+function makeManyEntries(count: number): VideoEntryDTO[] {
+  return Array.from({ length: count }, (_, index) => ({
+    documentId: `v-many-${index}`,
+    locale: "el" as const,
+    title: `Video ${index + 1}`,
+    youtubeId: `id${index}`,
+    youtubeUrl: null,
+    categories: [],
+    sortOrder: index,
+    relatedArticle: null,
+    legacyArticleUrl: null,
+  }));
+}
+
 describe("VideoDirectoryGrid", () => {
-  it("renders video cards and category filters", () => {
+  it("renders video rows and category filters", () => {
     render(<VideoDirectoryGrid entries={entries} locale="el" />);
 
     expect(screen.getByRole("heading", { name: entries[0]!.title })).toBeDefined();
     expect(screen.getByRole("heading", { name: entries[1]!.title })).toBeDefined();
     expect(screen.getByRole("button", { name: "Ρινός" })).toBeDefined();
-    expect(screen.getByRole("link", { name: "Διαβάστε περισσότερα" })).toHaveAttribute(
-      "href",
-      "/el/skoliosi",
-    );
-    expect(screen.queryAllByRole("link", { name: "Διαβάστε περισσότερα" })).toHaveLength(1);
+    expect(screen.queryByRole("link", { name: "Σχετικό άρθρο" })).toBeNull();
   });
 
   it("filters entries by category", async () => {
@@ -54,12 +64,69 @@ describe("VideoDirectoryGrid", () => {
     expect(screen.queryByRole("heading", { name: entries[0]!.title })).toBeNull();
   });
 
-  it("loads iframe only after play is activated", async () => {
+  it("shows the first 12 entries then loads more", async () => {
     const user = userEvent.setup();
-    render(<VideoDirectoryGrid entries={[entries[0]!]} locale="el" />);
+    const many = makeManyEntries(15);
+    render(<VideoDirectoryGrid entries={many} locale="el" />);
+
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(12);
+    expect(screen.getByRole("button", { name: "Περισσότερα (+3)" })).toBeDefined();
+
+    await user.click(screen.getByRole("button", { name: "Περισσότερα (+3)" }));
+
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(15);
+    expect(screen.queryByRole("button", { name: "Περισσότερα (+3)" })).toBeNull();
+  });
+
+  it("resets visible count when the category filter changes", async () => {
+    const user = userEvent.setup();
+    const manyRhino = makeManyEntries(14).map((entry, index) => ({
+      ...entry,
+      documentId: `rhino-${index}`,
+      categories: [{ slug: "ρινος", label: "Ρινός" }],
+    }));
+    const pedEntry: VideoEntryDTO = {
+      ...entries[1]!,
+      documentId: "ped-only",
+    };
+    render(<VideoDirectoryGrid entries={[...manyRhino, pedEntry]} locale="el" />);
+
+    await user.click(screen.getByRole("button", { name: "Περισσότερα (+3)" }));
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(15);
+
+    await user.click(screen.getByRole("button", { name: "Παιδο-ΩΡΛ" }));
+
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(1);
+    expect(screen.queryByRole("button", { name: /Περισσότερα/ })).toBeNull();
+  });
+
+  it("expands one video at a time and reveals its related article", async () => {
+    const user = userEvent.setup();
+    render(<VideoDirectoryGrid entries={entries} locale="el" />);
 
     expect(document.querySelector("iframe")).toBeNull();
-    await user.click(screen.getByRole("button", { name: "Αναπαραγωγή βίντεο" }));
-    expect(document.querySelector("iframe")).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Σχετικό άρθρο" })).toBeNull();
+
+    await user.click(
+      screen.getByRole("button", {
+        name: `Αναπαραγωγή βίντεο: ${entries[0]!.title}`,
+      }),
+    );
+
+    expect(document.querySelector("iframe")).toHaveAttribute("title", entries[0]!.title);
+    expect(screen.getByRole("link", { name: "Σχετικό άρθρο" })).toHaveAttribute(
+      "href",
+      "/el/skoliosi",
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: `Αναπαραγωγή βίντεο: ${entries[1]!.title}`,
+      }),
+    );
+
+    expect(screen.getByTitle(entries[1]!.title)).toBeDefined();
+    expect(screen.queryByTitle(entries[0]!.title)).toBeNull();
+    expect(screen.queryByRole("link", { name: "Σχετικό άρθρο" })).toBeNull();
   });
 });

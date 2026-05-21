@@ -135,7 +135,13 @@ describe("PageRenderer", () => {
         {
           ...makeNavNode(variant, variant),
           documentId: `nav-${variant}`,
-          children: [makeNavNode(`${variant}-child`, "Child page")],
+          children: [
+            {
+              ...makeNavNode(`${variant}-child`, "Child page"),
+              tags: variant === "encyclopedia-index" ? [{ name: "Ρινός", slug: "nose" }] : [],
+              layoutVariant: variant === "encyclopedia-index" ? "encyclopedia-article" : "standard",
+            },
+          ],
         },
       ];
 
@@ -148,6 +154,65 @@ describe("PageRenderer", () => {
 
       unmount();
     }
+  });
+
+  it("uses tagged directory navigation pages for the encyclopedia index", async () => {
+    const directoryPage: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-orl-egkyklopaidia",
+      layoutVariant: "encyclopedia-index",
+      title: "ΩΡΛ Εγκυκλοπαίδεια",
+      slug: "orl-egkyklopaidia",
+      isFolder: true,
+    };
+    const taggedServiceArticle = {
+      ...makeNavNode("xeno-soma-igmoreio", "Ξένο σώμα στο ιγμόρειο άντρο"),
+      hideFromMenu: true,
+      layoutVariant: "service-article" as const,
+      tags: [
+        { name: "Ενδοσκοπική χειρουργική", slug: "endoscopic-surgery" },
+        { name: "Ρινός", slug: "nose" },
+      ],
+    };
+    const untaggedArticle = {
+      ...makeNavNode("plain-page", "Plain page"),
+      layoutVariant: "service-article" as const,
+    };
+    const taggedFolder = {
+      ...makeNavNode("rinoplastiki", "Σύγχρονη λειτουργική ρινοπλαστική"),
+      isFolder: true,
+      layoutVariant: "section-hub" as const,
+      tags: [{ name: "Ρινός", slug: "nose" }],
+    };
+    const directoryNavigation: NavigationNodeDTO[] = [
+      {
+        ...makeNavNode("orl-egkyklopaidia", "ΩΡΛ Εγκυκλοπαίδεια"),
+        documentId: "nav-orl-egkyklopaidia",
+        children: [],
+      },
+      {
+        ...makeNavNode("pathiseis", "Παθήσεις"),
+        documentId: "nav-pathiseis",
+        children: [taggedServiceArticle, untaggedArticle, taggedFolder],
+      },
+    ];
+
+    render(
+      <PageRenderer
+        page={directoryPage}
+        navigation={[]}
+        directoryNavigation={directoryNavigation}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole("link", { name: /Ξένο σώμα/ })).toHaveAttribute(
+        "href",
+        "/el/xeno-soma-igmoreio",
+      );
+      expect(screen.queryByRole("link", { name: /Plain page/ })).toBeNull();
+      expect(screen.queryByRole("link", { name: /Σύγχρονη λειτουργική/ })).toBeNull();
+    });
   });
 
   it("renders QuestionListPage for faq page type", async () => {

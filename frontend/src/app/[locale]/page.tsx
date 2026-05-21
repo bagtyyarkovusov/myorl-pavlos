@@ -47,6 +47,7 @@ export default async function LocaleHomePage({ params }: LocaleHomeProps) {
       page={page}
       appointmentHref={appointmentHref}
       navigation={site.navigation}
+      directoryNavigation={site.directoryNavigation}
       globalSettings={site.settings}
       homeTestimonials={homeTestimonials}
     />

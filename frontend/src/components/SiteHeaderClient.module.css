@@ -368,7 +368,7 @@
     align-items: center;
     column-gap: clamp(8px, 2.5vw, 14px);
     row-gap: 0;
-    padding: 6px 0;
+    padding-block: 6px;
   }
 
   .site-utility__group:first-child {
@@ -508,8 +508,46 @@
   }
 }
 
-@media (min-width: 1181px) {
+@media (min-width: 1321px) {
   .hamburger {
     display: none;
+  }
+
+  /*
+   * Shared trailing-column layout: keep utility actions and the CTA on the same
+   * container edge, and constrain nav to the middle track so flex overflow cannot
+   * push the CTA past the utility bar.
+   */
+  .site-utility__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: clamp(12px, 1.6vw, 20px);
+  }
+
+  .site-utility__group:first-child {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .site-utility__group:last-child {
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .site-header__inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: clamp(14px, 1.6vw, 24px);
+  }
+
+  .brand {
+    grid-column: 1;
+  }
+
+  .header-actions {
+    grid-column: 3;
+    justify-self: end;
   }
 }

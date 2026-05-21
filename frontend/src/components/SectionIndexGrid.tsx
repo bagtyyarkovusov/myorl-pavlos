@@ -233,13 +233,25 @@ function IndexCard({
   }
 
   return (
-    <Link href={node.href}>
+    <Link
+      href={node.href}
+      data-has-media={variant === "encyclopedia-list" && hasMedia ? "true" : undefined}
+    >
       {variant !== "encyclopedia-list" ? (
         <IndexMedia media={media} title={node.navLabel} variant={variant} />
       ) : null}
       <div className={styles["index-row__body"]}>
         <strong>{node.navLabel}</strong>
         {node.excerpt ? <p className={styles["index-row__excerpt"]}>{node.excerpt}</p> : null}
+        {variant === "encyclopedia-list" && node.tags.length > 0 ? (
+          <ul className={styles["index-row__tags"]} aria-label="Article categories">
+            {node.tags.map((tag) => (
+              <li key={tag.slug} className={styles["index-row__tag"]}>
+                {tag.name}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       {variant === "encyclopedia-list" && hasMedia ? (
         <IndexMedia media={media} title={node.navLabel} variant={variant} />

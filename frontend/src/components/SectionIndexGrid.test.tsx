@@ -13,6 +13,7 @@ function makeChild(
     menuIndex?: number;
     excerpt?: string | null;
     imageUrl?: string | null;
+    tags?: TagDTO[];
   } = {},
 ): NavigationNodeDTO {
   return {
@@ -33,7 +34,7 @@ function makeChild(
       ? { url: opts.imageUrl, alternativeText: label, width: 1200, height: 800 }
       : null,
     imageCenter: null,
-    tags: [],
+    tags: opts.tags ?? [],
     href: `/el/${slug}`,
     children: [],
   };
@@ -100,6 +101,22 @@ describe("SectionIndexGrid", () => {
     const arrows = container.querySelectorAll("[aria-hidden='true']");
     expect(arrows.length).toBeGreaterThanOrEqual(1);
   });
+
+  it("renders encyclopedia article tags as category cues", () => {
+    const children = [
+      makeChild("epistaksi", "Ρινορραγία", {
+        tags: [
+          { name: "Ρινός", slug: "rinos" },
+          { name: "Επεμβάσεις", slug: "epemvaseis" },
+        ],
+      }),
+    ];
+
+    render(<SectionIndexGrid items={children} locale="el" variant="encyclopedia-index" />);
+
+    expect(screen.getByText("Ρινός")).toBeDefined();
+    expect(screen.getByText("Επεμβάσεις")).toBeDefined();
+  });
 });
 
 describe("SectionIndexGrid variants", () => {
@@ -153,6 +170,71 @@ describe("SectionIndexGrid variants", () => {
 
     expect(screen.getAllByRole("link")).toHaveLength(16);
     expect(screen.getByRole("link", { name: /Item 16/ })).toHaveAttribute("href", "/el/item-16");
+  });
+
+  it("paginates encyclopedia indexes with URL links", () => {
+    const children = Array.from({ length: 16 }, (_, index) =>
+      makeChild(`item-${index + 1}`, `Item ${index + 1}`, { menuIndex: index + 1 }),
+    );
+
+    render(
+      <SectionIndexGrid
+        items={children}
+        locale="el"
+        variant="encyclopedia-index"
+        indexHref="/el/orl-egkyklopaidia"
+        currentPage={2}
+      />,
+    );
+
+    expect(screen.queryByRole("link", { name: /Item 1/ })).toBeNull();
+    expect(screen.getByRole("link", { name: /Item 13/ })).toHaveAttribute("href", "/el/item-13");
+    expect(screen.queryByRole("button", { name: /Περισσότερα/ })).toBeNull();
+    expect(screen.getByRole("navigation", { name: "Σελίδες" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "1" })).toHaveAttribute(
+      "href",
+      "/el/orl-egkyklopaidia",
+    );
+    expect(screen.getByRole("link", { name: "Πρώτη" })).toHaveAttribute(
+      "href",
+      "/el/orl-egkyklopaidia",
+    );
+  });
+
+  it("uses URL-backed tag filters on encyclopedia indexes", () => {
+    const tags: TagDTO[] = [{ name: "Nose", slug: "nose" }];
+    const children = [
+      makeChild("rhinoplasty", "Rhinoplasty", { tags, menuIndex: 1 }),
+      makeChild("otitis", "Otitis", { tags: [{ name: "Ear", slug: "ear" }], menuIndex: 2 }),
+    ];
+    const tagMap: Record<string, string[]> = {
+      "doc-rhinoplasty": ["nose"],
+      "doc-otitis": ["ear"],
+    };
+
+    render(
+      <SectionIndexGrid
+        items={children}
+        locale="el"
+        variant="encyclopedia-index"
+        indexHref="/el/orl-egkyklopaidia"
+        tags={tags}
+        tagMap={tagMap}
+        activeTagSlug="nose"
+        currentPage={1}
+      />,
+    );
+
+    expect(screen.getByRole("link", { name: "Όλα" })).toHaveAttribute(
+      "href",
+      "/el/orl-egkyklopaidia",
+    );
+    expect(screen.getByRole("link", { name: "Nose" })).toHaveAttribute(
+      "href",
+      "/el/orl-egkyklopaidia?tag=nose",
+    );
+    expect(screen.getByRole("link", { name: /Rhinoplasty/ })).toBeDefined();
+    expect(screen.queryByRole("link", { name: /Otitis/ })).toBeNull();
   });
 
   it("renders an empty state with a back link when there are no children", () => {

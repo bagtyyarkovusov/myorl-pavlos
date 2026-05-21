@@ -84,8 +84,18 @@
   }
 }
 
-/* Responsive: hide megamenu on smaller screens */
-@media (max-width: 1180px) {
+@media (min-width: 1321px) {
+  .megamenu-host {
+    grid-column: 2;
+    flex: unset;
+    align-self: stretch;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* Responsive: hide megamenu until the full desktop header can fit without overflow. */
+@media (max-width: 1320px) {
   .megamenu-host,
   .desktop-nav {
     display: none;

@@ -137,6 +137,7 @@ export async function getPage(locale: Locale, slug: string): Promise<PageDTO> {
  */
 export type SiteContext = {
   navigation: NavigationNodeDTO[];
+  directoryNavigation: NavigationNodeDTO[];
   footerNavigation: NavigationNodeDTO[];
   settings: GlobalSettingsDTO;
 };
@@ -163,6 +164,7 @@ async function loadSite(locale: Locale): Promise<SiteContext> {
     })
     .then((pages) => ({
       navigation: buildNavigationTree(pages, locale),
+      directoryNavigation: buildNavigationTree(pages, locale, { includeHidden: true }),
       footerNavigation: buildNavigationTree(pages, locale, { includeHidden: true }),
     }));
 
@@ -173,6 +175,8 @@ async function loadSite(locale: Locale): Promise<SiteContext> {
   const [pagesResult, settingsResult] = await Promise.allSettled([pagesPromise, settingsPromise]);
 
   const navigation = pagesResult.status === "fulfilled" ? pagesResult.value.navigation : [];
+  const directoryNavigation =
+    pagesResult.status === "fulfilled" ? pagesResult.value.directoryNavigation : [];
   const footerNavigation =
     pagesResult.status === "fulfilled" ? pagesResult.value.footerNavigation : [];
   const settings =
@@ -180,7 +184,7 @@ async function loadSite(locale: Locale): Promise<SiteContext> {
       ? settingsResult.value
       : buildFallbackSettings(locale);
 
-  return { navigation, footerNavigation, settings };
+  return { navigation, directoryNavigation, footerNavigation, settings };
 }
 
 /**

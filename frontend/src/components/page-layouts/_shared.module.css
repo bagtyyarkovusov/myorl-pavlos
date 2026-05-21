@@ -46,6 +46,36 @@
   flex-direction: column;
   gap: clamp(1.25rem, 3.5vw, 2.5rem);
   min-width: 0;
+  padding-inline: clamp(16px, 4vw, 32px);
+}
+
+.directory-intro {
+  max-width: min(72ch, 100%);
+  color: var(--muted);
+}
+
+.directory-intro pre {
+  margin: 0;
+  max-width: 100%;
+  overflow: visible;
+  white-space: normal;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: clamp(16px, 2.5vw, 22px) clamp(18px, 3vw, 26px);
+  background:
+    linear-gradient(135deg, rgba(251, 252, 254, 0.88), rgba(228, 237, 248, 0.38)), var(--surface);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: clamp(0.98rem, 1.2vw, 1.0625rem);
+  line-height: 1.68;
+  text-wrap: pretty;
+}
+
+.directory-intro pre strong {
+  display: block;
+  max-width: 68ch;
+  color: inherit;
+  font-weight: 600;
 }
 
 .directory-closure {

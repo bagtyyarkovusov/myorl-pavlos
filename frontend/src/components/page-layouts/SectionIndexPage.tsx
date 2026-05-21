@@ -11,7 +11,10 @@ import { PageHeader, type PageLayoutProps } from "./_shared";
 import layoutStyles from "./_shared.module.css";
 
 export function SectionIndexPage({ page, navigation = [] }: PageLayoutProps) {
-  const children = findChildren(navigation, page.documentId);
+  const children =
+    page.layoutVariant === "encyclopedia-index"
+      ? findTaggedDirectoryPages(navigation, page.documentId)
+      : findChildren(navigation, page.documentId);
   const { tags, tagMap } = deriveDirectoryTagFilter(children);
   const t = getPageStrings(page.locale);
   const appointmentHref = findAppointmentHref(navigation, page.locale);
@@ -20,7 +23,9 @@ export function SectionIndexPage({ page, navigation = [] }: PageLayoutProps) {
     <PageSection rhythm="compact" entranceMotion="instant">
       <div className={layoutStyles["directory-page-stack"]}>
         <PageHeader page={page} kicker={null} />
-        {page.content ? <CmsHtml html={page.content} /> : null}
+        {page.content ? (
+          <CmsHtml html={page.content} className={layoutStyles["directory-intro"]} />
+        ) : null}
         <SectionIndexGrid
           items={children}
           locale={page.locale}
@@ -51,4 +56,21 @@ function findChildren(nodes: NavigationNodeDTO[], documentId: string): Navigatio
     if (found.length > 0) return found;
   }
   return [];
+}
+
+function findTaggedDirectoryPages(
+  nodes: NavigationNodeDTO[],
+  currentDocumentId: string,
+): NavigationNodeDTO[] {
+  const pages = new Map<string, NavigationNodeDTO>();
+
+  const visit = (node: NavigationNodeDTO) => {
+    if (node.documentId !== currentDocumentId && !node.isFolder && node.tags.length > 0) {
+      pages.set(node.documentId, node);
+    }
+    node.children.forEach(visit);
+  };
+
+  nodes.forEach(visit);
+  return Array.from(pages.values());
 }

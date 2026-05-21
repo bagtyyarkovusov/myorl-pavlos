@@ -47,6 +47,8 @@ type PageRendererProps = {
   appointmentHref?: string;
   /** Server-fetched navigation used by home-only entry components. */
   navigation?: NavigationNodeDTO[];
+  /** Includes hidden pages so directory indexes can list CMS articles outside the header menu. */
+  directoryNavigation?: NavigationNodeDTO[];
   /** Global Strapi single-type; used by the home visit/map band. */
   globalSettings?: GlobalSettingsDTO;
   /** Google / curated quotes for the home testimonials band (after the video section). */
@@ -59,6 +61,7 @@ export function PageRenderer({
   page,
   appointmentHref,
   navigation = [],
+  directoryNavigation,
   globalSettings,
   homeTestimonials = null,
   testimonialsPage = 1,
@@ -79,7 +82,7 @@ export function PageRenderer({
   } else if (page.layoutVariant === "appointment-form") {
     layout = <AppointmentPage page={page} />;
   } else if (DIRECTORY_LAYOUT_VARIANTS.has(page.layoutVariant)) {
-    layout = <SectionIndexPage page={page} navigation={navigation} />;
+    layout = <SectionIndexPage page={page} navigation={directoryNavigation ?? navigation} />;
   } else if (page.layoutVariant === "section-hub" || isSectionHubChild(navigation, page)) {
     layout = <SectionHubPage page={page} navigation={navigation} />;
   } else if (page.pageType === "home") {

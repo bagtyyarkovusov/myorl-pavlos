@@ -56,7 +56,10 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
     notFound();
   }
 
-  const [page, { navigation }] = await Promise.all([getPage(locale, slug), getSite(locale)]);
+  const [page, { navigation, directoryNavigation }] = await Promise.all([
+    getPage(locale, slug),
+    getSite(locale),
+  ]);
 
   // Section-hub folder pages redirect to their first child.
   if (page.layoutVariant === "section-hub" && page.isFolder) {
@@ -66,8 +69,22 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
   }
 
   return (
-    <Suspense fallback={<PageRenderer page={page} navigation={navigation} testimonialsPage={1} />}>
-      <CmsPageContent page={page} navigation={navigation} searchParams={searchParams} />
+    <Suspense
+      fallback={
+        <PageRenderer
+          page={page}
+          navigation={navigation}
+          directoryNavigation={directoryNavigation}
+          testimonialsPage={1}
+        />
+      }
+    >
+      <CmsPageContent
+        page={page}
+        navigation={navigation}
+        directoryNavigation={directoryNavigation}
+        searchParams={searchParams}
+      />
     </Suspense>
   );
 }
@@ -75,14 +92,23 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
 async function CmsPageContent({
   page,
   navigation,
+  directoryNavigation,
   searchParams,
 }: {
   page: PageDTO;
   navigation: NavigationNodeDTO[];
+  directoryNavigation: NavigationNodeDTO[];
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = searchParams ? await searchParams : {};
   const testimonialsPage = parsePageParam(sp.page);
 
-  return <PageRenderer page={page} navigation={navigation} testimonialsPage={testimonialsPage} />;
+  return (
+    <PageRenderer
+      page={page}
+      navigation={navigation}
+      directoryNavigation={directoryNavigation}
+      testimonialsPage={testimonialsPage}
+    />
+  );
 }

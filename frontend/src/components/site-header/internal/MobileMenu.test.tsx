@@ -17,6 +17,7 @@ const base: Omit<NavigationNodeDTO, "documentId" | "navLabel" | "href"> = {
   layoutVariant: "standard",
   parentPage: null,
   externalUrl: null,
+  tags: [],
   children: [],
 };
 

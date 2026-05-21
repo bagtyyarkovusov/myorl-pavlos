@@ -1,0 +1,620 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e9]: Λεωφ. Αλεξάνδρας 201, Αθήνα
+        - generic [ref=e10]: Δε-Πα 09:00-21:00
+      - generic [ref=e11]:
+        - link "+30 210 6427 000" [ref=e12] [cursor=pointer]:
+          - /url: tel:+302106427000
+        - generic "Γλώσσα" [ref=e13]:
+          - link "GR" [ref=e14] [cursor=pointer]:
+            - /url: http://localhost:3000/el/rinoplastiki-piezotome
+          - link "RU" [ref=e15] [cursor=pointer]:
+            - /url: /ru/rinoplastiki-piezotome
+    - banner [ref=e16]:
+      - generic [ref=e17]:
+        - link "MyORL — ΩΡΛ Χειρουργική Κλινική Αθηνών" [ref=e18] [cursor=pointer]:
+          - /url: /el
+          - img "MyORL — ΩΡΛ Χειρουργική Κλινική Αθηνών" [ref=e19]
+        - navigation "Κύρια πλοήγηση" [ref=e21]:
+          - button "Menu" [ref=e23] [cursor=pointer]:
+            - text: Menu
+            - generic [ref=e24]: ⌄
+          - link "Ιατρείο" [ref=e26] [cursor=pointer]:
+            - /url: /el/iatreio
+          - button "Παθήσεις" [ref=e28] [cursor=pointer]:
+            - text: Παθήσεις
+            - generic [ref=e29]: ⌄
+          - button "Παιδο-ΩΡΛ" [ref=e31] [cursor=pointer]:
+            - text: Παιδο-ΩΡΛ
+            - generic [ref=e32]: ⌄
+          - button "Ενδοσκοπική χειρουργική" [ref=e34] [cursor=pointer]:
+            - text: Ενδοσκοπική χειρουργική
+            - generic [ref=e35]: ⌄
+          - button "Πλαστική προσώπου" [ref=e37] [cursor=pointer]:
+            - text: Πλαστική προσώπου
+            - generic [ref=e38]: ⌄
+          - link "Επικοινωνία" [ref=e40] [cursor=pointer]:
+            - /url: /el/epikoinonia
+        - link "Κλείσε ραντεβού →" [ref=e42] [cursor=pointer]:
+          - /url: /el
+          - generic [ref=e43]: Κλείσε ραντεβού →
+  - generic:
+    - button
+    - complementary:
+      - generic:
+        - link:
+          - /url: /el
+          - img
+      - navigation:
+        - generic:
+          - button:
+            - generic:
+              - generic: Menu
+              - generic: Menu
+            - generic: ⌄
+          - generic:
+            - link:
+              - /url: /el
+              - text: Επισκόπηση ενότητας
+            - link:
+              - /url: /el/yperesies
+              - text: Υπηρεσίες
+            - link:
+              - /url: /el/epemvaseis
+              - text: Επεμβάσεις
+            - link:
+              - /url: /el/diagnosi
+              - text: Διάγνωση
+            - link:
+              - /url: /el/klinikes
+              - text: Κλινικές
+            - link:
+              - /url: /el/timokatalogos
+              - text: Τιμοκατάλογος
+            - link:
+              - /url: /el/video
+              - text: Video
+            - link:
+              - /url: /el/orl-egkyklopaidia
+              - text: ΩΡΛ Εγκυκλοπαίδεια
+        - link:
+          - /url: /el/iatreio
+          - text: Ιατρείο
+        - generic:
+          - button:
+            - generic:
+              - generic: Παθήσεις
+              - generic: Παθήσεις
+            - generic: ⌄
+          - generic:
+            - link:
+              - /url: /el/pathiseis
+              - text: Επισκόπηση ενότητας
+            - link:
+              - /url: /el/roxalito-kai-apnoia
+              - text: Ροχαλητό και άπνοια
+            - link:
+              - /url: /el/igmoritida
+              - text: Ιγμορίτιδα
+            - link:
+              - /url: /el/rinikoi-polypodes
+              - text: Ρινικοί πολύποδες
+            - link:
+              - /url: /el/skoliosi-rinikou-diafragmatos-stravo-dafragma
+              - text: Σκολίωση ρινικού διαφράγματος
+            - link:
+              - /url: /el/pathiseis-fonitikon-xordon
+              - text: Παθήσεις φωνητικών χορδών
+            - link:
+              - /url: /el/thyreoeidis-adenas
+              - text: Θυρεοειδής αδένας
+            - link:
+              - /url: /el/ypertrofia-rinikon-kogxon
+              - text: Υπερτροφία ρινικών κογχών
+            - link:
+              - /url: /el/laryngofaringiki-palindromisi
+              - text: Λαρυγγοφαρυγγική παλινδρόμηση
+            - link:
+              - /url: /el/ponolaimos
+              - text: Πονόλαιμος
+            - link:
+              - /url: /el/akoustika-varikoias
+              - text: Ακουστικά βαρηκοΐας
+            - link:
+              - /url: /el/afairesi-amygdalwn
+              - text: Αμυγδαλεκτομή
+            - link:
+              - /url: /el/ekkritiki-otitida
+              - text: Υγρό στο αυτί
+            - link:
+              - /url: /el/rinorragia
+              - text: Ρινορραγία (Επίσταξη)
+            - link:
+              - /url: /el/oxeia-kofosi
+              - text: Οξεία κώφωση
+            - link:
+              - /url: /el/ilingos-zali
+              - text: Ίλιγγος ή ζάλη;
+            - link:
+              - /url: /el/vragxos-fonis
+              - text: Βράγχος φωνής
+            - link:
+              - /url: /el/traxilikes-diogkoseis
+              - text: Τραχηλικές διογκώσεις
+            - link:
+              - /url: /el/pathiseis-amygdalon
+              - text: Παθήσεις αμυγδαλών
+            - link:
+              - /url: /el/emvoes-oton
+              - text: Εμβοές ωτών
+            - link:
+              - /url: /el/rinitida
+              - text: Χρόνια ρινίτιδα
+            - link:
+              - /url: /el/allergiki-rinitida
+              - text: Αλλεργική ρινίτιδα
+            - link:
+              - /url: /el/afairesi-vismatos
+              - text: Αφαίρεση βύσματος κυψέλης
+            - link:
+              - /url: /el/psarokokalo
+              - text: Ψαροκόκκαλο στο λαιμό
+            - link:
+              - /url: /el/xronia-otitida
+              - text: Χρόνια ωτίτιδα
+            - link:
+              - /url: /el/voulomeni-myti
+              - text: Βουλωμένη μύτη
+            - link:
+              - /url: /el/thorivos-sto-ayti
+              - text: Θόρυβος στο αυτί
+            - link:
+              - /url: /el/dysleitourgia-eystahianis-salpingas
+              - text: Δυσλειτουργία ευσταχιανής σάλπιγγας
+            - link:
+              - /url: /el/voulomeno-auti
+              - text: Βουλωμένο αυτί
+            - link:
+              - /url: /el/ponos-sto-auti
+              - text: Πόνος στο αυτί
+            - link:
+              - /url: /el/kysti-sto-auti
+              - text: Κύστη στο αυτί
+            - link:
+              - /url: /el/katagma-mitis
+              - text: Κάταγμα μύτης (ρινός)
+            - link:
+              - /url: /el/pathiseis-stomatos
+              - text: Παθήσεις στόματος
+            - link:
+              - /url: /el/yposmia
+              - text: Υποσμία
+            - link:
+              - /url: /el/kysti-thornwald
+              - text: Κύστη Thornwaldt
+            - link:
+              - /url: /el/parotida-ypognathios-adenas
+              - text: Παρωτίδα και υπογνάθιος αδένας
+            - link:
+              - /url: /el/trypa-sto-tympano
+              - text: Τρύπα στο τύμπανο
+            - link:
+              - /url: /el/otosklirinsi
+              - text: Ωτοσκλήρυνση
+            - link:
+              - /url: /el/thyreoplasty
+              - text: Θυρεοπλαστική
+            - link:
+              - /url: /el/syndromo-adeias-mytis
+              - text: Σύνδρομο άδειας μύτης
+            - link:
+              - /url: /el/syndromo-eagle
+              - text: Σύνδρομο Eagle
+            - link:
+              - /url: /el/pankolpitida
+              - text: Πανκολπίτιδα
+            - link:
+              - /url: /el/karkinos-sto-auti
+              - text: Όγκοι του ωτικού πτερυγίου
+            - link:
+              - /url: /el/mikitoma-igmoreiou
+              - text: Μυκήτωμα ιγμορείου
+            - link:
+              - /url: /el/rinofima
+              - text: Ρινόφυμα
+            - link:
+              - /url: /el/kakosmia-stomatos
+              - text: Κακοσμία στόματος
+            - link:
+              - /url: /el/rendu-osler-weber
+              - text: Κληρονομική αιμορραγική τηλαγγειεκτασία
+            - link:
+              - /url: /el/preauricular-cyst
+              - text: Προωτιαίο συρίγγιο
+            - link:
+              - /url: /el/smigmatogonos-kysti
+              - text: Σμηγματογόνος κύστη
+            - link:
+              - /url: /el/trachiostomia
+              - text: Τραχειοστομία - Σύγκλιση τραχειοστομίας
+            - link:
+              - /url: /el/atrisia
+              - text: Ατρησία ρινικής χοάνης
+            - link:
+              - /url: /el/lipoma
+              - text: Λίπωμα
+        - generic:
+          - button:
+            - generic:
+              - generic: Παιδο-ΩΡΛ
+              - generic: Παιδο-ΩΡΛ
+            - generic: ⌄
+          - generic:
+            - link:
+              - /url: /el/paido-orl
+              - text: Επισκόπηση ενότητας
+            - link:
+              - /url: /el/kreatakia-egxeirisi
+              - text: Αδενοειδείς εκβλαστήσεις (Κρεατάκια)
+            - link:
+              - /url: /el/amygdalektomi
+              - text: Αμυγδαλεκτομή στα παιδιά
+            - link:
+              - /url: /el/roxalito-paidiou
+              - text: Ροχαλητό στα παιδιά
+            - link:
+              - /url: /el/roxlito-katarroi-sta-paidia
+              - text: Ρινική καταρροή σε βρέφη και παιδιά
+            - link:
+              - /url: /el/ponolaimos-sta-paidia
+              - text: Πονόλαιμος στο παιδί
+            - link:
+              - /url: /el/rinitida-igmoritida-paidia
+              - text: Ρινίτιδα και ιγμορίτιδα στα παιδιά
+            - link:
+              - /url: /el/allergiki-rinitida-paidia
+              - text: Αλλεργική ρινίτιδα στα παιδιά
+            - link:
+              - /url: /el/loimoxeis-aytion
+              - text: Λοιμώξεις αυτιών
+            - link:
+              - /url: /el/xalinos-glossas-xeilous
+              - text: Χαλινός γλώσσας / χείλους
+            - link:
+              - /url: /el/apoleia-akois-se-paidia
+              - text: Απώλεια ακοής σε παιδιά
+            - link:
+              - /url: /el/rinorragies
+              - text: Ρινορραγίες στα παιδιά (Επίσταξη ρινός)
+            - link:
+              - /url: /el/kysti-thyrioglossikou-porou
+              - text: Κύστη θυρεογλωσσικού πόρου
+            - link:
+              - /url: /el/afestota-ota
+              - text: Ωτοπλαστική σε παιδιά
+            - link:
+              - /url: /el/geniki-anaisthisia-gia-to-paidi-sas
+              - text: Η γενική αναισθησία για το παιδί σας
+            - link:
+              - /url: /el/xena-somata-paidia
+              - text: Ξένα σώματα στα παιδιά
+        - generic:
+          - button:
+            - generic:
+              - generic: Ενδοσκοπική χειρουργική
+              - generic: Ενδοσκοπική χειρουργική
+            - generic: ⌄
+          - generic:
+            - link:
+              - /url: /el/endoskopiki-xeirourgiki
+              - text: Επισκόπηση ενότητας
+            - link:
+              - /url: /el/endoskopiki-xeirourgiki-rinos-fess
+              - text: Ενδοσκοπική χειρουργική ρινός και παραρρινίων
+            - link:
+              - /url: /el/endoskopiki-dakryoaskorinostomia
+              - text: Ενδοσκοπική δακρυοασκορινοστομία
+            - link:
+              - /url: /el/endoskopiki-adenotomi
+              - text: Ενδοσκοπική αδενοτομή
+            - link:
+              - /url: /el/endoskopiki-diafragmatoplastiki
+              - text: Ενδοσκοπική διαφραγματοπλαστική
+            - link:
+              - /url: /el/endoskopiki-kogxoplastiki
+              - text: Ενδοσκοπική κογχοπλαστική
+            - link:
+              - /url: /el/endoskopiki-kryoxeirourgiki
+              - text: Ενδοσκοπική κρυοχειρουργική
+            - link:
+              - /url: /el/diatrisi-rinikou-diafragmatos
+              - text: Διάτρηση ρινικού διαφράγματος
+            - link:
+              - /url: /el/anastrofo-thiloma
+              - text: Ανάστροφο θήλωμα
+            - link:
+              - /url: /el/concha-bullosa
+              - text: Φυσαλιδώδης κόγχη - Concha bullosa
+            - link:
+              - /url: /el/xeno-soma-igmoreio
+              - text: Ξένο σώμα στο ιγμόρειο άντρο
+        - generic:
+          - button:
+            - generic:
+              - generic: Πλαστική προσώπου
+              - generic: Πλαστική προσώπου
+            - generic: ⌄
+          - generic:
+            - link:
+              - /url: /el/plastiki-aisthitiki-prosopou
+              - text: Επισκόπηση ενότητας
+            - link:
+              - /url: /el/rinoplastiki
+              - text: Σύγχρονη λειτουργική ρινοπλαστική
+            - link:
+              - /url: /el/otoplastika-v-athinah
+              - text: Ωτοπλαστική
+            - link:
+              - /url: /el/blepharoplasty
+              - text: Βλεφαροπλαστική
+            - link:
+              - /url: /el/osteoma-kraniou
+              - text: Οστέωμα και λίπωμα κρανίου
+            - link:
+              - /url: /el/endoskopiki-facelift-browlift
+              - text: Ανύψωση φρυδιών και μετώπου
+            - link:
+              - /url: /el/facelifting
+              - text: Λίφτινγκ προσώπου (Face Lift)
+            - link:
+              - /url: /el/ear-lobe-repair
+              - text: Διόρθωση λοβίου αυτιού - Σκισμένα λοβία
+            - link:
+              - /url: /el/silhouette-soft-afini
+              - text: Silhouette Soft
+            - link:
+              - /url: /el/necklift
+              - text: Ανόρθωση λαιμού και πηγουνιού (Νeck Lifting)
+            - link:
+              - /url: /el/mesotherapeia
+              - text: Μεσοθεραπεία
+            - link:
+              - /url: /el/plastika-verhnei-gubi
+              - text: Πλαστική στα χείλια
+            - link:
+              - /url: /el/metamosxeusi-mallion
+              - text: "Μεταμόσχευση μαλλιών: φρυδιών, βλεφαρίδων, γενιών"
+            - link:
+              - /url: /el/mesotherapeia-me-dermapen
+              - text: Μεσοθεραπεία με Dermapen
+            - link:
+              - /url: /el/xiloeidi-auti
+              - text: Χηλοειδή αυτιών
+            - link:
+              - /url: /el/afairesi-oulis-prosopou
+              - text: Αφαίρεση ουλής προσώπου
+            - link:
+              - /url: /el/spiloi-prosopou
+              - text: Σπίλοι προσώπου
+            - link:
+              - /url: /el/meiosi-lovion
+              - text: Μείωση λοβίων
+            - link:
+              - /url: /el/thilomata-spiloi
+              - text: Θηλώματα
+            - link:
+              - /url: /el/lftynnk-prospou-2
+              - text: Λίφτινγκ προσώπου 2
+        - link:
+          - /url: /el/epikoinonia
+          - text: Επικοινωνία
+      - generic:
+        - generic:
+          - generic: Λεωφ. Αλεξάνδρας 201, Αθήνα
+        - generic:
+          - generic: ☎
+          - link:
+            - /url: tel:+302106427000
+            - text: +30 210 6427 000
+        - generic:
+          - generic: 🕒
+          - generic: Δε-Πα 09:00-21:00
+      - generic:
+        - link:
+          - /url: /el
+          - text: Κλείσε ραντεβού →
+  - main [ref=e44]:
+    - generic [ref=e45]:
+      - img "Ρινοπλαστική με Piezotome" [ref=e47]
+      - heading "Ρινοπλαστική με Piezotome" [level=1] [ref=e48]
+      - paragraph [ref=e49]: Μέσω των υπερήχων υπάρχουν περισσότερες δυνατότητες αφαίρεσης μικρών τεμαχίων οστού χωρίς να βλάπτεται ο υποκείμενος βλεννογόνος και να εξαλείφονται οι τραχείες επιφάνειες για να υπάρχει ακόμη μεγαλύτερη ακρίβεια σε αυτήν την μέθοδο ρινοπλαστικής.
+    - navigation "Πλοήγηση ενότητας" [ref=e51]:
+      - link "Ρινοπλαστική (Εισαγωγή)" [ref=e52] [cursor=pointer]:
+        - /url: /el/rinoplastiki-eisagogi
+      - link "Σύγχρονη λειτουργική ρινοπλαστική" [ref=e53] [cursor=pointer]:
+        - /url: /el/sygxroni-leitourgiki-rinoplastiki
+      - link "Βήματα στη χειρουργική ρινοπλαστικής" [ref=e54] [cursor=pointer]:
+        - /url: /el/vimata-sti-xeirourgiki-rinoplastikis
+      - link "Ρινοπλαστική με Piezotome" [ref=e55] [cursor=pointer]:
+        - /url: /el/rinoplastiki-piezotome
+      - link "Μη-επεμβατική ρινοπλαστική" [ref=e56] [cursor=pointer]:
+        - /url: /el/mi-epemvatiki-rinoplastiki
+      - link "Συχνές ερωτήσεις - Απαντήσεις" [ref=e57] [cursor=pointer]:
+        - /url: /el/kostos-rinoplastikis-diafragma
+    - main [ref=e58]:
+      - article [ref=e59]:
+        - generic [ref=e60]:
+          - paragraph [ref=e61]:
+            - strong [ref=e62]: Η ρινοπλαστική μέσω του πιεζοηλεκτρικού συστήματος Piezotome
+            - text: είναι κάπως διαφορετική απο αυτή της παραδοσιακής χειρουργικής ρινοπλαστικής. Μέσω των υπερήχων υπάρχουν περισσότερες δυνατότητες αφαίρεσης μικρών τεμαχίων οστού χωρίς να βλάπτεται ο υποκείμενος βλεννογόνος και να εξαλείφονται οι τραχείες επιφάνειες για να υπάρχει ακόμη μεγαλύτερη ακρίβεια σε αυτήν την μέθοδο ρινοπλαστικής.
+          - paragraph [ref=e63]
+          - paragraph [ref=e64]: Το τελικό αποτέλεσμα είναι μια πιο όμορφη μύτη με πολύ λιγότερα τραύματα, μικρότερη εμφάνιση οιδήματος και σχεδόν καθόλου μώλωπες.
+          - paragraph [ref=e65]
+          - paragraph [ref=e66]:
+            - strong [ref=e67]: Τα πλεονεκτήματα μέσω του πιεζοηλεκτρικού συστήματος Piezotome
+            - text: "είναι τα παρακάτω:"
+          - list [ref=e68]:
+            - listitem [ref=e69]: Μείωση των τραυμάτων των μαλακών ιστών (σχεδόν εκμηδενίζονται). Έτσι οι μώλωπες και τα οιδήματα είναι σχεδόν ανύπαρκτα.
+            - listitem [ref=e70]: Λόγω της μεγάλης ακρίβειας αφαίρεσης μικρών ελεγχόμενων τεμαχίων οστού το αποτέλεσμα είναι απόλυτα ακριβές με πολύ ικανοποιητικά αποτελέσματα.
+            - listitem [ref=e71]: Δυνατότητα παροχής πιο κομψής μετάβασης απο τη ρινική γέφυρα προς το ρινικό άκρο.
+            - listitem [ref=e72]: Προλαμβάνει τα ανεξέλεγκτα οστικά κατάγματα λόγω χρήσης μεθόδων εφαρμογής ειδικών οστεοτομών και οργάνων μικροκινητικής ρινοπλαστικής. Έτσι, αποτρέπονται οι παραμορφώσεις και ανωμαλίες του περιγράμματος της μύτης.
+            - listitem [ref=e73]: Η μετεγχειρητική αποκατάσταση είναι καλύτερη επειδή δεν προκαλείται βλάβη στους μαλακούς ιστούς που περιβάλλονται τα αιμοφόρα αγγεία και οι χόνδροι με αποτέλεσμα οι ασθενείς να επιστρέψουν στην καθημερινή τους ζωή πιο γρήγορα. Ο μετεγχειρητικός πόνος συνήθως είναι ελάχιστος.
+            - listitem [ref=e74]: Τα ποσοστά επιπλοκών και η ανάγκη για επανάληψη της χειρουργικής διαδικασίας είναι σχεδόν μηδενικά.
+          - paragraph [ref=e75]
+          - paragraph [ref=e76]:
+            - text: Η διάρκεια της ρινοπλαστικής μέσω του πιεζοηλεκτρικού συστήματος Piezotome λόγω της μεγάλης ακρίβειας και της πολυπλοκότητας απαιτεί
+            - strong [ref=e77]: 2-3 ώρες για να εκτελεστεί
+            - text: .
+          - paragraph [ref=e78]:
+            - strong [ref=e79]: Η αποκατάσταση
+            - text: μετά απο τη συγκεκριμένη μέθοδο ρινοπλαστικής είναι παρόμοια με την παραδοσιακή ρινοπλαστική. Πρέπει να φοράτε ρινικό νάρθηκα για επτά ημέρες. Επίσης, πρέπει ακόμα να κοιμάστε με το κεφάλι του κρεβατιού ανυψωμένο και μπορεί να χρειαστεί να εφαρμόσετε πάγο στη μύτη. Η διαφορά του αποτελέσματος απο αυτήν την ρινοπλαστική μέθοδο είναι ευδιάκριτη στο κοινό απο νωρίς και το μακροπρόθεσμο τελικό αποτέλεσμα ενισχύεται όταν έχει πραγματοποιηθεί πλήρης επούλωση με την πάροδο ενός έτους.
+          - paragraph [ref=e80]:
+            - iframe [ref=e81]:
+              - generic "YouTube Video Player" [ref=f3e3]:
+                - alert [ref=f3e4]:
+                  - generic [ref=f3e5]:
+                    - generic [ref=f3e6]:
+                      - img
+                    - generic [ref=f3e7]:
+                      - generic [ref=f3e8]: Video unavailable
+                      - generic [ref=f3e9]: This video is unavailable
+                  - link "Visit YouTube to search for more videos" [ref=f3e10] [cursor=pointer]:
+                    - /url: https://www.youtube.com
+                    - img
+          - paragraph [ref=e82]: Η ρινοπλαστική μέσω του πιεζοηλεκτρικού συστήματος Piezotome είναι κατάλληλη για όλα τα άτομα που είναι αρκετά υγιή για να εφαρμόσουν και την παραδοσιακή ρινοπλαστική.
+          - paragraph [ref=e83]: Η συγκεκριμένη μέθοδος ρινοπλαστικής λειτουργεί με συσκευές υπερήχων που χρησιμοποιούν υψηλής ταχύτητας ηχητικά κύματα για τη δημιουργία δονήσεων στους ιστούς. Αυτές οι δονήσεις προκαλούν ήπια διάσπαση των επιφανειών των ιστών για την απομάκρυνση των επιφανειακών ανωμαλιών και την αποκοπή των ιστών, αποφεύγοντας παράλληλα τη βλάβη στις υποκείμενες δομές. Με άλλα λόγια, αντιμετωπίζει τις περιοχές που χρειάζονται θεραπεία με πολύ στοχοθετημένο και ακριβή τρόπο, με ταυτόχρονη ελαχιστοποιήση της ζημίας.
+          - paragraph [ref=e84]:
+            - text: Σε περίπτωση που ενδιαφέρεστε για περισσότερες πληροφορίες για την συγκεκριμένη μέθοδο ρινοπλαστικής μην διστάσετε να
+            - link "επικοινωνήσετε" [ref=e85] [cursor=pointer]:
+              - /url: /epikoinonia
+            - text: μαζί μας.
+      - complementary [ref=e86]:
+        - region "Πηγές" [ref=e87]:
+          - paragraph [ref=e88]: Πηγές
+          - generic [ref=e89]:
+            - paragraph [ref=e90]:
+              - generic [ref=e91]:
+                - text: Rhinoplasty — 2024 —
+                - link "https://www.ncbi.nlm.nih.gov/books/NBK558970/" [ref=e92] [cursor=pointer]:
+                  - /url: https://www.ncbi.nlm.nih.gov/books/NBK558970/
+            - paragraph [ref=e93]:
+              - generic [ref=e94]:
+                - text: "Nasal Fractures: Acute, Subacute, and Delayed Management — 2023 —"
+                - link "https://pubmed.ncbi.nlm.nih.gov/37353368/" [ref=e95] [cursor=pointer]:
+                  - /url: https://pubmed.ncbi.nlm.nih.gov/37353368/
+            - paragraph [ref=e96]:
+              - generic [ref=e97]:
+                - text: "Improving Nasal Form and Function after Rhinoplasty: Clinical Practice Guideline Executive Summary — 2017 —"
+                - link "https://pubmed.ncbi.nlm.nih.gov/28145848/" [ref=e98] [cursor=pointer]:
+                  - /url: https://pubmed.ncbi.nlm.nih.gov/28145848/
+            - paragraph [ref=e99]:
+              - generic [ref=e100]:
+                - text: Functional Rhinoplasty — 2023 —
+                - link "https://pubmed.ncbi.nlm.nih.gov/37900451/" [ref=e101] [cursor=pointer]:
+                  - /url: https://pubmed.ncbi.nlm.nih.gov/37900451/
+            - paragraph [ref=e102]
+  - contentinfo [ref=e103]:
+    - generic [ref=e104]:
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - link "MyORL" [ref=e107] [cursor=pointer]:
+            - /url: /el
+            - generic [ref=e108]: m
+            - generic [ref=e109]: myorl
+          - paragraph [ref=e110]: Ιδιωτικό ΩΡΛ ιατρείο του Δρ. Παύλου Τσολαρίδη, M.D. Εξυπηρέτηση ασθενών στην Αθήνα και διεθνώς από το 1998.
+        - generic [ref=e111]:
+          - group [ref=e112]:
+            - generic "Ιατρείο"
+            - list [ref=e113]:
+              - listitem [ref=e114]:
+                - link "Πλήρης Ωτορινολαρυγγολογική εξέταση" [ref=e115] [cursor=pointer]:
+                  - /url: /el/orl-exetasi
+              - listitem [ref=e116]:
+                - link "Υπηρεσίες" [ref=e117] [cursor=pointer]:
+                  - /url: /el/yperesies
+              - listitem [ref=e118]:
+                - link "Επεμβάσεις" [ref=e119] [cursor=pointer]:
+                  - /url: /el/epemvaseis
+              - listitem [ref=e120]:
+                - link "Διάγνωση" [ref=e121] [cursor=pointer]:
+                  - /url: /el/diagnosi
+              - listitem [ref=e122]:
+                - link "Παθήσεις" [ref=e123] [cursor=pointer]:
+                  - /url: /el/pathiseis
+          - group [ref=e124]:
+            - generic "Ασθενείς"
+            - list [ref=e125]:
+              - listitem [ref=e126]:
+                - link "Online ραντεβού" [ref=e127] [cursor=pointer]:
+                  - /url: /el
+              - listitem [ref=e128]:
+                - link "Κλινικές" [ref=e129] [cursor=pointer]:
+                  - /url: /el/klinikes
+              - listitem [ref=e130]:
+                - link "Τιμοκατάλογος" [ref=e131] [cursor=pointer]:
+                  - /url: /el/timokatalogos
+              - listitem [ref=e132]:
+                - link "Κλείστε ραντεβού Online" [ref=e133] [cursor=pointer]:
+                  - /url: /el/kleiste-randevou-online
+              - listitem [ref=e134]:
+                - link "Οδηγίες πριν το χειρουργείο" [ref=e135] [cursor=pointer]:
+                  - /url: /el/odigies-prin-xeirourgeio
+              - listitem [ref=e136]:
+                - link "Αναζήτηση αποτελεσμάτων" [ref=e137] [cursor=pointer]:
+                  - /url: /el/anazitisi-apotelesmaton
+          - group [ref=e138]:
+            - generic "Εταιρεία"
+            - list [ref=e139]:
+              - listitem [ref=e140]:
+                - link "Video" [ref=e141] [cursor=pointer]:
+                  - /url: /el/video
+              - listitem [ref=e142]:
+                - link "Επικοινωνία" [ref=e143] [cursor=pointer]:
+                  - /url: /el/epikoinonia
+              - listitem [ref=e144]:
+                - link "Σύντομο βιογραφικό" [ref=e145] [cursor=pointer]:
+                  - /url: /el/viografiko
+              - listitem [ref=e146]:
+                - link "Πολιτική Απορρήτου" [ref=e147] [cursor=pointer]:
+                  - /url: /el/privacy-policy
+        - generic [ref=e148]:
+          - paragraph [ref=e149]: Επικοινωνία
+          - generic [ref=e150]:
+            - generic [ref=e151]:
+              - generic [ref=e152]: Λεωφ. Αλεξάνδρας 201, Αθήνα 11523
+              - generic [ref=e153]:
+                - link "+30 210 6427 000" [ref=e154] [cursor=pointer]:
+                  - /url: tel:+302106427000
+                - text: ·
+                - link "info@myorl.gr" [ref=e155] [cursor=pointer]:
+                  - /url: mailto:info@myorl.gr
+            - list "Social media" [ref=e156]:
+              - listitem [ref=e157]:
+                - link "Google" [ref=e158] [cursor=pointer]:
+                  - /url: https://www.google.gr/search?newwindow=1&source=hp&ei=1qigXOlUwqeuBLSOn7AG&q=%CF%89%CF%81%CE%BB%20%CE%B1%CE%B8%CE%B7%CE%BD%CE%B1&oq=%CF%89%CF%81%CE%BB+%CE%B1&gs_l=psy-ab.1.0.0l10.3218.4564..6536...0.0..0.253.1089.1j4j2......0....1..gws-wiz.....0..0i131.QSZaY-bx0rw&npsic=0&rflfq=1&rlha=0&rllag=37983315,23738826,1742&tbm=lcl&rldimm=15671721623596932737&ved=2ahUKEwjN-rnFp6zhAhV9ysQBHUHYAI4QvS4wAXoECAkQIQ&rldoc=1&tbs=lrf:!2m1!1e2!2m1!1e3!3sIAE,lf:1,lf_ui:2#lrd=0x14a1a2ab52ac0da9:0xd97d23c8c94d9e81,1,,,&rlfi=hd:;si:15671721623596932737;mv:!1m2!1d38.0012241!2d23.766274199999998!2m2!1d37.9622964!2d23.713051699999998;tbs:lrf:!2m1!1e2!2m1!1e3!3sIAE,lf:1,lf_ui:2
+                  - img [ref=e159]
+              - listitem [ref=e162]:
+                - link "Facebook" [ref=e163] [cursor=pointer]:
+                  - /url: https://www.facebook.com/orlathens/
+                  - img [ref=e164]
+              - listitem [ref=e166]:
+                - link "YouTube" [ref=e167] [cursor=pointer]:
+                  - /url: https://www.youtube.com/user/OrlAthens/videos
+                  - img [ref=e168]
+              - listitem [ref=e171]:
+                - link "Instagram" [ref=e172] [cursor=pointer]:
+                  - /url: https://www.instagram.com/myorl.gr/
+                  - img [ref=e173]
+      - generic [ref=e176]:
+        - paragraph [ref=e177]: © 2026 MyORL · Δρ. Παύλος Τσολαρίδης M.D.
+        - link "Χάρτης ιστότοπου" [ref=e178] [cursor=pointer]:
+          - /url: /el/sitemap
+  - button:
+    - img
+  - button "Open Next.js Dev Tools" [ref=e184] [cursor=pointer]:
+    - img [ref=e185]
+  - alert [ref=e188]

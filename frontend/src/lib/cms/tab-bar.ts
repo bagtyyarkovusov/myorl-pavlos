@@ -92,8 +92,17 @@ export function getTabBarConfig(
         visible = allNodes.slice(0, maxVisible);
         overflow = allNodes.slice(maxVisible);
       } else {
-        visible = [...allNodes.slice(0, maxVisible - 1), allNodes[activeIdx]];
-        overflow = [...allNodes.slice(maxVisible - 1, activeIdx), ...allNodes.slice(activeIdx + 1)];
+        const promoted = activeIdx >= 0 ? allNodes[activeIdx] : undefined;
+        if (!promoted) {
+          visible = allNodes.slice(0, maxVisible);
+          overflow = allNodes.slice(maxVisible);
+        } else {
+          visible = [...allNodes.slice(0, maxVisible - 1), promoted];
+          overflow = [
+            ...allNodes.slice(maxVisible - 1, activeIdx),
+            ...allNodes.slice(activeIdx + 1),
+          ];
+        }
       }
       return { visible, overflow, activeIndex: activeIdx, isLeaf: false };
     }
@@ -113,9 +122,14 @@ export function getTabBarConfig(
     visible = siblings.slice(0, maxVisible);
     overflow = siblings.slice(maxVisible);
   } else {
-    // Active page is beyond the visible window — promote it.
-    visible = [...siblings.slice(0, maxVisible - 1), siblings[activeIdx]];
-    overflow = [...siblings.slice(maxVisible - 1, activeIdx), ...siblings.slice(activeIdx + 1)];
+    const promoted = activeIdx >= 0 ? siblings[activeIdx] : undefined;
+    if (!promoted) {
+      visible = siblings.slice(0, maxVisible);
+      overflow = siblings.slice(maxVisible);
+    } else {
+      visible = [...siblings.slice(0, maxVisible - 1), promoted];
+      overflow = [...siblings.slice(maxVisible - 1, activeIdx), ...siblings.slice(activeIdx + 1)];
+    }
   }
 
   return { visible, overflow, activeIndex: activeIdx, isLeaf: true };

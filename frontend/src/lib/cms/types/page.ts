@@ -59,6 +59,8 @@ export interface NavigationInput {
   featuredImage?: MediaDTO | null;
   imageCenter?: MediaDTO | null;
   footerCategory?: FooterCategory;
+  /** Tags for directory filtering (MODX-style hubs); empty when none assigned in CMS. */
+  tags: TagDTO[];
 }
 
 export type NavigationNodeDTO = NavigationInput & {

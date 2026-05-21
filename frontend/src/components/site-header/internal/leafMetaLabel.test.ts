@@ -21,6 +21,7 @@ const base: NavigationNodeDTO = {
   layoutVariant: "standard",
   parentPage: null,
   externalUrl: null,
+  tags: [],
   children: [],
 };
 

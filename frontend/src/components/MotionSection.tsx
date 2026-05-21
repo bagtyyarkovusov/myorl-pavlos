@@ -10,12 +10,14 @@ type MotionSectionProps = {
   ariaLabelledBy?: string;
   background?: string;
   density?: string;
+  /** Directory hubs disable scroll fade-up for faster scanning (all viewports). */
+  entranceMotion?: "default" | "instant";
   children: ReactNode;
 };
 
 const TRANSITION: Transition = {
   duration: 0.5,
-  ease: "easeOut",
+  ease: [0.22, 1, 0.36, 1],
 };
 
 export function MotionSection({
@@ -25,6 +27,7 @@ export function MotionSection({
   ariaLabelledBy,
   background,
   density,
+  entranceMotion = "default",
   children,
 }: MotionSectionProps) {
   const shouldAnimate = useDesktopMotion();
@@ -34,7 +37,7 @@ export function MotionSection({
     () => false,
   );
 
-  const animate = mounted && shouldAnimate;
+  const animate = entranceMotion === "instant" ? false : mounted && shouldAnimate;
 
   return (
     <motion.section

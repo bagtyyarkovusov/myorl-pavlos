@@ -1,5 +1,7 @@
 import { MediaFrame } from "@/components/design-system";
 import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
+import { getPageStrings } from "@/lib/i18n/page";
+import Link from "next/link";
 
 import styles from "./_shared.module.css";
 
@@ -8,20 +10,31 @@ export type PageLayoutProps = {
   navigation?: NavigationNodeDTO[];
 };
 
-export function PageHeader({ page, kicker }: { page: PageDTO; kicker?: string | null }) {
+export function PageHeader({
+  page,
+  kicker,
+  breadcrumbsEnabled = true,
+}: {
+  page: PageDTO;
+  kicker?: string | null;
+  /** When true, renders Home / Parent crumb links when `parentPage` is set (same trail as article heroes). */
+  breadcrumbsEnabled?: boolean;
+}) {
   const media = page.imageCenter ?? page.featuredImage;
   const kickerText = kicker === null ? null : (kicker ?? readableVariant(page.layoutVariant));
+  const t = getPageStrings(page.locale);
+  const crumbs = breadcrumbsEnabled ? buildHeaderBreadcrumbs(page, t.home) : [];
 
   return (
     <header className={styles["page-hero"]}>
-      {media ? (
-        <MediaFrame
-          media={media}
-          alt={media.alternativeText ?? page.title}
-          eager
-          variant="wide"
-          className={styles["page-hero__image"]}
-        />
+      {crumbs.length > 0 ? (
+        <nav aria-label="Breadcrumbs" className={styles.breadcrumbs}>
+          {crumbs.map((crumb) => (
+            <span key={`${crumb.href}-${crumb.label}`}>
+              <Link href={crumb.href}>{crumb.label}</Link>
+            </span>
+          ))}
+        </nav>
       ) : null}
       {kickerText ? (
         <p className="font-mono text-xs font-medium uppercase text-stone-soft">{kickerText}</p>
@@ -35,8 +48,33 @@ export function PageHeader({ page, kicker }: { page: PageDTO; kicker?: string | 
           ))}
         </ul>
       ) : null}
+      {media ? (
+        <MediaFrame
+          media={media}
+          alt={media.alternativeText ?? page.title}
+          eager
+          variant="wide"
+          className={styles["page-hero__image"]}
+        />
+      ) : null}
     </header>
   );
+}
+
+/** Same trail as `StandardPage` article heroes: Home → Parent (current page title is the H1). */
+function buildHeaderBreadcrumbs(
+  page: PageDTO,
+  homeLabel: string,
+): Array<{ label: string; href: string }> {
+  if (!page.parentPage?.slug || !page.parentPage.title) return [];
+
+  return [
+    { label: homeLabel, href: `/${page.locale}` },
+    {
+      label: page.parentPage.title,
+      href: `/${page.locale}/${page.parentPage.slug}`,
+    },
+  ];
 }
 
 function readableVariant(value: string): string {

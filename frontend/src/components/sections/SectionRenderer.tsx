@@ -29,6 +29,8 @@ export function SectionRenderer({
     return <HomeSectionRenderer section={section} locale={locale} index={index} />;
   }
 
+  const sectionOrder = index ?? 0;
+
   const headingBlock =
     section.heading || section.intro
       ? { title: section.heading ?? "", intro: section.intro ?? undefined }
@@ -39,7 +41,7 @@ export function SectionRenderer({
       id={id}
       heading={headingBlock}
       rhythm="standard"
-      sectionIndex={index}
+      sectionIndex={sectionOrder}
       density={density}
       width="contained"
       className={styles["section-divider"]}
@@ -49,7 +51,7 @@ export function SectionRenderer({
         density={density}
         locale={locale}
         galleryMode={galleryMode}
-        sectionIndex={index}
+        sectionIndex={sectionOrder}
       />
     </PageSection>
   );

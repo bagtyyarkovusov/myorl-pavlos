@@ -20,6 +20,7 @@ const internalItem: NavigationNodeDTO = {
   layoutVariant: "standard",
   parentPage: null,
   externalUrl: null,
+  tags: [],
   children: [],
 };
 
@@ -38,6 +39,7 @@ const externalItem: NavigationNodeDTO = {
   layoutVariant: "standard",
   parentPage: null,
   externalUrl: null,
+  tags: [],
   children: [],
 };
 

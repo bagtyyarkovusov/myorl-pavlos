@@ -144,7 +144,7 @@
 
 .tabs {
   display: grid;
-  gap: 24px;
+  gap: clamp(18px, 3vw, 24px);
 }
 
 .tabs__desktop {
@@ -169,7 +169,7 @@
   min-height: 44px;
   border: 0;
   background: transparent;
-  color: var(--text);
+  color: var(--foreground);
   cursor: pointer;
   font: inherit;
   font-weight: 650;
@@ -192,6 +192,8 @@
 }
 
 .tabs__panel {
+  width: 100%;
+  max-width: min(820px, 72ch);
   color: var(--muted);
 }
 

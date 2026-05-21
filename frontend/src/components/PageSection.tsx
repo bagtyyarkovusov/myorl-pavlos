@@ -30,6 +30,8 @@ type PageSectionProps = {
   id?: string;
   ariaLabelledBy?: string;
   children: ReactNode;
+  /** Pass `instant` on dense directory pages to skip MotionSection entrance animation. */
+  entranceMotion?: "default" | "instant";
 };
 
 const BACKGROUND_CLASSES: Record<PageSectionBackground, string> = {
@@ -44,9 +46,9 @@ const ALTERNATING_BACKGROUND_CLASSES = {
 } as const;
 
 const RHYTHM_CLASSES: Record<PageSectionRhythm, string> = {
-  standard: "py-20 md:py-32",
+  standard: "py-[clamp(3.5rem,calc(2rem+5vw),8rem)]",
   hero: "pt-[clamp(60px,8vw,120px)] pb-[clamp(54px,7vw,96px)]",
-  compact: "py-12 md:py-16",
+  compact: "py-[clamp(2.75rem,calc(1.25rem+3vw),4rem)]",
   contact: "py-[clamp(80px,10vw,160px)]",
 };
 
@@ -56,16 +58,19 @@ const DENSITY_RHYTHM_CLASSES: Record<Density, string> = {
   theater: "py-[var(--section-padding-theater)]",
 };
 
+/** Matches globals `.container` max width without the class name (avoids Tailwind/global clashes). */
+const SECTION_MAX_ROW = "w-full max-w-[1280px] mx-auto min-w-0";
+
 const CONTAINER_CLASSES: Record<PageSectionContainerWidth, string> = {
-  full: "container mx-auto",
-  tight: "max-w-5xl mx-auto w-[min(1024px,calc(100vw-48px))]",
-  prose: "max-w-3xl mx-auto w-[min(820px,calc(100vw-48px))]",
+  full: SECTION_MAX_ROW,
+  tight: "max-w-5xl w-full mx-auto min-w-0",
+  prose: "max-w-3xl w-full mx-auto min-w-0",
 };
 
 const WIDTH_CLASSES: Record<PageSectionWidth, string> = {
-  "full-bleed": "w-full",
-  contained: "container mx-auto",
-  narrow: "max-w-3xl mx-auto w-[min(768px,calc(100vw-48px))]",
+  "full-bleed": "w-full min-w-0",
+  contained: SECTION_MAX_ROW,
+  narrow: "max-w-3xl w-full mx-auto min-w-0",
 };
 
 export function PageSection({
@@ -81,6 +86,7 @@ export function PageSection({
   label,
   id,
   ariaLabelledBy,
+  entranceMotion = "default",
   children,
 }: PageSectionProps) {
   const alternatingBackground =
@@ -106,25 +112,28 @@ export function PageSection({
       ariaLabelledBy={ariaLabelledBy}
       background={alternatingBackground ?? undefined}
       density={sectionIndex !== undefined ? density : undefined}
+      entranceMotion={entranceMotion}
     >
       <div className={containerClass} data-width={width}>
         {header !== undefined ? (
           header
         ) : heading ? (
-          <header className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div>
+          <header className="mb-[clamp(2.5rem,5vw,6rem)] flex flex-col justify-between gap-6 md:flex-row md:items-end md:gap-8">
+            <div className="min-w-0">
               {heading.eyebrow ? (
                 <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.04em] text-stone-soft">
                   {heading.eyebrow}
                 </p>
               ) : null}
-              <h2 className="max-w-2xl font-display text-4xl leading-tight text-ink md:text-5xl lg:text-6xl">
+              <h2 className="max-w-2xl text-balance break-words font-display text-[clamp(1.875rem,5.5vw,3.75rem)] leading-[1.12] tracking-tight text-ink">
                 {heading.title}
               </h2>
             </div>
             {heading.action ??
               (heading.intro ? (
-                <p className="max-w-xl text-lg text-stone">{heading.intro}</p>
+                <p className="max-w-xl min-w-0 text-base leading-relaxed text-stone sm:text-lg">
+                  {heading.intro}
+                </p>
               ) : null)}
           </header>
         ) : null}

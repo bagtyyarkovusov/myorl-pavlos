@@ -199,6 +199,10 @@ type SectionDTO =
   | { __component: "sections.contact"; heading?: string | null; intro?: string | null; details: ContactDetailDTO[]; clinics: ContactClinicDTO[] };
 ```
 
+### Editorial: section-hub long-form pages
+
+For **service-article** and **reference** pages rendered **under a section hub** (tab bar above the body), the `sections` array and each section’s **`heading`** drive in-page navigation (`#section-1`, `#section-2`, …) and the mobile “sections” panel. Prefer **several Strapi section blocks with clear headings** over a **single** section that holds most of the article (for example one `sections.tabs` with all prose). Smaller blocks improve scanability, sidebar labels, and anchor targets without frontend hacks.
+
 ### GlobalSettingsDTO
 
 ```ts

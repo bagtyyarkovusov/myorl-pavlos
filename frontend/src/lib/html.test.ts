@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { sanitizeCmsHtml, stripTags } from "./html";
+import { sanitizeCmsHtml, stripTags, upgradeImageOnlyParagraphs } from "./html";
 
 describe("sanitizeCmsHtml", () => {
   afterEach(() => {
@@ -46,6 +46,27 @@ describe("sanitizeCmsHtml", () => {
     expect(sanitizeCmsHtml('<a href="https://example.com" target="_blank">link</a>')).toContain(
       'rel="noopener noreferrer"',
     );
+  });
+
+  it("promotes image-only paragraphs to figure for structure and layout hooks", () => {
+    const input = '<p><img src="/uploads/a.jpg" alt="diagram"></p><p>Body</p>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).toContain('<figure class="cms-html__figure">');
+    expect(result).toContain("<img");
+    expect(result).toContain("Body");
+    expect(result).not.toMatch(/<p>\s*<img/);
+  });
+
+  it("leaves paragraphs that mix text and images unchanged", () => {
+    const input = '<p>See <img src="/b.jpg" alt=""> for detail.</p>';
+    expect(sanitizeCmsHtml(input)).not.toContain("cms-html__figure");
+  });
+});
+
+describe("upgradeImageOnlyParagraphs", () => {
+  it("wraps multiple sibling images in one figure", () => {
+    const html = '<p>  <img src="/1.jpg" alt=""> <img src="/2.jpg" alt="">  </p>';
+    expect(upgradeImageOnlyParagraphs(html).match(/cms-html__figure/g)?.length).toBe(1);
   });
 });
 

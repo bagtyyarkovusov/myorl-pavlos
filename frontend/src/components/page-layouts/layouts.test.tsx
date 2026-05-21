@@ -88,6 +88,7 @@ function makeNav(slug: string, label: string, index = 0): NavigationNodeDTO {
     featuredImage: null,
     imageCenter: null,
     href: `/el/${slug}`,
+    tags: [],
     children: [],
   };
 }
@@ -181,10 +182,11 @@ describe("StandardPage", () => {
 
     expect(document.querySelector("[data-hero-variant='cinematic']")).toBeTruthy();
     expect(document.querySelector("[data-service-layout='true']")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "What to expect" })).toHaveAttribute(
-      "href",
-      "#section-1",
-    );
+    const serviceAside = document.querySelector("[data-service-layout='true'] aside");
+    expect(serviceAside).toBeTruthy();
+    expect(
+      within(serviceAside as HTMLElement).getByRole("link", { name: "What to expect" }),
+    ).toHaveAttribute("href", "#section-1");
     expect(screen.getByText("Service body").closest("div")?.getAttribute("data-variant")).toBe(
       "service",
     );
@@ -223,12 +225,15 @@ describe("StandardPage", () => {
 
     expect(document.querySelector("[data-hero-variant='compact']")).toBeTruthy();
     expect(document.querySelector("[data-article-layout='encyclopedia']")).toBeTruthy();
-    const articleContents = screen.getByRole("navigation", { name: "Περιεχόμενα" });
-    expect(articleContents).toBeDefined();
-    expect(within(articleContents).getByRole("link", { name: "Diagnosis" })).toHaveAttribute(
-      "href",
-      "#diagnosis",
-    );
+    const contentsNavs = screen.getAllByRole("navigation", { name: "Περιεχόμενα" });
+    expect(contentsNavs.length).toBeGreaterThanOrEqual(1);
+    const contentsNavPrimary = contentsNavs[0];
+    expect(contentsNavPrimary).toBeDefined();
+    expect(
+      within(contentsNavPrimary as HTMLElement)
+        .getByRole("link", { name: "Diagnosis" })
+        .getAttribute("href"),
+    ).toBe("#diagnosis");
     expect(screen.getByText("Reference body").closest("div")?.getAttribute("data-variant")).toBe(
       "encyclopedia",
     );
@@ -683,7 +688,7 @@ describe("SectionIndexPage", () => {
       title: "Diseases",
       content: "<p>Browse our conditions library</p>",
     };
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("diseases", "Diseases"),
         isFolder: true,
@@ -706,7 +711,7 @@ describe("SectionIndexPage", () => {
       title: "Diseases",
       slug: "diseases",
     };
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("diseases", "Diseases"),
         isFolder: true,
@@ -733,7 +738,71 @@ describe("SectionIndexPage", () => {
 
     render(<SectionIndexPage page={page} navigation={[]} />);
 
-    expect(screen.getByText("No pages are available yet.")).toBeDefined();
+    expect(screen.getByText("Δεν υπάρχουν ακόμη διαθέσιμες σελίδες.")).toBeDefined();
+  });
+
+  it("renders breadcrumb links when a parent page is set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-diagnosi",
+      layoutVariant: "section-index",
+      isFolder: true,
+      title: "Διάγνωση",
+      slug: "diagnosi",
+      parentPage: {
+        documentId: "doc-yperesies",
+        slug: "yperesies",
+        title: "Υπηρεσίες",
+      },
+    };
+    const nav: NavigationNodeDTO[] = [
+      {
+        ...makeNav("diagnosi", "Διάγνωση"),
+        documentId: "nav-diagnosi",
+        isFolder: true,
+        children: [makeNav("exam", "Exam", 1)],
+      },
+    ];
+
+    render(<SectionIndexPage page={page} navigation={nav} />);
+
+    const crumbs = screen.getByRole("navigation", { name: "Breadcrumbs" });
+    expect(within(crumbs).getByRole("link", { name: "Αρχική" })).toHaveAttribute("href", "/el");
+    expect(within(crumbs).getByRole("link", { name: "Υπηρεσίες" })).toHaveAttribute(
+      "href",
+      "/el/yperesies",
+    );
+  });
+
+  it("renders a localized appointment closure band", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-diagnosi",
+      layoutVariant: "section-index",
+      isFolder: true,
+      title: "Διάγνωση",
+      slug: "diagnosi",
+    };
+    const nav: NavigationNodeDTO[] = [
+      {
+        ...makeNav("diagnosi", "Διάγνωση"),
+        isFolder: true,
+        children: [makeNav("exam", "Exam", 1)],
+      },
+      makeNav("rantevou", "Online ραντεβού"),
+    ];
+
+    render(<SectionIndexPage page={page} navigation={nav} />);
+
+    expect(
+      screen.getByText(
+        "Δεν είστε σίγουροι ποια εξέταση χρειάζεστε; Θα σας καθοδηγήσουμε στο ραντεβού.",
+      ),
+    ).toBeDefined();
+    expect(screen.getByRole("link", { name: "Κλείστε ραντεβού" })).toHaveAttribute(
+      "href",
+      "/el/rantevou",
+    );
   });
 
   it("passes the layout variant into the dense directory grid", () => {
@@ -745,7 +814,7 @@ describe("SectionIndexPage", () => {
       title: "Videos",
       slug: "videos",
     };
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("videos", "Videos"),
         isFolder: true,
@@ -756,6 +825,36 @@ describe("SectionIndexPage", () => {
     render(<SectionIndexPage page={page} navigation={nav} />);
 
     expect(document.querySelector('[data-index-variant="video-grid"]')).toBeTruthy();
+  });
+
+  it("renders tag filter pills derived from child navigation tags", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-hub",
+      layoutVariant: "section-index",
+      isFolder: true,
+      title: "Face surgery",
+      slug: "hub",
+    };
+    const ear = { name: "Ear", slug: "ear" };
+    const nose = { name: "Nose", slug: "nose" };
+    const nav: NavigationNodeDTO[] = [
+      {
+        ...makeNav("hub", "Face surgery"),
+        documentId: "nav-hub",
+        isFolder: true,
+        children: [
+          { ...makeNav("oto", "Otoplasty", 1), tags: [ear] },
+          { ...makeNav("rhino", "Rhinoplasty", 2), tags: [nose, ear] },
+        ],
+      },
+    ];
+
+    render(<SectionIndexPage page={page} navigation={nav} />);
+
+    expect(screen.getByRole("button", { name: "Όλα" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Ear" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Nose" })).toBeDefined();
   });
 });
 
@@ -783,7 +882,7 @@ describe("SectionHubPage", () => {
       makeNav("sygxroni-leitourgiki-rinoplastiki", "Modern Techniques"),
       makeNav("vimata-sti-xeirourgiki-rinoplastikis", "Surgical Steps"),
     ];
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("rinoplastiki", "Rhinoplasty"),
         documentId: "doc-rinoplastiki",
@@ -807,11 +906,136 @@ describe("SectionHubPage", () => {
     expect(screen.getByRole("heading", { name: "Introduction" })).toBeDefined();
     expect(screen.getByRole("link", { name: "Modern Techniques" })).toBeDefined();
     expect(screen.getByRole("link", { name: "Surgical Steps" })).toBeDefined();
+    expect(document.querySelector("main[data-hub-child='true']")).toBeTruthy();
+  });
+
+  it("renders sources footer on section-hub encyclopedia child when sources are set", () => {
+    const children = [makeNav("plasticheskaia-xeirourgia-otoplastika", "Otoplasty surgery")];
+    const nav: NavigationNodeDTO[] = [
+      {
+        ...makeNav("otoplastika-v-athinah", "Otoplasty"),
+        documentId: "doc-otoplastika-hub",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      locale: "ru",
+      documentId: "nav-plasticheskaia-xeirourgia-otoplastika",
+      layoutVariant: "encyclopedia-article",
+      isFolder: false,
+      title: "Otoplasty surgery",
+      slug: "plasticheskaia-xeirourgia-otoplastika",
+      parentPage: { documentId: "doc-otoplastika-hub", slug: null, title: null },
+      sources: '<p><a href="https://pubmed.ncbi.nlm.nih.gov/29153192/">PubMed</a></p>',
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    expect(screen.getByRole("region", { name: "Источники" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "PubMed" })).toBeDefined();
+  });
+
+  it("renders tab bar for blefaroplastika section-hub child pages", () => {
+    const children = [
+      makeNav("blefaroplastika-v-athinah", "Blepharoplasty"),
+      makeNav("lazernaia-blefaroplastika", "Laser blepharoplasty"),
+    ];
+    const nav: NavigationNodeDTO[] = [
+      {
+        ...makeNav("blefaroplastika-plastika-glaz", "Blepharoplasty hub"),
+        documentId: "doc-blefaroplastika-hub",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      locale: "ru",
+      documentId: "nav-blefaroplastika-v-athinah",
+      layoutVariant: "encyclopedia-article",
+      isFolder: false,
+      title: "Blepharoplasty",
+      slug: "blefaroplastika-v-athinah",
+      parentPage: { documentId: "doc-blefaroplastika-hub", slug: null, title: null },
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    expect(screen.getByRole("heading", { name: "Blepharoplasty" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "Laser blepharoplasty" })).toBeDefined();
+    expect(screen.queryByText(/←/)).toBeNull();
+  });
+
+  it("renders sources footer on blefaroplastika section-hub child when sources are set", () => {
+    const children = [makeNav("blefaroplastika-v-athinah", "Blepharoplasty")];
+    const nav: NavigationNodeDTO[] = [
+      {
+        ...makeNav("blefaroplastika-plastika-glaz", "Blepharoplasty hub"),
+        documentId: "doc-blefaroplastika-hub",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      locale: "ru",
+      documentId: "nav-blefaroplastika-v-athinah",
+      layoutVariant: "encyclopedia-article",
+      isFolder: false,
+      title: "Blepharoplasty",
+      slug: "blefaroplastika-v-athinah",
+      parentPage: { documentId: "doc-blefaroplastika-hub", slug: null, title: null },
+      sources:
+        '<p><a href="https://pubmed.ncbi.nlm.nih.gov/20300364/">Blepharoplasty overview</a></p>',
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    expect(screen.getByRole("region", { name: "Источники" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "Blepharoplasty overview" })).toBeDefined();
+  });
+
+  it("renders tab bar for otoplastika section-hub child pages", () => {
+    const children = [
+      makeNav("plasticheskaia-xeirourgia-otoplastika", "Otoplasty surgery"),
+      makeNav("novaia-otoplastika-bez-razrezov", "No-incision otoplasty"),
+      makeNav("voprosi-otvei-otoplastika", "FAQ"),
+    ];
+    const nav: NavigationNodeDTO[] = [
+      {
+        ...makeNav("otoplastika-v-athinah", "Otoplasty"),
+        documentId: "doc-otoplastika-hub",
+        isFolder: true,
+        layoutVariant: "section-hub",
+        children,
+      },
+    ];
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      documentId: "nav-plasticheskaia-xeirourgia-otoplastika",
+      layoutVariant: "encyclopedia-article",
+      isFolder: false,
+      title: "Otoplasty surgery",
+      slug: "plasticheskaia-xeirourgia-otoplastika",
+      parentPage: { documentId: "doc-otoplastika-hub", slug: null, title: null },
+    };
+
+    render(<SectionHubPage page={page} navigation={nav} />);
+
+    expect(screen.getByRole("heading", { name: "Otoplasty surgery" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "No-incision otoplasty" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "FAQ" })).toBeDefined();
+    expect(screen.queryByText(/←/)).toBeNull();
   });
 
   it("does not render a back-link for section-hub child page", () => {
     const children = [makeNav("child-a", "Child A"), makeNav("child-b", "Child B")];
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("folder", "Folder"),
         documentId: "doc-folder",
@@ -853,7 +1077,7 @@ describe("SectionHubPage", () => {
 
   it("marks the active child tab with aria-current", () => {
     const children = [makeNav("child-a", "Child A"), makeNav("child-b", "Child B")];
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("folder", "Folder"),
         documentId: "doc-folder",
@@ -880,7 +1104,7 @@ describe("SectionHubPage", () => {
 
   it("shows More dropdown when siblings exceed maxVisible", () => {
     const children = Array.from({ length: 12 }, (_, i) => makeNav(`child-${i}`, `Child ${i}`));
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("folder", "Folder"),
         documentId: "doc-folder",
@@ -911,7 +1135,7 @@ describe("SectionHubPage", () => {
       makeNav("child-b", "Child B"),
       makeNav("child-c", "Child C"),
     ];
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("folder", "Folder"),
         documentId: "doc-folder",
@@ -940,7 +1164,7 @@ describe("SectionHubPage", () => {
 
   it("renders sections below the tab bar for section-hub child", () => {
     const children = [makeNav("child-a", "Child A")];
-    const nav = [
+    const nav: NavigationNodeDTO[] = [
       {
         ...makeNav("folder", "Folder"),
         documentId: "doc-folder",
@@ -1012,16 +1236,24 @@ describe("PageBody", () => {
       ],
     };
 
-    render(<PageBody page={page} />);
+    const { rerender } = render(<PageBody page={page} />);
 
-    expect(document.querySelector("[data-service-layout='true']")).toBeTruthy();
+    let main = document.querySelector("[data-service-layout='true']");
+    expect(main).toBeTruthy();
+    expect(main?.getAttribute("data-hub-child")).toBeNull();
+
+    rerender(<PageBody page={page} hubChild />);
+    main = document.querySelector("[data-service-layout='true']");
+    expect(main?.getAttribute("data-hub-child")).toBe("true");
+
     expect(screen.getByText("Service content").closest("div")?.getAttribute("data-variant")).toBe(
       "service",
     );
-    expect(screen.getByRole("link", { name: "What to expect" })).toHaveAttribute(
-      "href",
-      "#section-1",
-    );
+    const serviceAside = document.querySelector("[data-service-layout='true'] aside");
+    expect(serviceAside).toBeTruthy();
+    expect(
+      within(serviceAside as HTMLElement).getByRole("link", { name: "What to expect" }),
+    ).toHaveAttribute("href", "#section-1");
   });
 
   it("renders reference article body with TOC sidebar", () => {
@@ -1056,11 +1288,15 @@ describe("PageBody", () => {
     expect(screen.getByText("Reference body").closest("div")?.getAttribute("data-variant")).toBe(
       "encyclopedia",
     );
-    const toc = screen.getByRole("navigation", { name: "Περιεχόμενα" });
-    expect(within(toc).getByRole("link", { name: "Diagnosis" })).toHaveAttribute(
-      "href",
-      "#diagnosis",
-    );
+    const contentsNavs = screen.getAllByRole("navigation", { name: "Περιεχόμενα" });
+    expect(contentsNavs.length).toBeGreaterThanOrEqual(1);
+    const contentsNavPrimary = contentsNavs[0];
+    expect(contentsNavPrimary).toBeDefined();
+    expect(
+      within(contentsNavPrimary as HTMLElement)
+        .getByRole("link", { name: "Diagnosis" })
+        .getAttribute("href"),
+    ).toBe("#diagnosis");
     expect(screen.getByRole("link", { name: "Nasal guide" })).toBeDefined();
   });
 

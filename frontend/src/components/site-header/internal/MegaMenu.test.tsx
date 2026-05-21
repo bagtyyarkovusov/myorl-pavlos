@@ -20,6 +20,7 @@ const mockItem: NavigationNodeDTO = {
   layoutVariant: "standard",
   parentPage: null,
   externalUrl: null,
+  tags: [],
   children: [
     {
       documentId: "child-1",
@@ -36,6 +37,7 @@ const mockItem: NavigationNodeDTO = {
       layoutVariant: "standard",
       parentPage: null,
       externalUrl: null,
+      tags: [],
       children: [],
     },
     {
@@ -53,6 +55,7 @@ const mockItem: NavigationNodeDTO = {
       layoutVariant: "standard",
       parentPage: null,
       externalUrl: null,
+      tags: [],
       children: [
         {
           documentId: "grandchild-1",
@@ -69,6 +72,7 @@ const mockItem: NavigationNodeDTO = {
           layoutVariant: "standard",
           parentPage: null,
           externalUrl: null,
+          tags: [],
           children: [],
         },
         {
@@ -86,6 +90,7 @@ const mockItem: NavigationNodeDTO = {
           layoutVariant: "standard",
           parentPage: null,
           externalUrl: null,
+          tags: [],
           children: [],
         },
       ],
@@ -177,6 +182,7 @@ describe("MegaMenu", () => {
           layoutVariant: "standard",
           parentPage: null,
           externalUrl: null,
+          tags: [],
           children: [],
         },
       ],

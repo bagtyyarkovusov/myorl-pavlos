@@ -55,11 +55,15 @@
   padding: 8px 14px;
   font-size: 0.85rem;
   white-space: nowrap;
-  transition: border-color var(--motion-duration-fast) var(--motion-ease-default);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-default),
+    background-color var(--motion-duration-fast) var(--motion-ease-default),
+    color var(--motion-duration-fast) var(--motion-ease-default);
 }
 
 .inline-pill:hover {
   border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .gallery-grid {

@@ -38,7 +38,9 @@ function ServiceArticlePage({ page }: PageLayoutProps) {
         breadcrumbs={buildBreadcrumbs(page, t.home)}
         cta={{ label: t.bookConsultation, href: `/${page.locale}/appointment` }}
       />
-      <PageBody page={page} />
+      <div className="container">
+        <PageBody page={page} />
+      </div>
     </>
   );
 }
@@ -55,7 +57,9 @@ function ReferenceArticlePage({ page }: PageLayoutProps) {
         breadcrumbs={buildBreadcrumbs(page, t.home)}
         metadata={buildArticleMetadata(page, variant, t)}
       />
-      <PageBody page={page} />
+      <div className="container">
+        <PageBody page={page} />
+      </div>
     </>
   );
 }

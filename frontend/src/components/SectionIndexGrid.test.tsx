@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 
 import { SectionIndexGrid } from "./SectionIndexGrid";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
@@ -33,6 +33,7 @@ function makeChild(
       ? { url: opts.imageUrl, alternativeText: label, width: 1200, height: 800 }
       : null,
     imageCenter: null,
+    tags: [],
     href: `/el/${slug}`,
     children: [],
   };
@@ -129,36 +130,39 @@ describe("SectionIndexGrid variants", () => {
     expect(screen.getByLabelText("Play video")).toBeDefined();
   });
 
-  it("shows the first 12 items and a pagination control when more children exist", () => {
-    const children = Array.from({ length: 13 }, (_, index) =>
+  it("shows the first 12 list items and a pagination control when more children exist", () => {
+    const children = Array.from({ length: 16 }, (_, index) =>
       makeChild(`item-${index + 1}`, `Item ${index + 1}`, { menuIndex: index + 1 }),
     );
 
     render(<SectionIndexGrid items={children} locale="el" variant="section-index" />);
 
-    expect(screen.getAllByRole("link")).toHaveLength(12);
-    expect(screen.getByRole("button", { name: "Load more" })).toBeDefined();
-    expect(screen.queryByRole("link", { name: /Item 13/ })).toBeNull();
+    expect(screen.getAllByRole("link")).toHaveLength(15);
+    expect(screen.getByRole("button", { name: "Περισσότερα (+1)" })).toBeDefined();
+    expect(screen.queryByRole("link", { name: /Item 16/ })).toBeNull();
   });
 
   it("loads the next page of children on demand", () => {
-    const children = Array.from({ length: 13 }, (_, index) =>
+    const children = Array.from({ length: 16 }, (_, index) =>
       makeChild(`item-${index + 1}`, `Item ${index + 1}`, { menuIndex: index + 1 }),
     );
 
     render(<SectionIndexGrid items={children} locale="el" variant="section-index" />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Load more" }));
+    fireEvent.click(screen.getByRole("button", { name: "Περισσότερα (+1)" }));
 
-    expect(screen.getAllByRole("link")).toHaveLength(13);
-    expect(screen.getByRole("link", { name: /Item 13/ })).toHaveAttribute("href", "/el/item-13");
+    expect(screen.getAllByRole("link")).toHaveLength(16);
+    expect(screen.getByRole("link", { name: /Item 16/ })).toHaveAttribute("href", "/el/item-16");
   });
 
   it("renders an empty state with a back link when there are no children", () => {
     render(<SectionIndexGrid items={[]} locale="el" variant="section-index" backHref="/el" />);
 
-    expect(screen.getByText("No pages are available yet.")).toBeDefined();
-    expect(screen.getByRole("link", { name: "Back to overview" })).toHaveAttribute("href", "/el");
+    expect(screen.getByText("Δεν υπάρχουν ακόμη διαθέσιμες σελίδες.")).toBeDefined();
+    expect(screen.getByRole("link", { name: "Επιστροφή στην επισκόπηση" })).toHaveAttribute(
+      "href",
+      "/el",
+    );
   });
 });
 
@@ -186,9 +190,74 @@ describe("SectionIndexGrid filtering", () => {
   it("renders tag filter buttons when tags are provided", () => {
     render(<SectionIndexGrid items={items} locale="el" tags={allTags} tagMap={tagMap} />);
 
+    expect(screen.getByRole("button", { name: "Όλα" })).toBeDefined();
     expect(screen.getByRole("button", { name: "Nose" })).toBeDefined();
     expect(screen.getByRole("button", { name: "Ear" })).toBeDefined();
     expect(screen.getByRole("button", { name: "Throat" })).toBeDefined();
+  });
+
+  it("hides secondary filters behind a disclosure when more than four tags exist", () => {
+    const manyTags: TagDTO[] = [
+      { name: "One", slug: "one" },
+      { name: "Two", slug: "two" },
+      { name: "Three", slug: "three" },
+      { name: "Four", slug: "four" },
+      { name: "Five", slug: "five" },
+    ];
+
+    render(<SectionIndexGrid items={items} locale="el" tags={manyTags} tagMap={{}} />);
+
+    const primaryToolbar = screen.getAllByRole("toolbar")[0]!;
+    expect(within(primaryToolbar).getByRole("button", { name: "Όλα" })).toBeDefined();
+    expect(within(primaryToolbar).getByRole("button", { name: "One" })).toBeDefined();
+    expect(within(primaryToolbar).queryByRole("button", { name: "Five" })).toBeNull();
+    expect(screen.getByText("Περισσότερα φίλτρα")).toBeDefined();
+  });
+
+  it("renders featured cards and a compact list for section-index hubs", () => {
+    const children = Array.from({ length: 5 }, (_, index) =>
+      makeChild(`item-${index + 1}`, `Item ${index + 1}`, {
+        menuIndex: index + 1,
+        imageUrl: "/img/item.jpg",
+      }),
+    );
+
+    render(<SectionIndexGrid items={children} locale="el" variant="section-index" />);
+
+    expect(screen.getByText("Ξεκινήστε εδώ")).toBeDefined();
+    expect(screen.getByText("Όλες οι εξετάσεις")).toBeDefined();
+    expect(screen.getAllByRole("link")).toHaveLength(5);
+    expect(document.querySelector('[class*="index-list--directory-list"]')).toBeTruthy();
+    expect(document.querySelectorAll('[class*="index-row-link--directory"]')).toHaveLength(2);
+  });
+
+  it("renders directory-list class and placeholder media for text-only items", () => {
+    const children = [
+      ...Array.from({ length: 3 }, (_, index) =>
+        makeChild(`featured-${index + 1}`, `Featured ${index + 1}`, {
+          menuIndex: index + 1,
+          imageUrl: "/img/featured.jpg",
+        }),
+      ),
+      makeChild("text-only", "Text Only Exam", {
+        menuIndex: 4,
+        excerpt: "No image available",
+      }),
+    ];
+
+    render(<SectionIndexGrid items={children} locale="el" variant="section-index" />);
+
+    const directoryList = document.querySelector('[class*="index-list--directory-list"]');
+    expect(directoryList).toBeTruthy();
+
+    const textOnlyLink = screen.getByRole("link", { name: /Text Only Exam/i });
+    expect(textOnlyLink.className).toMatch(/index-row-link--directory/);
+
+    const placeholder = textOnlyLink.querySelector(
+      '[data-media-variant="directory-list"][data-media-placeholder]',
+    );
+    expect(placeholder).toBeTruthy();
+    expect(placeholder?.querySelector("img")).toBeNull();
   });
 
   it("shows all items when no tag is selected", () => {
@@ -218,6 +287,29 @@ describe("SectionIndexGrid filtering", () => {
     expect(links[1]).toHaveAttribute("href", "/el/snoring");
   });
 
+  it("shows a localized empty state when a filter matches nothing", () => {
+    render(<SectionIndexGrid items={items} locale="el" tags={allTags} tagMap={{}} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Ear" }));
+
+    expect(screen.getByText("Δεν βρέθηκαν αποτελέσματα για αυτό το φίλτρο.")).toBeDefined();
+    expect(screen.queryByRole("link")).toBeNull();
+  });
+
+  it('clears the active tag via the "Όλα" chip or clear action', () => {
+    render(<SectionIndexGrid items={items} locale="el" tags={allTags} tagMap={tagMap} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Ear" }));
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+
+    fireEvent.click(screen.getByRole("button", { name: "Όλα" }));
+    expect(screen.getAllByRole("link")).toHaveLength(4);
+
+    fireEvent.click(screen.getByRole("button", { name: "Nose" }));
+    fireEvent.click(screen.getByRole("button", { name: "Εμφάνιση όλων" }));
+    expect(screen.getAllByRole("link")).toHaveLength(4);
+  });
+
   it("deselects tag on second click to show all items again", () => {
     render(<SectionIndexGrid items={items} locale="el" tags={allTags} tagMap={tagMap} />);
 
@@ -226,6 +318,30 @@ describe("SectionIndexGrid filtering", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Ear" }));
     expect(screen.getAllByRole("link")).toHaveLength(4);
+  });
+
+  it("resets pagination when the active filter changes", () => {
+    const manyNoseItems = Array.from({ length: 13 }, (_, index) =>
+      makeChild(`nose-${index + 1}`, `Nose ${index + 1}`, { menuIndex: index + 1 }),
+    );
+    const manyTagMap = Object.fromEntries(manyNoseItems.map((item) => [item.documentId, ["nose"]]));
+    manyTagMap["doc-otitis"] = ["ear"];
+
+    render(
+      <SectionIndexGrid
+        items={[...manyNoseItems, makeChild("otitis", "Otitis", { menuIndex: 99 })]}
+        locale="el"
+        tags={allTags}
+        tagMap={manyTagMap}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Nose" }));
+    fireEvent.click(screen.getByRole("button", { name: "Περισσότερα (+1)" }));
+    expect(screen.getAllByRole("link")).toHaveLength(13);
+
+    fireEvent.click(screen.getByRole("button", { name: "Ear" }));
+    expect(screen.getAllByRole("link")).toHaveLength(1);
   });
 
   it("does not render filter bar when no tags are provided", () => {

@@ -31,6 +31,7 @@ function makePage(overrides: Partial<NavigationInput>): NavigationInput {
     featuredImage: overrides.featuredImage ?? null,
     imageCenter: overrides.imageCenter ?? null,
     footerCategory: overrides.footerCategory ?? "none",
+    tags: overrides.tags ?? [],
   };
 }
 

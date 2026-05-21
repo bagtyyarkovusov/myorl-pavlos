@@ -2,8 +2,9 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { SiteHeaderClient } from "../SiteHeaderClient";
+import type { NavigationNodeDTO } from "@/lib/cms/types";
 
-const mockNavigation = [
+const mockNavigation: NavigationNodeDTO[] = [
   {
     documentId: "home",
     locale: "el" as const,
@@ -19,6 +20,7 @@ const mockNavigation = [
     layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
+    tags: [],
     children: [],
   },
   {
@@ -36,6 +38,7 @@ const mockNavigation = [
     layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
+    tags: [],
     children: [
       {
         documentId: "consultation",
@@ -52,6 +55,7 @@ const mockNavigation = [
         layoutVariant: "standard",
         parentPage: null,
         externalUrl: null,
+        tags: [],
         children: [],
       },
     ],
@@ -71,6 +75,7 @@ const mockNavigation = [
     layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
+    tags: [],
     children: [],
   },
 ];

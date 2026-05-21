@@ -245,6 +245,7 @@ function makeNavNode(slug: string, navLabel: string, menuIndex = 0): NavigationN
     excerpt: null,
     featuredImage: null,
     imageCenter: null,
+    tags: [],
     href: `/el/${slug}`,
     children: [],
   };

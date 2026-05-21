@@ -2,8 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { DesktopNav } from "./DesktopNav";
+import type { NavigationNodeDTO } from "@/lib/cms/types";
 
-const items = [
+const items: NavigationNodeDTO[] = [
   {
     documentId: "item-1",
     locale: "el" as const,
@@ -19,6 +20,7 @@ const items = [
     layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
+    tags: [],
     children: [],
   },
   {
@@ -36,6 +38,7 @@ const items = [
     layoutVariant: "standard",
     parentPage: null,
     externalUrl: null,
+    tags: [],
     children: [
       {
         documentId: "child-1",
@@ -52,6 +55,7 @@ const items = [
         layoutVariant: "standard",
         parentPage: null,
         externalUrl: null,
+        tags: [],
         children: [],
       },
     ],

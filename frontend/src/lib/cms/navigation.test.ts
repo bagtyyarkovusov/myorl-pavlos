@@ -3,6 +3,7 @@ import { buildNavigationTree } from "./navigation";
 import type { NavigationInput } from "./types";
 
 function makePage(overrides: Partial<NavigationInput> = {}): NavigationInput {
+  const { tags: overrideTags, ...rest } = overrides;
   return {
     documentId: "default-id",
     locale: "el",
@@ -17,7 +18,8 @@ function makePage(overrides: Partial<NavigationInput> = {}): NavigationInput {
     isFolder: false,
     layoutVariant: "standard",
     excerpt: null,
-    ...overrides,
+    ...rest,
+    tags: overrideTags ?? [],
   };
 }
 

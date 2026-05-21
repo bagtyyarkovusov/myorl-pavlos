@@ -6,12 +6,14 @@ during the MODX import to the new ``section-hub`` layout variant. These are
 MODX template-20 pages — small hub folders (2–6 children) that should render
 children as a horizontal tab bar instead of an article layout.
 
-Affected pages (10 total across both locales)::
+Affected pages (MODX template-20 hub folders)::
 
-    el: rinoplastiki, skoliosi-rinikou-diafragmatos-stravo-dafragma,
+    el: rinoplastiki, otoplastika-v-athinah, blepharoplasty, roxalito-kai-apnoia,
+        skoliosi-rinikou-diafragmatos-stravo-dafragma, ypertrofia-rinikon-kogxon,
         metamosxeusi-mallion, pathiseis-stomatos, parotida-ypognathios-adenas
-    ru: rinoplastiki, skoliosi-rinikou-diafragmatos-stravo-dafragma,
-        metamosxeusi-mallion, pathiseis-stomatos, ypertrofia-rinikon-kogxon
+    ru: rinoplastiki, otoplastika-v-athinah, blefaroplastika-plastika-glaz,
+        skoliosi-rinikou-diafragmatos-stravo-dafragma, metamosxeusi-mallion,
+        pathiseis-stomatos, ypertrofia-rinikon-kogxon
 
 Usage::
 
@@ -42,11 +44,17 @@ TO_VARIANT = "section-hub"
 
 AFFECTED = [
     ("el", "rinoplastiki"),
+    ("el", "otoplastika-v-athinah"),
+    ("el", "blepharoplasty"),
+    ("el", "roxalito-kai-apnoia"),
     ("el", "skoliosi-rinikou-diafragmatos-stravo-dafragma"),
+    ("el", "ypertrofia-rinikon-kogxon"),
     ("el", "metamosxeusi-mallion"),
     ("el", "pathiseis-stomatos"),
     ("el", "parotida-ypognathios-adenas"),
     ("ru", "rinoplastiki"),
+    ("ru", "otoplastika-v-athinah"),
+    ("ru", "blefaroplastika-plastika-glaz"),
     ("ru", "skoliosi-rinikou-diafragmatos-stravo-dafragma"),
     ("ru", "metamosxeusi-mallion"),
     ("ru", "pathiseis-stomatos"),
@@ -67,7 +75,7 @@ def preview(db_path: str) -> None:
     cur = conn.execute(
         "SELECT document_id, locale, slug, layout_variant, is_folder "
         "FROM pages WHERE published_at IS NOT NULL "
-        "ORDER BY locale, slug"
+        "ORDER BY locale, slug",
     )
     rows = [dict(r) for r in cur.fetchall()]
     conn.close()
@@ -80,10 +88,22 @@ def preview(db_path: str) -> None:
     print(f"Found {len(affected_rows)} affected page(s):")
     for r in affected_rows:
         current = r["layout_variant"]
-        status = "OK" if current == TO_VARIANT else f"will change: {current} → {TO_VARIANT}"
+        folder_ok = bool(r["is_folder"])
+        variant_ok = current == TO_VARIANT
+        if variant_ok and folder_ok:
+            status = "OK"
+        else:
+            parts = []
+            if not variant_ok:
+                parts.append(f"{current} → {TO_VARIANT}")
+            if not folder_ok:
+                parts.append("is_folder → true")
+            status = ", ".join(parts)
         print(f"  [{r['locale']}] {r['slug']}  ({status})")
 
-    already_ok = sum(1 for r in affected_rows if r["layout_variant"] == TO_VARIANT)
+    already_ok = sum(
+        1 for r in affected_rows if r["layout_variant"] == TO_VARIANT and bool(r["is_folder"])
+    )
     needs_change = len(affected_rows) - already_ok
     print(f"\n{needs_change} row(s) need updating, {already_ok} already at target.")
 
@@ -93,19 +113,16 @@ def apply(db_path: str) -> None:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
 
-    # Read current state of ALL rows for the backup (not just affected)
+    affected_set = {(loc, slug) for loc, slug in AFFECTED}
     cur = conn.execute(
-        "SELECT id, document_id, locale, slug, layout_variant "
-        "FROM pages WHERE published_at IS NOT NULL "
-        "AND layout_variant = ?",
-        (FROM_VARIANT,),
+        "SELECT id, document_id, locale, slug, layout_variant, is_folder "
+        "FROM pages WHERE published_at IS NOT NULL",
     )
-    snapshot = [dict(r) for r in cur.fetchall()]
-
-    # Filter to affected
     targets = [
-        r for r in snapshot
-        if (r["locale"], r["slug"]) in {(loc, slug) for loc, slug in AFFECTED}
+        dict(r)
+        for r in cur.fetchall()
+        if (r["locale"], r["slug"]) in affected_set
+        and (r["layout_variant"] != TO_VARIANT or not bool(r["is_folder"]))
     ]
 
     if not targets:
@@ -118,11 +135,11 @@ def apply(db_path: str) -> None:
     backup_file.write_text(json.dumps(targets, indent=2, ensure_ascii=False), "utf-8")
     print(f"Backup saved to {backup_file}")
 
-    # Update
+    # Update layout + folder flag for hub pages
     ids = [r["id"] for r in targets]
     placeholders = ",".join("?" for _ in ids)
     conn.execute(
-        f"UPDATE pages SET layout_variant = ? WHERE id IN ({placeholders})",
+        f"UPDATE pages SET layout_variant = ?, is_folder = 1 WHERE id IN ({placeholders})",
         [TO_VARIANT] + ids,
     )
     conn.commit()
@@ -130,7 +147,12 @@ def apply(db_path: str) -> None:
 
     print(f"Updated {len(targets)} row(s):")
     for r in targets:
-        print(f"  [{r['locale']}] {r['slug']}: {FROM_VARIANT} → {TO_VARIANT}")
+        changes: list[str] = []
+        if r["layout_variant"] != TO_VARIANT:
+            changes.append(f"{r['layout_variant']} → {TO_VARIANT}")
+        if not bool(r["is_folder"]):
+            changes.append("is_folder → true")
+        print(f"  [{r['locale']}] {r['slug']}: {', '.join(changes)}")
 
 
 def rollback(db_path: str) -> None:
@@ -148,8 +170,8 @@ def rollback(db_path: str) -> None:
 
     for r in rows:
         conn.execute(
-            "UPDATE pages SET layout_variant = ? WHERE id = ?",
-            (r["layout_variant"], r["id"]),
+            "UPDATE pages SET layout_variant = ?, is_folder = ? WHERE id = ?",
+            (r["layout_variant"], int(bool(r.get("is_folder", 0))), r["id"]),
         )
 
     conn.commit()

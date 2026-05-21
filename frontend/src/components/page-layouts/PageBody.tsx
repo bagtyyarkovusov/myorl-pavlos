@@ -9,17 +9,19 @@ type PageBodyProps = {
   page: PageDTO;
   /** Tighter vertical gaps between intro, CMS sections, and footers (section-hub pages). */
   proseStackGap?: "default" | "compact";
+  /** When true, page sits under section-hub chrome (tab bar): tighter stacks and TOC scroll offsets. */
+  hubChild?: boolean;
 };
 
-export function PageBody({ page, proseStackGap = "default" }: PageBodyProps) {
+export function PageBody({ page, proseStackGap = "default", hubChild = false }: PageBodyProps) {
   if (page.layoutVariant === "service-article") {
-    return <ServiceArticleBody page={page} />;
+    return <ServiceArticleBody page={page} hubChild={hubChild} />;
   }
   if (
     page.layoutVariant === "encyclopedia-article" ||
     page.layoutVariant === "specialized-article"
   ) {
-    return <ReferenceArticleBody page={page} />;
+    return <ReferenceArticleBody page={page} hubChild={hubChild} />;
   }
   return <DefaultPageBody page={page} proseStackGap={proseStackGap} />;
 }
@@ -51,7 +53,7 @@ function DefaultPageBody({ page, proseStackGap }: DefaultPageBodyProps) {
   );
 }
 
-function ServiceArticleBody({ page }: PageBodyProps) {
+function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
   const t = getPageStrings(page.locale);
   const sectionLinks = page.sections
     .map((section, index) => ({
@@ -60,9 +62,28 @@ function ServiceArticleBody({ page }: PageBodyProps) {
     }))
     .filter((link) => link.label.trim().length > 0);
 
+  const mobileSectionNav =
+    sectionLinks.length > 0 ? (
+      <details className={styles["service-mobile-panel"]}>
+        <summary>{t.sections}</summary>
+        <nav aria-label={t.sections}>
+          {sectionLinks.map((link) => (
+            <a href={`#${link.id}`} key={link.id}>
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </details>
+    ) : null;
+
   return (
     <>
-      <main className={styles["service-layout"]} data-service-layout="true">
+      {mobileSectionNav}
+      <main
+        className={styles["service-layout"]}
+        data-hub-child={hubChild ? "true" : undefined}
+        data-service-layout="true"
+      >
         <article className={styles["service-layout__content"]}>
           <CmsHtml html={page.content} variant="service" />
           {page.sections.map((section, index) => (
@@ -104,7 +125,7 @@ function ServiceArticleBody({ page }: PageBodyProps) {
   );
 }
 
-function ReferenceArticleBody({ page }: PageBodyProps) {
+function ReferenceArticleBody({ page, hubChild = false }: PageBodyProps) {
   const t = getPageStrings(page.locale);
   const variant = page.layoutVariant === "specialized-article" ? "specialized" : "encyclopedia";
   const headings = extractHeadings(page.content);
@@ -114,9 +135,28 @@ function ReferenceArticleBody({ page }: PageBodyProps) {
     (section) => section.__component !== "sections.linked-resources",
   );
 
+  const mobileToc =
+    headings.length > 0 ? (
+      <details className={styles["reference-mobile-panel"]}>
+        <summary>{t.contents}</summary>
+        <nav aria-label={t.contents}>
+          {headings.map((heading) => (
+            <a href={`#${heading.id}`} key={heading.id}>
+              {heading.text}
+            </a>
+          ))}
+        </nav>
+      </details>
+    ) : null;
+
   return (
     <>
-      <main className={styles["reference-layout"]} data-article-layout={variant}>
+      {mobileToc}
+      <main
+        className={styles["reference-layout"]}
+        data-article-layout={variant}
+        data-hub-child={hubChild ? "true" : undefined}
+      >
         <article className={styles["reference-layout__content"]}>
           <CmsHtml html={contentWithHeadingIds} variant={variant} />
           {bodySections.map((section, index) => (
@@ -134,6 +174,12 @@ function ReferenceArticleBody({ page }: PageBodyProps) {
               className={styles["note-block"]}
               variant={variant}
             />
+          ) : null}
+          {page.sources ? (
+            <section className={styles["sources-footer"]} aria-label={t.sources}>
+              <p className={styles["sources-footer__label"]}>{t.sources}</p>
+              <CmsHtml html={page.sources} className={styles["sources-block"]} variant={variant} />
+            </section>
           ) : null}
         </article>
         <aside className={styles["reference-layout__sidebar"]}>
@@ -163,26 +209,8 @@ function ReferenceArticleBody({ page }: PageBodyProps) {
               ))}
             </section>
           ) : null}
-          {page.sources ? (
-            <section className={styles["reference-panel"]} aria-label={t.sources}>
-              <p>{t.sources}</p>
-              <CmsHtml html={page.sources} variant={variant} />
-            </section>
-          ) : null}
         </aside>
       </main>
-      <details className={styles["reference-mobile-panel"]}>
-        <summary>{t.articleDetails}</summary>
-        {headings.length > 0 ? (
-          <nav aria-label={t.articleDetails}>
-            {headings.map((heading) => (
-              <a href={`#${heading.id}`} key={heading.id}>
-                {heading.text}
-              </a>
-            ))}
-          </nav>
-        ) : null}
-      </details>
     </>
   );
 }

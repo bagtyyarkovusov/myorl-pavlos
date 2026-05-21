@@ -24,6 +24,7 @@ function makeNode(
     isFolder: opts.isFolder ?? false,
     layoutVariant: "standard",
     excerpt: null,
+    tags: [],
     href: `/el/${slug}`,
     children: opts.children ?? [],
   };

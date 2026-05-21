@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-12T00:00:00.000Z",
+  "title": "Design System: myORL",
+  "extensions": {
+    "colorMeta": {
+      "bone": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "#f6f8fb",
+        "tonalRamp": [
+          "oklch(18% 0.005 252)",
+          "oklch(28% 0.005 252)",
+          "oklch(38% 0.005 252)",
+          "oklch(48% 0.005 252)",
+          "oklch(58% 0.005 252)",
+          "oklch(68% 0.005 252)",
+          "oklch(80% 0.005 252)",
+          "oklch(93% 0.005 252)"
+        ]
+      },
+      "bone-50": {
+        "role": "neutral",
+        "displayName": "Bone 50",
+        "canonical": "#fbfcfe",
+        "tonalRamp": [
+          "oklch(18% 0.003 252)",
+          "oklch(28% 0.003 252)",
+          "oklch(38% 0.003 252)",
+          "oklch(48% 0.003 252)",
+          "oklch(58% 0.003 252)",
+          "oklch(68% 0.003 252)",
+          "oklch(80% 0.003 252)",
+          "oklch(95% 0.003 252)"
+        ]
+      },
+      "bone-200": {
+        "role": "neutral",
+        "displayName": "Bone 200",
+        "canonical": "#eaeef5",
+        "tonalRamp": [
+          "oklch(18% 0.006 252)",
+          "oklch(28% 0.006 252)",
+          "oklch(38% 0.006 252)",
+          "oklch(48% 0.006 252)",
+          "oklch(58% 0.006 252)",
+          "oklch(68% 0.006 252)",
+          "oklch(80% 0.006 252)",
+          "oklch(90% 0.006 252)"
+        ]
+      },
+      "bone-300": {
+        "role": "neutral",
+        "displayName": "Bone 300",
+        "canonical": "#d7dfeb",
+        "tonalRamp": [
+          "oklch(18% 0.008 252)",
+          "oklch(28% 0.008 252)",
+          "oklch(38% 0.008 252)",
+          "oklch(48% 0.008 252)",
+          "oklch(58% 0.008 252)",
+          "oklch(68% 0.008 252)",
+          "oklch(80% 0.008 252)",
+          "oklch(88% 0.008 252)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0f2a4a",
+        "tonalRamp": [
+          "oklch(15% 0.03 255)",
+          "oklch(22% 0.04 255)",
+          "oklch(30% 0.04 255)",
+          "oklch(40% 0.04 255)",
+          "oklch(50% 0.04 255)",
+          "oklch(60% 0.04 255)",
+          "oklch(72% 0.04 255)",
+          "oklch(85% 0.04 255)"
+        ]
+      },
+      "stone": {
+        "role": "neutral",
+        "displayName": "Stone",
+        "canonical": "#5a6b7e",
+        "tonalRamp": [
+          "oklch(18% 0.01 250)",
+          "oklch(28% 0.01 250)",
+          "oklch(38% 0.01 250)",
+          "oklch(48% 0.01 250)",
+          "oklch(58% 0.01 250)",
+          "oklch(68% 0.01 250)",
+          "oklch(80% 0.01 250)",
+          "oklch(92% 0.01 250)"
+        ]
+      },
+      "trust": {
+        "role": "primary",
+        "displayName": "Trust",
+        "canonical": "#2563a8",
+        "tonalRamp": [
+          "oklch(18% 0.06 258)",
+          "oklch(28% 0.10 258)",
+          "oklch(38% 0.13 258)",
+          "oklch(48% 0.13 258)",
+          "oklch(55% 0.13 258)",
+          "oklch(65% 0.10 258)",
+          "oklch(78% 0.06 258)",
+          "oklch(90% 0.02 258)"
+        ]
+      },
+      "teal": {
+        "role": "secondary",
+        "displayName": "Teal",
+        "canonical": "#0e7c7b",
+        "tonalRamp": [
+          "oklch(18% 0.04 195)",
+          "oklch(28% 0.06 195)",
+          "oklch(38% 0.08 195)",
+          "oklch(48% 0.08 195)",
+          "oklch(55% 0.08 195)",
+          "oklch(65% 0.06 195)",
+          "oklch(78% 0.04 195)",
+          "oklch(90% 0.02 195)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero titles, section headings, and card titles only. Never below 1.25rem."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All body copy, UI text, descriptions. Greek and Russian."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Kickers, eyebrow text, meta labels, media frame badges. Uppercase mono."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-ink-soft",
+        "value": "0 0 0 rgba(15, 42, 74, 0.08)",
+        "purpose": "Button rest state. Invisible transition target."
+      },
+      {
+        "name": "shadow-accent",
+        "value": "0 6px 22px rgba(37, 99, 168, 0.2)",
+        "purpose": "Primary button hover glow."
+      },
+      {
+        "name": "hero-media",
+        "value": "0 18px 44px rgba(15, 42, 74, 0.11)",
+        "purpose": "Hero image frame. Deep and diffuse."
+      },
+      {
+        "name": "kicker-pill",
+        "value": "0 1px 8px rgba(15, 42, 74, 0.05)",
+        "purpose": "Hero eyebrow tag."
+      },
+      {
+        "name": "scroll-to-top",
+        "value": "0 12px 28px rgba(15, 42, 74, 0.25)",
+        "purpose": "Floating scroll-to-top button."
+      },
+      {
+        "name": "megamenu",
+        "value": "0 16px 48px rgba(15, 42, 74, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+        "purpose": "Megamenu dropdown surface."
+      }
+    ],
+    "motion": [
+      {
+        "name": "motion-duration-fast",
+        "value": "150ms",
+        "purpose": "Hover, focus, and color transitions."
+      },
+      {
+        "name": "motion-duration-default",
+        "value": "200ms",
+        "purpose": "Default transition duration for most interactive elements."
+      },
+      {
+        "name": "motion-duration-standard",
+        "value": "500ms",
+        "purpose": "Section entrance animations and media scale transitions."
+      },
+      {
+        "name": "motion-ease-default",
+        "value": "ease",
+        "purpose": "Default easing curve paired with duration tokens."
+      },
+      {
+        "name": "motion-ease-out",
+        "value": "ease-out",
+        "purpose": "Easing for state transitions where smooth deceleration is desired."
+      },
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Hero entrance and section reveals."
+      }
+    ],
+    "breakpoints": [
+      { "name": "base", "value": "560px" },
+      { "name": "tablet", "value": "720px" },
+      { "name": "tablet-landscape", "value": "768px" },
+      { "name": "mid-large", "value": "860px" },
+      { "name": "desktop", "value": "1024px" },
+      { "name": "wide", "value": "1180px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main call-to-action. Ink background, Bone 50 text, fully rounded pill.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">ΚΛΕΙΣΤΕ ΡΑΝΤΕΒΟΥ</a>",
+      "css": ".ds-btn-primary{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border-radius:var(--radius-full);border:1px solid transparent;padding:0 20px;background:#0f2a4a;color:#fbfcfe;font-family:'Source Sans 3',ui-sans-serif,system-ui,sans-serif;font-size:0.875rem;font-weight:600;white-space:nowrap;text-decoration:none;transition:all var(--motion-duration-fast) var(--motion-ease-default);cursor:pointer}.ds-btn-primary:hover,.ds-btn-primary:focus-visible{background:#2563a8;transform:translateY(-1px);box-shadow:0 6px 22px rgba(37,99,168,0.2)}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting action. Transparent with Ink border, sits alongside primary without competing.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">ΜΑΘΕΤΕ ΠΕΡΙΣΣΟΤΕΡΑ</a>",
+      "css": ".ds-btn-secondary{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border-radius:var(--radius-full);border:1px solid rgba(15,42,74,0.2);padding:0 20px;background:transparent;color:#0f2a4a;font-family:'Source Sans 3',ui-sans-serif,system-ui,sans-serif;font-size:0.875rem;font-weight:600;white-space:nowrap;text-decoration:none;transition:all var(--motion-duration-fast) var(--motion-ease-default);cursor:pointer}.ds-btn-secondary:hover,.ds-btn-secondary:focus-visible{border-color:#2563a8;background:#e4edf8;color:#17406f;transform:translateY(-1px)}"
+    },
+    {
+      "name": "Card (Focused)",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Default card density. Image above, body below, full-card click target. Lifts 2px on hover.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-media\"><svg viewBox=\"0 0 320 180\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"320\" height=\"180\" fill=\"#eaeef5\"/><circle cx=\"160\" cy=\"70\" r=\"20\" fill=\"#d7dfeb\"/><path d=\"M120 130c0-15 13-26 28-26h24c15 0 28 11 28 26v2H120v-2z\" fill=\"#d7dfeb\"/></svg></div><div class=\"ds-card-body\"><h3 class=\"ds-card-title\">Ωτορινολαρυγγολογία</h3><p class=\"ds-card-description\">Πλήρης διαγνωστική και θεραπευτική προσέγγιση για παθήσεις του αυτιού, της μύτης και του λαιμού.</p><span class=\"ds-card-cta\">Μάθετε περισσότερα →</span></div></article>",
+      "css": ".ds-card{position:relative;display:grid;overflow:hidden;background:#fbfcfe;color:#0f2a4a;transition:transform var(--motion-duration-fast) var(--motion-ease-default),background var(--motion-duration-fast) var(--motion-ease-default)}.ds-card:hover,.ds-card:focus-within{transform:translateY(-2px)}.ds-card-media{position:relative;aspect-ratio:16/9;overflow:hidden;background:#eaeef5}.ds-card-media svg{display:block;width:100%;height:100%}.ds-card:hover .ds-card-media svg{transform:scale(1.03);transition:transform var(--motion-duration-standard) var(--motion-ease-default)}.ds-card-body{display:grid;gap:12px;padding:24px}.ds-card-title{font-family:'Instrument Serif',Georgia,serif;font-size:2rem;font-weight:400;line-height:1.12;margin:0;color:#0f2a4a}.ds-card-description{font-size:1rem;line-height:1.65;color:#5a6b7e;margin:0}.ds-card-cta{color:#17406f;font-size:0.9rem;font-weight:700}"
+    },
+    {
+      "name": "Media Frame (Wide)",
+      "kind": "custom",
+      "refersTo": "media-frame",
+      "description": "Image/video container with 16:9 ratio. Placeholder stripe pattern when no media loaded.",
+      "html": "<div class=\"ds-media-frame ds-media-frame--wide\"><svg viewBox=\"0 0 640 360\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"640\" height=\"360\" fill=\"#eaeef5\"/><defs><pattern id=\"ph\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\" patternTransform=\"rotate(135)\"><rect width=\"10\" height=\"20\" fill=\"#dde4ef\"/><rect x=\"10\" width=\"10\" height=\"20\" fill=\"#eaeef5\"/></pattern></defs><rect width=\"640\" height=\"360\" fill=\"url(#ph)\"/></svg><span class=\"ds-media-frame-label\">ΠΡΟΕΠΙΣΚΟΠΗΣΗ</span></div>",
+      "css": ".ds-media-frame{position:relative;overflow:hidden;border:1px solid #d7dfeb;border-radius:var(--radius-md);background:#eaeef5}.ds-media-frame--wide{aspect-ratio:16/9}.ds-media-frame svg{display:block;width:100%;height:100%}.ds-media-frame-label{position:absolute;bottom:16px;left:16px;border:1px solid rgba(15,42,74,0.1);border-radius:var(--radius-sm);background:rgba(251,252,254,0.82);backdrop-filter:blur(10px);padding:5px 7px;color:#8594a6;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:0.72rem;font-weight:500;line-height:1.4;text-transform:uppercase}"
+    },
+    {
+      "name": "Content Card (Glass)",
+      "kind": "card",
+      "refersTo": "content-card",
+      "description": "Bordered glass-surface card for content sections. Responsive internal padding.",
+      "html": "<div class=\"ds-content-card\"><h3 class=\"ds-content-card-title\">Ωράριο Λειτουργίας</h3><p class=\"ds-content-card-text\">Δευτέρα – Παρασκευή: 09:00 – 17:00</p></div>",
+      "css": ".ds-content-card{border:1px solid #d7dfeb;border-radius:var(--radius-md);background:rgba(251,252,254,0.82);padding:clamp(22px,3vw,34px)}.ds-content-card-title{font-family:'Instrument Serif',Georgia,serif;font-size:1.5rem;font-weight:400;line-height:1.12;margin:0 0 8px 0;color:#0f2a4a}.ds-content-card-text{font-size:1rem;line-height:1.65;color:#5a6b7e;margin:0}"
+    },
+    {
+      "name": "Inline Pill",
+      "kind": "chip",
+      "refersTo": "inline-pill",
+      "description": "Fully rounded border pill for filter tags and meta indicators. Border shifts to accent on hover.",
+      "html": "<span class=\"ds-inline-pill\">Ωτορινολαρυγγολογία</span>",
+      "css": ".ds-inline-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid #d7dfeb;border-radius:var(--radius-full);padding:8px 14px;color:#0f2a4a;font-size:0.85rem;white-space:nowrap;transition:border-color var(--motion-duration-fast) var(--motion-ease-default)}.ds-inline-pill:hover{border-color:#2563a8}"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": "u-link",
+      "description": "Animated underline link. Underline grows from 1px to 2px on hover, color shifts to Trust accent.",
+      "html": "<a class=\"ds-nav-link\" href=\"#\">Υπηρεσίες</a>",
+      "css": ".ds-nav-link{color:#0f2a4a;text-decoration:none;background-image:linear-gradient(currentColor,currentColor);background-position:0 100%;background-repeat:no-repeat;background-size:100% 1px;transition:background-size 160ms ease,color 160ms ease;padding-bottom:2px}.ds-nav-link:hover,.ds-nav-link:focus-visible{background-size:100% 2px;color:#2563a8}"
+    },
+    {
+      "name": "Section Heading",
+      "kind": "custom",
+      "refersTo": "section-heading",
+      "description": "Section header with eyebrow label, display title, and optional intro text. Two-column at desktop, stacked on mobile.",
+      "html": "<div class=\"ds-section-heading\"><div><p class=\"ds-section-heading-eyebrow\">ΥΠΗΡΕΣΙΕΣ</p><h2 class=\"ds-section-heading-title\">Τι θεραπεύουμε</h2></div><p class=\"ds-section-heading-intro\">Εξειδικευμένη φροντίδα για όλο το φάσμα των παθήσεων του ωτορινολαρυγγολογικού συστήματος.</p></div>",
+      "css": ".ds-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:clamp(34px,5vw,58px)}.ds-section-heading-eyebrow{color:#8594a6;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:0.72rem;font-weight:500;line-height:1.4;text-transform:uppercase;margin:0 0 8px 0}.ds-section-heading-title{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(2.4rem,13vw,4.6rem);line-height:1;max-width:680px;margin:0;color:#0f2a4a}.ds-section-heading-intro{max-width:520px;color:#5a6b7e;font-size:clamp(1rem,1.5vw,1.14rem);line-height:1.6;margin:0}"
+    },
+    {
+      "name": "Hairline Grid",
+      "kind": "layout",
+      "refersTo": "hairline-grid",
+      "description": "Shared CSS Module classes for the signature hairline-bordered grid pattern. Container gets border-left; cells get border-right + border-bottom. Components compose these and layer their own grid-template-columns and nth-child overrides.",
+      "html": "<ul class=\"ds-hairline-grid\" style=\"display:grid;grid-template-columns:repeat(3,1fr);gap:0;list-style:none\"><li class=\"ds-hairline-cell\"><div style=\"padding:20px;text-align:center\">Cell</div></li><li class=\"ds-hairline-cell\"><div style=\"padding:20px;text-align:center\">Cell</div></li><li class=\"ds-hairline-cell\"><div style=\"padding:20px;text-align:center\">Cell</div></li></ul>",
+      "css": ".ds-hairline-grid{border-left:1px solid #d7dfeb}.ds-hairline-cell{border-right:1px solid #d7dfeb;border-bottom:1px solid #d7dfeb}"
+    },
+    {
+      "name": "Stripe Placeholder",
+      "kind": "asset",
+      "refersTo": "stripe-placeholder",
+      "description": "Diagonal stripe pattern for empty media slots. Shared via .stripe-placeholder in shared-layout.module.css (also available as .ph-stripe in design-system.module.css). Components compose this and add their own display, dimensions, and min-height.",
+      "html": "<div class=\"ds-stripe-placeholder\" style=\"height:220px;display:grid;place-items:center\"><span style=\"font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#8594a6;text-transform:uppercase\">ΠΡΟΕΠΙΣΚΟΠΗΣΗ</span></div>",
+      "css": ".ds-stripe-placeholder{background:repeating-linear-gradient(135deg,#eaeef5 0 10px,#dde4ef 10px 20px),#eaeef5}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Calm Clinic",
+    "overview": "A well-appointed consulting room: clean surfaces, intentional objects, nothing that doesn't serve the patient. The myORL design system prioritizes clarity as a form of care. Every element is placed to reduce cognitive load for anxious patients researching ENT symptoms — the interface should feel like a reassuring hand on the shoulder, not a medical textbook. The system is light-only by design. Patients and family members browse on phones and laptops at home, in waiting rooms, under office lighting. A light surface maximizes readability and signals clinical cleanliness. The palette is restrained: tinted blue-grey neutrals carrying a single blue accent at ≤10% surface coverage. Instrument Serif adds warmth and personal authority at display sizes; Source Sans 3 carries body text in both Greek and Russian with equal confidence. This system explicitly rejects SaaS-cream card farms, hospital-corporate sterility, Mediterranean-tourism warmth, and crypto-dark aggressive styling. It is neither playful nor severe. It is calm, and the calm is earned by the doctor's credentials.",
+    "keyCharacteristics": [
+      "Restrained color strategy: one accent (trust blue) ≤10% of any screen",
+      "Light-only theme tuned for clinical readability",
+      "Serif display + sans body: warmth through typography, not decoration",
+      "Density system (scanning / focused / theater) controls spacing and type scale globally",
+      "Flat-by-default elevation: shadows appear only on state change",
+      "Hairline grid patterns for structured content sections",
+      "WCAG 2.2 AA with enhanced focus indicators exceeding AA visibility",
+      "Bilingual parity: Greek and Russian locales are equally complete, no cross-locale fallback"
+    ],
+    "rules": [
+      {
+        "name": "The Restrained Rule",
+        "body": "Trust blue covers ≤10% of any given screen. It appears on CTAs, links, and focus rings — and on nothing else. The accent's authority comes from its scarcity.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Pure-Black Rule",
+        "body": "Every neutral carries a blue undertone (chroma ~0.005–0.01 in OKLCH). #000 and #fff are forbidden. Ink (#0f2a4a) is the darkest color; Bone 50 (#fbfcfe) is the lightest.",
+        "section": "colors"
+      },
+      {
+        "name": "The Glass Transparency Rule",
+        "body": "Glass surfaces (header, nav, megamenu) use RGBA values derived from Bone 50, not arbitrary colors. Each variant corresponds to a specific opacity calibrated to its context: general panels 82%, sticky header 88%, nav bar 94%, megamenu dropdown 96%.",
+        "section": "colors"
+      },
+      {
+        "name": "The Display Authority Rule",
+        "body": "Instrument Serif is reserved for hero titles, section headings, and card titles. It never appears in body copy, labels, UI chrome, or at sizes below 1.25rem.",
+        "section": "typography"
+      },
+      {
+        "name": "The Bilingual Parity Rule",
+        "body": "All type sizes, line heights, and container widths must work in both Greek and Russian. Greek text tends to run 15–20% longer than Russian; Russian Cyrillic glyphs have different vertical metrics and ascender/descender profiles. Test every layout in both locales.",
+        "section": "typography"
+      },
+      {
+        "name": "The Balance Rule",
+        "body": "Headings use text-wrap: balance; body text uses text-wrap: pretty. Overflow strategy is overflow-wrap: break-word (never anywhere) with hyphens: auto keyed to the correct lang attribute (el or ru).",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces are flat at rest. Shadows appear only as a response to state (hover, focus, sticky scroll, overlay). If a surface isn't interactive or positioned above the page, it doesn't cast a shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Glass-Not-Gloss Rule",
+        "body": "Glass surfaces (nav, header, megamenu) use backdrop-filter: blur() to separate from page content while remaining readable. They are functional — keeping navigation accessible during scroll — not decorative. The blur value is calibrated per context: general panels and megamenu at higher blur, nav at lower blur for speed.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the semantic aliases (--background, --foreground, --accent, --line, --surface, --muted) in CSS Modules. Reserve palette names (--color-*) for cases where the literal color value matters.",
+      "Do use the density system (scanning / focused / theater) to control both spacing and type scale. Pick one density per section; don't mix densities within a single section.",
+      "Do keep the Trust accent to ≤10% of any screen. Its authority comes from scarcity.",
+      "Do use Instrument Serif only at display sizes (≥1.25rem) for hero titles, section headings, and card titles.",
+      "Do test every layout in both Greek and Russian. Greek runs longer; Cyrillic has different vertical metrics. Neither locale is a second-class citizen.",
+      "Do provide enhanced focus indicators: minimum 2px solid Trust outline with 2px offset, visible against both the component and the page background.",
+      "Do respect prefers-reduced-motion — skip all animations when active (use animation-duration: 0.01ms with !important, not just slower durations).",
+      "Do use overflow-wrap: break-word (never anywhere) with hyphens: auto keyed to the correct lang attribute (el or ru).",
+      "Do use CSS custom property tokens for radius (--radius-sm, --radius-md, --radius-full) and motion (--motion-duration-*, --motion-ease-*) instead of hardcoded values. All 40+ hardcoded radius values and 28 hardcoded transitions have been migrated to tokens."
+    ],
+    "donts": [
+      "Don't use #000 or #fff. Ink (#0f2a4a) is the darkest color; Bone 50 (#fbfcfe) is the lightest. Every neutral carries a blue undertone.",
+      "Don't use gradient text (background-clip: text combined with a gradient). Emphasis comes from weight, size, or color — never from decorative effects.",
+      "Don't use side-stripe borders (border-left or border-right greater than 1px as a colored accent on cards, list items, or callouts). Use full borders, background tints, or leading indicators instead.",
+      "Don't use glassmorphism as decoration. Glass surfaces are functional (sticky nav, overlays, megamenu) — not a visual style to apply generically.",
+      "Don't use the hero-metric template (big number + small label + supporting stats + gradient accent). This is a medical practice site, not a SaaS dashboard.",
+      "Don't use identical card grids (same-sized cards with icon + heading + text, repeated endlessly). Vary card density, layout, and presence of media by section.",
+      "Don't use modals as the first solution. Exhaust inline expansion, accordion panels, or progressive disclosure before reaching for a modal.",
+      "Don't use disabled buttons. Links are present-and-active or absent. Redirect unavailable destinations to a status page.",
+      "Don't use bounce or elastic easing curves. Default to ease-out (simple transitions) or cubic-bezier(0.16, 1, 0.3, 1) (entrance animations).",
+      "Don't animate CSS layout properties (padding, margin, width, height). Animate transform and opacity only.",
+      "Don't use dark mode, purple gradients, neon accents, or crypto/tech aggressive styling. This is medicine — the interface reassures, it doesn't impress."
+    ]
+  }
+}

@@ -1,13 +1,19 @@
-/* Keeps hero + tabs aligned with hub container; gap replaces page-hero bottom margin between tabs. */
+/* Slightly more air between title block and tab strip than index pages. */
 .hubChrome {
   display: flex;
   flex-direction: column;
-  gap: clamp(14px, 2.5vw, 26px);
+  gap: clamp(16px, 2.8vw, 28px);
   min-width: 0;
 }
 
 .hubChrome > :first-child {
   margin-bottom: 0;
+}
+
+/* Outer `.container` already gutters the hub; drop duplicate inset on the scroll strip. */
+.hubChrome :global(.tab-bar) {
+  padding-inline: 0;
+  scroll-padding-inline: 0;
 }
 
 /* Article/service shells ship large vertical margins; inside a hub, `.page-shell`
@@ -21,4 +27,19 @@
   margin-inline: auto;
   margin-block-start: clamp(8px, 1.5vw, 22px);
   margin-block-end: clamp(28px, 5vw, 72px);
+}
+
+/* Hub service / reference articles: one continuous band from tabs into body. */
+.hubBodySlot :global(main[data-hub-child="true"][data-service-layout="true"]),
+.hubBodySlot :global(main[data-hub-child="true"][data-article-layout]) {
+  margin-block-start: clamp(10px, 1.9vw, 26px);
+}
+
+.hubBodySlot
+  :global(main[data-hub-child="true"][data-service-layout="true"] .service-layout__content) {
+  gap: clamp(22px, 3.25vw, 44px);
+}
+
+.hubBodySlot :global(main[data-hub-child="true"][data-article-layout] .reference-layout__content) {
+  gap: clamp(22px, 3.25vw, 42px);
 }

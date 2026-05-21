@@ -137,7 +137,7 @@ describe("PageSection", () => {
     );
 
     const el = container.firstElementChild as HTMLElement;
-    expect(el.className).toContain("py-12");
+    expect(el.className).toContain("py-[clamp(2.75rem,calc(1.25rem+3vw),4rem)]");
   });
 
   it("applies rhythm variant: contact", () => {
@@ -257,7 +257,7 @@ describe("PageSection", () => {
 
     const el = container.firstElementChild as HTMLElement;
     expect(el.className).toContain("bg-bone-50");
-    expect(el.className).toContain("py-12");
+    expect(el.className).toContain("py-[clamp(2.75rem,calc(1.25rem+3vw),4rem)]");
   });
 
   it("does not render empty heading when heading has only empty eyebrow", () => {

@@ -14,7 +14,7 @@ export function SectionHubPage({ page, navigation = [] }: PageLayoutProps) {
           <SectionTabBar navigation={navigation} currentPage={page} />
         </div>
         <div className={styles.hubBodySlot}>
-          <PageBody page={page} proseStackGap="compact" />
+          <PageBody page={page} proseStackGap="compact" hubChild />
         </div>
       </div>
     </div>

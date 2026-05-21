@@ -75,6 +75,9 @@ export function toMediaDTO(
 function resolveMediaUrl(url: string, strapiUrl?: string): string {
   if (/^https?:\/\//i.test(url)) return url;
   const base = strapiUrl ?? process.env.STRAPI_URL ?? "";
+  if (!base) {
+    return url.startsWith("/") ? url : "/" + url;
+  }
   return new URL(url, base).toString();
 }
 

@@ -1,27 +1,45 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { PageSection } from "@/components/PageSection";
 import { SectionIndexGrid } from "@/components/SectionIndexGrid";
+import { deriveDirectoryTagFilter } from "@/lib/cms/directory-tags";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
+import { getPageStrings } from "@/lib/i18n/page";
+import { findAppointmentHref } from "@/lib/navigation/appointment-href";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
+import Link from "next/link";
 import { PageHeader, type PageLayoutProps } from "./_shared";
+import layoutStyles from "./_shared.module.css";
 
 export function SectionIndexPage({ page, navigation = [] }: PageLayoutProps) {
   const children = findChildren(navigation, page.documentId);
+  const { tags, tagMap } = deriveDirectoryTagFilter(children);
+  const t = getPageStrings(page.locale);
+  const appointmentHref = findAppointmentHref(navigation, page.locale);
 
   return (
-    <PageSection>
-      <PageHeader page={page} kicker={null} />
-      {page.content ? <CmsHtml html={page.content} /> : null}
-      <SectionIndexGrid
-        items={children}
-        locale={page.locale}
-        variant={page.layoutVariant}
-        backHref={
-          page.parentPage?.slug
-            ? hrefForLocaleSlug(page.locale, page.parentPage.slug)
-            : `/${page.locale}`
-        }
-      />
+    <PageSection rhythm="compact" entranceMotion="instant">
+      <div className={layoutStyles["directory-page-stack"]}>
+        <PageHeader page={page} kicker={null} />
+        {page.content ? <CmsHtml html={page.content} /> : null}
+        <SectionIndexGrid
+          items={children}
+          locale={page.locale}
+          variant={page.layoutVariant}
+          tags={tags}
+          tagMap={tagMap}
+          backHref={
+            page.parentPage?.slug
+              ? hrefForLocaleSlug(page.locale, page.parentPage.slug)
+              : `/${page.locale}`
+          }
+        />
+        <aside className={layoutStyles["directory-closure"]} aria-label={t.directoryClosureCta}>
+          <p>{t.directoryClosureCopy}</p>
+          <Link href={appointmentHref} className={layoutStyles["service-cta"]}>
+            {t.directoryClosureCta}
+          </Link>
+        </aside>
+      </div>
     </PageSection>
   );
 }

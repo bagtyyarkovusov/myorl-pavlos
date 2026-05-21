@@ -15,6 +15,19 @@ export type PageStrings = {
   openLabel: string;
   moreLabel: (count: number) => string;
   backToSection: (parentTitle: string) => string;
+  directoryEmpty: string;
+  backToOverview: string;
+  directoryFilterEmpty: string;
+  directoryMoreFilters: string;
+  directoryFeaturedLabel: string;
+  directoryAllLabel: string;
+  /** Primary filter chip: show all examinations (clears active tag). */
+  directoryAllFiltersLabel: string;
+  /** Link next to result count when a tag filter is active. */
+  directoryClearFilter: string;
+  directoryResultCount: (count: number) => string;
+  directoryClosureCopy: string;
+  directoryClosureCta: string;
 };
 
 const STRINGS: Record<Locale, PageStrings> = {
@@ -33,6 +46,18 @@ const STRINGS: Record<Locale, PageStrings> = {
     openLabel: "Άνοιγμα",
     moreLabel: (count) => `Περισσότερα (+${count})`,
     backToSection: (title) => `← ${title}`,
+    directoryEmpty: "Δεν υπάρχουν ακόμη διαθέσιμες σελίδες.",
+    backToOverview: "Επιστροφή στην επισκόπηση",
+    directoryFilterEmpty: "Δεν βρέθηκαν αποτελέσματα για αυτό το φίλτρο.",
+    directoryMoreFilters: "Περισσότερα φίλτρα",
+    directoryFeaturedLabel: "Ξεκινήστε εδώ",
+    directoryAllLabel: "Όλες οι εξετάσεις",
+    directoryAllFiltersLabel: "Όλα",
+    directoryClearFilter: "Εμφάνιση όλων",
+    directoryResultCount: (count) => (count === 1 ? "1 αποτέλεσμα" : `${count} αποτελέσματα`),
+    directoryClosureCopy:
+      "Δεν είστε σίγουροι ποια εξέταση χρειάζεστε; Θα σας καθοδηγήσουμε στο ραντεβού.",
+    directoryClosureCta: "Κλείστε ραντεβού",
   },
   ru: {
     home: "Главная",
@@ -49,6 +74,24 @@ const STRINGS: Record<Locale, PageStrings> = {
     openLabel: "Открыть",
     moreLabel: (count) => `Ещё (+${count})`,
     backToSection: (title) => `← ${title}`,
+    directoryEmpty: "Пока нет доступных страниц.",
+    backToOverview: "Вернуться к обзору",
+    directoryFilterEmpty: "По этому фильтру ничего не найдено.",
+    directoryMoreFilters: "Больше фильтров",
+    directoryFeaturedLabel: "С чего начать",
+    directoryAllLabel: "Все обследования",
+    directoryAllFiltersLabel: "Все",
+    directoryClearFilter: "Показать все",
+    directoryResultCount: (count) => {
+      const mod10 = count % 10;
+      const mod100 = count % 100;
+      if (mod10 === 1 && mod100 !== 11) return `${count} результат`;
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return `${count} результата`;
+      return `${count} результатов`;
+    },
+    directoryClosureCopy:
+      "Не уверены, какое обследование вам нужно? На приёме мы подскажем следующий шаг.",
+    directoryClosureCta: "Записаться на приём",
   },
 };
 

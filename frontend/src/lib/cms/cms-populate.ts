@@ -78,10 +78,12 @@ export const PAGE_POPULATE = {
 /**
  * Minimal populate for the navigation endpoint.
  *
- * Only requests the parent page reference needed to build the tree hierarchy.
+ * Requests parent page reference, tags (for directory filtering), images,
+ * and hierarchy fields needed to build the tree.
  */
 export const NAVIGATION_POPULATE = {
   parentPage: { fields: ["documentId", "slug", "title"] },
+  tags: { fields: ["name", "slug"] },
   featuredImage: true,
   imageCenter: true,
 } as const;

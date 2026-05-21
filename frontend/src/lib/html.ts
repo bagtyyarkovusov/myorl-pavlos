@@ -91,6 +91,13 @@ const ALLOWED_ATTR = [
 
 const ALLOWED_CALLOUT_CLASSES = new Set(["callout-teal", "callout-ink", "callout-trust"]);
 
+/** Layout hooks we add server-side (`cms-html__*`) — keep in sync with globals.css. */
+const CMS_HTML_CLASS_PREFIX = "cms-html__";
+
+function isAllowedCmsHtmlClass(token: string): boolean {
+  return token.startsWith(CMS_HTML_CLASS_PREFIX) && /^cms-html__[a-z0-9-]+$/.test(token);
+}
+
 const ALLOWED_IFRAME_HOSTS = new Set([
   "www.youtube.com",
   "youtube.com",
@@ -140,7 +147,7 @@ function registerHooks(): void {
     if (className) {
       const safeClasses = className
         .split(/\s+/)
-        .filter((token) => ALLOWED_CALLOUT_CLASSES.has(token));
+        .filter((token) => ALLOWED_CALLOUT_CLASSES.has(token) || isAllowedCmsHtmlClass(token));
       if (safeClasses.length > 0) {
         node.setAttribute("class", safeClasses.join(" "));
       } else {
@@ -173,18 +180,33 @@ function isAllowedIframeSrc(src: string): boolean {
   }
 }
 
+/**
+ * Markdown / WYSIWYG often emits `<p><img></p>`, which inherits paragraph flow and reads
+ * poorly on mobile. Normalise to `<figure class="cms-html__figure">` for semantics and layout.
+ */
+export function upgradeImageOnlyParagraphs(html: string): string {
+  if (!html.includes("<img")) {
+    return html;
+  }
+  return html.replace(
+    /<p(?:\s[^>]*)?>\s*((?:<img\b[^>]*>\s*)+)<\/p>/gi,
+    '<figure class="cms-html__figure">$1</figure>',
+  );
+}
+
 export function sanitizeCmsHtml(html: string | null | undefined): string {
   if (!html) {
     return "";
   }
   registerHooks();
-  return DOMPurify.sanitize(html, {
+  const sanitized = DOMPurify.sanitize(html, {
     ALLOWED_TAGS,
     ALLOWED_ATTR,
     ALLOW_DATA_ATTR: false,
     FORBID_TAGS: ["style", "script", "font"],
     FORBID_ATTR: ["style"],
   });
+  return upgradeImageOnlyParagraphs(sanitized);
 }
 
 /**

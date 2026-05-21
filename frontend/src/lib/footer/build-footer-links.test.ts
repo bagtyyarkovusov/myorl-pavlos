@@ -21,6 +21,7 @@ function makeNode(overrides: Partial<NavigationNodeDTO>): NavigationNodeDTO {
     featuredImage: null,
     imageCenter: null,
     footerCategory: overrides.footerCategory ?? "none",
+    tags: overrides.tags ?? [],
     href: overrides.href ?? "/el/" + (overrides.slug ?? "x"),
     children: overrides.children ?? [],
   } as NavigationNodeDTO;

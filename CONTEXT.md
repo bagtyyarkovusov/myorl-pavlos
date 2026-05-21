@@ -14,6 +14,33 @@ This document defines the canonical vocabulary for architecture discussions in t
 | Testing | Vitest, Playwright |
 | CSS | Tailwind CSS v4, CSS Modules |
 
+## Content Library
+
+**Video Entry**:
+A standalone medical video managed as a CMS catalog item, optionally connected to a related article for deeper reading.
+_Avoid_: video block, embed, media file
+
+**Related Article**:
+The article a **Video Entry** points readers to when the video has a deeper explanation or procedure page.
+_Avoid_: button link, corresponding page, more link
+
+**Video Directory**:
+A localized library page that lets readers browse and play **Video Entries**.
+_Avoid_: video page, YouTube page, video block list
+
+**Video Category**:
+A local browsing label for grouping **Video Entries** within a **Video Directory**.
+_Avoid_: site tag, article taxonomy, global category
+
+## Relationships
+
+- A **Video Entry** may point to zero or one **Related Article**.
+- Localized **Video Entries** may represent the same underlying video while preserving per-locale title, tags, visibility, and **Related Article**.
+- A **Related Article** should be an internal page relation when the historical link can be resolved; unresolved historical links remain fallback evidence, not the preferred reader path.
+- A **Video Directory** plays **Video Entries** inline and remains the first restoration target before article-page embeds.
+- A **Video Category** belongs to the video library and should not be treated as the site-wide article taxonomy.
+- The first **Video Directory** restoration should migrate the historical video set, with unresolved **Related Articles** treated as cleanup work rather than migration blockers.
+
 ---
 
 ## Rehearsal Environment

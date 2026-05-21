@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type AnchorHTMLAttributes, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { isExternalHref } from "@/components/design-system";
 import { SECTION_INDEX_FEATURED_COUNT, partitionDirectoryTags } from "@/lib/cms/directory-tags";
+import {
+  getDirectoryExternalHost,
+  getDirectoryNodeDescription,
+  getDirectoryNodeMedia,
+} from "@/lib/cms/directory-node-presentation";
 import type { LayoutVariant, Locale, MediaDTO, NavigationNodeDTO } from "@/lib/cms/types";
 import type { TagDTO } from "@/lib/cms/types/tag";
 import { getPageStrings } from "@/lib/i18n/page";
@@ -20,6 +26,9 @@ type SectionIndexGridProps = {
   backHref?: string;
   tags?: TagDTO[];
   tagMap?: Record<string, string[]>;
+  indexHref?: string;
+  currentPage?: number;
+  activeTagSlug?: string | null;
 };
 
 type DirectoryVariant =
@@ -36,11 +45,18 @@ export function SectionIndexGrid({
   backHref,
   tags,
   tagMap,
+  indexHref,
+  currentPage = 1,
+  activeTagSlug = null,
 }: SectionIndexGridProps) {
   const t = getPageStrings(locale);
-  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [localActiveTag, setLocalActiveTag] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const directoryVariant = getDirectoryVariant(variant);
+  const usesUrlControls = directoryVariant === "encyclopedia-list" && Boolean(indexHref);
+  const urlActiveTag =
+    activeTagSlug && tags?.some((tag) => tag.slug === activeTagSlug) ? activeTagSlug : null;
+  const activeTag = usesUrlControls ? urlActiveTag : localActiveTag;
   const tagContext = variant === "section-index" ? "section-index" : "default";
   const { primary: primaryTags, secondary: secondaryTags } = partitionDirectoryTags(
     tags ?? [],
@@ -71,18 +87,22 @@ export function SectionIndexGrid({
 
   const featuredItems = useTieredSectionGrid ? filtered.slice(0, SECTION_INDEX_FEATURED_COUNT) : [];
   const listPool = useTieredSectionGrid ? filtered.slice(SECTION_INDEX_FEATURED_COUNT) : filtered;
-  const listItems = listPool.slice(0, visibleCount);
-  const hasMore = listPool.length > visibleCount;
+  const pageCount = Math.max(1, Math.ceil(listPool.length / PAGE_SIZE));
+  const safeCurrentPage = usesUrlControls ? clampPage(currentPage, pageCount) : 1;
+  const pageStart = usesUrlControls ? (safeCurrentPage - 1) * PAGE_SIZE : 0;
+  const pageEnd = usesUrlControls ? pageStart + PAGE_SIZE : visibleCount;
+  const listItems = listPool.slice(pageStart, pageEnd);
+  const hasMore = !usesUrlControls && listPool.length > visibleCount;
   const remainingCount = listPool.length - visibleCount;
 
   const toggleTag = (slug: string) => {
     setVisibleCount(PAGE_SIZE);
-    setActiveTag((current) => (current === slug ? null : slug));
+    setLocalActiveTag((current) => (current === slug ? null : slug));
   };
 
   const clearTagFilter = () => {
     setVisibleCount(PAGE_SIZE);
-    setActiveTag(null);
+    setLocalActiveTag(null);
   };
 
   const listVariant: DirectoryVariant =
@@ -97,35 +117,61 @@ export function SectionIndexGrid({
             role="toolbar"
             aria-label={t.sections}
           >
-            <button
-              type="button"
-              className={`${styles["filter-pill"]}${activeTag === null ? ` ${styles["filter-pill--active"]}` : ""}`}
-              onClick={clearTagFilter}
-              aria-pressed={activeTag === null}
-            >
-              {t.directoryAllFiltersLabel}
-            </button>
-            {primaryTags.map((tag) => (
-              <FilterPill
-                key={tag.slug}
-                tag={tag}
-                active={activeTag === tag.slug}
-                onToggle={toggleTag}
+            {usesUrlControls && indexHref ? (
+              <FilterLink
+                href={buildDirectoryHref(indexHref, 1, null)}
+                label={t.directoryAllFiltersLabel}
+                active={activeTag === null}
               />
-            ))}
+            ) : (
+              <button
+                type="button"
+                className={`${styles["filter-pill"]}${activeTag === null ? ` ${styles["filter-pill--active"]}` : ""}`}
+                onClick={clearTagFilter}
+                aria-pressed={activeTag === null}
+              >
+                {t.directoryAllFiltersLabel}
+              </button>
+            )}
+            {primaryTags.map((tag) =>
+              usesUrlControls && indexHref ? (
+                <FilterLink
+                  key={tag.slug}
+                  href={buildDirectoryHref(indexHref, 1, tag.slug)}
+                  label={tag.name}
+                  active={activeTag === tag.slug}
+                />
+              ) : (
+                <FilterPill
+                  key={tag.slug}
+                  tag={tag}
+                  active={activeTag === tag.slug}
+                  onToggle={toggleTag}
+                />
+              ),
+            )}
           </div>
           {secondaryTags.length > 0 ? (
             <details className={styles["filter-disclosure"]}>
               <summary>{t.directoryMoreFilters}</summary>
               <div className={`${styles["filter-bar"]} ${styles["filter-bar--secondary"]}`}>
-                {secondaryTags.map((tag) => (
-                  <FilterPill
-                    key={tag.slug}
-                    tag={tag}
-                    active={activeTag === tag.slug}
-                    onToggle={toggleTag}
-                  />
-                ))}
+                {secondaryTags.map((tag) =>
+                  usesUrlControls && indexHref ? (
+                    <FilterLink
+                      key={tag.slug}
+                      href={buildDirectoryHref(indexHref, 1, tag.slug)}
+                      label={tag.name}
+                      active={activeTag === tag.slug}
+                    />
+                  ) : (
+                    <FilterPill
+                      key={tag.slug}
+                      tag={tag}
+                      active={activeTag === tag.slug}
+                      onToggle={toggleTag}
+                    />
+                  ),
+                )}
               </div>
             </details>
           ) : null}
@@ -134,9 +180,18 @@ export function SectionIndexGrid({
               <p className={styles["filter-status"]} aria-live="polite">
                 {t.directoryResultCount(filtered.length)}
               </p>
-              <button type="button" className={styles["filter-clear"]} onClick={clearTagFilter}>
-                {t.directoryClearFilter}
-              </button>
+              {usesUrlControls && indexHref ? (
+                <Link
+                  className={styles["filter-clear"]}
+                  href={buildDirectoryHref(indexHref, 1, null)}
+                >
+                  {t.directoryClearFilter}
+                </Link>
+              ) : (
+                <button type="button" className={styles["filter-clear"]} onClick={clearTagFilter}>
+                  {t.directoryClearFilter}
+                </button>
+              )}
             </div>
           ) : null}
         </div>
@@ -178,9 +233,36 @@ export function SectionIndexGrid({
               {t.moreLabel(remainingCount)}
             </button>
           ) : null}
+          {usesUrlControls && indexHref && pageCount > 1 ? (
+            <Pagination
+              activeTag={activeTag}
+              currentPage={safeCurrentPage}
+              indexHref={indexHref}
+              pageCount={pageCount}
+              labels={{
+                first: t.paginationFirst,
+                previous: t.paginationPrevious,
+                next: t.paginationNext,
+                last: t.paginationLast,
+                nav: t.paginationLabel,
+              }}
+            />
+          ) : null}
         </>
       )}
     </div>
+  );
+}
+
+function FilterLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      className={`${styles["filter-pill"]}${active ? ` ${styles["filter-pill--active"]}` : ""}`}
+      aria-current={active ? "true" : undefined}
+    >
+      {label}
+    </Link>
   );
 }
 
@@ -214,13 +296,19 @@ function IndexCard({
   variant: DirectoryVariant;
   featuredTier?: boolean;
 }) {
-  const media = node.imageCenter ?? node.featuredImage;
-  const hasMedia = Boolean(media?.url);
+  const media = getDirectoryNodeMedia(node);
+  const description =
+    getDirectoryNodeDescription(node) ??
+    (variant === "clinic-grid" ? getDirectoryExternalHost(node) : null);
+  const externalHost = getDirectoryExternalHost(node);
+  const showMediaSlot = variant === "clinic-grid" || Boolean(media?.url);
+  const hasMediaLayout = showMediaSlot;
 
   if (variant === "directory-list") {
+    const directoryMedia = node.imageCenter ?? node.featuredImage;
     return (
       <Link href={node.href} className={styles["index-row-link--directory"]}>
-        <IndexMedia media={media} title={node.navLabel} variant={variant} />
+        <IndexMedia media={directoryMedia} title={node.navLabel} variant={variant} />
         <div className={styles["index-row__body"]}>
           <strong>{node.navLabel}</strong>
           {node.excerpt ? <p className={styles["index-row__excerpt"]}>{node.excerpt}</p> : null}
@@ -232,35 +320,40 @@ function IndexCard({
     );
   }
 
+  if (variant === "encyclopedia-list" || variant === "clinic-grid") {
+    return (
+      <IndexRowLink href={node.href} data-has-media={hasMediaLayout ? "true" : undefined}>
+        {showMediaSlot ? (
+          <IndexMedia media={media} title={node.navLabel} variant={variant} />
+        ) : null}
+        <div className={styles["index-row__body"]}>
+          <strong>{node.navLabel}</strong>
+          {description ? <p className={styles["index-row__excerpt"]}>{description}</p> : null}
+          {variant === "clinic-grid" && externalHost && description !== externalHost ? (
+            <p className={styles["index-row__site"]}>{externalHost}</p>
+          ) : null}
+          {variant === "encyclopedia-list" && node.tags.length > 0 ? (
+            <ul className={styles["index-row__tags"]} aria-label="Article categories">
+              {node.tags.map((tag) => (
+                <li key={tag.slug} className={styles["index-row__tag"]}>
+                  {tag.name}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      </IndexRowLink>
+    );
+  }
+
   return (
-    <Link
-      href={node.href}
-      data-has-media={variant === "encyclopedia-list" && hasMedia ? "true" : undefined}
-    >
-      {variant !== "encyclopedia-list" ? (
-        <IndexMedia media={media} title={node.navLabel} variant={variant} />
-      ) : null}
+    <Link href={node.href}>
+      <IndexMedia media={media} title={node.navLabel} variant={variant} />
       <div className={styles["index-row__body"]}>
         <strong>{node.navLabel}</strong>
         {node.excerpt ? <p className={styles["index-row__excerpt"]}>{node.excerpt}</p> : null}
-        {variant === "encyclopedia-list" && node.tags.length > 0 ? (
-          <ul className={styles["index-row__tags"]} aria-label="Article categories">
-            {node.tags.map((tag) => (
-              <li key={tag.slug} className={styles["index-row__tag"]}>
-                {tag.name}
-              </li>
-            ))}
-          </ul>
-        ) : null}
       </div>
-      {variant === "encyclopedia-list" && hasMedia ? (
-        <IndexMedia media={media} title={node.navLabel} variant={variant} />
-      ) : null}
-      {variant === "encyclopedia-list" ? (
-        <span className={styles["index-row__arrow"]} aria-hidden="true">
-          →
-        </span>
-      ) : featuredTier ? (
+      {featuredTier ? (
         <span
           className={`${styles["index-row__arrow"]} ${styles["index-row__arrow--featured-only"]}`}
           aria-hidden="true"
@@ -268,6 +361,29 @@ function IndexCard({
           →
         </span>
       ) : null}
+    </Link>
+  );
+}
+
+function IndexRowLink({
+  href,
+  children,
+  ...rest
+}: {
+  href: string;
+  children: ReactNode;
+} & AnchorHTMLAttributes<HTMLAnchorElement>) {
+  if (isExternalHref(href)) {
+    return (
+      <a href={href} rel="noreferrer" target="_blank" {...rest}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} {...rest}>
+      {children}
     </Link>
   );
 }
@@ -281,7 +397,7 @@ function IndexMedia({
   title: string;
   variant: DirectoryVariant;
 }) {
-  const isPlaceholder = !media?.url && variant === "directory-list";
+  const isPlaceholder = !media?.url && (variant === "directory-list" || variant === "clinic-grid");
 
   return (
     <span
@@ -326,11 +442,100 @@ function getImageSizes(variant: DirectoryVariant): string {
     case "section-grid":
       return "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw";
     case "clinic-grid":
+    case "encyclopedia-list":
+      return "(min-width: 768px) 132px, 76px";
     case "video-grid":
       return "(min-width: 768px) 50vw, 100vw";
-    case "encyclopedia-list":
-      return "(min-width: 768px) 160px, 33vw";
     case "directory-list":
       return "(min-width: 1024px) 33vw, 88px";
   }
+}
+
+function Pagination({
+  activeTag,
+  currentPage,
+  indexHref,
+  labels,
+  pageCount,
+}: {
+  activeTag: string | null;
+  currentPage: number;
+  indexHref: string;
+  labels: {
+    first: string;
+    previous: string;
+    next: string;
+    last: string;
+    nav: string;
+  };
+  pageCount: number;
+}) {
+  const previousPage = Math.max(1, currentPage - 1);
+  const nextPage = Math.min(pageCount, currentPage + 1);
+
+  return (
+    <nav className={styles.pagination} aria-label={labels.nav}>
+      <Link
+        className={styles["pagination__control"]}
+        href={buildDirectoryHref(indexHref, 1, activeTag)}
+        aria-disabled={currentPage === 1 ? "true" : undefined}
+      >
+        {labels.first}
+      </Link>
+      <Link
+        className={styles["pagination__control"]}
+        href={buildDirectoryHref(indexHref, previousPage, activeTag)}
+        aria-disabled={currentPage === 1 ? "true" : undefined}
+      >
+        {labels.previous}
+      </Link>
+      <ol className={styles["pagination__pages"]}>
+        {Array.from({ length: pageCount }, (_, index) => {
+          const page = index + 1;
+          return (
+            <li key={page}>
+              <Link
+                className={styles["pagination__page"]}
+                href={buildDirectoryHref(indexHref, page, activeTag)}
+                aria-current={page === currentPage ? "page" : undefined}
+              >
+                {page}
+              </Link>
+            </li>
+          );
+        })}
+      </ol>
+      <Link
+        className={styles["pagination__control"]}
+        href={buildDirectoryHref(indexHref, nextPage, activeTag)}
+        aria-disabled={currentPage === pageCount ? "true" : undefined}
+      >
+        {labels.next}
+      </Link>
+      <Link
+        className={styles["pagination__control"]}
+        href={buildDirectoryHref(indexHref, pageCount, activeTag)}
+        aria-disabled={currentPage === pageCount ? "true" : undefined}
+      >
+        {labels.last}
+      </Link>
+    </nav>
+  );
+}
+
+function buildDirectoryHref(indexHref: string, page: number, tag: string | null): string {
+  const params = new URLSearchParams();
+  if (tag) {
+    params.set("tag", tag);
+  }
+  if (page > 1) {
+    params.set("page", String(page));
+  }
+  const query = params.toString();
+  return query ? `${indexHref}?${query}` : indexHref;
+}
+
+function clampPage(page: number, pageCount: number): number {
+  if (!Number.isFinite(page)) return 1;
+  return Math.min(Math.max(1, Math.floor(page)), pageCount);
 }

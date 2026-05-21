@@ -244,8 +244,41 @@
   transform: translateY(-1px);
 }
 
+.cta-book__full,
+.cta-book__short {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+}
+
 .cta-book__short {
   display: none;
+}
+
+.cta-book__label {
+  line-height: 1;
+}
+
+.cta-book__arrow {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  color: inherit;
+  transition: transform var(--motion-duration-fast) var(--motion-ease-default);
+}
+
+.cta-book__arrow svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+.cta-book:hover .cta-book__arrow,
+.cta-book:focus-visible .cta-book__arrow {
+  transform: translateX(2px);
 }
 
 .hamburger {
@@ -307,7 +340,29 @@
     display: none;
   }
   [data-locale="ru"] .cta-book__short {
-    display: inline;
+    display: inline-flex;
+  }
+}
+
+/*
+ * Header fit ladder (container queries on .site-header__inner, active at ≥1321px viewport).
+ * Measured at max container width 1232px (1280px viewport − 48px padding):
+ *   logo ~56px, full RU CTA ~240px, short RU CTA ~150px, 8-label RU nav ~950px+.
+ * Middle track with full CTA ≈864px — insufficient without compression.
+ * Thresholds (inline-size of site-header__inner):
+ *   ≤80rem (1280px): RU short CTA
+ *   ≤76rem (1216px): RU tighter nav padding / no chevrons
+ *   ≤74rem (1184px): hamburger fallback, hide desktop nav
+ */
+@media (min-width: 1321px) {
+  @container site-header-inner (max-width: 80rem) {
+    [data-locale="ru"] .cta-book__full {
+      display: none;
+    }
+
+    [data-locale="ru"] .cta-book__short {
+      display: inline-flex;
+    }
   }
 }
 
@@ -539,7 +594,9 @@
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    column-gap: clamp(14px, 1.6vw, 24px);
+    column-gap: clamp(20px, 2.4vw, 36px);
+    container-type: inline-size;
+    container-name: site-header-inner;
   }
 
   .brand {
@@ -549,5 +606,11 @@
   .header-actions {
     grid-column: 3;
     justify-self: end;
+  }
+
+  @container site-header-inner (max-width: 74rem) {
+    .hamburger {
+      display: inline-flex;
+    }
   }
 }

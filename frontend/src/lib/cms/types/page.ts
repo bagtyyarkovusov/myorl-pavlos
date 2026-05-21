@@ -5,6 +5,7 @@ import type {
   FooterCategory,
 } from "@myorl-pavlos/shared-types";
 import type { Locale, MediaDTO, PageRefDTO } from "./common";
+import type { SeoDTO } from "./seo";
 import type { SectionDTO, StrapiSectionRaw } from "./sections";
 import type { SeoDTO, StrapiMedia, StrapiSeo } from "./seo";
 import type { TagDTO, StrapiTag } from "./tag";
@@ -58,6 +59,7 @@ export interface NavigationInput {
   excerpt?: string | null;
   featuredImage?: MediaDTO | null;
   imageCenter?: MediaDTO | null;
+  seo?: SeoDTO | null;
   footerCategory?: FooterCategory;
   /** Tags for directory filtering (MODX-style hubs); empty when none assigned in CMS. */
   tags: TagDTO[];

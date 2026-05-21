@@ -23,6 +23,7 @@ const zodPageRef = z
     documentId: z.string().nullish(),
     slug: z.string().nullish(),
     title: z.string().nullish(),
+    locale: z.string().nullish(),
   })
   .nullish();
 
@@ -114,6 +115,20 @@ export const pageListResponseSchema = z
     meta: z.unknown().optional(),
   })
   .transform((response) => response.data);
+
+export const zodVideoEntryEntity = z
+  .object({
+    documentId: z.string(),
+    locale: z.enum(["el", "ru"]),
+    title: z.string(),
+    youtubeId: z.string(),
+    youtubeUrl: z.string().nullish(),
+    categories: z.unknown().nullish(),
+    sortOrder: z.number().nullish(),
+    relatedArticle: zodPageRef,
+    legacyArticleUrl: z.string().nullish(),
+  })
+  .passthrough();
 
 const strapiGlobalEntitySchema = z
   .object({

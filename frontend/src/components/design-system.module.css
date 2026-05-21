@@ -22,6 +22,11 @@
   aspect-ratio: 16 / 9;
 }
 
+/* Short editorial band for interior page heroes (directory hubs, indexes). */
+.media-frame--band {
+  aspect-ratio: 5 / 2;
+}
+
 .media-frame__label {
   position: absolute;
   bottom: 16px;

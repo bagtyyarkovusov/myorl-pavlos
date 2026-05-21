@@ -49,13 +49,16 @@
   padding-inline: clamp(16px, 4vw, 32px);
 }
 
-.directory-intro {
-  max-width: min(72ch, 100%);
+:global(.cms-html).directory-intro {
+  width: 100%;
+  max-width: 100%;
   color: var(--muted);
 }
 
 .directory-intro pre {
+  box-sizing: border-box;
   margin: 0;
+  width: 100%;
   max-width: 100%;
   overflow: visible;
   white-space: normal;
@@ -73,7 +76,7 @@
 
 .directory-intro pre strong {
   display: block;
-  max-width: 68ch;
+  max-width: none;
   color: inherit;
   font-weight: 600;
 }
@@ -119,9 +122,21 @@
   overflow: hidden;
 }
 
+/* Directory / index heroes: title-first, image as a short editorial band. */
+.page-hero__image--accent {
+  max-width: min(32rem, 100%);
+  max-height: clamp(9rem, 17vw, 12rem);
+  margin-top: clamp(14px, 2.5vw, 22px);
+}
+
 @media (min-width: 768px) {
-  .page-hero__image {
+  .page-hero__image:not(.page-hero__image--accent) {
     max-height: none;
+  }
+
+  .page-hero__image--accent {
+    max-width: min(28rem, 58%);
+    max-height: clamp(9.5rem, 11vw, 11.75rem);
   }
 }
 

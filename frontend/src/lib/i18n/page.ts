@@ -26,8 +26,16 @@ export type PageStrings = {
   /** Link next to result count when a tag filter is active. */
   directoryClearFilter: string;
   directoryResultCount: (count: number) => string;
+  paginationLabel: string;
+  paginationFirst: string;
+  paginationPrevious: string;
+  paginationNext: string;
+  paginationLast: string;
   directoryClosureCopy: string;
   directoryClosureCta: string;
+  videoReadMore: string;
+  videoPlayLabel: string;
+  videoDirectoryEmpty: string;
 };
 
 const STRINGS: Record<Locale, PageStrings> = {
@@ -55,9 +63,17 @@ const STRINGS: Record<Locale, PageStrings> = {
     directoryAllFiltersLabel: "Όλα",
     directoryClearFilter: "Εμφάνιση όλων",
     directoryResultCount: (count) => (count === 1 ? "1 αποτέλεσμα" : `${count} αποτελέσματα`),
+    paginationLabel: "Σελίδες",
+    paginationFirst: "Πρώτη",
+    paginationPrevious: "Προηγούμενη",
+    paginationNext: "Επόμενη",
+    paginationLast: "Τελευταία",
     directoryClosureCopy:
       "Δεν είστε σίγουροι ποια εξέταση χρειάζεστε; Θα σας καθοδηγήσουμε στο ραντεβού.",
     directoryClosureCta: "Κλείστε ραντεβού",
+    videoReadMore: "Διαβάστε περισσότερα",
+    videoPlayLabel: "Αναπαραγωγή βίντεο",
+    videoDirectoryEmpty: "Δεν υπάρχουν διαθέσιμα βίντεο ακόμη.",
   },
   ru: {
     home: "Главная",
@@ -89,9 +105,17 @@ const STRINGS: Record<Locale, PageStrings> = {
       if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return `${count} результата`;
       return `${count} результатов`;
     },
+    paginationLabel: "Страницы",
+    paginationFirst: "Первая",
+    paginationPrevious: "Предыдущая",
+    paginationNext: "Следующая",
+    paginationLast: "Последняя",
     directoryClosureCopy:
       "Не уверены, какое обследование вам нужно? На приёме мы подскажем следующий шаг.",
     directoryClosureCta: "Записаться на приём",
+    videoReadMore: "Читать далее",
+    videoPlayLabel: "Воспроизвести видео",
+    videoDirectoryEmpty: "Видео пока недоступны.",
   },
 };
 

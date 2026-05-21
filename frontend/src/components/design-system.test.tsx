@@ -76,6 +76,18 @@ describe("MediaFrame", () => {
     expect(frame.className).toContain("media-frame--portrait");
   });
 
+  it("renders with band variant class", () => {
+    const { container } = render(
+      <MediaFrame
+        media={{ url: "/test.jpg", width: 800, height: 320, alternativeText: null }}
+        alt="test"
+        variant="band"
+      />,
+    );
+    const frame = container.firstElementChild as HTMLElement;
+    expect(frame.className).toContain("media-frame--band");
+  });
+
   it("renders ph-stripe class when media has no url", () => {
     const { container } = render(<MediaFrame media={null} alt="no image" />);
     const frame = container.firstElementChild as HTMLElement;

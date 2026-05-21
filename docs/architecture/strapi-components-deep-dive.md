@@ -18,7 +18,7 @@ Repeatable items used inside sections and dynamic zones:
 | `items.promo-slide` | `items/promo-slide.json` | Carousel slide: image, title, subtitle, link |
 | `items.social-link` | `items/social-link.json` | Social media link: platform + URL |
 | `items.tab-item` | `items/tab-item.json` | Tab item: label + content blocks |
-| `items.video` | `items/video.json` | Video embed: YouTube/Vimeo URL |
+| `items.video` | `items/video.json` | Uploaded MP4/WebM media for inline page sections |
 
 ## Sections (10)
 
@@ -35,7 +35,13 @@ Top-level sections placed in the page dynamic zone:
 | `sections.promo-slider` | `sections/promo-slider.json` | Promo carousel (repeats `promo-slide`) |
 | `sections.social-links` | `sections/social-links.json` | Social media links (repeats `social-link`) |
 | `sections.tabs` | `sections/tabs.json` | Tabbed content (repeats `tab-item`) |
-| `sections.video` | `sections/video.json` | Embedded video section |
+| `sections.video` | `sections/video.json` | Embedded video section (uploaded media) |
+
+## Video library
+
+| Content type | File | Purpose |
+| --- | --- | --- |
+| `video-entry` | `api/video-entry/` | Standalone **Video Entry** catalog for `/el/video` and `/ru/video` directories (YouTube + optional related article) |
 
 ## Shared (1)
 

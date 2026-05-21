@@ -10,7 +10,7 @@ export function SectionHubPage({ page, navigation = [] }: PageLayoutProps) {
     <div className={layoutStyles["page-shell"]}>
       <div className="container">
         <div className={styles.hubChrome}>
-          <PageHeader page={page} kicker={null} />
+          <PageHeader page={page} kicker={null} heroImageVariant="accent" />
           <SectionTabBar navigation={navigation} currentPage={page} />
         </div>
         <div className={styles.hubBodySlot}>

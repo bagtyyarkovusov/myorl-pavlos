@@ -116,7 +116,7 @@ describe("SiteHeaderClient", () => {
       />,
     );
 
-    const ctaLinks = screen.getAllByText("Κλείσε ραντεβού →");
+    const ctaLinks = screen.getAllByText("Κλείσε ραντεβού");
     expect(ctaLinks.length).toBeGreaterThanOrEqual(1);
     expect(ctaLinks[0]?.closest("a")?.getAttribute("href")).toBe("/el/rantevou");
   });
@@ -199,5 +199,26 @@ describe("SiteHeaderClient", () => {
 
     const addressElements = screen.getAllByText(/Λεωφ. Αλεξάνδρας 201, Αθήνα/);
     expect(addressElements.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders Russian CTA with full and short label spans for container-query switching", () => {
+    render(
+      <SiteHeaderClient
+        locale="ru"
+        navigation={mockNavigation}
+        appointmentHref="/ru/zapis"
+        settings={{ ...defaultSettings, locale: "ru" }}
+      />,
+    );
+
+    const header = document.querySelector('[data-locale="ru"]');
+    expect(header).toBeTruthy();
+
+    const fullLabels = screen.getAllByText("Записаться на приём");
+    const shortLabels = screen.getAllByText("Записаться");
+    expect(fullLabels.length).toBeGreaterThanOrEqual(1);
+    expect(shortLabels.length).toBeGreaterThanOrEqual(1);
+    expect(fullLabels[0]?.closest('[class*="cta-book__full"]')).toBeTruthy();
+    expect(shortLabels[0]?.closest('[class*="cta-book__short"]')).toBeTruthy();
   });
 });

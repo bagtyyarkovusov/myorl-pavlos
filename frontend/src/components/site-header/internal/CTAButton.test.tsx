@@ -11,14 +11,21 @@ describe("CTAButton", () => {
 
   it("renders short label with aria-hidden", () => {
     render(<CTAButton href="/el/rantevou" fullLabel="Book Appointment" shortLabel="Book" />);
-    const short = screen.getByText("Book");
+    const short = document.querySelector('[class*="cta-book__short"]') as HTMLElement;
     expect(short.getAttribute("aria-hidden")).toBe("true");
+    expect(short.querySelector('[class*="cta-book__label"]')?.textContent).toBe("Book");
   });
 
   it("link href is correct", () => {
     render(<CTAButton href="/el/rantevou" fullLabel="Book Appointment" shortLabel="Book" />);
     const link = screen.getByText("Book Appointment").closest("a");
     expect(link?.getAttribute("href")).toBe("/el/rantevou");
+  });
+
+  it("renders label and arrow as separate elements", () => {
+    render(<CTAButton href="/el/rantevou" fullLabel="Book Appointment" shortLabel="Book" />);
+    const link = screen.getByText("Book Appointment").closest("a");
+    expect(link?.querySelector('[class*="cta-book__arrow"] svg')).toBeTruthy();
   });
 
   it("handles external appointment URLs", () => {

@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 
+import { fetchVideoEntries } from "@/lib/cms/video-entries";
+
+vi.mock("@/lib/cms/video-entries", () => ({
+  fetchVideoEntries: vi.fn(async () => []),
+}));
+
 import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
 import { SectionIndexPage } from "./SectionIndexPage";
@@ -805,26 +811,43 @@ describe("SectionIndexPage", () => {
     );
   });
 
-  it("passes the layout variant into the dense directory grid", () => {
+  it("renders VideoDirectoryPage with video entries", async () => {
+    const { VideoDirectoryPageWithEntries } = await import("./VideoDirectoryPage");
     const page: PageDTO = {
       ...BASE_PAGE,
       documentId: "nav-videos",
       layoutVariant: "video-index",
       isFolder: true,
       title: "Videos",
-      slug: "videos",
+      slug: "video",
     };
-    const nav: NavigationNodeDTO[] = [
-      {
-        ...makeNav("videos", "Videos"),
-        isFolder: true,
-        children: [makeNav("tour", "Clinic Tour", 1)],
-      },
-    ];
 
-    render(<SectionIndexPage page={page} navigation={nav} />);
+    render(
+      <VideoDirectoryPageWithEntries
+        page={page}
+        navigation={[]}
+        entries={[
+          {
+            documentId: "video-1",
+            locale: "el",
+            title: "Clinic Tour",
+            youtubeId: "abc123",
+            youtubeUrl: null,
+            categories: [{ slug: "ρινος", label: "Ρινός" }],
+            sortOrder: 1,
+            relatedArticle: { documentId: "p1", slug: "tour", title: "Tour" },
+            legacyArticleUrl: null,
+          },
+        ]}
+      />,
+    );
 
-    expect(document.querySelector('[data-index-variant="video-grid"]')).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Videos" })).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Clinic Tour" })).toBeDefined();
+    expect(screen.getByRole("link", { name: "Διαβάστε περισσότερα" })).toHaveAttribute(
+      "href",
+      "/el/tour",
+    );
   });
 
   it("renders tag filter pills derived from child navigation tags", () => {

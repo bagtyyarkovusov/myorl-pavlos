@@ -65,7 +65,7 @@ type MediaFrameProps = {
   media?: MediaDTO | null;
   alt?: string;
   label?: string;
-  variant?: "portrait" | "wide";
+  variant?: "portrait" | "wide" | "band";
   eager?: boolean;
   className?: string;
   /** Overrides the default `sizes` hint for `next/image` (layout-specific breakpoints). */
@@ -89,7 +89,11 @@ export function MediaFrame({
   );
 
   const defaultSizes =
-    variant === "portrait" ? "(min-width: 960px) 36vw, 100vw" : "(min-width: 960px) 44vw, 100vw";
+    variant === "portrait"
+      ? "(min-width: 960px) 36vw, 100vw"
+      : variant === "band"
+        ? "(min-width: 960px) 28rem, 92vw"
+        : "(min-width: 960px) 44vw, 100vw";
 
   return (
     <div className={frameClass}>

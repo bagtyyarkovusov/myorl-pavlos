@@ -141,7 +141,19 @@ export function MobileDrawer({
           style={{ "--stagger-index": staggerBase + 1 } as React.CSSProperties}
         >
           <Link href={appointmentHref} onClick={onClose}>
-            {bookAppointmentLabel}
+            <span className={styles["cta-book__label"]}>{bookAppointmentLabel}</span>
+            <span className={styles["cta-book__arrow"]} aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="16" height="16" focusable="false">
+                <path
+                  d="M3.5 8h7.5M8.5 4.5 12 8l-3.5 3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
           </Link>
         </div>
       </aside>

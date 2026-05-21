@@ -1,6 +1,7 @@
 import { MediaFrame } from "@/components/design-system";
 import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
 import { getPageStrings } from "@/lib/i18n/page";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 import styles from "./_shared.module.css";
@@ -14,11 +15,14 @@ export function PageHeader({
   page,
   kicker,
   breadcrumbsEnabled = true,
+  heroImageVariant = "default",
 }: {
   page: PageDTO;
   kicker?: string | null;
   /** When true, renders Home / Parent crumb links when `parentPage` is set (same trail as article heroes). */
   breadcrumbsEnabled?: boolean;
+  /** `accent` — compact band under the title on directory-style pages; `default` — full wide hero. */
+  heroImageVariant?: "default" | "accent";
 }) {
   const media = page.imageCenter ?? page.featuredImage;
   const kickerText = kicker === null ? null : (kicker ?? readableVariant(page.layoutVariant));
@@ -53,8 +57,11 @@ export function PageHeader({
           media={media}
           alt={media.alternativeText ?? page.title}
           eager
-          variant="wide"
-          className={styles["page-hero__image"]}
+          variant={heroImageVariant === "accent" ? "band" : "wide"}
+          className={cn(
+            styles["page-hero__image"],
+            heroImageVariant === "accent" && styles["page-hero__image--accent"],
+          )}
         />
       ) : null}
     </header>

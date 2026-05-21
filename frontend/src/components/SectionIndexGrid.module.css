@@ -374,6 +374,8 @@
     transform: translateY(-2px);
   }
 
+  .index-list--clinic-grid .index-row a:hover,
+  .index-list--clinic-grid .index-row a:focus-visible,
   .index-list--encyclopedia-list .index-row a:hover,
   .index-list--encyclopedia-list .index-row a:focus-visible {
     transform: none;
@@ -403,83 +405,101 @@
   }
 }
 
-.index-list--clinic-grid,
 .index-list--video-grid {
   grid-template-columns: 1fr;
   gap: 16px;
 }
 
 @media (min-width: 768px) {
-  .index-list--clinic-grid,
   .index-list--video-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(16px, 3vw, 24px);
   }
 }
 
+.index-list--clinic-grid,
 .index-list--encyclopedia-list {
   gap: 0;
   border-top: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
+.index-list--clinic-grid .index-row,
 .index-list--encyclopedia-list .index-row {
   border-bottom: 1px solid var(--color-stone-line, #d7dfeb);
 }
 
+.index-list--clinic-grid .index-row a,
 .index-list--encyclopedia-list .index-row a {
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(12px, 2vw, 18px);
   align-items: center;
   min-height: 96px;
   padding: 16px 0;
   background: transparent;
 }
 
+.index-list--clinic-grid .index-row a[data-has-media="true"],
 .index-list--encyclopedia-list .index-row a[data-has-media="true"] {
-  grid-template-columns: minmax(0, 1fr) minmax(84px, 132px) auto;
+  grid-template-columns: minmax(72px, 88px) minmax(0, 1fr);
 }
 
+.index-list--clinic-grid .index-row a:hover,
+.index-list--clinic-grid .index-row a:focus-visible,
 .index-list--encyclopedia-list .index-row a:hover,
 .index-list--encyclopedia-list .index-row a:focus-visible {
-  padding-left: 8px;
+  padding-left: 0;
+  background: rgba(228, 237, 248, 0.18);
 }
 
 @media (min-width: 1024px) {
+  .index-list--clinic-grid,
   .index-list--encyclopedia-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(12px, 1.5vw, 18px);
-    border-top: 0;
   }
 
-  .index-list--encyclopedia-list .index-row {
-    border-bottom: 0;
+  .index-list--clinic-grid .index-row:nth-child(odd),
+  .index-list--encyclopedia-list .index-row:nth-child(odd) {
+    border-right: 1px solid var(--color-stone-line, #d7dfeb);
   }
 
+  .index-list--clinic-grid .index-row:nth-child(odd) a,
+  .index-list--encyclopedia-list .index-row:nth-child(odd) a {
+    padding-right: clamp(16px, 2vw, 28px);
+  }
+
+  .index-list--clinic-grid .index-row:nth-child(even) a,
+  .index-list--encyclopedia-list .index-row:nth-child(even) a {
+    padding-left: clamp(16px, 2vw, 28px);
+  }
+
+  .index-list--clinic-grid .index-row a,
   .index-list--encyclopedia-list .index-row a {
-    min-height: clamp(118px, 11vw, 146px);
-    height: 100%;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: clamp(16px, 2vw, 22px);
-    background:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.42)), var(--surface);
+    min-height: clamp(104px, 7vw, 120px);
+    padding-top: clamp(18px, 2vw, 22px);
+    padding-bottom: clamp(18px, 2vw, 22px);
   }
 
-  .index-list--encyclopedia-list .index-row a:hover {
-    padding-left: clamp(16px, 2vw, 22px);
-    background:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.84), rgba(228, 237, 248, 0.58)), var(--surface);
+  .index-list--clinic-grid .index-row a[data-has-media="true"],
+  .index-list--encyclopedia-list .index-row a[data-has-media="true"] {
+    grid-template-columns: minmax(112px, 144px) minmax(0, 1fr);
+    gap: clamp(18px, 2vw, 24px);
   }
 
+  .index-list--clinic-grid .index-row a:focus-visible,
   .index-list--encyclopedia-list .index-row a:focus-visible {
-    padding-left: clamp(16px, 2vw, 22px);
     outline: 2px solid var(--accent);
-    outline-offset: 2px;
+    outline-offset: -2px;
   }
 
+  .index-list--clinic-grid .index-row__body strong,
   .index-list--encyclopedia-list .index-row__body strong {
-    font-size: clamp(1.12rem, 1.3vw, 1.32rem);
+    font-size: clamp(1.12rem, 1.2vw, 1.28rem);
     text-wrap: balance;
+  }
+
+  .index-media[data-media-variant="clinic-grid"],
+  .index-media[data-media-variant="encyclopedia-list"] {
+    max-width: 144px;
   }
 }
 
@@ -666,6 +686,7 @@
   border-radius: var(--radius-sm);
 }
 
+.index-media[data-media-variant="clinic-grid"][data-media-placeholder],
 .index-media[data-media-variant="directory-list"][data-media-placeholder] {
   background: var(--surface-soft);
 }
@@ -711,6 +732,7 @@
   padding: 18px;
 }
 
+.index-list--clinic-grid .index-row__body,
 .index-list--encyclopedia-list .index-row__body {
   padding: 0;
 }
@@ -732,6 +754,17 @@
   line-height: 1.42;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+.index-row__site {
+  margin: 0;
+  color: var(--color-stone-soft);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-transform: lowercase;
 }
 
 .index-row__tags {
@@ -793,12 +826,32 @@
   aspect-ratio: 16 / 9;
 }
 
-.index-media[data-media-variant="clinic-grid"] {
-  aspect-ratio: 4 / 3;
-}
-
+.index-media[data-media-variant="clinic-grid"],
 .index-media[data-media-variant="encyclopedia-list"] {
   aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+@media (max-width: 767px) {
+  .index-media[data-media-variant="clinic-grid"],
+  .index-media[data-media-variant="encyclopedia-list"] {
+    width: 100%;
+    max-width: 76px;
+  }
+}
+
+@media (min-width: 768px) {
+  .index-list--clinic-grid .index-row a[data-has-media="true"],
+  .index-list--encyclopedia-list .index-row a[data-has-media="true"] {
+    grid-template-columns: minmax(96px, 132px) minmax(0, 1fr);
+  }
+
+  .index-media[data-media-variant="clinic-grid"],
+  .index-media[data-media-variant="encyclopedia-list"] {
+    width: 100%;
+    max-width: 132px;
+  }
 }
 
 .play-overlay {
@@ -862,6 +915,90 @@
 
 .load-more:active {
   transform: translateY(1px);
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: clamp(24px, 4vw, 36px);
+}
+
+.pagination__pages {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination__page,
+.pagination__control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-out),
+    background var(--motion-duration-fast) var(--motion-ease-out),
+    color var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.pagination__page {
+  min-width: 38px;
+  padding: 0 12px;
+}
+
+.pagination__control {
+  padding: 0 14px;
+}
+
+.pagination__page:hover,
+.pagination__page:focus-visible,
+.pagination__control:hover,
+.pagination__control:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  outline: none;
+}
+
+.pagination__page[aria-current="page"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--color-bone-50);
+}
+
+.pagination__control[aria-disabled="true"] {
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .pagination {
+    justify-content: stretch;
+  }
+
+  .pagination__pages {
+    order: -1;
+    flex-basis: 100%;
+  }
+
+  .pagination__control {
+    flex: 1 1 calc(50% - 8px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -929,14 +1066,5 @@
   .index-list--directory-list .index-row__arrow {
     width: 32px;
     height: 32px;
-  }
-
-  .index-list--encyclopedia-list .index-row a {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 12px;
-  }
-
-  .index-list--encyclopedia-list .index-media {
-    display: none;
   }
 }

@@ -63,6 +63,8 @@
   display: flex;
   align-items: center;
   gap: clamp(0px, 0.4vw, 8px);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .desktop-nav .nav-item {
@@ -78,19 +80,37 @@
   padding-inline: clamp(7px, 0.75vw, 12px);
 }
 
-@media (max-width: 1280px) {
-  [data-locale="ru"] .nav-chevron {
-    display: none;
-  }
-}
-
 @media (min-width: 1321px) {
   .megamenu-host {
     grid-column: 2;
     flex: unset;
     align-self: stretch;
+    justify-content: flex-start;
     width: 100%;
     min-width: 0;
+    padding-inline-start: clamp(4px, 0.6vw, 10px);
+  }
+
+  @container site-header-inner (max-width: 76rem) {
+    [data-locale="ru"] .nav-trigger,
+    [data-locale="ru"] .nav-link {
+      font-size: 0.82rem;
+      padding-inline: clamp(5px, 0.5vw, 8px);
+    }
+
+    [data-locale="ru"] .nav-chevron {
+      display: none;
+    }
+
+    [data-locale="ru"] .desktop-nav {
+      gap: 0;
+    }
+  }
+
+  @container site-header-inner (max-width: 74rem) {
+    .megamenu-host {
+      display: none;
+    }
   }
 }
 

@@ -5,6 +5,7 @@ import { SectionIndexGrid } from "./SectionIndexGrid";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 import type { LayoutVariant } from "@/lib/cms/types";
 import type { TagDTO } from "@/lib/cms/types/tag";
+import type { SeoDTO } from "@/lib/cms/types/seo";
 
 function makeChild(
   slug: string,
@@ -14,6 +15,9 @@ function makeChild(
     excerpt?: string | null;
     imageUrl?: string | null;
     tags?: TagDTO[];
+    externalUrl?: string | null;
+    seo?: Partial<SeoDTO> | null;
+    href?: string;
   } = {},
 ): NavigationNodeDTO {
   return {
@@ -26,7 +30,7 @@ function makeChild(
     menuIndex: opts.menuIndex ?? 0,
     hideFromMenu: false,
     parentPage: { documentId: "doc-parent", slug: null, title: null },
-    externalUrl: null,
+    externalUrl: opts.externalUrl ?? null,
     isFolder: false,
     layoutVariant: "standard",
     excerpt: opts.excerpt ?? null,
@@ -34,8 +38,9 @@ function makeChild(
       ? { url: opts.imageUrl, alternativeText: label, width: 1200, height: 800 }
       : null,
     imageCenter: null,
+    seo: opts.seo ?? null,
     tags: opts.tags ?? [],
-    href: `/el/${slug}`,
+    href: opts.href ?? `/el/${slug}`,
     children: [],
   };
 }
@@ -93,13 +98,61 @@ describe("SectionIndexGrid", () => {
     expect(container.firstElementChild).toBeNull();
   });
 
-  it("renders an arrow indicator per row", () => {
-    const children = [makeChild("item", "Item")];
+  it("does not render row arrows on encyclopedia list items", () => {
+    const children = [makeChild("item", "Item", { imageUrl: "/img/item.jpg" })];
 
-    const { container } = render(<SectionIndexGrid items={children} locale="el" />);
+    const { container } = render(
+      <SectionIndexGrid items={children} locale="el" variant="encyclopedia-index" />,
+    );
 
-    const arrows = container.querySelectorAll("[aria-hidden='true']");
-    expect(arrows.length).toBeGreaterThanOrEqual(1);
+    expect(container.querySelector('[class*="index-row__arrow"]')).toBeNull();
+  });
+
+  it("renders left-aligned thumbnails for encyclopedia list items with media", () => {
+    const children = [makeChild("item", "Item", { imageUrl: "/img/item.jpg" })];
+
+    render(<SectionIndexGrid items={children} locale="el" variant="encyclopedia-index" />);
+
+    const link = screen.getByRole("link", { name: /Item/i });
+    expect(link).toHaveAttribute("data-has-media", "true");
+    expect(link.querySelector('[data-media-variant="encyclopedia-list"] img')).toBeTruthy();
+  });
+
+  it("renders clinic index rows with the hairline list layout", () => {
+    const children = [makeChild("clinic", "Athens Clinic", { imageUrl: "/img/clinic.jpg" })];
+
+    render(<SectionIndexGrid items={children} locale="ru" variant="clinic-index" />);
+
+    expect(document.querySelector('[data-index-variant="clinic-grid"]')).toBeTruthy();
+    expect(document.querySelector('[class*="index-list--clinic-grid"]')).toBeTruthy();
+
+    const link = screen.getByRole("link", { name: /Athens Clinic/i });
+    expect(link).toHaveAttribute("data-has-media", "true");
+    expect(link.querySelector('[data-media-variant="clinic-grid"] img')).toBeTruthy();
+    expect(link.querySelector('[class*="index-row__arrow"]')).toBeNull();
+  });
+
+  it("uses seo fallbacks and external link attributes for clinic rows", () => {
+    const children = [
+      makeChild("mediterraneo", "Mediterraneo", {
+        externalUrl: "http://www.mediterraneohospital.gr/",
+        href: "http://www.mediterraneohospital.gr/",
+        excerpt: null,
+        seo: {
+          metaDescription: "Private hospital partner in Athens",
+          ogImage: { url: "/uploads/mediterraneo.jpg", alternativeText: "Mediterraneo" },
+        },
+      }),
+    ];
+
+    render(<SectionIndexGrid items={children} locale="ru" variant="clinic-index" />);
+
+    const link = screen.getByRole("link", { name: /Mediterraneo/i });
+    expect(link).toHaveAttribute("href", "http://www.mediterraneohospital.gr/");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noreferrer");
+    expect(screen.getByText("Private hospital partner in Athens")).toBeDefined();
+    expect(link.querySelector('[data-media-variant="clinic-grid"] img')).toBeTruthy();
   });
 
   it("renders encyclopedia article tags as category cues", () => {
@@ -187,7 +240,7 @@ describe("SectionIndexGrid variants", () => {
       />,
     );
 
-    expect(screen.queryByRole("link", { name: /Item 1/ })).toBeNull();
+    expect(screen.queryByRole("link", { name: /^Item 1$/ })).toBeNull();
     expect(screen.getByRole("link", { name: /Item 13/ })).toHaveAttribute("href", "/el/item-13");
     expect(screen.queryByRole("button", { name: /Περισσότερα/ })).toBeNull();
     expect(screen.getByRole("navigation", { name: "Σελίδες" })).toBeDefined();

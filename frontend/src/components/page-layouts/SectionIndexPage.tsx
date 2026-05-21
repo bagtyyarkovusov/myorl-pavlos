@@ -10,7 +10,19 @@ import Link from "next/link";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import layoutStyles from "./_shared.module.css";
 
-export function SectionIndexPage({ page, navigation = [] }: PageLayoutProps) {
+type SectionIndexPageProps = PageLayoutProps & {
+  currentPage?: number;
+  activeTagSlug?: string | null;
+  indexHref?: string;
+};
+
+export function SectionIndexPage({
+  page,
+  navigation = [],
+  currentPage = 1,
+  activeTagSlug = null,
+  indexHref,
+}: SectionIndexPageProps) {
   const children =
     page.layoutVariant === "encyclopedia-index"
       ? findTaggedDirectoryPages(navigation, page.documentId)
@@ -22,7 +34,7 @@ export function SectionIndexPage({ page, navigation = [] }: PageLayoutProps) {
   return (
     <PageSection rhythm="compact" entranceMotion="instant">
       <div className={layoutStyles["directory-page-stack"]}>
-        <PageHeader page={page} kicker={null} />
+        <PageHeader page={page} kicker={null} heroImageVariant="accent" />
         {page.content ? (
           <CmsHtml html={page.content} className={layoutStyles["directory-intro"]} />
         ) : null}
@@ -32,6 +44,9 @@ export function SectionIndexPage({ page, navigation = [] }: PageLayoutProps) {
           variant={page.layoutVariant}
           tags={tags}
           tagMap={tagMap}
+          currentPage={currentPage}
+          activeTagSlug={activeTagSlug}
+          indexHref={indexHref}
           backHref={
             page.parentPage?.slug
               ? hrefForLocaleSlug(page.locale, page.parentPage.slug)

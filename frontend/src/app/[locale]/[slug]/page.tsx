@@ -6,6 +6,7 @@ import { PageRenderer } from "@/components/PageRenderer";
 import { getPage, getSite } from "@/lib/cms/cms-api";
 import { getSitemapPages } from "@/lib/cms/cms-api";
 import { toPageMetadata } from "@/lib/cms/metadata";
+import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { isLocale, type PageDTO, type NavigationNodeDTO } from "@/lib/cms/types";
 import { findNodeByDocumentId } from "@/lib/cms/tab-bar";
 import { parsePageParam } from "@/lib/testimonials/paginate";
@@ -76,6 +77,8 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
           navigation={navigation}
           directoryNavigation={directoryNavigation}
           testimonialsPage={1}
+          directoryPage={1}
+          directoryHref={hrefForLocaleSlug(page.locale, page.slug)}
         />
       }
     >
@@ -102,6 +105,8 @@ async function CmsPageContent({
 }) {
   const sp = searchParams ? await searchParams : {};
   const testimonialsPage = parsePageParam(sp.page);
+  const directoryPage = parsePageParam(sp.page);
+  const directoryTag = parseTagParam(sp.tag);
 
   return (
     <PageRenderer
@@ -109,6 +114,14 @@ async function CmsPageContent({
       navigation={navigation}
       directoryNavigation={directoryNavigation}
       testimonialsPage={testimonialsPage}
+      directoryPage={directoryPage}
+      directoryTag={directoryTag}
+      directoryHref={hrefForLocaleSlug(page.locale, page.slug)}
     />
   );
+}
+
+function parseTagParam(raw: string | string[] | undefined): string | null {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  return value && value.trim().length > 0 ? value : null;
 }

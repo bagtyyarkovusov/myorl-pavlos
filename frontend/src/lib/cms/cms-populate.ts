@@ -86,6 +86,7 @@ export const NAVIGATION_POPULATE = {
   tags: { fields: ["name", "slug"] },
   featuredImage: true,
   imageCenter: true,
+  seo: { populate: ["ogImage"] },
 } as const;
 
 /**
@@ -98,4 +99,11 @@ export const SITEMAP_POPULATE = {
   seo: { populate: ["ogImage"] },
   parentPage: { fields: ["documentId", "slug", "title"] },
   localizations: { fields: ["documentId", "locale", "slug", "title"] },
+} as const;
+
+/**
+ * Populate for the video library directory.
+ */
+export const VIDEO_ENTRY_POPULATE = {
+  relatedArticle: { fields: ["documentId", "slug", "title", "locale"] },
 } as const;

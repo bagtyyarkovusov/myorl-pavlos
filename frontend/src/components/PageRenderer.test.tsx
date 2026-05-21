@@ -1,7 +1,47 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { PageRenderer } from "./PageRenderer";
-import type { PageDTO, NavigationNodeDTO, GlobalSettingsDTO } from "@/lib/cms/types";
+import type { PageDTO, NavigationNodeDTO, GlobalSettingsDTO, VideoEntryDTO } from "@/lib/cms/types";
+
+const mockVideoEntries: VideoEntryDTO[] = [
+  {
+    documentId: "video-1",
+    locale: "el",
+    title: "Sample video",
+    youtubeId: "abc123",
+    youtubeUrl: "https://www.youtube.com/watch?v=abc123",
+    categories: [],
+    sortOrder: 1,
+    relatedArticle: null,
+    legacyArticleUrl: null,
+  },
+];
+
+vi.mock("@/lib/cms/video-entries", () => ({
+  fetchVideoEntries: vi.fn(async () => mockVideoEntries),
+}));
+
+vi.mock("@/components/page-layouts/VideoDirectoryPage", async () => {
+  const actual = await vi.importActual<typeof import("./page-layouts/VideoDirectoryPage")>(
+    "@/components/page-layouts/VideoDirectoryPage",
+  );
+  return {
+    ...actual,
+    VideoDirectoryPage: ({
+      page,
+      navigation = [],
+    }: {
+      page: PageDTO;
+      navigation?: NavigationNodeDTO[];
+    }) => (
+      <actual.VideoDirectoryPageWithEntries
+        page={page}
+        navigation={navigation}
+        entries={mockVideoEntries}
+      />
+    ),
+  };
+});
 
 beforeEach(() => {
   vi.stubEnv("STRAPI_URL", "http://localhost:1337");
@@ -114,12 +154,29 @@ describe("PageRenderer", () => {
     });
   });
 
-  it("renders SectionIndexPage for all directory layout variants", async () => {
+  it("renders VideoDirectoryPage for video-index layout", async () => {
+    const videoPage: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "video-index",
+      title: "Videos",
+      slug: "video",
+      isFolder: true,
+    };
+
+    render(<PageRenderer page={videoPage} navigation={[]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: "Videos" })).toBeDefined();
+      expect(screen.getByRole("heading", { name: "Sample video" })).toBeDefined();
+    });
+    expect(screen.queryByRole("link", { name: /Child page/ })).toBeNull();
+  });
+
+  it("renders SectionIndexPage for directory layout variants", async () => {
     const variants: Array<PageDTO["layoutVariant"]> = [
       "section-index",
       "clinic-index",
       "encyclopedia-index",
-      "video-index",
     ];
 
     for (const variant of variants) {

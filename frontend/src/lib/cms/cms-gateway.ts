@@ -1,10 +1,11 @@
 import { z, type ZodSchema } from "zod";
 import { CmsError } from "./errors";
 import { pageEntitySchema, pageResponseSchema } from "./page-parsers";
-import type { PageDTO } from "./types";
+import { videoEntryEntitySchema } from "./video-entry-parsers";
+import type { PageDTO, VideoEntryDTO } from "./types";
 
 /** Re-export of the page DTO type used by the gateway. */
-export { type PageDTO };
+export { type PageDTO, type VideoEntryDTO };
 
 /**
  * Options for fetching a single CMS entity.
@@ -62,6 +63,9 @@ export interface CmsGateway {
   pages: {
     all(opts?: FetchAllOptions): Promise<PageDTO[]>;
     one(slug: string, opts?: FetchOneOptions): Promise<PageDTO | null>;
+  };
+  videoEntries: {
+    all(opts?: FetchAllOptions): Promise<VideoEntryDTO[]>;
   };
   fetchOne<T>(endpoint: string, schema: ZodSchema<T>, opts?: FetchOneOptions): Promise<T | null>;
   fetchAll<T>(endpoint: string, schema: ZodSchema<T>, opts?: FetchAllOptions): Promise<T[]>;
@@ -400,8 +404,15 @@ export function createCmsGateway(config: CmsGatewayConfig): CmsGateway {
     },
   };
 
+  const videoEntriesImpl = {
+    all: async (opts?: FetchAllOptions): Promise<VideoEntryDTO[]> => {
+      return fetchAllImpl("/api/video-entries", videoEntryEntitySchema, opts);
+    },
+  };
+
   const gateway: CmsGateway = {
     pages: pagesImpl,
+    videoEntries: videoEntriesImpl,
     fetchOne: fetchOneImpl,
     fetchAll: fetchAllImpl,
     fetch: fetchImpl,
@@ -423,6 +434,9 @@ export function createCmsGateway(config: CmsGatewayConfig): CmsGateway {
     gateway.pages.one = cache.dedupe(
       gateway.pages.one as (...args: unknown[]) => unknown,
     ) as typeof gateway.pages.one;
+    gateway.videoEntries.all = cache.dedupe(
+      gateway.videoEntries.all as (...args: unknown[]) => unknown,
+    ) as typeof gateway.videoEntries.all;
   }
 
   return gateway;

@@ -42,3 +42,5 @@ export type {
 export type { SeoDTO, SitemapChangeFrequency, StrapiMedia, StrapiSeo } from "./types/seo";
 
 export type { TagDTO, StrapiTag } from "./types/tag";
+
+export type { VideoCategoryDTO, VideoEntryDTO, StrapiVideoEntryPayload } from "./types/video-entry";

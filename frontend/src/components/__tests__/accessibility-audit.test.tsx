@@ -44,7 +44,10 @@ describe("Accessibility audit — interactive components meet WCAG AA contracts"
 
     it("single mode keeps only one panel open at a time", () => {
       render(<DisclosureList items={items} mode="single" />);
-      const [first, second] = screen.getAllByRole("button");
+      const buttons = screen.getAllByRole("button");
+      expect(buttons.length).toBeGreaterThanOrEqual(2);
+      const first = buttons[0]!;
+      const second = buttons[1]!;
       fireEvent.click(first);
       expect(first.getAttribute("aria-expanded")).toBe("true");
       fireEvent.click(second);

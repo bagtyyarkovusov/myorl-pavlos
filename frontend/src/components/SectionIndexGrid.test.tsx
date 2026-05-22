@@ -7,6 +7,21 @@ import type { LayoutVariant } from "@/lib/cms/types";
 import type { TagDTO } from "@/lib/cms/types/tag";
 import type { SeoDTO } from "@/lib/cms/types/seo";
 
+function makeSeo(overrides: Partial<SeoDTO> = {}): SeoDTO {
+  return {
+    metaTitle: null,
+    metaDescription: null,
+    canonicalUrl: null,
+    ogImage: null,
+    robotsNoindex: false,
+    robotsNofollow: false,
+    sitemapExclude: false,
+    sitemapPriority: null,
+    sitemapChangeFrequency: null,
+    ...overrides,
+  };
+}
+
 function makeChild(
   slug: string,
   label: string,
@@ -16,7 +31,7 @@ function makeChild(
     imageUrl?: string | null;
     tags?: TagDTO[];
     externalUrl?: string | null;
-    seo?: Partial<SeoDTO> | null;
+    seo?: SeoDTO | null;
     href?: string;
   } = {},
 ): NavigationNodeDTO {
@@ -138,10 +153,15 @@ describe("SectionIndexGrid", () => {
         externalUrl: "http://www.mediterraneohospital.gr/",
         href: "http://www.mediterraneohospital.gr/",
         excerpt: null,
-        seo: {
+        seo: makeSeo({
           metaDescription: "Private hospital partner in Athens",
-          ogImage: { url: "/uploads/mediterraneo.jpg", alternativeText: "Mediterraneo" },
-        },
+          ogImage: {
+            url: "/uploads/mediterraneo.jpg",
+            alternativeText: "Mediterraneo",
+            width: null,
+            height: null,
+          },
+        }),
       }),
     ];
 

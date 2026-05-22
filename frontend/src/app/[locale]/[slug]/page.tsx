@@ -8,7 +8,12 @@ import { getSitemapPages } from "@/lib/cms/cms-api";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { withRelatedTopics } from "@/lib/cms/related-topics";
-import { isLocale, type PageDTO, type NavigationNodeDTO } from "@/lib/cms/types";
+import {
+  isLocale,
+  type PageDTO,
+  type NavigationNodeDTO,
+  type GlobalSettingsDTO,
+} from "@/lib/cms/types";
 import { findNodeByDocumentId } from "@/lib/cms/tab-bar";
 import { parsePageParam } from "@/lib/testimonials/paginate";
 
@@ -58,7 +63,7 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
     notFound();
   }
 
-  const [page, { navigation, directoryNavigation }] = await Promise.all([
+  const [page, { navigation, directoryNavigation, settings }] = await Promise.all([
     getPage(locale, slug),
     getSite(locale),
   ]);
@@ -91,6 +96,7 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
         page={pageWithRelatedTopics}
         navigation={navigation}
         directoryNavigation={directoryNavigation}
+        globalSettings={settings}
         searchParams={searchParams}
       />
     </Suspense>
@@ -101,11 +107,13 @@ async function CmsPageContent({
   page,
   navigation,
   directoryNavigation,
+  globalSettings,
   searchParams,
 }: {
   page: PageDTO;
   navigation: NavigationNodeDTO[];
   directoryNavigation: NavigationNodeDTO[];
+  globalSettings?: GlobalSettingsDTO;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = searchParams ? await searchParams : {};
@@ -118,6 +126,7 @@ async function CmsPageContent({
       page={page}
       navigation={navigation}
       directoryNavigation={directoryNavigation}
+      globalSettings={globalSettings}
       testimonialsPage={testimonialsPage}
       directoryPage={directoryPage}
       directoryTag={directoryTag}

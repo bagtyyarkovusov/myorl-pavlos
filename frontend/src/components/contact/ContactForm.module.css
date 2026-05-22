@@ -1,0 +1,215 @@
+.panel {
+  margin-top: clamp(28px, 4vw, 48px);
+  border: 1px solid var(--line, #d7dfeb);
+  border-radius: var(--radius-md, 8px);
+  background: rgba(251, 252, 254, 0.82);
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display, "Instrument Serif", Georgia, serif);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--foreground, #0f2a4a);
+}
+
+.intro {
+  margin: 0 0 1.5rem;
+  max-width: 58ch;
+  color: var(--muted, #5a6b7e);
+  line-height: 1.65;
+}
+
+.form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.fieldRow {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .fieldRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground, #0f2a4a);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line, #d7dfeb);
+  border-radius: var(--radius-md, 8px);
+  background: var(--surface, #fbfcfe);
+  padding: 0.65rem 0.85rem;
+  font: inherit;
+  color: var(--foreground, #0f2a4a);
+  transition:
+    border-color var(--motion-duration-fast, 150ms) var(--motion-ease-default, ease),
+    box-shadow var(--motion-duration-fast, 150ms) var(--motion-ease-default, ease);
+}
+
+.field textarea {
+  min-height: 148px;
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--accent, #2563a8);
+  outline-offset: 2px;
+  border-color: var(--accent, #2563a8);
+}
+
+.field input:disabled,
+.field textarea:disabled {
+  opacity: 0.72;
+}
+
+.fileInput {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line, #d7dfeb);
+  border-radius: var(--radius-md, 8px);
+  background: var(--surface, #fbfcfe);
+  padding: 0.55rem 0.85rem;
+  font: inherit;
+  color: var(--foreground, #0f2a4a);
+}
+
+.fileInput:focus-visible {
+  outline: 2px solid var(--accent, #2563a8);
+  outline-offset: 2px;
+  border-color: var(--accent, #2563a8);
+}
+
+.fileHint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted, #5a6b7e);
+}
+
+.fileName {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--foreground, #0f2a4a);
+}
+
+.fileError {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-trust-ink, #17406f);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.requiredNote {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted, #5a6b7e);
+}
+
+.submit {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-full, 999px);
+  background: var(--foreground, #0f2a4a);
+  padding: 0 1.25rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-bone-50, #fbfcfe);
+  cursor: pointer;
+  transition:
+    background var(--motion-duration-fast, 150ms) var(--motion-ease-default, ease),
+    transform var(--motion-duration-fast, 150ms) var(--motion-ease-out, ease-out);
+}
+
+.submit:hover,
+.submit:focus-visible {
+  background: var(--accent, #2563a8);
+  transform: translateY(-1px);
+}
+
+.submit:focus-visible {
+  outline: 2px solid var(--accent, #2563a8);
+  outline-offset: 2px;
+}
+
+.submitPending {
+  cursor: wait;
+}
+
+.submit:disabled {
+  opacity: 0.85;
+  cursor: wait;
+  transform: none;
+}
+
+.secondaryAction {
+  margin-top: 1rem;
+  border: 1px solid var(--line, #d7dfeb);
+  border-radius: var(--radius-full, 999px);
+  background: transparent;
+  padding: 0.55rem 1rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground, #0f2a4a);
+  cursor: pointer;
+}
+
+.secondaryAction:hover,
+.secondaryAction:focus-visible {
+  border-color: var(--accent, #2563a8);
+  background: var(--color-trust-soft, #e4edf8);
+  color: var(--color-trust-ink, #17406f);
+  outline: 2px solid var(--accent, #2563a8);
+  outline-offset: 2px;
+}
+
+.alert {
+  margin-bottom: 1rem;
+  border: 1px solid color-mix(in srgb, var(--accent, #2563a8) 35%, var(--line, #d7dfeb));
+  border-radius: var(--radius-md, 8px);
+  background: var(--color-trust-soft, #e4edf8);
+  padding: 0.85rem 1rem;
+  color: var(--color-trust-ink, #17406f);
+}
+
+.alertTitle {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

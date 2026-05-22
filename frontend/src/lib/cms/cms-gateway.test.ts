@@ -538,6 +538,7 @@ describe("pages.one", () => {
       documentId: "home123",
       slug: "index",
       title: "Home",
+      featuredImage: null,
     });
   });
 

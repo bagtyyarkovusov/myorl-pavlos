@@ -62,6 +62,8 @@ function makePage(slug: string, opts: { isFolder?: boolean; parentDocId?: string
     hideFromMenu: false,
     menuIndex: 0,
     parentPage: opts.parentDocId ? { documentId: opts.parentDocId, slug: null, title: null } : null,
+    relatedPages: [],
+    relatedTopics: [],
     tags: [],
     infoBlockBottom: null,
     articleAuthor: null,

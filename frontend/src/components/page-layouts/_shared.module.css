@@ -469,6 +469,10 @@
   min-width: 0;
 }
 
+.service-layout__content :global(.cms-html.prose-service) {
+  max-width: 100%;
+}
+
 .service-layout__sidebar {
   position: sticky;
   top: 100px;

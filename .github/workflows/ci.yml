@@ -85,8 +85,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install PyYAML
-        run: pip install "PyYAML>=6.0"
+      - name: Install Python tooling dependencies
+        run: pip install -r requirements.txt
 
       - name: Environment drift detector
         run: python3 tests/test_environments.py
@@ -99,6 +99,12 @@ jobs:
 
       - name: Migration runner tests
         run: python3 tests/test_migration_runner.py
+
+      - name: CMS HTML cleanup tests
+        run: python3 tests/test_cms_html_cleanup.py
+
+      - name: Service-article blob repair (offline helpers)
+        run: python3 tests/test_repair_service_article_blob_pages.py
 
   docker:
     name: docker • build • compose

@@ -382,6 +382,28 @@ main[data-hub-child="true"] .cms-html h3[id] {
   box-shadow: inset 0 3px 0 0 var(--color-teal);
 }
 
+.prose-service h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.4em;
+  font-size: 1.15em;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.prose-service h3:first-child {
+  margin-top: 0;
+}
+
+.prose-service ul,
+.prose-service ol {
+  margin: 0 0 1.25em;
+  padding-left: 1.35em;
+}
+
+.prose-service li + li {
+  margin-top: 0.35em;
+}
+
 .prose-encyclopedia {
   max-width: 760px;
   color: var(--foreground);

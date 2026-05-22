@@ -84,6 +84,10 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
     }))
     .filter((link) => link.label.trim().length > 0);
 
+  const contentHeadings = sectionLinks.length === 0 ? extractHeadings(page.content) : [];
+  const mainContentHtml =
+    contentHeadings.length > 0 ? addHeadingIds(page.content, contentHeadings) : page.content;
+
   const mobileSectionNav =
     sectionLinks.length > 0 ? (
       <details className={styles["service-mobile-panel"]}>
@@ -92,6 +96,20 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
           {sectionLinks.map((link) => (
             <a href={`#${link.id}`} key={link.id}>
               {link.label}
+            </a>
+          ))}
+        </nav>
+      </details>
+    ) : null;
+
+  const mobileContentToc =
+    contentHeadings.length > 0 ? (
+      <details className={styles["reference-mobile-panel"]}>
+        <summary>{t.contents}</summary>
+        <nav aria-label={t.contents}>
+          {contentHeadings.map((heading) => (
+            <a href={`#${heading.id}`} key={heading.id}>
+              {heading.text}
             </a>
           ))}
         </nav>
@@ -110,6 +128,7 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
   return (
     <>
       {mobileSectionNav}
+      {mobileContentToc}
       {mobileRelatedTopics}
       <main
         className={styles["service-layout"]}
@@ -117,7 +136,7 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
         data-service-layout="true"
       >
         <article className={styles["service-layout__content"]}>
-          <CmsHtml html={page.content} variant="service" />
+          <CmsHtml html={mainContentHtml} variant="service" />
           {page.sections.map((section, index) => (
             <SectionRenderer
               key={`${section.__component}-${index}`}
@@ -144,6 +163,16 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
               {sectionLinks.map((link) => (
                 <a href={`#${link.id}`} key={link.id}>
                   {link.label}
+                </a>
+              ))}
+            </nav>
+          ) : null}
+          {contentHeadings.length > 0 ? (
+            <nav aria-label={t.contents} className={styles["reference-nav"]}>
+              <p>{t.contents}</p>
+              {contentHeadings.map((heading) => (
+                <a href={`#${heading.id}`} key={heading.id}>
+                  {heading.text}
                 </a>
               ))}
             </nav>

@@ -5,7 +5,6 @@ import type {
   FooterCategory,
 } from "@myorl-pavlos/shared-types";
 import type { Locale, MediaDTO, PageRefDTO } from "./common";
-import type { SeoDTO } from "./seo";
 import type { SectionDTO, StrapiSectionRaw } from "./sections";
 import type { SeoDTO, StrapiMedia, StrapiSeo } from "./seo";
 import type { TagDTO, StrapiTag } from "./tag";

@@ -75,6 +75,7 @@ describe("getPageResult", () => {
       documentId: "home123",
       slug: "index",
       title: "Home",
+      featuredImage: null,
     });
     expect(page.alternateUrls).toHaveProperty("el");
     expect(page.alternateUrls).toHaveProperty("ru");

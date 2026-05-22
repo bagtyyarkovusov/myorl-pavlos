@@ -470,14 +470,6 @@ describe("HomePage", () => {
 });
 
 describe("ContactPage", () => {
-  const SETTINGS_WITH_ADDRESS: GlobalSettingsDTO = {
-    locale: "el",
-    address: "Λεωφ. Αλεξάνδρας 201, Αθήνα",
-    phoneTel: "+302106427000",
-    phoneDisplay: "+30 210 6427 000",
-    hours: null,
-  };
-
   const CONTACT_PAGE: PageDTO = {
     ...BASE_PAGE,
     pageType: "contact",
@@ -493,7 +485,14 @@ describe("ContactPage", () => {
           { type: "email", valueHtml: "<p>info@clinic.com</p>" },
         ],
         clinics: [
-          { name: "Athens", addressHtml: "<p>123 Main St</p>", phone: "+30 210 000", email: null },
+          {
+            name: "Athens",
+            addressHtml: "<p>123 Main St</p>",
+            phone: "+30 210 000",
+            email: null,
+            latitude: 37.9838,
+            longitude: 23.7275,
+          },
           {
             name: "Thessaloniki",
             addressHtml: "<p>456 Other St</p>",
@@ -505,21 +504,26 @@ describe("ContactPage", () => {
     ],
   };
 
+  it("renders the contact form", () => {
+    render(<ContactPage page={CONTACT_PAGE} />);
+    expect(screen.getByRole("heading", { name: "Στείλτε μήνυμα" })).toBeDefined();
+    expect(screen.getByLabelText("Επισύναψη αρχείου")).toBeDefined();
+    expect(screen.getByRole("button", { name: "Αποστολή" })).toBeDefined();
+  });
+
   it("renders the section details inside the contact details column", () => {
-    render(<ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />);
+    render(<ContactPage page={CONTACT_PAGE} />);
     expect(screen.getByText("+30 210 123 4567")).toBeDefined();
     expect(screen.getByText("info@clinic.com")).toBeDefined();
   });
 
   it("renders the split-screen layout wrapper", () => {
-    const { container } = render(
-      <ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />,
-    );
+    const { container } = render(<ContactPage page={CONTACT_PAGE} />);
     expect(container.querySelector("[data-contact-split]")).toBeTruthy();
   });
 
   it("renders each clinic as an accordion toggle", () => {
-    render(<ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />);
+    render(<ContactPage page={CONTACT_PAGE} />);
     expect(screen.getByRole("button", { name: /Athens/ })).toHaveAttribute(
       "aria-expanded",
       "false",
@@ -531,9 +535,7 @@ describe("ContactPage", () => {
   });
 
   it("expands a clinic panel on click without changing the map iframe src", () => {
-    const { container } = render(
-      <ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />,
-    );
+    const { container } = render(<ContactPage page={CONTACT_PAGE} />);
     const map = container.querySelector("iframe[data-contact-map]");
     expect(map).toBeTruthy();
     const initialSrc = map!.getAttribute("src");
@@ -545,12 +547,11 @@ describe("ContactPage", () => {
     const thessToggle = screen.getByRole("button", { name: /Thessaloniki/ });
     fireEvent.click(thessToggle);
 
-    // Map iframe src is mounted once and never changes on selection (PRD #103).
     expect(map!.getAttribute("src")).toBe(initialSrc);
   });
 
   it("renders phone/email links with tel: and mailto: schemes inside the expanded panel", () => {
-    render(<ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />);
+    render(<ContactPage page={CONTACT_PAGE} />);
 
     fireEvent.click(screen.getByRole("button", { name: /Athens/ }));
     const phoneLink = screen.getByRole("link", { name: "+30 210 000" });
@@ -561,25 +562,52 @@ describe("ContactPage", () => {
     expect(emailLink).toHaveAttribute("href", "mailto:th@cl.com");
   });
 
-  it("hides the map block when global settings has no address", () => {
-    const { container } = render(
-      <ContactPage
-        page={CONTACT_PAGE}
-        globalSettings={{ ...SETTINGS_WITH_ADDRESS, address: null }}
-      />,
-    );
+  it("renders the map from clinic coordinates per ADR-009", () => {
+    const { container } = render(<ContactPage page={CONTACT_PAGE} />);
+    const map = container.querySelector("iframe[data-contact-map]");
+    expect(map?.getAttribute("src")).toContain("37.9838");
+  });
+
+  it("hides the map block when clinics have no usable location data", () => {
+    const page: PageDTO = {
+      ...CONTACT_PAGE,
+      sections: [
+        {
+          __component: "sections.contact" as const,
+          heading: null,
+          intro: null,
+          details: [{ type: "phone", valueHtml: "<p>555</p>" }],
+          clinics: [{ name: "Empty", addressHtml: "", phone: null, email: null }],
+        },
+      ],
+    };
+    const { container } = render(<ContactPage page={page} />);
     expect(container.querySelector("iframe[data-contact-map]")).toBeNull();
   });
 
-  it("hides the map block when no globalSettings prop is passed", () => {
-    const { container } = render(<ContactPage page={CONTACT_PAGE} />);
-    expect(container.querySelector("iframe[data-contact-map]")).toBeNull();
+  it("uses fallback contact data when CMS sections are empty", () => {
+    const page: PageDTO = { ...CONTACT_PAGE, sections: [] };
+    render(<ContactPage page={page} />);
+    expect(screen.getByRole("heading", { name: "Διεύθυνση" })).toBeDefined();
+    expect(screen.getByRole("button", { name: /Λεωφόρος Αλεξάνδρας 201/ })).toBeDefined();
+  });
+
+  it("does not render a hero image even when CMS provides featuredImage", () => {
+    const page: PageDTO = {
+      ...CONTACT_PAGE,
+      featuredImage: {
+        url: "http://localhost:1337/uploads/otoplastiki_c130f8d656.jpg",
+        alternativeText: "Wrong image",
+        width: 1200,
+        height: 800,
+      },
+    };
+    const { container } = render(<ContactPage page={page} />);
+    expect(container.querySelector("header img")).toBeNull();
   });
 
   it("does not render any <StructuredData> tags (composer is the single entry point)", () => {
-    const { container } = render(
-      <ContactPage page={CONTACT_PAGE} globalSettings={SETTINGS_WITH_ADDRESS} />,
-    );
+    const { container } = render(<ContactPage page={CONTACT_PAGE} />);
     expect(container.querySelector('script[type="application/ld+json"]')).toBeNull();
   });
 });
@@ -1360,6 +1388,40 @@ describe("PageBody", () => {
     expect(
       within(serviceAside as HTMLElement).getByRole("link", { name: "What to expect" }),
     ).toHaveAttribute("href", "#section-1");
+  });
+
+  it("renders service-article content TOC when sections are empty", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "service-article",
+      content: "<p>Intro</p><h3>Symptoms</h3><p>Details</p><h3>Treatment</h3><p>More</p>",
+      sections: [],
+      relatedTopics: [{ documentId: "r1", slug: "follow-up", title: "Follow up" }],
+    };
+
+    const { container } = render(<PageBody page={page} />);
+
+    const serviceAside = document.querySelector("[data-service-layout='true'] aside");
+    expect(serviceAside).toBeTruthy();
+    const aside = serviceAside as HTMLElement;
+
+    const contentsNav = within(aside).getByRole("navigation", { name: "Περιεχόμενα" });
+    expect(within(contentsNav).getByRole("link", { name: "Symptoms" })).toHaveAttribute(
+      "href",
+      "#symptoms",
+    );
+    expect(within(contentsNav).getByRole("link", { name: "Treatment" })).toHaveAttribute(
+      "href",
+      "#treatment",
+    );
+    expect(within(aside).getByRole("link", { name: "Follow up" })).toHaveAttribute(
+      "href",
+      "/el/follow-up",
+    );
+
+    expect(container.querySelector("#symptoms")).toBeTruthy();
+    expect(container.querySelector("#treatment")).toBeTruthy();
+    expect(screen.queryByRole("navigation", { name: "Ενότητες" })).toBeNull();
   });
 
   it("renders reference article body with TOC sidebar", () => {

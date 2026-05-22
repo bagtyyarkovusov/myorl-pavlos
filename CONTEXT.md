@@ -66,6 +66,7 @@ _Avoid_: linked-resources section (for article cross-links), popular articles li
 - On article pages, **`sections.linked-resources`** is retired after a one-time migration into **Related Pages**; the section remains for home editorial grids only.
 - Auto-suggested **Related Topics** exclude the current page, parent hub/index pages, menu-hidden pages, and non-article layout variants — only other long-form medical articles qualify.
 - When no **Related Topics** resolve, hide the panel entirely — do not render an empty heading on desktop or mobile.
+- Encyclopedia-style prose stored entirely in **`page.content`** with **`service-article`** layout and **empty** **`pageSections`** is an editorial mismatch when the cinematic service shell is unwanted: **`encyclopedia-article`** is the canonical long-form article layout — HTML normalization and optional layout normalization run through [`tools/repair_service_article_blob_pages.py`](tools/repair_service_article_blob_pages.py) (dry-run by default).
 
 ---
 

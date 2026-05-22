@@ -6,6 +6,22 @@ import {
   getDirectoryNodeMedia,
 } from "./directory-node-presentation";
 import type { NavigationNodeDTO } from "./types";
+import type { SeoDTO } from "./types/seo";
+
+function makeSeo(overrides: Partial<SeoDTO> = {}): SeoDTO {
+  return {
+    metaTitle: null,
+    metaDescription: null,
+    canonicalUrl: null,
+    ogImage: null,
+    robotsNoindex: false,
+    robotsNofollow: false,
+    sitemapExclude: false,
+    sitemapPriority: null,
+    sitemapChangeFrequency: null,
+    ...overrides,
+  };
+}
 
 function makeNode(overrides: Partial<NavigationNodeDTO> = {}): NavigationNodeDTO {
   return {
@@ -37,7 +53,7 @@ describe("getDirectoryNodeMedia", () => {
 
     expect(getDirectoryNodeMedia(makeNode({ imageCenter: center }))).toEqual(center);
     expect(getDirectoryNodeMedia(makeNode({ featuredImage: featured }))).toEqual(featured);
-    expect(getDirectoryNodeMedia(makeNode({ seo: { ogImage: og } }))).toEqual(og);
+    expect(getDirectoryNodeMedia(makeNode({ seo: makeSeo({ ogImage: og }) }))).toEqual(og);
   });
 });
 
@@ -47,7 +63,7 @@ describe("getDirectoryNodeDescription", () => {
       getDirectoryNodeDescription(
         makeNode({
           excerpt: "<p>Clinic excerpt</p>",
-          seo: { metaDescription: "SEO description" },
+          seo: makeSeo({ metaDescription: "SEO description" }),
         }),
       ),
     ).toBe("Clinic excerpt");
@@ -57,7 +73,7 @@ describe("getDirectoryNodeDescription", () => {
     expect(
       getDirectoryNodeDescription(
         makeNode({
-          seo: { metaDescription: "Private hospital in Athens" },
+          seo: makeSeo({ metaDescription: "Private hospital in Athens" }),
         }),
       ),
     ).toBe("Private hospital in Athens");

@@ -6,7 +6,7 @@ import re
 import warnings
 from typing import Any
 
-from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning, NavigableString
 
 _BROKEN_IMG_SRC_RE = re.compile(
     r"""
@@ -89,3 +89,142 @@ def remove_broken_images(raw_html: str | None) -> str:
         paragraph.decompose()
 
     return str(soup)
+
+
+_SENTENCE_BOUNDARY = re.compile(r"(?<=[.!?…])\s+")
+_SKIP_NBSP_PARENTS = frozenset({"script", "style"})
+
+
+def strip_nbsp_from_html(html: str | None) -> tuple[str, int]:
+    """Replace non-breaking spaces with normal spaces outside ``script``/``style``.
+
+    Handles literal ``\\xa0`` / narrow no-break spaces in text nodes only.
+    Returns ``(clean_html, replacements_count)``.
+    """
+
+    if not html or not isinstance(html, str):
+        return "", 0
+    lowered = html.lower()
+    # ``&nbsp;`` becomes ``\\xa0`` after parsing — still cheap to skip untouched HTML.
+    if "\xa0" not in html and "\u202f" not in html and "&nbsp;" not in lowered:
+        return html, 0
+
+    warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
+    soup = BeautifulSoup(html, "html.parser")
+    replaced = 0
+    for text in soup.find_all(string=True):
+        parent_name = getattr(getattr(text, "parent", None), "name", None)
+        if parent_name in _SKIP_NBSP_PARENTS:
+            continue
+        raw = str(text)
+        new = raw.replace("\xa0", " ").replace("\u202f", " ")
+        if new != raw:
+            replaced += raw.count("\xa0") + raw.count("\u202f")
+            text.replace_with(new)
+    out = str(soup)
+    return out, replaced
+
+
+def _paragraph_plain_with_br_only(p_tag: Any) -> bool:
+    """True if paragraph has no nested elements other than optional ``br``."""
+
+    if getattr(p_tag, "name", None) != "p":
+        return False
+    for child in getattr(p_tag, "children", ()):
+        if isinstance(child, NavigableString):
+            continue
+        name = getattr(child, "name", None)
+        if name == "br":
+            continue
+        return False
+    return True
+
+
+def _hard_wrap_line(text: str, max_chars: int) -> list[str]:
+    """Break a chunk that still exceeds ``max_chars`` on spaces."""
+
+    out: list[str] = []
+    tail = text.strip()
+    while tail:
+        if len(tail) <= max_chars:
+            out.append(tail)
+            break
+        cut = tail.rfind(" ", max(20, max_chars // 5), max_chars + 1)
+        if cut < 1:
+            cut = max_chars
+        piece = tail[:cut].strip()
+        tail = tail[cut:].strip()
+        if piece:
+            out.append(piece)
+    return out
+
+
+def _sentence_parts(text: str) -> list[str]:
+    parts = [_p.strip() for _p in _SENTENCE_BOUNDARY.split(text.strip()) if _p.strip()]
+    return parts if parts else ([text.strip()] if text.strip() else [])
+
+
+def _chunk_plain_text(text: str, max_chars: int) -> list[str]:
+    """Bundle sentences into paragraphs under ``max_chars``."""
+
+    sentences = _sentence_parts(text)
+    paragraphs: list[str] = []
+    current = ""
+    for sent in sentences:
+        if len(sent) > max_chars:
+            if current.strip():
+                paragraphs.append(current.strip())
+                current = ""
+            paragraphs.extend(_hard_wrap_line(sent, max_chars))
+            continue
+        candidate = f"{current} {sent}".strip() if current else sent
+        if len(candidate) <= max_chars:
+            current = candidate
+        else:
+            if current.strip():
+                paragraphs.append(current.strip())
+            current = sent
+    if current.strip():
+        paragraphs.append(current.strip())
+    return paragraphs
+
+
+def split_long_paragraphs(html: str | None, *, max_chars: int) -> tuple[str, int]:
+    """Split overly long plain ``<p>`` bodies into shorter ``<p>`` blocks."""
+
+    if not html or max_chars <= 0:
+        return html or "", 0
+
+    warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
+    soup = BeautifulSoup(html, "html.parser")
+    split_count = 0
+    for p in list(soup.find_all("p")):
+        if not _paragraph_plain_with_br_only(p):
+            continue
+        txt = p.get_text()
+        if len(txt.strip()) <= max_chars:
+            continue
+        fragments = _chunk_plain_text(txt, max_chars)
+        if len(fragments) <= 1:
+            continue
+        for frag in fragments:
+            new_p = soup.new_tag("p")
+            new_p.string = frag
+            p.insert_before(new_p)
+        split_count += len(fragments) - 1
+        p.extract()
+    return str(soup), split_count
+
+
+def promote_h3_to_h2(html: str | None) -> tuple[str, int]:
+    """Rename ``h3`` elements to ``h2`` for better scan hierarchy (use carefully)."""
+
+    if not html or "<h3" not in html.lower():
+        return html or "", 0
+
+    warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
+    soup = BeautifulSoup(html, "html.parser")
+    headings = soup.find_all("h3")
+    for h in headings:
+        h.name = "h2"
+    return str(soup), len(headings)

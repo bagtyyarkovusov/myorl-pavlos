@@ -1,40 +1,36 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { ContactClinicAccordion } from "@/components/contact/ContactClinicAccordion";
+import { ContactForm } from "@/components/contact/ContactForm";
 import { PageSection } from "@/components/PageSection";
-import { mapEmbedSrcFromAddress } from "@/lib/site/contact-fallbacks";
+import { buildContactRenderModel } from "@/lib/contact/contact-render-model";
+import { resolveContactSection } from "@/lib/contact/contact-section-fallbacks";
+import { getContactStrings } from "@/lib/i18n/contact";
 import type { GlobalSettingsDTO, PageDTO } from "@/lib/cms/types";
 import { PageHeader } from "./_shared";
 import styles from "./ContactPage.module.css";
 
 type ContactPageProps = {
   page: PageDTO;
-  /**
-   * Optional global Strapi settings. The contact map iframe `src` is derived
-   * from `globalSettings.address` once on mount and never re-renders on
-   * clinic selection (PRD #103 blocker-fix decision).
-   */
-  globalSettings?: GlobalSettingsDTO | null;
 };
 
-export function ContactPage({ page, globalSettings }: ContactPageProps) {
-  const contactSection = page.sections.find((s) => s.__component === "sections.contact");
-  const detailsBlock =
-    contactSection?.__component === "sections.contact" ? contactSection.details : [];
-  const clinics = contactSection?.__component === "sections.contact" ? contactSection.clinics : [];
-
-  const trimmedAddress = globalSettings?.address?.trim() ?? "";
-  const mapSrc = trimmedAddress ? mapEmbedSrcFromAddress(trimmedAddress) : null;
+export function ContactPage({ page }: ContactPageProps) {
+  const t = getContactStrings(page.locale);
+  const contactSection = resolveContactSection(page, page.locale);
+  const model = buildContactRenderModel(contactSection);
+  const mapSrc = model.map?.src ?? null;
 
   return (
     <PageSection>
-      <PageHeader page={page} />
+      <PageHeader page={page} kicker="contact" showExcerpt={false} showHeroImage={false} />
       <CmsHtml html={page.content} />
 
+      <ContactForm locale={page.locale} />
+
       <div className={styles.split} data-contact-split>
-        <aside className={styles.column} aria-label="Contact details">
-          {detailsBlock.length > 0 ? (
-            <section className={styles.detailsBand} aria-label="Contact information">
-              {detailsBlock.map((detail, index) => (
+        <aside className={styles.column} aria-label={t.contactDetailsLabel}>
+          {model.section.details.length > 0 ? (
+            <section className={styles.detailsBand} aria-label={t.contactDetailsLabel}>
+              {model.section.details.map((detail, index) => (
                 <article className={styles.detailCard} key={`${detail.type}-${index}`}>
                   <h2>{detail.type}</h2>
                   <CmsHtml html={detail.valueHtml} />
@@ -42,17 +38,17 @@ export function ContactPage({ page, globalSettings }: ContactPageProps) {
               ))}
             </section>
           ) : null}
-          {clinics.length > 0 ? (
-            <ContactClinicAccordion clinics={clinics} toggleLabel="Clinics" />
+          {model.clinics.length > 0 ? (
+            <ContactClinicAccordion clinics={model.clinics} toggleLabel={t.clinicsLabel} />
           ) : null}
         </aside>
 
         {mapSrc ? (
-          <section className={styles.mapColumn} aria-label="Map">
+          <section className={styles.mapColumn} aria-label={t.mapLabel}>
             <iframe
               data-contact-map
               src={mapSrc}
-              title="Map"
+              title={t.mapLabel}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               className={styles.mapFrame}

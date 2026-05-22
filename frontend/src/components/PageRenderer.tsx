@@ -127,7 +127,7 @@ export function PageRenderer({
   } else if (page.pageType === "gallery") {
     layout = <GalleryPage page={page} />;
   } else if (page.pageType === "contact") {
-    layout = <ContactPage page={page} globalSettings={globalSettings} />;
+    layout = <ContactPage page={page} />;
   } else {
     layout = <StandardPage page={page} />;
   }

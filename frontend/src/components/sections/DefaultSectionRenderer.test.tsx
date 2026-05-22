@@ -355,7 +355,10 @@ describe("DefaultSectionRenderer", () => {
 
     render(<DefaultSectionRenderer section={section} disclosureMode="single" />);
 
-    const [first, second] = screen.getAllByRole("button");
+    const buttons = screen.getAllByRole("button");
+    expect(buttons.length).toBeGreaterThanOrEqual(2);
+    const first = buttons[0]!;
+    const second = buttons[1]!;
     fireEvent.click(first);
     expect(first).toHaveAttribute("aria-expanded", "true");
 

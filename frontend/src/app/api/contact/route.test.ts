@@ -59,7 +59,7 @@ describe("POST /api/contact", () => {
     expect(response.status).toBe(503);
   });
 
-  it("returns 200 for valid submissions", async () => {
+  it("returns 200 for valid contact submissions", async () => {
     const { POST } = await import("@/app/api/contact/route");
     const response = await POST(
       new NextRequest("http://localhost:3000/api/contact", {
@@ -78,5 +78,58 @@ describe("POST /api/contact", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ ok: true, id: "email-1" });
+  });
+
+  it("returns 200 for valid appointment submissions", async () => {
+    const { POST } = await import("@/app/api/contact/route");
+    const { sendContactEmail } = await import("@/lib/contact/send-contact-email");
+    const response = await POST(
+      new NextRequest("http://localhost:3000/api/contact", {
+        method: "POST",
+        headers: { referer: "https://myorl.example.com/ru/zapis" },
+        body: JSON.stringify({
+          locale: "ru",
+          name: "Maria Ivanova",
+          email: "maria@example.com",
+          phone: "+30 694 000 0000",
+          message: "Ear pain, prefer afternoon.",
+          formType: "appointment",
+          preferredDate: "2026-06-20",
+          company: "",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(vi.mocked(sendContactEmail)).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          formType: "appointment",
+          preferredDate: "2026-06-20",
+        }),
+      }),
+    );
+  });
+
+  it("returns 200 for appointment submissions with empty message", async () => {
+    const { POST } = await import("@/app/api/contact/route");
+    const response = await POST(
+      new NextRequest("http://localhost:3000/api/contact", {
+        method: "POST",
+        headers: { referer: "https://myorl.example.com/ru/zapis" },
+        body: JSON.stringify({
+          locale: "ru",
+          name: "Maria Ivanova",
+          email: "maria@example.com",
+          phone: "+30 694 000 0000",
+          message: "",
+          formType: "appointment",
+          preferredDate: "2026-06-20",
+          company: "",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
   });
 });

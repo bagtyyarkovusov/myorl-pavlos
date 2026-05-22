@@ -9,6 +9,7 @@ import styles from "./_shared.module.css";
 export type PageLayoutProps = {
   page: PageDTO;
   navigation?: NavigationNodeDTO[];
+  appointmentHref?: string;
 };
 
 export function PageHeader({

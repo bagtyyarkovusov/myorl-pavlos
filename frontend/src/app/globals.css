@@ -75,8 +75,15 @@
   --motion-duration-standard: 500ms;
   --motion-ease-default: ease;
   --motion-ease-out: ease-out;
+  /* Page entry: small air below fixed header (header spacer owns header height). */
+  --page-top-gutter: clamp(24px, 3vw, 36px);
+  --page-bottom-gutter: clamp(48px, 7vw, 104px);
+  /* Fixed header flow spacer total (utility + main row). Overridden at header breakpoints. */
+  --header-offset: 124px;
   /* In-page anchors: offset for sticky site header when jumping from TOC / section nav. */
-  --anchor-scroll-offset: clamp(5.25rem, 12vh, 7.75rem);
+  --anchor-scroll-offset: calc(var(--header-offset) + var(--page-top-gutter));
+  --mobile-dock-height: 52px;
+  --page-inline-gutter: clamp(16px, 4vw, 24px);
 
   /* Canonical breakpoint scale (reference; CSS custom properties can't be
      used in @media queries yet, but these document the intended values). */
@@ -86,6 +93,24 @@
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1180px;
   --breakpoint-2xl: 1280px;
+}
+
+@media (max-width: 680px) {
+  :root {
+    --header-offset: 110px;
+  }
+}
+
+@media (max-width: 479px) {
+  :root {
+    --header-offset: 104px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --header-offset: 98px;
+  }
 }
 
 html {
@@ -113,6 +138,15 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (max-width: 768px) {
+  #main-content {
+    padding-bottom: max(
+      calc(var(--mobile-dock-height) + env(safe-area-inset-bottom, 0px) + 16px),
+      4.25rem
+    );
+  }
 }
 
 * {
@@ -160,7 +194,7 @@ main[data-hub-child="true"] .cms-html h3[id] {
 .container {
   width: min(1280px, 100%);
   margin-inline: auto;
-  padding-inline: clamp(16px, 4vw, 24px);
+  padding-inline: var(--page-inline-gutter);
   box-sizing: border-box;
 }
 

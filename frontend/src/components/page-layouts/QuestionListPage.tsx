@@ -4,21 +4,17 @@ import { CmsHtml } from "@/components/CmsHtml";
 import { PageSection } from "@/components/PageSection";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getPageStrings } from "@/lib/i18n/page";
-import { findAppointmentHref } from "@/lib/navigation/appointment-href";
+import { defaultAppointmentHref } from "@/lib/navigation/appointment-href";
 
 import { PageHeader, type PageLayoutProps } from "./_shared";
 import layoutStyles from "./_shared.module.css";
 
-export function QuestionListPage({ page, navigation = [] }: PageLayoutProps) {
+export function QuestionListPage({ page, appointmentHref }: PageLayoutProps) {
   const t = getPageStrings(page.locale);
-  const appointmentHref = findAppointmentHref(
-    navigation,
-    page.locale,
-    `/${page.locale}/appointment`,
-  );
+  const bookHref = appointmentHref ?? defaultAppointmentHref(page.locale);
 
   return (
-    <PageSection rhythm="compact" entranceMotion="instant">
+    <PageSection rhythm="page" entranceMotion="instant">
       <div className={layoutStyles["directory-page-stack"]}>
         <PageHeader page={page} kicker={null} heroImageVariant="accent" />
         {page.content ? (
@@ -35,7 +31,7 @@ export function QuestionListPage({ page, navigation = [] }: PageLayoutProps) {
         ))}
         <aside className={layoutStyles["directory-closure"]} aria-label={t.bookConsultation}>
           <p>{t.questionListClosureCopy}</p>
-          <Link href={appointmentHref} className={layoutStyles["service-cta"]}>
+          <Link href={bookHref} className={layoutStyles["service-cta"]}>
             {t.bookConsultation}
           </Link>
         </aside>

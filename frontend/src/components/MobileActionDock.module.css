@@ -1,0 +1,103 @@
+.dock {
+  position: fixed;
+  inset: auto 0 max(12px, env(safe-area-inset-bottom, 0px)) 0;
+  z-index: 60;
+  display: none;
+  pointer-events: none;
+  transition: opacity var(--motion-duration-default) var(--motion-ease-default);
+}
+
+.dock--at-footer {
+  opacity: 0.9;
+}
+
+.fab-group {
+  position: fixed;
+  left: clamp(12px, 3vw, 20px);
+  bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.fab {
+  display: grid;
+  width: var(--mobile-dock-height, 52px);
+  height: var(--mobile-dock-height, 52px);
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-full);
+  padding: 0;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px var(--shadow-ink-soft, rgba(15, 42, 74, 0.12));
+  transition:
+    background var(--motion-duration-default) var(--motion-ease-default),
+    color var(--motion-duration-default) var(--motion-ease-default),
+    opacity var(--motion-duration-default) var(--motion-ease-default),
+    transform var(--motion-duration-fast) var(--motion-ease-default);
+}
+
+.fab:active {
+  transform: scale(0.94);
+}
+
+.fab--call {
+  background: var(--color-teal, #0e7c7b);
+  color: var(--color-bone-50, #fbfcfe);
+}
+
+.fab--call:hover,
+.fab--call:focus-visible {
+  background: #0a6665;
+  outline: none;
+}
+
+.fab--contact {
+  border: 1.5px solid var(--color-trust, #2563a8);
+  background: var(--surface);
+  color: var(--color-trust-ink, #17406f);
+}
+
+.fab--contact:hover,
+.fab--contact:focus-visible {
+  background: var(--color-trust-soft, #e4edf8);
+  outline: none;
+}
+
+.fab--scroll {
+  position: fixed;
+  right: clamp(12px, 3vw, 20px);
+  bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--color-ink, #0f2a4a);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px) scale(0.92);
+}
+
+.fab--scroll.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.fab--scroll:hover,
+.fab--scroll:focus-visible {
+  background: var(--color-bone-100, #f0f3f8);
+  color: var(--color-trust, #2563a8);
+  outline: none;
+}
+
+.fab--scroll.is-visible:active {
+  transform: translateY(0) scale(0.94);
+}
+
+@media (max-width: 768px) {
+  .dock {
+    display: block;
+  }
+}

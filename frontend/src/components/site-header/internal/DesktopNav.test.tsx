@@ -71,7 +71,8 @@ const baseProps = {
   onMenuOpen: vi.fn(),
   onMenuClose: vi.fn(),
   registerPillRect: vi.fn(),
-  overviewLinkLabel: "Overview",
+  overviewLinkLabel: "Open section",
+  sectionOverviewMoreHint: (hiddenCount: number) => `${hiddenCount} more inside`,
   featureBlurb: "",
   primaryNavLabel: "Main navigation",
   topicsLabel: (count: number) => `${count} topics`,
@@ -175,7 +176,7 @@ describe("DesktopNav", () => {
     const panel = document.querySelector('[class*="megamenu-panel"]') as HTMLElement;
     expect(panel.getAttribute("data-open")).toBe("true");
     expect(panel.getAttribute("aria-hidden")).toBe("false");
-    expect(screen.getByText("Overview")).toBeDefined();
+    expect(screen.getByText("Consultation")).toBeDefined();
   });
 
   it("hides MegaMenu panel when no menu is open", () => {

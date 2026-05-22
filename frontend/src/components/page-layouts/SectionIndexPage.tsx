@@ -4,7 +4,7 @@ import { SectionIndexGrid } from "@/components/SectionIndexGrid";
 import { deriveDirectoryTagFilter } from "@/lib/cms/directory-tags";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { getPageStrings } from "@/lib/i18n/page";
-import { findAppointmentHref } from "@/lib/navigation/appointment-href";
+import { defaultAppointmentHref } from "@/lib/navigation/appointment-href";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 import Link from "next/link";
 import { PageHeader, type PageLayoutProps } from "./_shared";
@@ -19,6 +19,7 @@ type SectionIndexPageProps = PageLayoutProps & {
 export function SectionIndexPage({
   page,
   navigation = [],
+  appointmentHref,
   currentPage = 1,
   activeTagSlug = null,
   indexHref,
@@ -29,10 +30,10 @@ export function SectionIndexPage({
       : findChildren(navigation, page.documentId);
   const { tags, tagMap } = deriveDirectoryTagFilter(children);
   const t = getPageStrings(page.locale);
-  const appointmentHref = findAppointmentHref(navigation, page.locale);
+  const bookHref = appointmentHref ?? defaultAppointmentHref(page.locale);
 
   return (
-    <PageSection rhythm="compact" entranceMotion="instant">
+    <PageSection rhythm="page" entranceMotion="instant">
       <div className={layoutStyles["directory-page-stack"]}>
         <PageHeader page={page} kicker={null} heroImageVariant="accent" />
         {page.content ? (
@@ -55,7 +56,7 @@ export function SectionIndexPage({
         />
         <aside className={layoutStyles["directory-closure"]} aria-label={t.directoryClosureCta}>
           <p>{t.directoryClosureCopy}</p>
-          <Link href={appointmentHref} className={layoutStyles["service-cta"]}>
+          <Link href={bookHref} className={layoutStyles["service-cta"]}>
             {t.directoryClosureCta}
           </Link>
         </aside>

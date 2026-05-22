@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 import { getHeaderStrings } from "@/lib/i18n/header";
+import { resolveFooterAddressLine, resolveVisitHours } from "@/lib/site/contact-fallbacks";
 import type { GlobalSettingsDTO, Locale, NavigationNodeDTO } from "@/lib/cms/types";
 
 import { DesktopNav } from "./site-header/internal/DesktopNav";
@@ -32,10 +33,8 @@ export function SiteHeaderClient({
   settings,
 }: SiteHeaderClientProps) {
   const t = getHeaderStrings(locale);
-  const address = settings?.address ?? t.address;
-  const phoneTel = settings?.phoneTel ?? t.phoneTel;
-  const phoneDisplay = settings?.phoneDisplay ?? t.phoneDisplay;
-  const hours = settings?.hours ?? t.hours;
+  const address = resolveFooterAddressLine(settings, locale);
+  const hours = resolveVisitHours(settings, locale);
 
   const {
     isOpen: isDrawerOpen,
@@ -62,8 +61,7 @@ export function SiteHeaderClient({
         <UtilityBar
           address={address}
           hours={hours}
-          phoneTel={phoneTel}
-          phoneDisplay={phoneDisplay}
+          settings={settings}
           locale={locale}
           languageLabel={t.languageLabel}
         />
@@ -90,6 +88,7 @@ export function SiteHeaderClient({
               onMenuClose={nav.closeMenus}
               registerPillRect={registerRect}
               overviewLinkLabel={t.sectionOverviewLink}
+              sectionOverviewMoreHint={t.sectionOverviewMoreHint}
               featureBlurb={featureBlurb}
               primaryNavLabel={t.primaryNavLabel}
               topicsLabel={t.topicsLabel}
@@ -132,14 +131,13 @@ export function SiteHeaderClient({
         locale={locale}
         appointmentHref={appointmentHref}
         address={address}
-        hours={hours}
-        phoneTel={phoneTel}
-        phoneDisplay={phoneDisplay}
+        settings={settings}
         closeMenuLabel={t.closeMenu}
         brandLogoAlt={t.brandLogoAlt}
         mobileNavLabel={t.mobileNavLabel}
         mobileNavInnerLabel={t.mobileNavInnerLabel}
         overviewMobile={t.overviewMobile}
+        topicsLabel={t.topicsLabel}
         bookAppointmentLabel={t.bookAppointment}
       />
     </>

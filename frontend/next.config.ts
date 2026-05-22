@@ -106,6 +106,26 @@ const nextConfig: NextConfig = {
         destination: "/el/epikoinonia/:path*",
         permanent: true,
       },
+      {
+        source: "/el/kleiste-randevou-online",
+        destination: "/el/rantevou",
+        permanent: true,
+      },
+      {
+        source: "/ru/kleiste-randevou-online",
+        destination: "/ru/zapis",
+        permanent: true,
+      },
+      {
+        source: "/el/appointment",
+        destination: "/el/rantevou",
+        permanent: true,
+      },
+      {
+        source: "/ru/appointment",
+        destination: "/ru/zapis",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

@@ -1,9 +1,15 @@
 import type { Core } from "@strapi/strapi";
 
-const SEED_VERSION = "v1";
+import {
+  SEED_PRIMARY_CONTACT,
+  SEED_SOCIAL_LINKS,
+  type SeedLocale,
+} from "./seed-global-data";
+
+const SEED_VERSION = "v5";
 const MARKER_KEY = "seed_global_version";
 
-const LOCALES = ["el", "ru"] as const;
+const LOCALES: SeedLocale[] = ["el", "ru"];
 
 export async function seedGlobal(strapi: Core.Strapi): Promise<void> {
   const store = strapi.store({ type: "plugin", name: "content-manager" });
@@ -13,31 +19,43 @@ export async function seedGlobal(strapi: Core.Strapi): Promise<void> {
     return;
   }
 
+  let documentId: string | undefined;
+
   for (const locale of LOCALES) {
     try {
       const existing = await strapi.documents("api::global.global").findFirst({
         locale,
       });
 
+      const payload = {
+        ...SEED_PRIMARY_CONTACT[locale],
+        socialLinks: SEED_SOCIAL_LINKS,
+      };
+
       if (existing) {
-        strapi.log.info(
-          `[seed-global] Global entry (${locale}) already exists — skipping`,
-        );
+        documentId = existing.documentId;
+        await strapi.documents("api::global.global").update({
+          documentId: existing.documentId,
+          locale,
+          data: payload,
+        });
+        strapi.log.info(`[seed-global] Updated Global entry (${locale})`);
         continue;
       }
 
-      await strapi.documents("api::global.global").create({
+      const created = await strapi.documents("api::global.global").create({
         locale,
-        address: null,
-        phoneTel: null,
-        phoneDisplay: null,
-        hours: null,
+        data: payload,
       });
-
+      documentId = created.documentId;
       strapi.log.info(`[seed-global] Created Global entry (${locale})`);
     } catch (err) {
       strapi.log.error(`[seed-global] Failed to seed Global entry (${locale})`, err);
     }
+  }
+
+  if (documentId) {
+    strapi.log.info(`[seed-global] Global documentId: ${documentId}`);
   }
 
   await store.set({ key: MARKER_KEY, value: SEED_VERSION });

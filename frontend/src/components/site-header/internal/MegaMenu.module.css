@@ -31,11 +31,25 @@
 
 .nav-panel__feature h2 {
   margin-top: 0;
+  margin-bottom: 0;
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 2vw, 2rem);
   font-weight: 400;
   line-height: 1.05;
   color: var(--accent);
+}
+
+.nav-panel__count {
+  display: block;
+  margin-top: 6px;
+  color: var(--color-stone-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  font-feature-settings: "tnum";
 }
 
 .nav-panel__feature p {
@@ -50,9 +64,26 @@
   overflow: hidden;
 }
 
+.nav-panel__cta-block {
+  margin-top: 16px;
+}
+
+.nav-panel__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.nav-panel__cta-more {
+  margin: 8px 0 0;
+  color: var(--color-stone-soft);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
 .nav-panel__cta {
   display: inline-flex;
-  margin-top: 16px;
   align-items: center;
   gap: 4px;
   color: var(--accent-ink);
@@ -70,6 +101,29 @@
 .nav-panel__cta:focus-visible {
   color: var(--accent);
   border-color: var(--accent);
+}
+
+.nav-panel__cta .cta-arrow {
+  display: inline-block;
+  transform: translateX(2px);
+  transition: transform 200ms ease;
+}
+
+.nav-panel__cta:hover .cta-arrow,
+.nav-panel__cta:focus-visible .cta-arrow {
+  transform: translateX(6px);
+}
+
+.nav-panel__cta-count {
+  color: var(--color-stone-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  font-feature-settings: "tnum";
+  white-space: nowrap;
 }
 
 .nav-panel__links {
@@ -112,16 +166,6 @@
     0 16px 48px var(--shadow-ink-soft),
     inset 0 1px 0 var(--highlight-glass);
   padding: 32px;
-}
-
-.nav-panel__cta .cta-arrow {
-  display: inline-block;
-  transform: translateX(2px);
-  transition: transform var(--motion-duration-default) var(--motion-ease-default);
-}
-
-.nav-panel__cta:hover .cta-arrow {
-  transform: translateX(6px);
 }
 
 .nav-panel__link-wrapper {

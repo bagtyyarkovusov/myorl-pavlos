@@ -214,9 +214,35 @@ describe("getSite", () => {
 
     expect(result.navigation).toBeInstanceOf(Array);
     expect(result.navigation.length).toBeGreaterThan(0);
-    expect(result.settings.address).toBe("123 Main St, Athens");
-    expect(result.settings.phoneTel).toBe("+302101234567");
-    expect(result.settings.hours).toBe("Mon-Fri 9:00-17:00");
+    expect(result.appointmentHref).toBe("/el/rantevou");
+    expect(result.settings.address).toBe("Λεωφόρος Αλεξάνδρας 201 & Πανόρμου, Αμπελόκηποι, Αθήνα");
+    expect(result.settings.phoneTel).toBe("+302110194618");
+    expect(result.settings.phoneDisplay).toBe("211-01 94 618");
+    expect(result.settings.email).toBe("pavlos.tsolaridis@gmail.com");
+    expect(result.settings.socialLinks).toHaveLength(4);
+    expect(result.settings.hours).toBe("Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00");
+  });
+
+  it("reuses Greek social links when the locale entry has none", async () => {
+    const { getSite, injectCmsGatewayForTesting: inject } = await import("../cms-api");
+    const navFixture = loadFixture("navigation-pages.json");
+    const globalRuEmptySocial = loadFixture("global-settings.json");
+    globalRuEmptySocial.data.locale = "ru";
+    globalRuEmptySocial.data.socialLinks = [];
+    const globalEl = loadFixture("global-settings.json");
+
+    const mockFetch = vi.fn();
+    mockFetch.mockResolvedValueOnce(mockStrapiResponse(navFixture));
+    mockFetch.mockResolvedValueOnce(mockStrapiResponse(globalRuEmptySocial));
+    mockFetch.mockResolvedValueOnce(mockStrapiResponse(globalEl));
+    const gateway = createTestGateway(mockFetch as unknown as typeof globalThis.fetch);
+    inject(gateway);
+
+    const result = await getSite("ru");
+
+    expect(result.settings.locale).toBe("ru");
+    expect(result.settings.socialLinks).toHaveLength(4);
+    expect(result.settings.socialLinks[0]?.name).toBe("Facebook");
   });
 
   it("returns empty navigation and fallback settings when global fails", async () => {
@@ -233,6 +259,7 @@ describe("getSite", () => {
     const result = await getSite("el");
 
     expect(result.navigation).toBeInstanceOf(Array);
+    expect(result.appointmentHref).toBe("/el/rantevou");
     expect(result.settings.locale).toBe("el");
     expect(result.settings.address).toBeNull();
     expect(result.settings.phoneTel).toBeNull();

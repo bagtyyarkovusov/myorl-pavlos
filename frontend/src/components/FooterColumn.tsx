@@ -38,7 +38,10 @@ export function FooterColumn({
 
   return (
     <details className={styles["link-col"]} open={isOpen}>
-      <summary className={styles["col-label"]}>{label}</summary>
+      <summary className={styles["col-summary"]}>
+        <span className={styles["col-label"]}>{label}</span>
+        <span className={styles["col-toggle"]} aria-hidden="true" />
+      </summary>
       <ul className={styles["link-list"]}>
         {links.map((link, index) => (
           <li key={`${link.href}-${index}`}>

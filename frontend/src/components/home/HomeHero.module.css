@@ -3,7 +3,8 @@
   isolation: isolate;
   overflow: hidden;
   background: transparent;
-  padding: clamp(60px, 8vw, 120px) 1rem clamp(54px, 7vw, 96px);
+  padding-block-end: clamp(54px, 7vw, 96px);
+  padding-inline: 0;
 }
 
 .hero-section::before {

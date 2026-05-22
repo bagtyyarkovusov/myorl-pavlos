@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toSocialLinkDTO } from "./social";
+
 const optionalStringTransform = z
   .string()
   .nullish()
@@ -133,6 +135,14 @@ export const zodVideoEntryEntity = z
   })
   .passthrough();
 
+const strapiSocialLinkSchema = z
+  .object({
+    name: z.string().nullish(),
+    url: z.string().nullish(),
+    icon: z.string().nullish(),
+  })
+  .passthrough();
+
 const strapiGlobalEntitySchema = z
   .object({
     id: z.number().optional(),
@@ -141,7 +151,11 @@ const strapiGlobalEntitySchema = z
     address: optionalStringTransform,
     phoneTel: optionalStringTransform,
     phoneDisplay: optionalStringTransform,
+    secondaryPhoneTel: optionalStringTransform,
+    secondaryPhoneDisplay: optionalStringTransform,
+    email: optionalStringTransform,
     hours: optionalStringTransform,
+    socialLinks: z.array(strapiSocialLinkSchema).nullish(),
   })
   .passthrough();
 
@@ -152,6 +166,16 @@ export const globalResponseSchema = z
   })
   .transform((response) => {
     if (!response.data) return null;
+
+    const socialLinks = (response.data.socialLinks ?? [])
+      .map((link) => toSocialLinkDTO(link))
+      .filter((link): link is NonNullable<typeof link> => link !== null)
+      .map((link) => ({
+        name: link.label,
+        url: link.url,
+        icon: null,
+      }));
+
     return {
       locale: (response.data.locale === "el" || response.data.locale === "ru"
         ? response.data.locale
@@ -159,6 +183,10 @@ export const globalResponseSchema = z
       address: response.data.address,
       phoneTel: response.data.phoneTel,
       phoneDisplay: response.data.phoneDisplay,
+      secondaryPhoneTel: response.data.secondaryPhoneTel,
+      secondaryPhoneDisplay: response.data.secondaryPhoneDisplay,
+      email: response.data.email,
       hours: response.data.hours,
+      socialLinks,
     };
   });

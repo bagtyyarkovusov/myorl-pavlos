@@ -5,7 +5,8 @@ import Link from "next/link";
 
 import { useRef } from "react";
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
-import type { Locale, NavigationNodeDTO } from "@/lib/cms/types";
+import type { GlobalSettingsDTO, Locale, NavigationNodeDTO } from "@/lib/cms/types";
+import { PrimaryContactPhones } from "@/components/PrimaryContactPhones";
 
 import { MobileMenu } from "./MobileMenu";
 import drawerStyles from "./MobileDrawer.module.css";
@@ -26,15 +27,14 @@ type MobileDrawerProps = {
   items: NavigationNodeDTO[];
   locale: Locale;
   appointmentHref: string;
-  address: string;
-  hours: string;
-  phoneTel: string;
-  phoneDisplay: string;
+  address: string | null;
+  settings: GlobalSettingsDTO;
   closeMenuLabel: string;
   brandLogoAlt: string;
   mobileNavLabel: string;
   mobileNavInnerLabel: string;
   overviewMobile: string;
+  topicsLabel: (count: number) => string;
   bookAppointmentLabel: string;
 };
 
@@ -46,14 +46,13 @@ export function MobileDrawer({
   locale,
   appointmentHref,
   address,
-  hours,
-  phoneTel,
-  phoneDisplay,
+  settings,
   closeMenuLabel,
   brandLogoAlt,
   mobileNavLabel,
   mobileNavInnerLabel,
   overviewMobile,
+  topicsLabel,
   bookAppointmentLabel,
 }: MobileDrawerProps) {
   const panelRef = useRef<HTMLElement>(null);
@@ -109,30 +108,35 @@ export function MobileDrawer({
         </div>
 
         <nav className={styles["mobile-drawer__body"]} aria-label={mobileNavInnerLabel}>
-          <MobileMenu items={items} overviewMobile={overviewMobile} onNavigate={onClose} />
+          <MobileMenu
+            items={items}
+            overviewMobile={overviewMobile}
+            topicsLabel={topicsLabel}
+            onNavigate={onClose}
+          />
         </nav>
 
         <div
           className={`${styles["mobile-drawer__info"]} ${styles["mobile-stagger-item"]}`}
           style={{ "--stagger-index": staggerBase } as React.CSSProperties}
         >
-          <div className={styles["mobile-drawer__info-item"]}>
-            <span className={styles["status-dot"]} aria-hidden="true" />
-            <span>{address}</span>
-          </div>
+          {address ? (
+            <div className={styles["mobile-drawer__info-item"]}>
+              <span className={styles["status-dot"]} aria-hidden="true" />
+              <span>{address}</span>
+            </div>
+          ) : null}
           <div className={styles["mobile-drawer__info-item"]}>
             <span className={styles["mobile-drawer__info-icon"]} aria-hidden="true">
               &#9742;
             </span>
-            <a className={styles["u-link"]} href={`tel:${phoneTel}`}>
-              {phoneDisplay}
-            </a>
-          </div>
-          <div className={styles["mobile-drawer__info-item"]}>
-            <span className={styles["mobile-drawer__info-icon"]} aria-hidden="true">
-              &#128338;
-            </span>
-            <span>{hours}</span>
+            <PrimaryContactPhones
+              locale={locale}
+              settings={settings}
+              className={styles["mobile-drawer__phones"]}
+              linkClassName={styles["u-link"]}
+              separatorClassName={styles["mobile-drawer__phone-separator"]}
+            />
           </div>
         </div>
 

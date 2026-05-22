@@ -7,28 +7,53 @@ import {
   isAllowedAttachmentType,
 } from "@/lib/contact/contact-attachment";
 import { cn } from "@/lib/utils";
-import { getContactStrings } from "@/lib/i18n/contact";
+import { getContactStrings, type ContactStrings } from "@/lib/i18n/contact";
+import type { AppointmentStrings } from "@/lib/i18n/appointment";
 import type { Locale } from "@/lib/cms/types";
 
 import styles from "./ContactForm.module.css";
 
 type ContactFormProps = {
   locale: Locale;
+  variant?: "contact" | "appointment";
+  copy?: Partial<ContactStrings>;
+  messagePlaceholder?: string;
+  appointmentStrings?: AppointmentStrings;
 };
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
-export function ContactForm({ locale }: ContactFormProps) {
-  const t = getContactStrings(locale);
+function todayIsoDate(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function ContactForm({
+  locale,
+  variant = "contact",
+  copy,
+  messagePlaceholder,
+  appointmentStrings,
+}: ContactFormProps) {
+  const t = { ...getContactStrings(locale), ...copy };
+  const isAppointment = variant === "appointment";
+  const showFormTitle = t.formTitle.trim().length > 0;
+  const messageRequired = !isAppointment;
   const formId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [state, setState] = useState<FormState>("idle");
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
+  const [preferredDateError, setPreferredDateError] = useState<string | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [preferredDate, setPreferredDate] = useState("");
   const [message, setMessage] = useState("");
+  const minDate = todayIsoDate();
 
   function validateAttachment(file: File | null): string | null {
     if (!file || file.size === 0) {
@@ -54,6 +79,11 @@ export function ContactForm({ locale }: ContactFormProps) {
     event.preventDefault();
     if (state === "submitting") return;
 
+    if (isAppointment && !preferredDate) {
+      setPreferredDateError(appointmentStrings?.preferredDateRequired ?? t.requiredNote);
+      return;
+    }
+
     const file = fileInputRef.current?.files?.[0] ?? null;
     const fileError = validateAttachment(file);
     if (fileError) {
@@ -63,6 +93,7 @@ export function ContactForm({ locale }: ContactFormProps) {
 
     setState("submitting");
     setAttachmentError(null);
+    setPreferredDateError(null);
 
     try {
       const body = new FormData();
@@ -71,7 +102,11 @@ export function ContactForm({ locale }: ContactFormProps) {
       body.append("email", email);
       body.append("phone", phone);
       body.append("message", message);
+      body.append("formType", variant);
       body.append("company", "");
+      if (isAppointment && preferredDate) {
+        body.append("preferredDate", preferredDate);
+      }
       if (file && file.size > 0) {
         body.append("attachment", file);
       }
@@ -95,6 +130,7 @@ export function ContactForm({ locale }: ContactFormProps) {
       setName("");
       setEmail("");
       setPhone("");
+      setPreferredDate("");
       setMessage("");
       setSelectedFileName(null);
       if (fileInputRef.current) {
@@ -108,22 +144,32 @@ export function ContactForm({ locale }: ContactFormProps) {
 
   if (state === "success") {
     return (
-      <section className={styles.panel} aria-live="polite">
+      <section
+        className={cn(styles.panel, isAppointment && styles.panelEmbedded)}
+        aria-live="polite"
+      >
         <h2 className={styles.title}>{t.successTitle}</h2>
         <p className={styles.intro}>{t.successBody}</p>
         <button type="button" className={styles.secondaryAction} onClick={() => setState("idle")}>
-          {t.formTitle}
+          {showFormTitle ? t.formTitle : t.submitLabel}
         </button>
       </section>
     );
   }
 
   return (
-    <section className={styles.panel} aria-labelledby={`${formId}-title`}>
-      <h2 className={styles.title} id={`${formId}-title`}>
-        {t.formTitle}
-      </h2>
-      <p className={styles.intro}>{t.formIntro}</p>
+    <section
+      className={cn(styles.panel, isAppointment && styles.panelEmbedded)}
+      {...(showFormTitle ? { "aria-labelledby": `${formId}-title` } : {})}
+    >
+      {showFormTitle ? (
+        <h2 className={styles.title} id={`${formId}-title`}>
+          {t.formTitle}
+        </h2>
+      ) : null}
+      <p className={styles.intro} id={showFormTitle ? undefined : `${formId}-intro`}>
+        {t.formIntro}
+      </p>
 
       {state === "error" ? (
         <div className={styles.alert} role="alert">
@@ -185,15 +231,48 @@ export function ContactForm({ locale }: ContactFormProps) {
           </div>
         </div>
 
+        {isAppointment && appointmentStrings ? (
+          <div className={styles.field}>
+            <label htmlFor={`${formId}-preferred-date`}>
+              {appointmentStrings.preferredDateLabel} <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id={`${formId}-preferred-date`}
+              name="preferredDate"
+              type="date"
+              min={minDate}
+              required
+              value={preferredDate}
+              onChange={(event) => {
+                setPreferredDate(event.target.value);
+                setPreferredDateError(null);
+              }}
+              disabled={state === "submitting"}
+              aria-describedby={`${formId}-preferred-date-hint${preferredDateError ? ` ${formId}-preferred-date-error` : ""}`}
+              aria-invalid={preferredDateError ? true : undefined}
+            />
+            <p className={styles.fileHint} id={`${formId}-preferred-date-hint`}>
+              {appointmentStrings.preferredDateHint}
+            </p>
+            {preferredDateError ? (
+              <p className={styles.fileError} id={`${formId}-preferred-date-error`} role="alert">
+                {preferredDateError}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+
         <div className={styles.field}>
           <label htmlFor={`${formId}-message`}>
-            {t.messageLabel} <span aria-hidden="true">*</span>
+            {t.messageLabel}
+            {messageRequired ? <span aria-hidden="true"> *</span> : null}
           </label>
           <textarea
             id={`${formId}-message`}
             name="message"
             rows={6}
-            required
+            required={messageRequired}
+            placeholder={messagePlaceholder}
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             disabled={state === "submitting"}

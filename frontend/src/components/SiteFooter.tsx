@@ -1,12 +1,13 @@
 import Link from "next/link";
 
+import { PrimaryContactPhones } from "@/components/PrimaryContactPhones";
 import { buildFooterLinks } from "@/lib/footer/build-footer-links";
 import { getFooterStrings } from "@/lib/i18n/footer";
 import {
   resolveContactEmail,
   resolveFooterAddressLine,
-  resolvePhoneDisplay,
-  resolvePhoneTel,
+  resolvePrimaryPhoneLinks,
+  resolveVisitHours,
 } from "@/lib/site/contact-fallbacks";
 import type {
   GlobalSettingsDTO,
@@ -58,9 +59,8 @@ export function SiteFooter({
   const year = new Date().getFullYear();
 
   const footerAddress = resolveFooterAddressLine(settings, locale);
-  const phoneDisplay = resolvePhoneDisplay(settings);
-  const phoneTel = resolvePhoneTel(settings);
-  const email = resolveContactEmail();
+  const hours = resolveVisitHours(settings, locale);
+  const email = resolveContactEmail(settings);
 
   const hasPractice = practiceLinks.length > 0;
   const hasPatients = patientsLinks.length > 0;
@@ -68,7 +68,7 @@ export function SiteFooter({
   const navColCount = [hasPractice, hasPatients, hasCompany].filter(Boolean).length;
 
   return (
-    <footer className={styles["site-footer"]}>
+    <footer className={`site-footer ${styles["site-footer"]}`}>
       <div className={`container ${styles["site-footer__inner"]}`}>
         <div className={styles["site-footer__grid"]}>
           <div className={styles["brand-col"]}>
@@ -93,14 +93,27 @@ export function SiteFooter({
           <div className={styles["contact-col"]}>
             <p className={styles["col-label"]}>{t.contactLabel}</p>
             <div className={styles["contact-row"]}>
-              <address className={styles["contact-block"]}>
-                <span>{footerAddress}</span>
-                <span>
-                  <a href={`tel:${phoneTel}`}>{phoneDisplay}</a>
-                  <span aria-hidden="true"> · </span>
-                  <a href={`mailto:${email}`}>{email}</a>
-                </span>
-              </address>
+              <div className={styles["contact-block"]}>
+                {footerAddress ? <span>{footerAddress}</span> : null}
+                {hours ? <span className={styles["contact-hours"]}>{hours}</span> : null}
+                {resolvePrimaryPhoneLinks(settings).length > 0 ? (
+                  <span className={styles["contact-phones"]}>
+                    <PrimaryContactPhones
+                      locale={locale}
+                      settings={settings}
+                      linkClassName={styles["contact-link"]}
+                      separatorClassName={styles["contact-phone-separator"]}
+                    />
+                  </span>
+                ) : null}
+                {email ? (
+                  <span className={styles["contact-email"]}>
+                    <a className={styles["contact-link"]} href={`mailto:${email}`}>
+                      {email}
+                    </a>
+                  </span>
+                ) : null}
+              </div>
               {socialLinks.length > 0 ? (
                 <ul className={styles["social-list"]} aria-label="Social media">
                   {socialLinks.map((link, index) => (

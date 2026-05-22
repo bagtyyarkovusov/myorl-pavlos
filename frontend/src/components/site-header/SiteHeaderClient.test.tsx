@@ -82,10 +82,14 @@ const mockNavigation: NavigationNodeDTO[] = [
 
 const defaultSettings = {
   locale: "el" as const,
-  address: null,
-  phoneTel: null,
-  phoneDisplay: null,
-  hours: null,
+  address: "Λεωφόρος Αλεξάνδρας 201 & Πανόρμου, Αμπελόκηποι, Αθήνα",
+  phoneTel: "+302110194618",
+  phoneDisplay: "211-01 94 618",
+  secondaryPhoneTel: "+306945773077",
+  secondaryPhoneDisplay: "6945 77 30 77",
+  email: "pavlos.tsolaridis@gmail.com",
+  hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  socialLinks: [],
 };
 
 describe("SiteHeaderClient", () => {
@@ -197,8 +201,23 @@ describe("SiteHeaderClient", () => {
       />,
     );
 
-    const addressElements = screen.getAllByText(/Λεωφ. Αλεξάνδρας 201, Αθήνα/);
+    const addressElements = screen.getAllByText(/Λεωφόρος Αλεξάνδρας 201/);
     expect(addressElements.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders utility bar hours as a single formatted line", () => {
+    render(
+      <SiteHeaderClient
+        locale="el"
+        navigation={mockNavigation}
+        appointmentHref="/el/rantevou"
+        settings={defaultSettings}
+      />,
+    );
+
+    const hoursEl = screen.getByText("Δευ–Παρ · 09:00 – 21:00 · Σάβ · 10:00 – 14:00");
+    expect(hoursEl.closest('[class*="site-utility__zone--start"]')).toBeTruthy();
+    expect(hoursEl.textContent).not.toContain("\n");
   });
 
   it("renders Russian CTA with full and short label spans for container-query switching", () => {

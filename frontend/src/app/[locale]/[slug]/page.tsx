@@ -63,7 +63,7 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
     notFound();
   }
 
-  const [page, { navigation, directoryNavigation, settings }] = await Promise.all([
+  const [page, { navigation, directoryNavigation, settings, appointmentHref }] = await Promise.all([
     getPage(locale, slug),
     getSite(locale),
   ]);
@@ -83,6 +83,7 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
           page={pageWithRelatedTopics}
           navigation={navigation}
           directoryNavigation={directoryNavigation}
+          appointmentHref={appointmentHref}
           testimonialsPage={1}
           directoryPage={1}
           directoryHref={hrefForLocaleSlug(
@@ -97,6 +98,7 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
         navigation={navigation}
         directoryNavigation={directoryNavigation}
         globalSettings={settings}
+        appointmentHref={appointmentHref}
         searchParams={searchParams}
       />
     </Suspense>
@@ -108,12 +110,14 @@ async function CmsPageContent({
   navigation,
   directoryNavigation,
   globalSettings,
+  appointmentHref,
   searchParams,
 }: {
   page: PageDTO;
   navigation: NavigationNodeDTO[];
   directoryNavigation: NavigationNodeDTO[];
   globalSettings?: GlobalSettingsDTO;
+  appointmentHref: string;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = searchParams ? await searchParams : {};
@@ -127,6 +131,7 @@ async function CmsPageContent({
       navigation={navigation}
       directoryNavigation={directoryNavigation}
       globalSettings={globalSettings}
+      appointmentHref={appointmentHref}
       testimonialsPage={testimonialsPage}
       directoryPage={directoryPage}
       directoryTag={directoryTag}

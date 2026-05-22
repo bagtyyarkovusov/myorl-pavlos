@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { resetContactEnvCacheForTesting } from "@/lib/contact/contact-env";
 import { parseContactFormPayload } from "@/lib/contact/contact-form-schema";
-import { resolveContactSection } from "@/lib/contact/contact-section-fallbacks";
 
 describe("parseContactFormPayload", () => {
   it("accepts valid payloads", () => {
@@ -29,22 +28,6 @@ describe("parseContactFormPayload", () => {
     });
 
     expect(result).toEqual({ ok: false, error: "spam" });
-  });
-});
-
-describe("resolveContactSection", () => {
-  it("returns fallback clinics when CMS contact section is empty", () => {
-    const section = resolveContactSection(
-      {
-        sections: [
-          { __component: "sections.contact", heading: null, intro: null, details: [], clinics: [] },
-        ],
-      },
-      "ru",
-    );
-
-    expect(section.clinics.length).toBeGreaterThan(0);
-    expect(section.details.some((detail) => detail.type === "Адрес")).toBe(true);
   });
 });
 

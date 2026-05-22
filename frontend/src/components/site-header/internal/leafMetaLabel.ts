@@ -1,5 +1,18 @@
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 
+function alternateTitle(node: NavigationNodeDTO): string | null {
+  const title = node.title?.trim();
+  const navLabel = node.navLabel.trim();
+  if (title && title.toLocaleLowerCase() !== navLabel.toLocaleLowerCase()) {
+    return title;
+  }
+  return null;
+}
+
+export function sectionEntryCount(item: NavigationNodeDTO): number {
+  return item.children.length;
+}
+
 export function leafMetaLabel(
   child: NavigationNodeDTO,
   parent: NavigationNodeDTO,
@@ -12,8 +25,5 @@ export function leafMetaLabel(
   if (excerpt) {
     return excerpt;
   }
-  if (child.title && child.title.trim() !== child.navLabel.trim()) {
-    return child.title;
-  }
-  return null;
+  return alternateTitle(child);
 }

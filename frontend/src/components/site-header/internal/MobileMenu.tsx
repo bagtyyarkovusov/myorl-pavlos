@@ -4,26 +4,34 @@ import { useState } from "react";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 
 import { NavigationAnchor } from "./NavigationAnchor";
+import { sectionEntryCount } from "./leafMetaLabel";
+import { showsSectionOverviewLink } from "./sectionOverviewLink";
 import styles from "./MobileDrawer.module.css";
 
 type MobileMenuProps = {
   items: NavigationNodeDTO[];
   overviewMobile: string;
+  topicsLabel: (count: number) => string;
   onNavigate: () => void;
 };
 
 function AccordionParent({
   item,
   overviewMobile,
+  topicsLabel,
   onNavigate,
   staggerIndex,
 }: {
   item: NavigationNodeDTO;
   overviewMobile: string;
+  topicsLabel: (count: number) => string;
   onNavigate: () => void;
   staggerIndex: number;
 }) {
   const [open, setOpen] = useState(false);
+  const entryCount = sectionEntryCount(item);
+  const entryLabel = entryCount > 0 ? topicsLabel(entryCount) : null;
+  const showOverviewLink = showsSectionOverviewLink(item);
 
   return (
     <div
@@ -38,8 +46,10 @@ function AccordionParent({
         onClick={() => setOpen((prev) => !prev)}
       >
         <span className={styles["mobile-nav-parent__label"]}>
-          <span>{item.navLabel}</span>
-          <span className={styles["mobile-nav-parent__subtitle"]}>{item.title}</span>
+          <span className={styles["mobile-nav-parent__title"]}>{item.navLabel}</span>
+          {entryLabel ? (
+            <span className={styles["mobile-nav-parent__count"]}>{entryLabel}</span>
+          ) : null}
         </span>
         <span className={styles["mobile-nav-parent__chevron"]} aria-hidden="true">
           ⌄
@@ -49,13 +59,15 @@ function AccordionParent({
       <div className={styles["mobile-nav-parent__children"]}>
         <div className={styles["mobile-nav-parent__children-inner"]}>
           <div className={styles["mobile-nav-child-list"]}>
-            <NavigationAnchor
-              item={item}
-              className={`${styles["mobile-nav-child-item"]} ${styles["is-overview"]}`}
-              onClick={onNavigate}
-            >
-              {overviewMobile}
-            </NavigationAnchor>
+            {showOverviewLink ? (
+              <NavigationAnchor
+                item={item}
+                className={`${styles["mobile-nav-child-item"]} ${styles["is-overview"]}`}
+                onClick={onNavigate}
+              >
+                {overviewMobile}
+              </NavigationAnchor>
+            ) : null}
             {item.children.map((child) => (
               <NavigationAnchor
                 key={child.documentId}
@@ -73,7 +85,7 @@ function AccordionParent({
   );
 }
 
-export function MobileMenu({ items, overviewMobile, onNavigate }: MobileMenuProps) {
+export function MobileMenu({ items, overviewMobile, topicsLabel, onNavigate }: MobileMenuProps) {
   return (
     <>
       {items.map((item, idx) =>
@@ -92,6 +104,7 @@ export function MobileMenu({ items, overviewMobile, onNavigate }: MobileMenuProp
             key={item.documentId}
             item={item}
             overviewMobile={overviewMobile}
+            topicsLabel={topicsLabel}
             onNavigate={onNavigate}
             staggerIndex={idx}
           />

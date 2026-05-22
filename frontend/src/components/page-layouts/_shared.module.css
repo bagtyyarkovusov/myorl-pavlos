@@ -46,7 +46,6 @@
   flex-direction: column;
   gap: clamp(1.25rem, 3.5vw, 2.5rem);
   min-width: 0;
-  padding-inline: clamp(16px, 4vw, 32px);
 }
 
 /* Video directory: tighter stack; list carries its own section break */
@@ -383,8 +382,8 @@
 }
 
 .page-shell {
-  padding-block-start: clamp(36px, 4.5vw, 72px);
-  padding-block-end: clamp(48px, 7vw, 104px);
+  padding-block-start: var(--page-top-gutter);
+  padding-block-end: var(--page-bottom-gutter);
 }
 
 .prose-shell {

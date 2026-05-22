@@ -43,7 +43,7 @@ export async function TestimonialsIndexPage({
 
   return (
     <div data-locale={page.locale}>
-      <PageSection rhythm="standard" containerWidth="tight" className="border-b border-stone-line">
+      <PageSection rhythm="page" containerWidth="tight" className="border-b border-stone-line">
         <PageHeader page={page} kicker={null} />
         <div className={styles.toolbar}>
           <TestimonialsRatingBar

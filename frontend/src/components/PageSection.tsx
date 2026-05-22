@@ -12,7 +12,7 @@ type PageSectionHeading = {
 };
 
 type PageSectionBackground = "default" | "surface" | "ink-dark";
-type PageSectionRhythm = "standard" | "hero" | "compact" | "contact";
+type PageSectionRhythm = "standard" | "hero" | "compact" | "page";
 type PageSectionContainerWidth = "full" | "tight" | "prose";
 type PageSectionWidth = "full-bleed" | "contained" | "narrow";
 
@@ -47,9 +47,9 @@ const ALTERNATING_BACKGROUND_CLASSES = {
 
 const RHYTHM_CLASSES: Record<PageSectionRhythm, string> = {
   standard: "py-[clamp(3.5rem,calc(2rem+5vw),8rem)]",
-  hero: "pt-[clamp(60px,8vw,120px)] pb-[clamp(54px,7vw,96px)]",
+  hero: "pt-[var(--page-top-gutter)] pb-[clamp(54px,7vw,96px)]",
   compact: "py-[clamp(2.75rem,calc(1.25rem+3vw),4rem)]",
-  contact: "py-[clamp(80px,10vw,160px)]",
+  page: "pt-[var(--page-top-gutter)] pb-[var(--page-bottom-gutter)]",
 };
 
 const DENSITY_RHYTHM_CLASSES: Record<Density, string> = {
@@ -60,6 +60,8 @@ const DENSITY_RHYTHM_CLASSES: Record<Density, string> = {
 
 /** Matches globals `.container` max width without the class name (avoids Tailwind/global clashes). */
 const SECTION_MAX_ROW = "w-full max-w-[1280px] mx-auto min-w-0";
+
+const PAGE_INLINE_GUTTER = "px-[var(--page-inline-gutter)]";
 
 const CONTAINER_CLASSES: Record<PageSectionContainerWidth, string> = {
   full: SECTION_MAX_ROW,
@@ -101,7 +103,7 @@ export function PageSection({
 
   const containerClass = cn(
     width ? WIDTH_CLASSES[width] : CONTAINER_CLASSES[containerWidth],
-    "px-0",
+    PAGE_INLINE_GUTTER,
   );
 
   return (

@@ -87,16 +87,46 @@ export function PageRenderer({
   let layout: React.ReactNode;
 
   if (page.renderMode === "frontend-native") {
-    layout = <FrontendNativePage page={page} testimonialsPage={testimonialsPage} />;
+    layout = (
+      <FrontendNativePage
+        page={page}
+        testimonialsPage={testimonialsPage}
+        directoryNavigation={directoryNavigation ?? navigation}
+      />
+    );
   } else if (page.layoutVariant === "appointment-form") {
-    layout = <AppointmentPage page={page} />;
+    layout = (
+      <AppointmentPage
+        page={page}
+        settings={
+          globalSettings ?? {
+            locale: page.locale,
+            address: null,
+            phoneTel: null,
+            phoneDisplay: null,
+            secondaryPhoneTel: null,
+            secondaryPhoneDisplay: null,
+            email: null,
+            hours: null,
+            socialLinks: [],
+          }
+        }
+      />
+    );
   } else if (page.layoutVariant === "video-index") {
-    layout = <VideoDirectoryPage page={page} navigation={directoryNavigation ?? navigation} />;
+    layout = (
+      <VideoDirectoryPage
+        page={page}
+        navigation={directoryNavigation ?? navigation}
+        appointmentHref={appointmentHref}
+      />
+    );
   } else if (DIRECTORY_LAYOUT_VARIANTS.has(page.layoutVariant)) {
     layout = (
       <SectionIndexPage
         page={page}
         navigation={directoryNavigation ?? navigation}
+        appointmentHref={appointmentHref}
         currentPage={directoryPage}
         activeTagSlug={directoryTag}
         indexHref={directoryHref}
@@ -116,20 +146,26 @@ export function PageRenderer({
             address: null,
             phoneTel: null,
             phoneDisplay: null,
+            secondaryPhoneTel: null,
+            secondaryPhoneDisplay: null,
+            email: null,
             hours: null,
+            socialLinks: [],
           }
         }
         homeTestimonials={homeTestimonials}
       />
     );
   } else if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
-    layout = <QuestionListPage page={page} navigation={navigation} />;
+    layout = (
+      <QuestionListPage page={page} navigation={navigation} appointmentHref={appointmentHref} />
+    );
   } else if (page.pageType === "gallery") {
     layout = <GalleryPage page={page} />;
   } else if (page.pageType === "contact") {
     layout = <ContactPage page={page} />;
   } else {
-    layout = <StandardPage page={page} />;
+    layout = <StandardPage page={page} appointmentHref={appointmentHref} />;
   }
 
   return (

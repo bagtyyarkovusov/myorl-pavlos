@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 
-import { leafMetaLabel } from "./leafMetaLabel";
+import { leafMetaLabel, sectionEntryCount } from "./leafMetaLabel";
 
 const topicsLabel = (count: number) => `${count} topics`;
 
@@ -90,6 +90,16 @@ describe("leafMetaLabel", () => {
     expect(leafMetaLabel(node, makeParent(), topicsLabel)).toBeNull();
   });
 
+  it("returns null when title differs from navLabel only by case", () => {
+    const node = makeNode({
+      documentId: "leaf",
+      title: "Меню",
+      navLabel: "МЕНЮ",
+      excerpt: null,
+    });
+    expect(leafMetaLabel(node, makeParent(), topicsLabel)).toBeNull();
+  });
+
   it("trims excerpt whitespace", () => {
     const node = makeNode({
       documentId: "leaf",
@@ -104,5 +114,26 @@ describe("leafMetaLabel", () => {
       excerpt: "   ",
     });
     expect(leafMetaLabel(node, makeParent(), topicsLabel)).toBeNull();
+  });
+});
+
+describe("sectionEntryCount", () => {
+  it("counts direct menu children shown in the section", () => {
+    const item = makeNode({
+      documentId: "services",
+      children: [
+        makeNode({ documentId: "consultation", children: [] }),
+        makeNode({
+          documentId: "surgery",
+          children: [makeNode({ documentId: "ent" }), makeNode({ documentId: "head-neck" })],
+        }),
+      ],
+    });
+
+    expect(sectionEntryCount(item)).toBe(2);
+  });
+
+  it("returns zero for leaf sections", () => {
+    expect(sectionEntryCount(makeNode({ documentId: "contact", children: [] }))).toBe(0);
   });
 });

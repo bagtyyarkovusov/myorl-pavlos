@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 
 import { PageRenderer } from "@/components/PageRenderer";
 import { getPage, getSite } from "@/lib/cms/cms-api";
-import { findAppointmentHref } from "@/lib/navigation/appointment-href";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { isLocale } from "@/lib/cms/types";
 import { getHomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
@@ -40,7 +39,7 @@ export default async function LocaleHomePage({ params }: LocaleHomeProps) {
     getHomeTestimonialsPayload(locale),
   ]);
 
-  const appointmentHref = findAppointmentHref(site.navigation, locale);
+  const appointmentHref = site.appointmentHref;
 
   return (
     <PageRenderer

@@ -1,0 +1,46 @@
+.sitemap-nav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sitemap-list {
+  margin: 0.35rem 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.sitemap-item {
+  margin: 0.2rem 0;
+}
+
+.sitemap-link {
+  color: var(--foreground);
+  font-size: clamp(0.98rem, 1.1vw, 1.05rem);
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.sitemap-link:hover,
+.sitemap-link:focus-visible {
+  color: var(--accent);
+  outline: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sitemap-list .sitemap-list {
+  margin-left: 1.1rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--line);
+}
+
+.sitemap-list .sitemap-list .sitemap-link {
+  font-size: clamp(0.94rem, 1vw, 1rem);
+  color: var(--muted);
+}
+
+.sitemap-list .sitemap-list .sitemap-link:hover,
+.sitemap-list .sitemap-list .sitemap-link:focus-visible {
+  color: var(--accent);
+}

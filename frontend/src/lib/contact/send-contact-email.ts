@@ -1,4 +1,5 @@
 import type { ContactFormInput } from "@/lib/contact/contact-form-schema";
+import { formatPreferredDate } from "@/lib/contact/contact-form-schema";
 import type { ContactEnv } from "@/lib/contact/contact-env";
 import type { ContactAttachment } from "@/lib/contact/contact-attachment";
 
@@ -19,9 +20,18 @@ export async function sendContactEmail({
   pageUrl,
   attachment = null,
 }: SendContactEmailParams): Promise<SendContactEmailResult> {
-  const subject = `[MyORL] ${payload.locale.toUpperCase()} — ${payload.name}`;
-  const text = buildPlainText(payload, pageUrl, attachment);
-  const html = buildHtml(payload, pageUrl, attachment);
+  const isAppointment = payload.formType === "appointment" && payload.preferredDate;
+  const formattedDate =
+    isAppointment && payload.preferredDate
+      ? formatPreferredDate(payload.locale, payload.preferredDate)
+      : null;
+
+  const subject = isAppointment
+    ? `[MyORL] APPOINTMENT — ${payload.locale.toUpperCase()} — ${payload.name}${formattedDate ? ` — ${formattedDate}` : ""}`
+    : `[MyORL] ${payload.locale.toUpperCase()} — ${payload.name}`;
+
+  const text = buildPlainText(payload, pageUrl, attachment, formattedDate);
+  const html = buildHtml(payload, pageUrl, attachment, formattedDate);
 
   const emailBody: Record<string, unknown> = {
     from: env.contactFromEmail,
@@ -66,12 +76,15 @@ function buildPlainText(
   payload: ContactFormInput,
   pageUrl?: string,
   attachment?: ContactAttachment | null,
+  formattedDate?: string | null,
 ): string {
   return [
     `Locale: ${payload.locale}`,
+    payload.formType === "appointment" ? "Type: Appointment request" : null,
     `Name: ${payload.name}`,
     `Email: ${payload.email}`,
     `Phone: ${payload.phone}`,
+    formattedDate ? `Preferred date: ${formattedDate}` : null,
     pageUrl ? `Page: ${pageUrl}` : null,
     attachment ? `Attachment: ${attachment.filename}` : null,
     "",
@@ -85,6 +98,7 @@ function buildHtml(
   payload: ContactFormInput,
   pageUrl?: string,
   attachment?: ContactAttachment | null,
+  formattedDate?: string | null,
 ): string {
   const escape = (value: string) =>
     value
@@ -95,9 +109,11 @@ function buildHtml(
 
   return `
     <p><strong>Locale:</strong> ${escape(payload.locale)}</p>
+    ${payload.formType === "appointment" ? "<p><strong>Type:</strong> Appointment request</p>" : ""}
     <p><strong>Name:</strong> ${escape(payload.name)}</p>
     <p><strong>Email:</strong> ${escape(payload.email)}</p>
     <p><strong>Phone:</strong> ${escape(payload.phone)}</p>
+    ${formattedDate ? `<p><strong>Preferred date:</strong> ${escape(formattedDate)}</p>` : ""}
     ${pageUrl ? `<p><strong>Page:</strong> ${escape(pageUrl)}</p>` : ""}
     ${attachment ? `<p><strong>Attachment:</strong> ${escape(attachment.filename)}</p>` : ""}
     <hr />

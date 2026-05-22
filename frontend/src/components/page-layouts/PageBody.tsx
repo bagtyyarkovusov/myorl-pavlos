@@ -3,21 +3,29 @@ import { MediaFrame } from "@/components/design-system";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getPageStrings } from "@/lib/i18n/page";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
+import { defaultAppointmentHref } from "@/lib/navigation/appointment-href";
 import type { PageRefDTO, PageDTO } from "@/lib/cms/types";
 import { cn } from "@/lib/utils";
 import styles from "./_shared.module.css";
 
 type PageBodyProps = {
   page: PageDTO;
+  /** Resolved book-appointment URL for service-article mobile CTA. */
+  appointmentHref?: string;
   /** Tighter vertical gaps between intro, CMS sections, and footers (section-hub pages). */
   proseStackGap?: "default" | "compact";
   /** When true, page sits under section-hub chrome (tab bar): tighter stacks and TOC scroll offsets. */
   hubChild?: boolean;
 };
 
-export function PageBody({ page, proseStackGap = "default", hubChild = false }: PageBodyProps) {
+export function PageBody({
+  page,
+  appointmentHref,
+  proseStackGap = "default",
+  hubChild = false,
+}: PageBodyProps) {
   if (page.layoutVariant === "service-article") {
-    return <ServiceArticleBody page={page} hubChild={hubChild} />;
+    return <ServiceArticleBody page={page} hubChild={hubChild} appointmentHref={appointmentHref} />;
   }
   if (
     page.layoutVariant === "encyclopedia-article" ||
@@ -74,8 +82,9 @@ function DefaultPageBody({ page, proseStackGap, hubChild = false }: DefaultPageB
   );
 }
 
-function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
+function ServiceArticleBody({ page, hubChild = false, appointmentHref }: PageBodyProps) {
   const t = getPageStrings(page.locale);
+  const bookHref = appointmentHref ?? defaultAppointmentHref(page.locale);
   const relatedTopics = page.relatedTopics;
   const sectionLinks = page.sections
     .map((section, index) => ({
@@ -186,7 +195,7 @@ function ServiceArticleBody({ page, hubChild = false }: PageBodyProps) {
           ) : null}
         </aside>
       </main>
-      <a className={styles["service-cta-mobile"]} href={`/${page.locale}/appointment`}>
+      <a className={styles["service-cta-mobile"]} href={bookHref}>
         {t.bookConsultation}
       </a>
     </>

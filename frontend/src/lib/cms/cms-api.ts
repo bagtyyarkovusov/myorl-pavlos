@@ -4,9 +4,12 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import type { CmsGateway } from "./cms-gateway";
 import { cms as productionGateway } from "./cms-gateway-setup";
+import { GLOBAL_POPULATE } from "./cms-populate";
 import { globalResponseSchema } from "./strapi-validators";
 import { buildNavigationTree } from "./navigation";
 import { NAVIGATION_POPULATE, PAGE_POPULATE, SITEMAP_POPULATE } from "./cms-populate";
+import { resolveAppointmentHref } from "@/lib/navigation/appointment-href";
+import { resolveContactHref } from "@/lib/navigation/contact-href";
 import type { GlobalSettingsDTO, Locale, NavigationNodeDTO, PageDTO } from "./types";
 import { CmsError } from "./errors";
 
@@ -139,6 +142,8 @@ export type SiteContext = {
   navigation: NavigationNodeDTO[];
   directoryNavigation: NavigationNodeDTO[];
   footerNavigation: NavigationNodeDTO[];
+  appointmentHref: string;
+  contactHref: string;
   settings: GlobalSettingsDTO;
 };
 
@@ -148,7 +153,36 @@ function buildFallbackSettings(locale: Locale): GlobalSettingsDTO {
     address: null,
     phoneTel: null,
     phoneDisplay: null,
+    secondaryPhoneTel: null,
+    secondaryPhoneDisplay: null,
+    email: null,
     hours: null,
+    socialLinks: [],
+  };
+}
+
+async function mergeSocialLinksFromDefaultLocale(
+  gateway: CmsGateway,
+  settings: GlobalSettingsDTO,
+  locale: Locale,
+): Promise<GlobalSettingsDTO> {
+  if (settings.socialLinks.length > 0 || locale === "el") {
+    return settings;
+  }
+
+  const elSettings = await gateway.fetchOne("/api/global", globalResponseSchema, {
+    locale: "el",
+    populate: GLOBAL_POPULATE,
+    cacheTags: ["global:el"],
+  });
+
+  if (!elSettings?.socialLinks.length) {
+    return settings;
+  }
+
+  return {
+    ...settings,
+    socialLinks: elSettings.socialLinks,
   };
 }
 
@@ -163,13 +197,18 @@ async function loadSite(locale: Locale): Promise<SiteContext> {
       cacheTags: ["navigation:" + locale, "pages"],
     })
     .then((pages) => ({
+      pages,
       navigation: buildNavigationTree(pages, locale),
       directoryNavigation: buildNavigationTree(pages, locale, { includeHidden: true }),
       footerNavigation: buildNavigationTree(pages, locale, { includeHidden: true }),
+      appointmentHref: resolveAppointmentHref(pages, locale),
+      contactHref: resolveContactHref(pages, locale),
     }));
 
   const settingsPromise = gateway.fetchOne("/api/global", globalResponseSchema, {
     locale,
+    populate: GLOBAL_POPULATE,
+    cacheTags: ["global:" + locale],
   });
 
   const [pagesResult, settingsResult] = await Promise.allSettled([pagesPromise, settingsPromise]);
@@ -179,12 +218,29 @@ async function loadSite(locale: Locale): Promise<SiteContext> {
     pagesResult.status === "fulfilled" ? pagesResult.value.directoryNavigation : [];
   const footerNavigation =
     pagesResult.status === "fulfilled" ? pagesResult.value.footerNavigation : [];
-  const settings =
+  const appointmentHref =
+    pagesResult.status === "fulfilled"
+      ? pagesResult.value.appointmentHref
+      : resolveAppointmentHref([], locale);
+  const contactHref =
+    pagesResult.status === "fulfilled"
+      ? pagesResult.value.contactHref
+      : resolveContactHref([], locale);
+  let settings =
     settingsResult.status === "fulfilled" && settingsResult.value !== null
       ? settingsResult.value
       : buildFallbackSettings(locale);
 
-  return { navigation, directoryNavigation, footerNavigation, settings };
+  settings = await mergeSocialLinksFromDefaultLocale(gateway, settings, locale);
+
+  return {
+    navigation,
+    directoryNavigation,
+    footerNavigation,
+    appointmentHref,
+    contactHref,
+    settings,
+  };
 }
 
 /**

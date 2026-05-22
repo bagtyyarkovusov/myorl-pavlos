@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-05-22T02:02:42.242502+00:00",
+  "apply": true,
+  "diagnostics": {
+    "mode": "slug_list",
+    "missed": []
+  },
+  "planRows": [
+    {
+      "locale": "ru",
+      "slug": "laryngofaringiki-palindromisi",
+      "documentId": "pfjbrojruu7hjxgpmjvw4c7x",
+      "dirty": true,
+      "contentLengthBefore": 6590,
+      "contentLengthAfter": 6582,
+      "transformStats": {
+        "nbsp_chars_replaced": 77,
+        "paragraph_splits": 0,
+        "h3_promoted_to_h2": 4
+      },
+      "layoutBefore": "service-article",
+      "layoutPreviewAfter": "encyclopedia-article",
+      "layoutPromotionEligible": true,
+      "layoutPromotionBlocked": null,
+      "applied": true
+    }
+  ]
+}

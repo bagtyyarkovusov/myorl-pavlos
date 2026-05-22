@@ -23,6 +23,7 @@ type DesktopNavProps = {
   onMenuClose: () => void;
   registerPillRect: (id: string, rect: { width: number; left: number }) => void;
   overviewLinkLabel: string;
+  sectionOverviewMoreHint: (hiddenCount: number) => string;
   featureBlurb: string;
   primaryNavLabel: string;
   topicsLabel: (count: number) => string;
@@ -38,6 +39,7 @@ export function DesktopNav({
   onMenuClose,
   registerPillRect,
   overviewLinkLabel,
+  sectionOverviewMoreHint,
   featureBlurb,
   primaryNavLabel,
   topicsLabel,
@@ -83,6 +85,7 @@ export function DesktopNav({
               item={activeMenu}
               featureBlurb={featureBlurb}
               overviewLinkLabel={overviewLinkLabel}
+              sectionOverviewMoreHint={sectionOverviewMoreHint}
               topicsLabel={topicsLabel}
             />
           ) : null}

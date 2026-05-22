@@ -5,7 +5,7 @@
     "singularName": "global",
     "pluralName": "globals",
     "displayName": "Global",
-    "description": "Site-wide localized chrome (header/footer): address, phone, hours."
+    "description": "Site-wide localized chrome (header/footer): address, phone, hours, email, social links."
   },
   "options": {
     "draftAndPublish": false
@@ -40,11 +40,45 @@
         }
       }
     },
+    "secondaryPhoneTel": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "secondaryPhoneDisplay": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "email": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
     "hours": {
       "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
+        }
+      }
+    },
+    "socialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "items.social-link",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
         }
       }
     }

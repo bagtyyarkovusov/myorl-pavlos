@@ -1,10 +1,6 @@
 import type { Locale } from "@/lib/cms/types";
 
 export type HeaderStrings = {
-  hours: string;
-  address: string;
-  phoneTel: string;
-  phoneDisplay: string;
   brandLogoAlt: string;
   bookAppointment: string;
   bookAppointmentShort: string;
@@ -17,15 +13,12 @@ export type HeaderStrings = {
   overviewMobile: string;
   sectionOverviewLink: string;
   sectionOverviewBlurb: (sectionTitle: string) => string;
+  sectionOverviewMoreHint: (hiddenCount: number) => string;
   topicsLabel: (count: number) => string;
 };
 
 const STRINGS: Record<Locale, HeaderStrings> = {
   el: {
-    hours: "Δε-Πα 09:00-21:00",
-    address: "Λεωφ. Αλεξάνδρας 201, Αθήνα",
-    phoneTel: "+302106427000",
-    phoneDisplay: "+30 210 6427 000",
     brandLogoAlt: "MyORL — ΩΡΛ Χειρουργική Κλινική Αθηνών",
     bookAppointment: "Κλείσε ραντεβού",
     bookAppointmentShort: "Ραντεβού",
@@ -39,13 +32,11 @@ const STRINGS: Record<Locale, HeaderStrings> = {
     sectionOverviewLink: "Δες την ενότητα",
     sectionOverviewBlurb: (sectionTitle) =>
       `Εξειδικευμένο κλινικό περιεχόμενο, διαδικασίες και οδηγίες ασθενών στην ενότητα «${sectionTitle}».`,
+    sectionOverviewMoreHint: (hiddenCount) =>
+      `+${hiddenCount} ${hiddenCount === 1 ? "ακόμη θέμα" : "ακόμη θέματα"} μέσα`,
     topicsLabel: (count) => `${count} ${count === 1 ? "θέμα" : "θέματα"}`,
   },
   ru: {
-    hours: "Пн-Пт 09:00-21:00",
-    address: "пр. Александрас, 201, Афины",
-    phoneTel: "+302106427000",
-    phoneDisplay: "+30 210 6427 000",
     brandLogoAlt: "MyORL — ЛОР хирургическая клиника, Афины",
     bookAppointment: "Записаться на приём",
     bookAppointmentShort: "Записаться",
@@ -59,6 +50,14 @@ const STRINGS: Record<Locale, HeaderStrings> = {
     sectionOverviewLink: "Открыть раздел",
     sectionOverviewBlurb: (sectionTitle) =>
       `Профильные клинические материалы, процедуры и инструкции для пациентов в разделе «${sectionTitle}».`,
+    sectionOverviewMoreHint: (hiddenCount) => {
+      const lastTwo = hiddenCount % 100;
+      const last = hiddenCount % 10;
+      if (lastTwo >= 11 && lastTwo <= 14) return `Ещё ${hiddenCount} тем в разделе`;
+      if (last === 1) return `Ещё ${hiddenCount} тема в разделе`;
+      if (last >= 2 && last <= 4) return `Ещё ${hiddenCount} темы в разделе`;
+      return `Ещё ${hiddenCount} тем в разделе`;
+    },
     topicsLabel: (count) => {
       const lastTwo = count % 100;
       const last = count % 10;

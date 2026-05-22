@@ -1,13 +1,14 @@
 import { PageHero } from "@/components/PageHero";
 import { PageBody } from "./PageBody";
 import { getPageStrings } from "@/lib/i18n/page";
+import { defaultAppointmentHref } from "@/lib/navigation/appointment-href";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 
 import layoutStyles from "./_shared.module.css";
 
-export function StandardPage({ page }: PageLayoutProps) {
+export function StandardPage({ page, appointmentHref }: PageLayoutProps) {
   if (page.layoutVariant === "service-article") {
-    return <ServiceArticlePage page={page} />;
+    return <ServiceArticlePage page={page} appointmentHref={appointmentHref} />;
   }
 
   if (
@@ -27,8 +28,9 @@ export function StandardPage({ page }: PageLayoutProps) {
   );
 }
 
-function ServiceArticlePage({ page }: PageLayoutProps) {
+function ServiceArticlePage({ page, appointmentHref }: PageLayoutProps) {
   const t = getPageStrings(page.locale);
+  const bookHref = appointmentHref ?? defaultAppointmentHref(page.locale);
 
   return (
     <>
@@ -36,10 +38,10 @@ function ServiceArticlePage({ page }: PageLayoutProps) {
         page={page}
         variant="cinematic"
         breadcrumbs={buildBreadcrumbs(page, t.home)}
-        cta={{ label: t.bookConsultation, href: `/${page.locale}/appointment` }}
+        cta={{ label: t.bookConsultation, href: bookHref }}
       />
       <div className="container">
-        <PageBody page={page} />
+        <PageBody page={page} appointmentHref={bookHref} />
       </div>
     </>
   );

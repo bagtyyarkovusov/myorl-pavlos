@@ -8,6 +8,7 @@ type NavigationAnchorProps = {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  "aria-label"?: string;
   onClick?: () => void;
   onMouseEnter?: () => void;
   onFocus?: () => void;
@@ -18,6 +19,7 @@ export function NavigationAnchor({
   children,
   className,
   style,
+  "aria-label": ariaLabel,
   onClick,
   onMouseEnter,
   onFocus,
@@ -30,6 +32,7 @@ export function NavigationAnchor({
         href={item.href}
         rel="noreferrer"
         target="_blank"
+        aria-label={ariaLabel}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onFocus={onFocus}
@@ -44,6 +47,7 @@ export function NavigationAnchor({
       className={className}
       style={style}
       href={item.href}
+      aria-label={ariaLabel}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onFocus={onFocus}

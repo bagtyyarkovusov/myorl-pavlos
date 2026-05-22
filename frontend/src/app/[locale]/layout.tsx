@@ -3,12 +3,11 @@ import { notFound } from "next/navigation";
 import { LocaleLangSetter } from "@/components/LocaleLangSetter";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { MobileActionDock } from "@/components/MobileActionDock";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import { SkipLink } from "@/components/SkipLink";
-import { findAppointmentHref } from "@/lib/navigation/appointment-href";
-import { getPageResult, getSite } from "@/lib/cms/cms-api";
+import { getSite } from "@/lib/cms/cms-api";
 import { isLocale } from "@/lib/cms/types";
-import type { SectionDTO, SocialLinkItemDTO } from "@/lib/cms/types";
 
 export const dynamic = "force-dynamic";
 
@@ -19,42 +18,35 @@ type LocaleLayoutProps = {
   }>;
 };
 
-type SocialSection = Extract<SectionDTO, { __component: "sections.social-links" }>;
-
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = await params;
   if (!isLocale(locale)) {
     notFound();
   }
 
-  const { navigation, footerNavigation, settings } = await getSite(locale);
-  const appointmentHref = findAppointmentHref(navigation, locale);
-
-  const socialLinks = await getSocialLinks(locale);
+  const { navigation, footerNavigation, settings, appointmentHref, contactHref } =
+    await getSite(locale);
 
   return (
     <>
       <SkipLink />
       <LocaleLangSetter lang={locale} />
-      <SiteHeader locale={locale} navigation={navigation} settings={settings} />
+      <SiteHeader
+        locale={locale}
+        navigation={navigation}
+        appointmentHref={appointmentHref}
+        settings={settings}
+      />
       <main id="main-content">{children}</main>
       <SiteFooter
         locale={locale}
         navigation={footerNavigation}
         settings={settings}
         appointmentHref={appointmentHref}
-        socialLinks={socialLinks}
+        socialLinks={settings.socialLinks}
       />
+      <MobileActionDock locale={locale} settings={settings} contactHref={contactHref} />
       <ScrollToTopButton />
     </>
   );
-}
-
-async function getSocialLinks(locale: "el" | "ru"): Promise<SocialLinkItemDTO[]> {
-  const result = await getPageResult(locale, "index");
-  if (!result.ok) return [];
-  const social = result.page.sections.find(
-    (section): section is SocialSection => section.__component === "sections.social-links",
-  );
-  return social?.links ?? [];
 }

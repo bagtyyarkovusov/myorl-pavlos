@@ -8,7 +8,7 @@
   gap: 18px;
   border-bottom: 1px solid var(--line);
   background: var(--surface);
-  padding: clamp(34px, 6vw, 72px) 0 clamp(30px, 5vw, 56px);
+  padding: var(--page-top-gutter) 0 clamp(30px, 5vw, 56px);
 }
 
 .compact,
@@ -16,7 +16,7 @@
   gap: 18px;
   border-bottom: 1px solid var(--line);
   background: var(--color-bone-50);
-  padding: clamp(34px, 6vw, 76px) 0 clamp(30px, 5vw, 62px);
+  padding: var(--page-top-gutter) 0 clamp(30px, 5vw, 62px);
 }
 
 .journal {
@@ -50,7 +50,7 @@
 }
 
 .cinematic .copy {
-  padding-block: clamp(92px, 18vw, 190px) clamp(38px, 7vw, 76px);
+  padding-block: calc(var(--page-top-gutter) + clamp(24px, 4vw, 48px)) clamp(38px, 7vw, 76px);
 }
 
 .breadcrumbs {

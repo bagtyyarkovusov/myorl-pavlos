@@ -126,7 +126,8 @@ describe("PageSection", () => {
     );
 
     const el = container.firstElementChild as HTMLElement;
-    expect(el.className).toContain("pt-[clamp(60px,8vw,120px)]");
+    expect(el.className).toContain("pt-[var(--page-top-gutter)]");
+    expect(el.className).toContain("pb-[clamp(54px,7vw,96px)]");
   });
 
   it("applies rhythm variant: compact", () => {
@@ -140,15 +141,16 @@ describe("PageSection", () => {
     expect(el.className).toContain("py-[clamp(2.75rem,calc(1.25rem+3vw),4rem)]");
   });
 
-  it("applies rhythm variant: contact", () => {
+  it("applies rhythm variant: page", () => {
     const { container } = render(
-      <PageSection rhythm="contact">
+      <PageSection rhythm="page">
         <p>Content</p>
       </PageSection>,
     );
 
     const el = container.firstElementChild as HTMLElement;
-    expect(el.className).toContain("py-[clamp(80px,10vw,160px)]");
+    expect(el.className).toContain("pt-[var(--page-top-gutter)]");
+    expect(el.className).toContain("pb-[var(--page-bottom-gutter)]");
   });
 
   it("applies containerWidth variant: tight", () => {
@@ -287,6 +289,17 @@ describe("PageSection", () => {
     );
 
     expect(container.querySelector("section")?.getAttribute("data-background")).toBe("white");
+  });
+
+  it("applies shared page inline gutter on the inner container", () => {
+    const { container } = render(
+      <PageSection>
+        <p>Content</p>
+      </PageSection>,
+    );
+
+    const inner = container.firstElementChild?.firstElementChild as HTMLElement;
+    expect(inner.className).toContain("px-[var(--page-inline-gutter)]");
   });
 
   it("applies density and width as public section attributes", () => {

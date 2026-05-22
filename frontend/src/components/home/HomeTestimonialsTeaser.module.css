@@ -4,10 +4,10 @@
    testimonials teaser layout.
    ═══════════════════════════════════════════════ */
 
-/* ── Section container — wider on mobile than default tight ── */
+/* ── Section container — align with PageSection gutter ── */
 @media (max-width: 1024px) {
   .section > div {
-    width: calc(100vw - 2rem);
+    width: 100%;
     max-width: none;
   }
 }
@@ -63,13 +63,13 @@
   }
 }
 
-/* ── Actions — row on all breakpoints; compact L/R pills on small screens ── */
+/* ── Actions — single CTA, centered ── */
 .actions {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 0.5rem 0.75rem;
   margin-top: 3.5rem;
   width: 100%;
@@ -97,7 +97,7 @@
   width: auto;
   flex: 0 1 auto;
   min-width: 0;
-  max-width: calc(50% - 0.375rem);
+  max-width: 100%;
   justify-content: center;
   white-space: normal;
   text-align: center;

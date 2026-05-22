@@ -215,7 +215,11 @@ type GlobalSettingsDTO = {
   address: string | null;
   phoneTel: string | null;
   phoneDisplay: string | null;
+  secondaryPhoneTel: string | null;
+  secondaryPhoneDisplay: string | null;
+  email: string | null;
   hours: string | null;
+  socialLinks: SocialLinkItemDTO[];
 };
 ```
 

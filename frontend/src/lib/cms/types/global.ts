@@ -1,4 +1,5 @@
 import type { Locale } from "./common";
+import type { SocialLinkItemDTO } from "./sections";
 
 export type SocialPlatform = "facebook" | "google" | "instagram" | "youtube";
 
@@ -13,7 +14,11 @@ export type GlobalSettingsDTO = {
   address: string | null;
   phoneTel: string | null;
   phoneDisplay: string | null;
+  secondaryPhoneTel: string | null;
+  secondaryPhoneDisplay: string | null;
+  email: string | null;
   hours: string | null;
+  socialLinks: SocialLinkItemDTO[];
 };
 
 export type StrapiGlobalPayload = {
@@ -23,10 +28,15 @@ export type StrapiGlobalPayload = {
   address?: string | null;
   phoneTel?: string | null;
   phoneDisplay?: string | null;
+  secondaryPhoneTel?: string | null;
+  secondaryPhoneDisplay?: string | null;
+  email?: string | null;
   hours?: string | null;
+  socialLinks?: StrapiSocialLink[] | null;
 };
 
 export type StrapiSocialLink = {
   name?: string | null;
   url?: string | null;
+  icon?: string | null;
 };

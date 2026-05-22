@@ -17,7 +17,6 @@ export function HomeTestimonialsTeaser({
   payload: HomeTestimonialsPayload;
 }) {
   const t = getHomeStrings(locale);
-  const fullHref = `/${locale}/${t.testimonialsListingSlug}`;
 
   return (
     <PageSection
@@ -47,12 +46,9 @@ export function HomeTestimonialsTeaser({
       />
 
       <div className={styles.actions}>
-        <ButtonLink href={fullHref} variant="primary" className={styles.actionBtn}>
-          {t.testimonialsViewAll}
-        </ButtonLink>
         <ButtonLink
           href={payload.googleMapsReviewsUrl}
-          variant="secondary"
+          variant="primary"
           className={styles.actionBtn}
         >
           {t.testimonialsOpenMaps}

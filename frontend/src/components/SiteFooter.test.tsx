@@ -10,7 +10,11 @@ const SETTINGS: GlobalSettingsDTO = {
   address: "123 Main St, Athens",
   phoneTel: "+302101234567",
   phoneDisplay: "+30 210 123 4567",
+  secondaryPhoneTel: null,
+  secondaryPhoneDisplay: null,
+  email: "test@example.com",
   hours: "Mon-Fri 9:00-17:00",
+  socialLinks: [],
 };
 
 function makePage(overrides: Partial<NavigationInput>): NavigationInput {
@@ -80,7 +84,7 @@ describe("SiteFooter", () => {
         locale="el"
         navigation={navigation}
         settings={SETTINGS}
-        appointmentHref="/el/appointment"
+        appointmentHref="/el/rantevou"
         socialLinks={[]}
       />,
     );
@@ -94,29 +98,34 @@ describe("SiteFooter", () => {
     expect(screen.queryByRole("link", { name: "Hidden Footer" })).toBeNull();
     expect(screen.getByRole("link", { name: "Online ραντεβού" })).toHaveAttribute(
       "href",
-      "/el/appointment",
+      "/el/rantevou",
     );
   });
 
-  it("keeps static contact and appointment fallbacks when CMS footer groups are empty", () => {
+  it("keeps CMS contact details when footer groups are empty", () => {
     render(
       <SiteFooter
         locale="el"
         navigation={[]}
         settings={SETTINGS}
-        appointmentHref="/el/appointment"
+        appointmentHref="/el/rantevou"
         socialLinks={[]}
       />,
     );
 
     expect(screen.getByText("123 Main St, Athens")).toBeInTheDocument();
+    expect(screen.getByText("Mon-Fri 9:00-17:00")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "+30 210 123 4567" })).toHaveAttribute(
       "href",
       "tel:+302101234567",
     );
+    expect(screen.getByRole("link", { name: "test@example.com" })).toHaveAttribute(
+      "href",
+      "mailto:test@example.com",
+    );
     expect(screen.getByRole("link", { name: "Online ραντεβού" })).toHaveAttribute(
       "href",
-      "/el/appointment",
+      "/el/rantevou",
     );
   });
 });

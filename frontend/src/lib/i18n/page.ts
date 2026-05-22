@@ -37,6 +37,7 @@ export type PageStrings = {
   videoReadMore: string;
   videoPlayLabel: string;
   videoDirectoryEmpty: string;
+  humanSitemapNavLabel: string;
 };
 
 const STRINGS: Record<Locale, PageStrings> = {
@@ -76,6 +77,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     videoReadMore: "Σχετικό άρθρο",
     videoPlayLabel: "Αναπαραγωγή βίντεο",
     videoDirectoryEmpty: "Δεν υπάρχουν διαθέσιμα βίντεο ακόμη.",
+    humanSitemapNavLabel: "Χάρτης θεμάτων",
   },
   ru: {
     home: "Главная",
@@ -119,6 +121,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     videoReadMore: "Связанная статья",
     videoPlayLabel: "Воспроизвести видео",
     videoDirectoryEmpty: "Видео пока недоступны.",
+    humanSitemapNavLabel: "Карта сайта",
   },
 };
 

@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 
+import type { GlobalSettingsDTO, NavigationNodeDTO } from "@/lib/cms/types";
 import { MobileDrawer } from "./MobileDrawer";
-import type { NavigationNodeDTO } from "@/lib/cms/types";
 
 const items: NavigationNodeDTO[] = [
   {
@@ -25,6 +25,18 @@ const items: NavigationNodeDTO[] = [
   },
 ];
 
+const mockSettings: GlobalSettingsDTO = {
+  locale: "el",
+  address: "123 Main St, Athens",
+  phoneTel: "+302110194618",
+  phoneDisplay: "211-01 94 618",
+  secondaryPhoneTel: "+306945773077",
+  secondaryPhoneDisplay: "6945 77 30 77",
+  email: "pavlos.tsolaridis@gmail.com",
+  hours: "Mon-Fri 09:00-21:00",
+  socialLinks: [],
+};
+
 const baseProps = {
   isOpen: false,
   onClose: vi.fn(),
@@ -33,14 +45,13 @@ const baseProps = {
   locale: "el" as const,
   appointmentHref: "/el/rantevou",
   address: "123 Main St, Athens",
-  hours: "Mon-Fri 09:00-21:00",
-  phoneTel: "+302106427000",
-  phoneDisplay: "+30 210 6427 000",
+  settings: mockSettings,
   closeMenuLabel: "Close menu",
   brandLogoAlt: "MyORL Logo",
   mobileNavLabel: "Mobile navigation",
   mobileNavInnerLabel: "Mobile nav inner",
-  overviewMobile: "Overview",
+  overviewMobile: "Section overview",
+  topicsLabel: (count: number) => `${count} topics`,
   bookAppointmentLabel: "Book Appointment",
 };
 
@@ -64,7 +75,6 @@ describe("MobileDrawer", () => {
     render(<MobileDrawer {...baseProps} isOpen={true} />);
     const img = screen.getByAltText("MyORL Logo");
     expect(img).toBeDefined();
-    // Next.js Image transforms src to /_next/image?url=... so just verify it exists
     expect(img.getAttribute("data-nimg")).toBe("1");
   });
 
@@ -133,15 +143,31 @@ describe("MobileDrawer", () => {
     expect(screen.getByText(/123 Main St/)).toBeDefined();
   });
 
-  it("renders phone link in info section", () => {
+  it("renders phone links in info section", () => {
     render(<MobileDrawer {...baseProps} isOpen={true} />);
-    const link = screen.getByText("+30 210 6427 000");
-    expect(link.closest("a")?.getAttribute("href")).toBe("tel:+302106427000");
+    expect(screen.getByText("211-01 94 618").closest("a")?.getAttribute("href")).toBe(
+      "tel:+302110194618",
+    );
+    expect(screen.getByText("6945 77 30 77").closest("a")?.getAttribute("href")).toBe(
+      "tel:+306945773077",
+    );
   });
 
-  it("renders hours in info section", () => {
+  it("styles the phone separator between clinic and mobile lines", () => {
+    render(<MobileDrawer {...baseProps} isOpen={true} locale="ru" />);
+    const separator = screen.getByText("или");
+    expect(separator.className).toContain("mobile-drawer__phone-separator");
+    expect(separator.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("does not render hours in info section", () => {
     render(<MobileDrawer {...baseProps} isOpen={true} />);
-    expect(screen.getByText("Mon-Fri 09:00-21:00")).toBeDefined();
+    expect(screen.queryByText("Mon-Fri 09:00-21:00")).toBeNull();
+  });
+
+  it("does not render locale switcher in drawer (locale lives in header utility bar)", () => {
+    render(<MobileDrawer {...baseProps} isOpen={true} />);
+    expect(screen.queryByLabelText("Language")).toBeNull();
   });
 
   it("traps focus: Tab from last focusable element cycles to first", () => {

@@ -106,7 +106,11 @@ export function StructuredDataComposer({
   }
 
   if (schemaTypes.has("ContactPoint")) {
-    const phone = firstClinicPhone(page.sections) ?? globalSettings?.phoneTel ?? undefined;
+    const phone =
+      firstClinicPhone(page.sections) ??
+      globalSettings?.phoneDisplay?.trim() ??
+      globalSettings?.phoneTel?.trim() ??
+      undefined;
     if (phone) {
       blocks.push(buildContactPointLd(phone));
     }
@@ -126,7 +130,11 @@ export function StructuredDataComposer({
         siteUrl,
         name: brandName,
         description: page.seo.metaDescription ?? undefined,
-        telephone: globalSettings?.phoneTel ?? firstClinicPhone(page.sections) ?? undefined,
+        telephone:
+          globalSettings?.phoneDisplay?.trim() ??
+          globalSettings?.phoneTel?.trim() ??
+          firstClinicPhone(page.sections) ??
+          undefined,
         address: globalSettings?.address ?? undefined,
         imageUrls: page.seo.ogImage?.url ? [page.seo.ogImage.url] : undefined,
         aggregateRating,

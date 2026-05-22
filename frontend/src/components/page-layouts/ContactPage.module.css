@@ -21,8 +21,8 @@
 @media (min-width: 1024px) {
   .column {
     position: sticky;
-    top: 100px;
-    max-height: calc(100vh - 120px);
+    top: calc(var(--header-offset) + var(--page-top-gutter));
+    max-height: calc(100vh - var(--header-offset) - var(--page-top-gutter) - 16px);
     overflow-y: auto;
   }
 }

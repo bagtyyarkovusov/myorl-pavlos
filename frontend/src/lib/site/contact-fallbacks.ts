@@ -1,25 +1,8 @@
 import type { GlobalSettingsDTO, Locale } from "@/lib/cms/types";
 
-/** Strapi `global` has no email field yet — keep aligned with legacy site. */
-export const HARDCODED_CONTACT_EMAIL = "info@myorl.gr";
-
-const DEFAULT_PHONE_DISPLAY = "+30 210 6427 000";
-const DEFAULT_PHONE_TEL = "+302106427000";
-
-/** One line for footer (design reference). */
-const FOOTER_ADDRESS_LINE: Record<Locale, string> = {
-  el: "Λεωφ. Αλεξάνδρας 201, Αθήνα 11523",
-  ru: "проспект Александрас 201, Афины 11523",
-};
-
-const BLOCK_ADDRESS: Record<Locale, string> = {
-  el: "Λεωφ. Αλεξάνδρας 201\nΑμπελόκηποι, Αθήνα 11523",
-  ru: "проспект Александрас 201\nАмбелокипи, Афины 11523",
-};
-
-const FALLBACK_HOURS: Record<Locale, string> = {
-  el: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
-  ru: "Пн–Пт · 09:00 – 21:00\nСб · 10:00 – 14:00",
+export type ResolvedPhoneLink = {
+  tel: string;
+  display: string;
 };
 
 function compactAddressFromCms(raw: string): string {
@@ -31,38 +14,90 @@ function compactAddressFromCms(raw: string): string {
     .join(", ");
 }
 
-export function resolveFooterAddressLine(settings: GlobalSettingsDTO, locale: Locale): string {
-  if (settings.address?.trim()) {
-    return compactAddressFromCms(settings.address);
+export function resolveFooterAddressLine(
+  settings: GlobalSettingsDTO,
+  _locale: Locale,
+): string | null {
+  if (!settings.address?.trim()) {
+    return null;
   }
-  return FOOTER_ADDRESS_LINE[locale];
+  return compactAddressFromCms(settings.address);
 }
 
 /** Multi-line block for visit section / map query. */
-export function resolveVisitAddressBlock(settings: GlobalSettingsDTO, locale: Locale): string {
-  if (settings.address?.trim()) {
-    return settings.address.trim();
+export function resolveVisitAddressBlock(
+  settings: GlobalSettingsDTO,
+  _locale: Locale,
+): string | null {
+  if (!settings.address?.trim()) {
+    return null;
   }
-  return BLOCK_ADDRESS[locale];
+  return settings.address.trim();
 }
 
-export function resolveVisitHours(settings: GlobalSettingsDTO, locale: Locale): string {
-  if (settings.hours?.trim()) {
-    return settings.hours.trim();
+export function resolveVisitHours(settings: GlobalSettingsDTO, _locale: Locale): string | null {
+  return settings.hours?.trim() || null;
+}
+
+/** Single-line hours for the desktop utility bar (footer/drawer keep pre-line blocks). */
+export function formatUtilityBarHours(hours: string | null | undefined): string | null {
+  if (!hours?.trim()) {
+    return null;
   }
-  return FALLBACK_HOURS[locale];
+
+  const lines = hours
+    .trim()
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  return lines.length > 0 ? lines.join(" · ") : null;
 }
 
-export function resolvePhoneDisplay(settings: GlobalSettingsDTO): string {
-  return settings.phoneDisplay?.trim() || DEFAULT_PHONE_DISPLAY;
+export function resolvePhoneDisplay(settings: GlobalSettingsDTO): string | null {
+  return settings.phoneDisplay?.trim() || null;
 }
 
-export function resolvePhoneTel(settings: GlobalSettingsDTO): string {
-  return settings.phoneTel?.trim() || DEFAULT_PHONE_TEL;
+export function resolvePhoneTel(settings: GlobalSettingsDTO): string | null {
+  return settings.phoneTel?.trim() || null;
 }
 
-export function resolveContactEmail(): string {
-  return HARDCODED_CONTACT_EMAIL;
+export function resolveSecondaryPhoneDisplay(settings: GlobalSettingsDTO): string | null {
+  return settings.secondaryPhoneDisplay?.trim() || null;
+}
+
+export function resolveSecondaryPhoneTel(settings: GlobalSettingsDTO): string | null {
+  return settings.secondaryPhoneTel?.trim() || null;
+}
+
+export function resolveContactEmail(settings: GlobalSettingsDTO): string | null {
+  return settings.email?.trim() || null;
+}
+
+export function resolvePhoneSeparator(locale: Locale): string {
+  return locale === "ru" ? "или" : "ή";
+}
+
+/** Mobile sticky call button prefers the clinic mobile line. */
+export function resolveMobileCallTel(settings: GlobalSettingsDTO): string | null {
+  return resolveSecondaryPhoneTel(settings) ?? resolvePhoneTel(settings);
+}
+
+export function resolvePrimaryPhoneLinks(settings: GlobalSettingsDTO): ResolvedPhoneLink[] {
+  const links: ResolvedPhoneLink[] = [];
+  const primaryTel = resolvePhoneTel(settings);
+  const primaryDisplay = resolvePhoneDisplay(settings);
+  if (primaryTel && primaryDisplay) {
+    links.push({ tel: primaryTel, display: primaryDisplay });
+  }
+
+  const secondaryTel = resolveSecondaryPhoneTel(settings);
+  const secondaryDisplay = resolveSecondaryPhoneDisplay(settings);
+  if (secondaryTel && secondaryDisplay) {
+    links.push({ tel: secondaryTel, display: secondaryDisplay });
+  }
+
+  return links;
 }
 
 export function mapEmbedSrcFromAddress(addressBlock: string): string {

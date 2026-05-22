@@ -38,9 +38,15 @@
   transform: translateY(0) scale(0.94);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 769px) {
   .scroll-top {
     width: 48px;
     height: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-top {
+    display: none;
   }
 }

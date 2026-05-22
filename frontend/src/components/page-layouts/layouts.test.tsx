@@ -30,10 +30,14 @@ afterEach(() => {
 
 const MOCK_GLOBAL_SETTINGS: GlobalSettingsDTO = {
   locale: "el",
-  address: null,
-  phoneTel: null,
-  phoneDisplay: null,
-  hours: null,
+  address: "Λεωφόρος Αλεξάνδρας 201 & Πανόρμου, Αμπελόκηποι, Αθήνα",
+  phoneTel: "+302110194618",
+  phoneDisplay: "211-01 94 618",
+  secondaryPhoneTel: "+306945773077",
+  secondaryPhoneDisplay: "6945 77 30 77",
+  email: "pavlos.tsolaridis@gmail.com",
+  hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  socialLinks: [],
 };
 
 const BASE_PAGE: PageDTO = {
@@ -309,7 +313,7 @@ describe("HomePage", () => {
     render(
       <HomePage
         page={homePage}
-        appointmentHref="/el/appointment"
+        appointmentHref="/el/rantevou"
         navigation={[]}
         settings={MOCK_GLOBAL_SETTINGS}
       />,
@@ -329,7 +333,7 @@ describe("HomePage", () => {
     render(
       <HomePage
         page={homePage}
-        appointmentHref="/el/appointment"
+        appointmentHref="/el/rantevou"
         navigation={[]}
         settings={MOCK_GLOBAL_SETTINGS}
       />,
@@ -356,7 +360,7 @@ describe("HomePage", () => {
     render(
       <HomePage
         page={homePage}
-        appointmentHref="/el/appointment"
+        appointmentHref="/el/rantevou"
         navigation={[]}
         settings={MOCK_GLOBAL_SETTINGS}
       />,
@@ -382,7 +386,7 @@ describe("HomePage", () => {
     const { container } = render(
       <HomePage
         page={homePage}
-        appointmentHref="/el/appointment"
+        appointmentHref="/el/rantevou"
         navigation={[]}
         settings={MOCK_GLOBAL_SETTINGS}
       />,
@@ -412,7 +416,7 @@ describe("HomePage", () => {
     render(
       <HomePage
         page={homePage}
-        appointmentHref="/el/appointment"
+        appointmentHref="/el/rantevou"
         navigation={navigation}
         settings={MOCK_GLOBAL_SETTINGS}
       />,
@@ -458,7 +462,7 @@ describe("HomePage", () => {
     render(
       <HomePage
         page={homePage}
-        appointmentHref="/el/appointment"
+        appointmentHref="/el/rantevou"
         navigation={navigation}
         settings={MOCK_GLOBAL_SETTINGS}
       />,
@@ -585,11 +589,12 @@ describe("ContactPage", () => {
     expect(container.querySelector("iframe[data-contact-map]")).toBeNull();
   });
 
-  it("uses fallback contact data when CMS sections are empty", () => {
+  it("renders only the contact form when CMS contact section is missing", () => {
     const page: PageDTO = { ...CONTACT_PAGE, sections: [] };
     render(<ContactPage page={page} />);
-    expect(screen.getByRole("heading", { name: "Διεύθυνση" })).toBeDefined();
-    expect(screen.getByRole("button", { name: /Λεωφόρος Αλεξάνδρας 201/ })).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Στείλτε μήνυμα" })).toBeDefined();
+    expect(screen.queryByRole("heading", { name: "Διεύθυνση" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Λεωφόρος Αλεξάνδρας 201/ })).toBeNull();
   });
 
   it("does not render a hero image even when CMS provides featuredImage", () => {
@@ -715,7 +720,11 @@ describe("QuestionListPage", () => {
     };
 
     render(
-      <QuestionListPage page={faqPage} navigation={[makeNav("appointment", "Appointment", 99)]} />,
+      <QuestionListPage
+        page={faqPage}
+        navigation={[makeNav("appointment", "Appointment", 99)]}
+        appointmentHref="/el/rantevou"
+      />,
     );
 
     expect(
@@ -723,7 +732,7 @@ describe("QuestionListPage", () => {
     ).toBeDefined();
     expect(screen.getByRole("link", { name: "Κλείσε ραντεβού" })).toHaveAttribute(
       "href",
-      "/el/appointment",
+      "/el/rantevou",
     );
     expect(screen.queryByText("service accordion")).toBeNull();
   });
@@ -792,6 +801,34 @@ describe("FrontendNativePage", () => {
 
     render(<FrontendNativePage page={nativePage} />);
     expect(screen.getByText("Native Page")).toBeDefined();
+  });
+
+  it("renders nested Human Site Map links from directory navigation", () => {
+    const nativePage: PageDTO = {
+      ...BASE_PAGE,
+      renderMode: "frontend-native",
+      layoutVariant: "sitemap",
+      slug: "sitemap",
+      title: "Sitemap",
+    };
+    const directoryNavigation: NavigationNodeDTO[] = [
+      {
+        ...makeNav("menu", "Menu"),
+        children: [makeNav("services", "Services", 1), makeNav("sitemap", "Sitemap", 2)],
+      },
+      makeNav("404", "404", 0),
+    ];
+    directoryNavigation[1] = {
+      ...directoryNavigation[1]!,
+      layoutVariant: "not-found",
+      hideFromMenu: true,
+    };
+
+    render(<FrontendNativePage page={nativePage} directoryNavigation={directoryNavigation} />);
+
+    expect(screen.getByRole("link", { name: "Services" })).toHaveAttribute("href", "/el/services");
+    expect(screen.queryByRole("link", { name: "Sitemap" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "404" })).toBeNull();
   });
 });
 
@@ -1609,18 +1646,34 @@ describe("AppointmentPage", () => {
     expect(screen.getByRole("heading", { name: "Appointment" })).toBeDefined();
   });
 
-  it("renders prominent contact CTA links", () => {
+  it("renders appointment request form and localized quick contact actions", () => {
     const apptPage: PageDTO = {
       ...BASE_PAGE,
+      locale: "el",
       layoutVariant: "appointment-form",
-      title: "Appointment",
+      title: "Ραντεβού",
+      excerpt: "Same text as body",
+      content: "<p>Same text as body</p>",
     };
 
-    render(<AppointmentPage page={apptPage} />);
-    const phoneLink = screen.getByRole("link", { name: /call/i });
-    expect(phoneLink).toBeTruthy();
-    const emailLink = screen.getByRole("link", { name: /email/i });
-    expect(emailLink).toBeTruthy();
+    render(<AppointmentPage page={apptPage} settings={MOCK_GLOBAL_SETTINGS} />);
+
+    expect(screen.getByRole("heading", { name: "Ραντεβού" })).toBeDefined();
+    expect(screen.queryByRole("heading", { name: "Αίτημα ραντεβού" })).toBeNull();
+    expect(screen.queryByText("appointment")).toBeNull();
+    expect(screen.getByLabelText(/Προτιμώμενη ημέρα/i)).toBeDefined();
+    expect(
+      screen.getByLabelText(/Λόγος επίσκεψης και προτιμώμενη ώρα \(προαιρετικά\)/i),
+    ).toBeDefined();
+    expect(screen.queryByText("Same text as body")).toBeNull();
+    expect(screen.getByRole("link", { name: "Κλήση τώρα" })).toHaveAttribute(
+      "href",
+      "tel:+302110194618",
+    );
+    expect(screen.getByRole("link", { name: "Email" })).toHaveAttribute(
+      "href",
+      "mailto:pavlos.tsolaridis@gmail.com",
+    );
   });
 
   it("renders sections through SectionRenderer", () => {

@@ -5,6 +5,10 @@ import type { NavigationNodeDTO } from "@/lib/cms/types";
 
 import { MegaMenu } from "./MegaMenu";
 
+const topicsLabel = (count: number) => `${count} topics`;
+const overviewLinkLabel = "Open section";
+const sectionOverviewMoreHint = (hiddenCount: number) => `${hiddenCount} more inside`;
+
 const mockItem: NavigationNodeDTO = {
   documentId: "menu-1",
   locale: "el",
@@ -101,7 +105,13 @@ const mockItem: NavigationNodeDTO = {
 describe("MegaMenu", () => {
   it("renders navLabel heading", () => {
     render(
-      <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,
+      <MegaMenu
+        item={mockItem}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
     );
 
     expect(screen.getByRole("heading", { name: "Services" })).toBeDefined();
@@ -112,7 +122,9 @@ describe("MegaMenu", () => {
       <MegaMenu
         item={mockItem}
         featureBlurb="We offer a comprehensive range of medical services."
-        overviewLinkLabel="Overview"
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
       />,
     );
 
@@ -121,37 +133,107 @@ describe("MegaMenu", () => {
 
   it("renders child links with correct labels", () => {
     render(
-      <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,
+      <MegaMenu
+        item={mockItem}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
     );
 
-    // Only direct children render; grandchildren show as count meta
     expect(screen.getByText("Consultation")).toBeDefined();
     expect(screen.getByText("Surgery")).toBeDefined();
-    // Grandchildren (ENT Surgery, Head & Neck) shown only as "2 topics" meta
-    expect(screen.getByText("2 topics")).toBeDefined();
+    expect(screen.getAllByText("2 topics")).toHaveLength(2);
   });
 
-  it("renders section overview link", () => {
+  it("renders section count beside the overview link", () => {
     render(
       <MegaMenu
         item={mockItem}
         featureBlurb={mockItem.excerpt!}
-        overviewLinkLabel="Section overview"
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
       />,
     );
 
-    const overviewLink = screen.getByText("Section overview");
-    expect(overviewLink).toBeDefined();
-    expect(overviewLink.closest("a")?.getAttribute("href")).toBe("/el/services");
+    const ctaRow = document.querySelector('[class*="nav-panel__cta-row"]') as HTMLElement;
+    const ctaLink = screen.getByText("Open section").closest("a") as HTMLElement;
+
+    expect(ctaRow.contains(ctaLink)).toBe(true);
+    expect(ctaLink.querySelector('[class*="cta-arrow"]')?.textContent).toBe("→");
+    expect(ctaRow).toHaveTextContent("2 topics");
+    expect(screen.getByRole("heading", { name: "Services" }).nextElementSibling?.tagName).toBe("P");
+  });
+
+  it("animates the overview arrow on link hover", () => {
+    render(
+      <MegaMenu
+        item={mockItem}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
+    );
+
+    expect(
+      screen.getByText("Open section").closest("a")?.querySelector('[class*="cta-arrow"]'),
+    ).toBeTruthy();
+  });
+
+  it("renders a section overview text link for regular section hubs", () => {
+    render(
+      <MegaMenu
+        item={mockItem}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
+    );
+
+    expect(screen.getByText("Open section").closest("a")).toHaveAttribute("href", "/el/services");
+  });
+
+  it("does not render a section overview link for the homepage menu hub", () => {
+    const menuItem: NavigationNodeDTO = {
+      ...mockItem,
+      slug: "index",
+      href: "/el",
+      navLabel: "Menu",
+      children: mockItem.children.slice(0, 1),
+    };
+
+    render(
+      <MegaMenu
+        item={menuItem}
+        featureBlurb={menuItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
+    );
+
+    expect(screen.queryByRole("link", { name: /Open section/i })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Menu" }).nextElementSibling).toHaveTextContent(
+      "1 topics",
+    );
   });
 
   it("renders child count meta label for parent children", () => {
     render(
-      <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,
+      <MegaMenu
+        item={mockItem}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
     );
 
-    // Surgery has 2 children, leafMetaLabel should show count
-    expect(screen.getByText("2 topics")).toBeDefined();
+    expect(screen.getByRole("link", { name: /Surgery/i })).toHaveTextContent("2 topics");
   });
 
   it("uses the provided localized count label for parent children", () => {
@@ -159,20 +241,25 @@ describe("MegaMenu", () => {
       <MegaMenu
         item={mockItem}
         featureBlurb={mockItem.excerpt!}
-        overviewLinkLabel="Overview"
+        overviewLinkLabel={overviewLinkLabel}
         topicsLabel={(count) => `${count} θέματα`}
       />,
     );
 
-    expect(screen.getByText("2 θέματα")).toBeDefined();
+    expect(screen.getByRole("link", { name: /Surgery/i })).toHaveTextContent("2 θέματα");
   });
 
   it("renders excerpt meta text for leaf pages", () => {
     render(
-      <MegaMenu item={mockItem} featureBlurb={mockItem.excerpt!} overviewLinkLabel="Overview" />,
+      <MegaMenu
+        item={mockItem}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
     );
 
-    // Consultation has excerpt
     expect(screen.getByText("Initial consultation services.")).toBeDefined();
   });
 
@@ -201,17 +288,71 @@ describe("MegaMenu", () => {
       ],
     };
 
-    render(<MegaMenu item={itemWithAltTitle} featureBlurb="" overviewLinkLabel="Overview" />);
+    render(
+      <MegaMenu
+        item={itemWithAltTitle}
+        featureBlurb=""
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
+    );
 
     expect(screen.getByText("Longer Alternative Title")).toBeDefined();
   });
 
-  it("handles null children gracefully", () => {
+  it("handles empty children gracefully", () => {
     const emptyItem: NavigationNodeDTO = { ...mockItem, children: [] };
 
-    render(<MegaMenu item={emptyItem} featureBlurb="" overviewLinkLabel="Overview" />);
+    render(
+      <MegaMenu
+        item={emptyItem}
+        featureBlurb=""
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
+    );
 
-    // Should not crash; overview link still renders
-    expect(screen.getByText("Overview")).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Services" })).toBeDefined();
+    expect(screen.queryByText("0 topics")).toBeNull();
+  });
+
+  it("shows an overflow hint when more topics exist than the dropdown displays", () => {
+    const overflowChildren = Array.from({ length: 15 }, (_, index) => ({
+      ...mockItem.children[0]!,
+      documentId: `overflow-${index}`,
+      slug: `topic-${index}`,
+      navLabel: `Topic ${index + 1}`,
+      href: `/el/services/topic-${index}`,
+    }));
+
+    render(
+      <MegaMenu
+        item={{ ...mockItem, children: overflowChildren }}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
+    );
+
+    expect(screen.getByText("3 more inside")).toBeDefined();
+    expect(screen.getByText("Topic 12")).toBeDefined();
+    expect(screen.queryByText("Topic 13")).toBeNull();
+  });
+
+  it("does not show an overflow hint when all topics fit in the dropdown", () => {
+    render(
+      <MegaMenu
+        item={mockItem}
+        featureBlurb={mockItem.excerpt!}
+        overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
+        topicsLabel={topicsLabel}
+      />,
+    );
+
+    expect(screen.queryByText(/more inside/i)).toBeNull();
   });
 });

@@ -114,3 +114,10 @@ export const SITEMAP_POPULATE = {
 export const VIDEO_ENTRY_POPULATE = {
   relatedArticle: { fields: ["documentId", "slug", "title", "locale"] },
 } as const;
+
+/**
+ * Populate for the Global Settings singleton.
+ */
+export const GLOBAL_POPULATE = {
+  socialLinks: true,
+} as const;

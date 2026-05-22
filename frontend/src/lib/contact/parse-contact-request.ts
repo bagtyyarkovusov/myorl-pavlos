@@ -31,6 +31,8 @@ async function parseMultipartRequest(formData: FormData): Promise<ParsedContactR
     email: stringField(formData.get("email")),
     phone: stringField(formData.get("phone")),
     message: stringField(formData.get("message")),
+    formType: stringField(formData.get("formType")) || "contact",
+    preferredDate: stringField(formData.get("preferredDate")) || undefined,
     company: stringField(formData.get("company")),
   };
 

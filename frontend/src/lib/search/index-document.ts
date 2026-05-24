@@ -1,5 +1,5 @@
 import { isFrontendNativeSystemLayout } from "@/lib/cms/page-normalizer";
-import type { LayoutVariant, Locale, PageDTO } from "@/lib/cms/types";
+import type { LayoutVariant, Locale, PageDTO, VideoEntryDTO } from "@/lib/cms/types";
 
 export type SearchDocument = {
   id: string;
@@ -22,6 +22,7 @@ export type SearchDocument = {
 };
 
 const PAGE_RANK_BOOST = 100;
+const VIDEO_RANK_BOOST = 50;
 
 export function indexPageDocument(page: PageDTO): SearchDocument | null {
   if (
@@ -49,6 +50,30 @@ export function indexPageDocument(page: PageDTO): SearchDocument | null {
     layoutVariant: page.layoutVariant,
     _rankBoost: PAGE_RANK_BOOST,
     localizations: localizationsForPage(page),
+  };
+}
+
+export function indexVideoDocument(video: VideoEntryDTO): SearchDocument | null {
+  if (!video.title?.trim()) return null;
+
+  return {
+    id: "video:" + video.documentId,
+    type: "video",
+    locale: video.locale,
+    title: video.title,
+    excerpt: video.categories.map((c) => c.label).join(", "),
+    body: video.categories.map((c) => c.label).join(" "),
+    slug: "",
+    href: "/" + video.locale + "/video",
+    thumbnail: null,
+    parentTitle: null,
+    parentSlug: null,
+    publishedAt: new Date().toISOString(),
+    parentSection: null,
+    tags: video.categories.map((c) => c.slug),
+    layoutVariant: "video-index",
+    _rankBoost: VIDEO_RANK_BOOST,
+    localizations: [],
   };
 }
 

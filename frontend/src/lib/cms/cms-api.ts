@@ -4,13 +4,18 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import type { CmsGateway } from "./cms-gateway";
 import { cms as productionGateway } from "./cms-gateway-setup";
-import { GLOBAL_POPULATE } from "./cms-populate";
+import {
+  GLOBAL_POPULATE,
+  NAVIGATION_POPULATE,
+  PAGE_POPULATE,
+  SITEMAP_POPULATE,
+  VIDEO_ENTRY_POPULATE,
+} from "./cms-populate";
 import { globalResponseSchema } from "./strapi-validators";
 import { buildNavigationTree } from "./navigation";
-import { NAVIGATION_POPULATE, PAGE_POPULATE, SITEMAP_POPULATE } from "./cms-populate";
 import { resolveAppointmentHref } from "@/lib/navigation/appointment-href";
 import { resolveContactHref } from "@/lib/navigation/contact-href";
-import type { GlobalSettingsDTO, Locale, NavigationNodeDTO, PageDTO } from "./types";
+import type { GlobalSettingsDTO, Locale, NavigationNodeDTO, PageDTO, VideoEntryDTO } from "./types";
 import { CmsError } from "./errors";
 
 let _gateway: CmsGateway | null = null;
@@ -50,6 +55,8 @@ export type CmsPageError =
  * throw-on-failure semantics.
  */
 export type PageResult = { ok: true; page: PageDTO } | { ok: false; error: CmsPageError };
+
+export type VideoResult = { ok: true; video: VideoEntryDTO } | { ok: false; error: CmsPageError };
 
 function toCmsPageError(error: unknown, locale: Locale, slug: string): CmsPageError {
   if (error instanceof CmsError) {
@@ -148,6 +155,48 @@ export async function getPageByDocumentIdResult(
       };
     }
     return { ok: true, page };
+  } catch (error) {
+    return { ok: false, error: toCmsPageError(error, locale, documentId) };
+  }
+}
+
+/**
+ * Fetches a single Video Entry by Strapi document ID through the CMS gateway.
+ *
+ * Used by the Search Index reindex endpoint to resolve Video Entries for
+ * bulk indexing.
+ *
+ * @param locale - The video entry locale.
+ * @param documentId - The Strapi document ID.
+ * @returns A {@link VideoResult} with the matched video entry or an explicit error.
+ */
+export async function getVideoEntryByDocumentIdResult(
+  locale: Locale,
+  documentId: string,
+): Promise<VideoResult> {
+  const gateway = getGateway();
+
+  try {
+    const entries = await gateway.videoEntries.all({
+      locale,
+      filters: { documentId: { $eq: documentId } },
+      populate: VIDEO_ENTRY_POPULATE,
+      pageSize: 1,
+      maxPages: 1,
+    });
+    const entry = entries[0];
+    if (!entry) {
+      return {
+        ok: false,
+        error: {
+          kind: "not_found",
+          locale,
+          slug: documentId,
+          message: "Video entry not found: " + locale + "/" + documentId,
+        },
+      };
+    }
+    return { ok: true, video: entry };
   } catch (error) {
     return { ok: false, error: toCmsPageError(error, locale, documentId) };
   }

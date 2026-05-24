@@ -7,6 +7,7 @@ the Search Indexes via the Next.js reindex API.
 Interface:
   python3 tools/seed_search_index.py --target=dev --mode=full
   python3 tools/seed_search_index.py --target=dev --mode=single --content-type=page --id=abc123 --locale=el
+  python3 tools/seed_search_index.py --target=dev --mode=sync-synonyms
   python3 tools/seed_search_index.py --target=production --mode=full --force
 """
 
@@ -21,7 +22,10 @@ import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Literal
+
+import yaml
 
 from environments import ENVIRONMENTS, get
 
@@ -32,6 +36,9 @@ from environments import ENVIRONMENTS, get
 CONTENT_TYPES = ("page", "video")
 LOCALES = ("el", "ru")
 STRAPI_PAGE_SIZE = 500
+
+# Path to the frontend YAML synonym/stopword files
+YAML_DIR = Path(__file__).resolve().parents[1] / "frontend" / "src" / "lib" / "search"
 
 # ---------------------------------------------------------------------------
 # Data model
@@ -339,6 +346,73 @@ def run_single(target: Target, content_type: str, doc_id: str, locale: str) -> i
 
 
 # ---------------------------------------------------------------------------
+# Sync synonyms mode
+# ---------------------------------------------------------------------------
+
+
+def _read_yaml_list(filename: str) -> list[Any]:
+    """Read and parse a YAML file from the frontend search directory."""
+    path = YAML_DIR / filename
+    with open(path, encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    if not isinstance(data, list):
+        return []
+    return data
+
+
+def _build_synonyms_payload(locale: str) -> dict[str, Any]:
+    """Build a sync-synonyms payload for the given locale."""
+    synonyms_raw = _read_yaml_list(f"synonyms.{locale}.yaml")
+
+    # Transform list-of-lists to Meilisearch dict format
+    synonyms: dict[str, list[str]] = {}
+    for group in synonyms_raw:
+        if not isinstance(group, list) or len(group) < 2:
+            continue
+        terms = [t for t in group if isinstance(t, str) and t.strip()]
+        if len(terms) < 2:
+            continue
+        for term in terms:
+            existing = synonyms.get(term, [])
+            merged = list(set(existing + [t for t in terms if t != term]))
+            synonyms[term] = merged
+
+    stop_words = _read_yaml_list(f"stopwords.{locale}.yaml")
+    stop_words = [w for w in stop_words if isinstance(w, str) and w.strip()]
+
+    return {
+        "action": "sync-synonyms",
+        "locale": locale,
+        "synonyms": synonyms,
+        "stopWords": stop_words,
+    }
+
+
+def run_sync_synonyms(target: Target) -> int:
+    """Push synonyms and stop words to Meilisearch for all locales."""
+    print(f"Syncing synonyms + stop words — target: {target.name}")
+    print()
+
+    for locale in LOCALES:
+        print(f"  Building payload [{locale}]...", end=" ", flush=True)
+        payload = _build_synonyms_payload(locale)
+        syn_count = len(payload["synonyms"])
+        sw_count = len(payload["stopWords"])
+        print(f"{syn_count} synonym entries, {sw_count} stop words")
+
+        print(f"  POSTING [{locale}]...", end=" ", flush=True)
+        result = _post_reindex(target, payload)
+        status = "ok" if result.get("ok") else "FAILED"
+        print(f"[{status}]")
+        if not result.get("ok"):
+            print(f"    Error: {result.get('error', 'unknown')}", file=sys.stderr)
+
+    print()
+    print("Done.")
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -353,9 +427,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--mode",
-        choices=["full", "single"],
+        choices=["full", "single", "sync-synonyms"],
         required=True,
-        help="full = crawl all content; single = one document",
+        help="full = crawl all content; single = one document; sync-synonyms = push synonyms + stop words",
     )
     parser.add_argument(
         "--force",
@@ -382,6 +456,9 @@ def main() -> int:
 
     if args.mode == "full":
         return run_full_seed(target)
+
+    if args.mode == "sync-synonyms":
+        return run_sync_synonyms(target)
 
     # Single mode
     if not args.content_type or not args.id or not args.locale:

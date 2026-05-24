@@ -443,3 +443,253 @@ describe("POST /api/search/reindex - bulk mode", () => {
     expect(json.error).toContain("missing id");
   });
 });
+
+function strapiSignedRequest(payload: unknown, secret = "test-webhook-secret"): Request {
+  const body = JSON.stringify(payload);
+  const signature = createHmac("sha256", secret).update(body).digest("hex");
+
+  return new Request("http://localhost/api/search/reindex", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-webhook-signature": signature,
+    },
+    body,
+  });
+}
+
+describe("POST /api/search/reindex - Strapi webhooks", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.stubEnv("SEARCH_ENABLED", "true");
+    vi.stubEnv("STRAPI_WEBHOOK_SECRET", "test-webhook-secret");
+    getMeiliAdminClient.mockReturnValue({ index });
+    getPageByDocumentIdResult.mockResolvedValue({ ok: true, page: makePage() });
+    getVideoEntryByDocumentIdResult.mockResolvedValue({ ok: true, video: makeVideoEntry() });
+    addDocuments.mockReturnValue(enqueuedTask());
+    deleteDocument.mockReturnValue(enqueuedTask());
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.clearAllMocks();
+  });
+
+  it("handles entry.create with publishedAt by upserting", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      strapiSignedRequest({
+        event: "entry.create",
+        model: "page",
+        entry: { documentId: "abc123xy", locale: "el", publishedAt: "2024-01-01T00:00:00.000Z" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toEqual({
+      ok: true,
+      action: "upsert",
+      id: "page:abc123xy",
+      locale: "el",
+      index: "el",
+    });
+    expect(getPageByDocumentIdResult).toHaveBeenCalledWith("el", "abc123xy");
+    expect(addDocuments).toHaveBeenCalledWith(
+      [expect.objectContaining({ documentKey: "page_abc123xy" })],
+      { primaryKey: "documentKey" },
+    );
+    expect(deleteDocument).not.toHaveBeenCalled();
+  });
+
+  it("handles entry.update with publishedAt by upserting", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      strapiSignedRequest({
+        event: "entry.update",
+        model: "page",
+        entry: { documentId: "abc123xy", locale: "el", publishedAt: "2024-01-01T00:00:00.000Z" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toMatchObject({ ok: true, action: "upsert" });
+    expect(getPageByDocumentIdResult).toHaveBeenCalledWith("el", "abc123xy");
+  });
+
+  it("handles entry.update with publishedAt:null by unpublishing", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      strapiSignedRequest({
+        event: "entry.update",
+        model: "page",
+        entry: { documentId: "abc123xy", locale: "el", publishedAt: null },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toEqual({
+      ok: true,
+      action: "unpublish",
+      id: "abc123xy",
+      locale: "el",
+      index: "el",
+    });
+    expect(deleteDocument).toHaveBeenCalledWith("page_abc123xy");
+    expect(addDocuments).not.toHaveBeenCalled();
+    expect(getPageByDocumentIdResult).not.toHaveBeenCalled();
+  });
+
+  it("handles entry.delete by removing from index", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      strapiSignedRequest({
+        event: "entry.delete",
+        model: "page",
+        entry: { documentId: "abc123xy", locale: "el", publishedAt: "2024-01-01T00:00:00.000Z" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toEqual({
+      ok: true,
+      action: "delete",
+      id: "abc123xy",
+      locale: "el",
+      index: "el",
+    });
+    expect(deleteDocument).toHaveBeenCalledWith("page_abc123xy");
+    expect(addDocuments).not.toHaveBeenCalled();
+    expect(getPageByDocumentIdResult).not.toHaveBeenCalled();
+  });
+
+  it("deletes only from the specified locale index", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      strapiSignedRequest({
+        event: "entry.delete",
+        model: "page",
+        entry: { documentId: "abc123xy", locale: "ru", publishedAt: "2024-01-01T00:00:00.000Z" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toEqual({
+      ok: true,
+      action: "delete",
+      id: "abc123xy",
+      locale: "ru",
+      index: "ru",
+    });
+    expect(index).toHaveBeenCalledWith("ru");
+    expect(index).not.toHaveBeenCalledWith("el");
+    expect(deleteDocument).toHaveBeenCalledWith("page_abc123xy");
+  });
+
+  it("is idempotent: replaying the same create payload twice is harmless", async () => {
+    const { POST } = await import("./route");
+    const payload = {
+      event: "entry.create",
+      model: "page",
+      entry: { documentId: "abc123xy", locale: "el", publishedAt: "2024-01-01T00:00:00.000Z" },
+    };
+
+    const response1 = await POST(strapiSignedRequest(payload));
+    expect(response1.status).toBe(200);
+
+    const response2 = await POST(strapiSignedRequest(payload));
+    expect(response2.status).toBe(200);
+
+    expect(getPageByDocumentIdResult).toHaveBeenCalledTimes(2);
+    expect(addDocuments).toHaveBeenCalledTimes(2);
+  });
+
+  it("rejects webhook payload with invalid HMAC signature", async () => {
+    const { POST } = await import("./route");
+    const body = JSON.stringify({
+      event: "entry.create",
+      model: "page",
+      entry: { documentId: "abc123xy", locale: "el", publishedAt: "2024-01-01T00:00:00.000Z" },
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/search/reindex", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-webhook-signature": "invalid",
+        },
+        body,
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(json).toEqual({ ok: false, error: "Invalid webhook signature." });
+    expect(addDocuments).not.toHaveBeenCalled();
+    expect(deleteDocument).not.toHaveBeenCalled();
+  });
+
+  it("returns no-op when search is disabled for webhook payloads", async () => {
+    vi.stubEnv("SEARCH_ENABLED", "false");
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      strapiSignedRequest({
+        event: "entry.create",
+        model: "page",
+        entry: { documentId: "abc123xy", locale: "el", publishedAt: "2024-01-01T00:00:00.000Z" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toEqual({ ok: true, noop: true });
+    expect(getMeiliAdminClient).not.toHaveBeenCalled();
+  });
+
+  it("rejects unknown event type with 400", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      strapiSignedRequest({
+        event: "entry.publish",
+        model: "page",
+        entry: { documentId: "abc123xy", locale: "el", publishedAt: "2024-01-01T00:00:00.000Z" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(json).toEqual({ ok: false, error: "Unknown event type." });
+    expect(addDocuments).not.toHaveBeenCalled();
+    expect(deleteDocument).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid locale in webhook payload with 400", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      strapiSignedRequest({
+        event: "entry.create",
+        model: "page",
+        entry: { documentId: "abc123xy", locale: "fr", publishedAt: "2024-01-01T00:00:00.000Z" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(json).toEqual({ ok: false, error: "Unsupported locale." });
+    expect(addDocuments).not.toHaveBeenCalled();
+    expect(deleteDocument).not.toHaveBeenCalled();
+  });
+});

@@ -64,6 +64,7 @@ export function SiteHeaderClient({
           settings={settings}
           locale={locale}
           languageLabel={t.languageLabel}
+          localeUnavailableLabel={t.localeUnavailableLabel}
         />
 
         <header className={styles["site-header"]} data-locale={locale}>

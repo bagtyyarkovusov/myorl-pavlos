@@ -23,6 +23,7 @@ describe("UtilityBar", () => {
     settings: mockSettings,
     locale: "el" as const,
     languageLabel: "Language",
+    localeUnavailableLabel: "Unavailable in this language",
   };
 
   it("renders address with status dot", () => {

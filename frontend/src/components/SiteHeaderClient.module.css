@@ -132,9 +132,31 @@
   color: var(--color-stone-soft);
 }
 
-.locale-switcher a[aria-current="page"] {
+.locale-switcher [aria-current="page"] {
+  display: inline-flex;
+  min-width: 28px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
   background: var(--foreground);
   color: var(--surface);
+}
+
+.locale-switcher--limited {
+  border-color: color-mix(in srgb, var(--line) 72%, transparent);
+}
+
+.locale-switcher__option--disabled {
+  display: inline-flex;
+  min-width: 28px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  color: color-mix(in srgb, var(--color-stone-soft) 52%, transparent);
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .status-dot {
@@ -507,6 +529,13 @@
   }
 
   .locale-switcher a {
+    min-width: 26px;
+    height: 22px;
+    font-size: 0.61rem;
+  }
+
+  .locale-switcher [aria-current="page"],
+  .locale-switcher__option--disabled {
     min-width: 26px;
     height: 22px;
     font-size: 0.61rem;

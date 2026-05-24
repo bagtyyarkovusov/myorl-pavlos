@@ -10,6 +10,7 @@ export type HeaderStrings = {
   mobileNavLabel: string;
   mobileNavInnerLabel: string;
   languageLabel: string;
+  localeUnavailableLabel: string;
   overviewMobile: string;
   sectionOverviewLink: string;
   sectionOverviewBlurb: (sectionTitle: string) => string;
@@ -28,6 +29,7 @@ const STRINGS: Record<Locale, HeaderStrings> = {
     mobileNavLabel: "Πλοήγηση κινητού",
     mobileNavInnerLabel: "Κύρια πλοήγηση κινητού",
     languageLabel: "Γλώσσα",
+    localeUnavailableLabel: "Η σελίδα δεν είναι διαθέσιμη σε αυτή τη γλώσσα",
     overviewMobile: "Επισκόπηση ενότητας",
     sectionOverviewLink: "Δες την ενότητα",
     sectionOverviewBlurb: (sectionTitle) =>
@@ -46,6 +48,7 @@ const STRINGS: Record<Locale, HeaderStrings> = {
     mobileNavLabel: "Мобильное меню",
     mobileNavInnerLabel: "Основное мобильное меню",
     languageLabel: "Язык",
+    localeUnavailableLabel: "Страница недоступна на этом языке",
     overviewMobile: "Обзор раздела",
     sectionOverviewLink: "Открыть раздел",
     sectionOverviewBlurb: (sectionTitle) =>

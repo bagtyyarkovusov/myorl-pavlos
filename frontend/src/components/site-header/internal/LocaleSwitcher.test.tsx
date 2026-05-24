@@ -24,6 +24,11 @@ vi.mock("@/lib/i18n/alternate-url-store", () => ({
   getServerSnapshot: () => ({}),
 }));
 
+const baseProps = {
+  languageLabel: "Language",
+  localeUnavailableLabel: "Unavailable in this language",
+};
+
 describe("LocaleSwitcher", () => {
   beforeEach(() => {
     mockUsePathname.mockReturnValue("/el");
@@ -35,42 +40,38 @@ describe("LocaleSwitcher", () => {
     vi.clearAllMocks();
   });
 
-  it("renders both locale links", () => {
-    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
+  it("renders both locale options", () => {
+    render(<LocaleSwitcher locale="el" {...baseProps} />);
 
-    const grLink = screen.getByText("GR");
-    const ruLink = screen.getByText("RU");
-    expect(grLink).toBeDefined();
-    expect(ruLink).toBeDefined();
+    expect(screen.getByText("GR")).toBeDefined();
+    expect(screen.getByText("RU")).toBeDefined();
   });
 
   it("sets aria-current on active locale", () => {
-    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
+    render(<LocaleSwitcher locale="el" {...baseProps} />);
 
-    const grLink = screen.getByText("GR");
-    expect(grLink.getAttribute("aria-current")).toBe("page");
+    const grOption = screen.getByText("GR");
+    expect(grOption.getAttribute("aria-current")).toBe("page");
+    expect(grOption.tagName).toBe("SPAN");
 
-    const ruLink = screen.getByText("RU");
-    expect(ruLink.getAttribute("aria-current")).toBeNull();
+    const ruLink = screen.getByText("RU").closest("a");
+    expect(ruLink).toBeTruthy();
+    expect(ruLink?.getAttribute("aria-current")).toBeNull();
   });
 
   it("sets active locale on ru", () => {
-    render(<LocaleSwitcher locale="ru" languageLabel="Language" />);
+    render(<LocaleSwitcher locale="ru" {...baseProps} />);
 
-    const ruLink = screen.getByText("RU");
-    expect(ruLink.getAttribute("aria-current")).toBe("page");
+    const ruOption = screen.getByText("RU");
+    expect(ruOption.getAttribute("aria-current")).toBe("page");
 
-    const grLink = screen.getByText("GR");
-    expect(grLink.getAttribute("aria-current")).toBeNull();
+    const grLink = screen.getByText("GR").closest("a");
+    expect(grLink).toBeTruthy();
   });
 
   it("links to homepage when on homepage", () => {
     mockUsePathname.mockReturnValue("/el");
-    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
-
-    const grLink = screen.getByText("GR").closest("a");
-    expect(grLink?.getAttribute("href")).toBe("/el");
-    expect(grLink?.getAttribute("hreflang")).toBe("el");
+    render(<LocaleSwitcher locale="el" {...baseProps} />);
 
     const ruLink = screen.getByText("RU").closest("a");
     expect(ruLink?.getAttribute("href")).toBe("/ru");
@@ -79,10 +80,7 @@ describe("LocaleSwitcher", () => {
 
   it("preserves current page path when switching locale", () => {
     mockUsePathname.mockReturnValue("/el/services");
-    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
-
-    const grLink = screen.getByText("GR").closest("a");
-    expect(grLink?.getAttribute("href")).toBe("/el/services");
+    render(<LocaleSwitcher locale="el" {...baseProps} />);
 
     const ruLink = screen.getByText("RU").closest("a");
     expect(ruLink?.getAttribute("href")).toBe("/ru/services");
@@ -90,40 +88,49 @@ describe("LocaleSwitcher", () => {
 
   it("preserves nested paths when switching locale", () => {
     mockUsePathname.mockReturnValue("/ru/blog/my-article");
-    render(<LocaleSwitcher locale="ru" languageLabel="Language" />);
+    render(<LocaleSwitcher locale="ru" {...baseProps} />);
 
     const grLink = screen.getByText("GR").closest("a");
     expect(grLink?.getAttribute("href")).toBe("/el/blog/my-article");
-
-    const ruLink = screen.getByText("RU").closest("a");
-    expect(ruLink?.getAttribute("href")).toBe("/ru/blog/my-article");
   });
 
   it("uses alternate URL when available for target locale", () => {
     storeSnapshot = { el: "/el/about", ru: "/ru/o-nas" };
     mockUsePathname.mockReturnValue("/el/about");
-    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
-
-    const grLink = screen.getByText("GR").closest("a");
-    expect(grLink?.getAttribute("href")).toBe("/el/about");
+    render(<LocaleSwitcher locale="el" {...baseProps} />);
 
     const ruLink = screen.getByText("RU").closest("a");
     expect(ruLink?.getAttribute("href")).toBe("/ru/o-nas");
   });
 
-  it("falls back to pathname swap when alternate URL not available", () => {
+  it("falls back to pathname swap when alternate URL not available yet", () => {
     storeSnapshot = {};
     mockUsePathname.mockReturnValue("/el/services");
-    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
+    render(<LocaleSwitcher locale="el" {...baseProps} />);
 
     const ruLink = screen.getByText("RU").closest("a");
     expect(ruLink?.getAttribute("href")).toBe("/ru/services");
   });
 
+  it("disables the other locale when the page has no localization partner", () => {
+    storeSnapshot = { ru: "http://localhost:3000/ru/fillers" };
+    mockUsePathname.mockReturnValue("/ru/fillers");
+    render(<LocaleSwitcher locale="ru" {...baseProps} />);
+
+    const switcher = screen.getByLabelText("Language");
+    expect(switcher.getAttribute("data-limited")).toBe("true");
+
+    const grOption = screen.getByText("GR");
+    expect(grOption.tagName).toBe("SPAN");
+    expect(grOption.getAttribute("aria-disabled")).toBe("true");
+    expect(grOption.getAttribute("title")).toBe("Unavailable in this language");
+    expect(grOption.closest("a")).toBeNull();
+  });
+
   it("reacts to alternate URL store updates", () => {
     storeSnapshot = {};
     mockUsePathname.mockReturnValue("/el/about");
-    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
+    render(<LocaleSwitcher locale="el" {...baseProps} />);
 
     const ruLinkBefore = screen.getByText("RU").closest("a");
     expect(ruLinkBefore?.getAttribute("href")).toBe("/ru/about");
@@ -138,8 +145,7 @@ describe("LocaleSwitcher", () => {
   });
 
   it("sets aria-label on container", () => {
-    render(<LocaleSwitcher locale="el" languageLabel="Language" />);
-    const container = screen.getByLabelText("Language");
-    expect(container).toBeDefined();
+    render(<LocaleSwitcher locale="el" {...baseProps} />);
+    expect(screen.getByLabelText("Language")).toBeDefined();
   });
 });

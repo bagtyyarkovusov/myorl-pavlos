@@ -27,10 +27,16 @@ export async function seedGlobal(strapi: Core.Strapi): Promise<void> {
         locale,
       });
 
+      // Strapi 5's generated `Data.Input<TSchemaUID>` is structurally strict
+      // (especially for component fields like socialLinks); the runtime
+      // shape matches the schema, but TS can't prove the overlap. Cast at
+      // the use site keeps the rest of the function strictly typed.
       const payload = {
         ...SEED_PRIMARY_CONTACT[locale],
         socialLinks: SEED_SOCIAL_LINKS,
-      };
+      } as unknown as Parameters<
+        ReturnType<Core.Strapi["documents"]>["create"]
+      >[0]["data"];
 
       if (existing) {
         documentId = existing.documentId;

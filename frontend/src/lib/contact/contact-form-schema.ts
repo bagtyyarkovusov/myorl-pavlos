@@ -50,7 +50,10 @@ export function isLocale(value: string): value is Locale {
 }
 
 export function formatPreferredDate(locale: Locale, isoDate: string): string {
-  const [year, month, day] = isoDate.split("-").map(Number);
+  const parts = isoDate.split("-").map(Number);
+  const year = parts[0] ?? 0;
+  const month = parts[1] ?? 1;
+  const day = parts[2] ?? 1;
   const date = new Date(Date.UTC(year, month - 1, day));
   return new Intl.DateTimeFormat(locale === "ru" ? "ru-RU" : "el-GR", {
     dateStyle: "full",

@@ -242,6 +242,7 @@ describe("MegaMenu", () => {
         item={mockItem}
         featureBlurb={mockItem.excerpt!}
         overviewLinkLabel={overviewLinkLabel}
+        sectionOverviewMoreHint={sectionOverviewMoreHint}
         topicsLabel={(count) => `${count} θέματα`}
       />,
     );

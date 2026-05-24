@@ -1,0 +1,301 @@
+{
+  "generatedAt": "2026-05-23T01:15:39.549964+00:00",
+  "summary": {
+    "plannedCount": 17,
+    "skippedCount": 11,
+    "errorCount": 0
+  },
+  "plannedUpdates": [
+    {
+      "documentId": "n3ryx3cfn7jvdofsw0ktycle",
+      "locale": "el",
+      "slug": "blepharoplasty",
+      "hasPublished": true,
+      "repairKind": "section-hub-structure",
+      "itemCount": 1,
+      "payload": {
+        "layoutVariant": "section-hub",
+        "isFolder": true
+      }
+    },
+    {
+      "documentId": "nkgl6v5e8j0u9d9hnodffo12",
+      "locale": "el",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-dafragma",
+      "hasPublished": true,
+      "repairKind": "section-hub-structure",
+      "itemCount": 1,
+      "payload": {
+        "layoutVariant": "section-hub",
+        "isFolder": true,
+        "pageSections": []
+      }
+    },
+    {
+      "documentId": "t5p48kwy6ynfbuzbxtb3lcyi",
+      "locale": "el",
+      "slug": "parotida-ypognathios-adenas",
+      "hasPublished": true,
+      "repairKind": "section-hub-structure",
+      "itemCount": 1,
+      "payload": {
+        "layoutVariant": "section-hub",
+        "isFolder": true
+      }
+    },
+    {
+      "documentId": "mals56qxfw1ckzcm9jm3kq1j",
+      "locale": "ru",
+      "slug": "blefaroplastika-plastika-glaz",
+      "hasPublished": true,
+      "repairKind": "section-hub-structure",
+      "itemCount": 1,
+      "payload": {
+        "layoutVariant": "section-hub",
+        "isFolder": true
+      }
+    },
+    {
+      "documentId": "nkgl6v5e8j0u9d9hnodffo12",
+      "locale": "ru",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-dafragma",
+      "hasPublished": true,
+      "repairKind": "section-hub-structure",
+      "itemCount": 1,
+      "payload": {
+        "layoutVariant": "section-hub",
+        "isFolder": true,
+        "pageSections": []
+      }
+    },
+    {
+      "documentId": "wn2k0el3opa926ibqr0ractv",
+      "locale": "ru",
+      "slug": "iatreio",
+      "hasPublished": true,
+      "repairKind": "section-hub-structure",
+      "itemCount": 1,
+      "payload": {
+        "layoutVariant": "section-hub",
+        "isFolder": true
+      }
+    },
+    {
+      "documentId": "jwo4jdihc76be0oi75wk0lnx",
+      "locale": "ru",
+      "slug": "amygdales-adenoeideis-ekvlastiseis",
+      "hasPublished": true,
+      "repairKind": "section-hub-structure",
+      "itemCount": 1,
+      "payload": {
+        "layoutVariant": "section-hub",
+        "isFolder": true
+      }
+    },
+    {
+      "documentId": "iukw4zqwwyxji9n7qqqnid1o",
+      "locale": "el",
+      "slug": "eutheiasmos-rinikou-diafragmatos",
+      "hasPublished": true,
+      "repairKind": "section-hub-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 0,
+        "layoutVariant": "encyclopedia-article",
+        "pageType": "content"
+      }
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "el",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "hasPublished": true,
+      "repairKind": "section-hub-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 1,
+        "layoutVariant": "encyclopedia-article",
+        "pageType": "content"
+      }
+    },
+    {
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
+      "locale": "el",
+      "slug": "diafragma-me-laser",
+      "hasPublished": true,
+      "repairKind": "section-hub-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 2,
+        "layoutVariant": "encyclopedia-article",
+        "pageType": "content"
+      }
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "el",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "hasPublished": true,
+      "repairKind": "section-hub-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 3,
+        "layoutVariant": "encyclopedia-article",
+        "pageType": "content"
+      }
+    },
+    {
+      "documentId": "iukw4zqwwyxji9n7qqqnid1o",
+      "locale": "ru",
+      "slug": "eutheiasmos-rinikou-diafragmatos",
+      "hasPublished": true,
+      "repairKind": "section-hub-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 0,
+        "layoutVariant": "encyclopedia-article",
+        "pageType": "content"
+      }
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "ru",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "hasPublished": true,
+      "repairKind": "section-hub-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 1,
+        "layoutVariant": "encyclopedia-article",
+        "pageType": "content"
+      }
+    },
+    {
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
+      "locale": "ru",
+      "slug": "diafragma-me-laser",
+      "hasPublished": true,
+      "repairKind": "section-hub-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 2,
+        "layoutVariant": "encyclopedia-article",
+        "pageType": "content"
+      }
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "ru",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "hasPublished": true,
+      "repairKind": "section-hub-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 3,
+        "layoutVariant": "encyclopedia-article",
+        "pageType": "content"
+      }
+    },
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "ru",
+      "slug": "iatreio-alexandras",
+      "hasPublished": true,
+      "repairKind": "iatreio-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 0
+      }
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "ru",
+      "slug": "iatreio-koukaki",
+      "hasPublished": true,
+      "repairKind": "iatreio-child-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": false,
+        "menuIndex": 1
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "documentId": "qrqbrvdczgpaww71fwvg3od5",
+      "locale": "el",
+      "slug": "rinoplastiki",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "aqbhriti77cnoithsrvowjh9",
+      "locale": "el",
+      "slug": "otoplastika-v-athinah",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "xol5hvue3ppy26k6y966scr9",
+      "locale": "el",
+      "slug": "roxalito-kai-apnoia",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "jd59fet2vsa9lc9cg0i437dn",
+      "locale": "el",
+      "slug": "ypertrofia-rinikon-kogxon",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "g5erxrpzv3ool4dztm27ovvk",
+      "locale": "el",
+      "slug": "metamosxeusi-mallion",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "pad4hur71wvlio05yourjuwx",
+      "locale": "el",
+      "slug": "pathiseis-stomatos",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "qrqbrvdczgpaww71fwvg3od5",
+      "locale": "ru",
+      "slug": "rinoplastiki",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "aqbhriti77cnoithsrvowjh9",
+      "locale": "ru",
+      "slug": "otoplastika-v-athinah",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "g5erxrpzv3ool4dztm27ovvk",
+      "locale": "ru",
+      "slug": "metamosxeusi-mallion",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "pad4hur71wvlio05yourjuwx",
+      "locale": "ru",
+      "slug": "pathiseis-stomatos",
+      "reason": "hub already at target"
+    },
+    {
+      "documentId": "jd59fet2vsa9lc9cg0i437dn",
+      "locale": "ru",
+      "slug": "ypertrofia-rinikon-kogxon",
+      "reason": "hub already at target"
+    }
+  ],
+  "errors": []
+}

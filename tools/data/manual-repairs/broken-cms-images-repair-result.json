@@ -1,41 +1,29 @@
 {
-  "okCount": 6,
+  "okCount": 4,
   "errorCount": 0,
   "ok": [
     {
-      "documentId": "ml7c4v5s98d13flurmre521t",
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
       "locale": "ru",
-      "slug": "igmoritida",
+      "slug": "diafragma-me-laser",
       "itemCount": 1
     },
     {
-      "documentId": "ml7c4v5s98d13flurmre521t",
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
       "locale": "ru",
-      "slug": "igmoritida",
+      "slug": "diafragma-me-laser",
       "itemCount": 1
     },
     {
-      "documentId": "gsal64tpo5n2xzduimtxaxpg",
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
       "locale": "ru",
-      "slug": "rinikoi-polypodes",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
       "itemCount": 1
     },
     {
-      "documentId": "gsal64tpo5n2xzduimtxaxpg",
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
       "locale": "ru",
-      "slug": "rinikoi-polypodes",
-      "itemCount": 1
-    },
-    {
-      "documentId": "yrkfbgd2yby64x206ksrzg6k",
-      "locale": "ru",
-      "slug": "roxalito-ypniki-apnoia",
-      "itemCount": 1
-    },
-    {
-      "documentId": "yrkfbgd2yby64x206ksrzg6k",
-      "locale": "ru",
-      "slug": "roxalito-ypniki-apnoia",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
       "itemCount": 1
     }
   ],

@@ -68,15 +68,23 @@ function DefaultPageBody({ page, proseStackGap, hubChild = false }: DefaultPageB
         proseStackGap === "compact" && styles["prose-shell--compact-stack"],
       )}
     >
-      <CmsHtml html={page.content} />
+      <CmsHtml html={page.content} locale={page.locale} />
       {page.sections.map((section, index) => (
         <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
       ))}
       {page.infoBlockBottom ? (
-        <CmsHtml html={page.infoBlockBottom} className={`cms-html ${styles["note-block"]}`} />
+        <CmsHtml
+          html={page.infoBlockBottom}
+          className={`cms-html ${styles["note-block"]}`}
+          locale={page.locale}
+        />
       ) : null}
       {page.sources ? (
-        <CmsHtml html={page.sources} className={`cms-html ${styles["sources-block"]}`} />
+        <CmsHtml
+          html={page.sources}
+          className={`cms-html ${styles["sources-block"]}`}
+          locale={page.locale}
+        />
       ) : null}
     </div>
   );
@@ -145,7 +153,7 @@ function ServiceArticleBody({ page, hubChild = false, appointmentHref }: PageBod
         data-service-layout="true"
       >
         <article className={styles["service-layout__content"]}>
-          <CmsHtml html={mainContentHtml} variant="service" />
+          <CmsHtml html={mainContentHtml} variant="service" locale={page.locale} />
           {page.sections.map((section, index) => (
             <SectionRenderer
               key={`${section.__component}-${index}`}
@@ -159,10 +167,16 @@ function ServiceArticleBody({ page, hubChild = false, appointmentHref }: PageBod
               html={page.infoBlockBottom}
               className={styles["note-block"]}
               variant="service"
+              locale={page.locale}
             />
           ) : null}
           {page.sources ? (
-            <CmsHtml html={page.sources} className={styles["sources-block"]} variant="service" />
+            <CmsHtml
+              html={page.sources}
+              className={styles["sources-block"]}
+              variant="service"
+              locale={page.locale}
+            />
           ) : null}
         </article>
         <aside className={styles["service-layout__sidebar"]}>
@@ -279,7 +293,7 @@ function ArticleAsideBody({
       {mobileRelatedTopics}
       <main className={styles["reference-layout"]} {...layoutProps}>
         <article className={styles["reference-layout__content"]}>
-          <CmsHtml html={contentWithHeadingIds} variant={cmsVariant} />
+          <CmsHtml html={contentWithHeadingIds} variant={cmsVariant} locale={page.locale} />
           {bodySections.map((section, index) => (
             <SectionRenderer
               key={`${section.__component}-${index}`}
@@ -294,6 +308,7 @@ function ArticleAsideBody({
               html={page.infoBlockBottom}
               className={styles["note-block"]}
               variant={cmsVariant}
+              locale={page.locale}
             />
           ) : null}
           {page.sources ? (
@@ -303,6 +318,7 @@ function ArticleAsideBody({
                 html={page.sources}
                 className={styles["sources-block"]}
                 variant={cmsVariant}
+                locale={page.locale}
               />
             </section>
           ) : null}

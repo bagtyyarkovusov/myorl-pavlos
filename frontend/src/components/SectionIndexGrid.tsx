@@ -305,7 +305,7 @@ function IndexCard({
   const hasMediaLayout = showMediaSlot;
 
   if (variant === "directory-list") {
-    const directoryMedia = node.imageCenter ?? node.featuredImage;
+    const directoryMedia = getDirectoryNodeMedia(node);
     return (
       <Link href={node.href} className={styles["index-row-link--directory"]}>
         <IndexMedia media={directoryMedia} title={node.navLabel} variant={variant} />

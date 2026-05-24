@@ -35,6 +35,19 @@ type BulkReindexPayload = {
   items: BulkItem[];
 };
 
+type StrapiEvent = "entry.create" | "entry.update" | "entry.delete";
+type StrapiModel = "page" | "video-entry";
+
+type StrapiWebhookPayload = {
+  event: StrapiEvent;
+  model: StrapiModel;
+  entry: {
+    documentId: string;
+    locale: string;
+    publishedAt: string | null;
+  };
+};
+
 class MeiliTaskFailedError extends Error {}
 
 export async function POST(request: Request) {
@@ -50,6 +63,11 @@ export async function POST(request: Request) {
 
   const payload = parsePayload(rawBody);
 
+  // Detect Strapi webhook format first
+  if (isStrapiWebhookPayload(payload)) {
+    return handleStrapiWebhook(payload);
+  }
+
   // Detect bulk vs single-doc
   if (Array.isArray(payload.items)) {
     return handleBulk(payload);
@@ -61,6 +79,135 @@ export async function POST(request: Request) {
   }
 
   return handleSingle(validation.payload);
+}
+
+function isStrapiWebhookPayload(payload: unknown): payload is StrapiWebhookPayload {
+  return (
+    typeof payload === "object" &&
+    payload !== null &&
+    "event" in payload &&
+    "model" in payload &&
+    "entry" in payload
+  );
+}
+
+function mapModel(model: StrapiModel): "page" | "video" {
+  return model === "video-entry" ? "video" : "page";
+}
+
+async function handleStrapiWebhook(payload: StrapiWebhookPayload): Promise<Response> {
+  const validEvents: StrapiEvent[] = ["entry.create", "entry.update", "entry.delete"];
+  if (!validEvents.includes(payload.event)) {
+    return NextResponse.json({ ok: false, error: "Unknown event type." }, { status: 400 });
+  }
+
+  const contentType = mapModel(payload.model);
+  const { documentId, locale, publishedAt } = payload.entry;
+
+  if (!isLocale(locale)) {
+    return NextResponse.json({ ok: false, error: "Unsupported locale." }, { status: 400 });
+  }
+
+  const admin = getMeiliAdminClient();
+  if (!admin) {
+    return NextResponse.json({ ok: true, degraded: true });
+  }
+
+  const indexName = indexNameForLocale(locale);
+  const meiliIndex = admin.index(indexName);
+  const documentKey =
+    contentType === "page"
+      ? meiliDocumentKeyForPage(documentId)
+      : meiliDocumentKeyForVideo(documentId);
+
+  // entry.delete → delete from index
+  if (payload.event === "entry.delete") {
+    try {
+      await waitForMeiliTask(meiliIndex.deleteDocument(documentKey));
+      return NextResponse.json({
+        ok: true,
+        action: "delete",
+        id: documentId,
+        locale,
+        index: indexName,
+      });
+    } catch (error) {
+      if (error instanceof MeiliTaskFailedError) {
+        return NextResponse.json({ ok: false, error: error.message }, { status: 502 });
+      }
+      return NextResponse.json({ ok: true, degraded: true });
+    }
+  }
+
+  // entry.update with publishedAt: null → unpublish (delete from index)
+  if (payload.event === "entry.update" && publishedAt === null) {
+    try {
+      await waitForMeiliTask(meiliIndex.deleteDocument(documentKey));
+      return NextResponse.json({
+        ok: true,
+        action: "unpublish",
+        id: documentId,
+        locale,
+        index: indexName,
+      });
+    } catch (error) {
+      if (error instanceof MeiliTaskFailedError) {
+        return NextResponse.json({ ok: false, error: error.message }, { status: 502 });
+      }
+      return NextResponse.json({ ok: true, degraded: true });
+    }
+  }
+
+  // entry.create or entry.update with publishedAt → upsert
+  try {
+    let searchDoc: Record<string, unknown> | null = null;
+    let docId: string | undefined;
+
+    if (contentType === "page") {
+      const pageResult = await getPageByDocumentIdResult(locale, documentId);
+      if (pageResult.ok) {
+        const mapped = indexPageDocument(pageResult.page);
+        if (mapped) {
+          docId = mapped.id;
+          searchDoc = { documentKey, ...mapped } as unknown as Record<string, unknown>;
+        }
+      }
+    } else {
+      const videoResult = await getVideoEntryByDocumentIdResult(locale, documentId);
+      if (videoResult.ok) {
+        const mapped = indexVideoDocument(videoResult.video);
+        if (mapped) {
+          docId = mapped.id;
+          searchDoc = { documentKey, ...mapped } as unknown as Record<string, unknown>;
+        }
+      }
+    }
+
+    if (!searchDoc) {
+      // Not found via gateway or excluded layout → delete any stale doc
+      try {
+        await waitForMeiliTask(meiliIndex.deleteDocument(documentKey));
+      } catch {
+        // Ignore delete errors for stale doc cleanup
+      }
+      return NextResponse.json({
+        ok: true,
+        skipped: true,
+        id: documentId,
+        locale,
+        index: indexName,
+      });
+    }
+
+    await waitForMeiliTask(meiliIndex.addDocuments([searchDoc], { primaryKey: "documentKey" }));
+
+    return NextResponse.json({ ok: true, action: "upsert", id: docId, locale, index: indexName });
+  } catch (error) {
+    if (error instanceof MeiliTaskFailedError) {
+      return NextResponse.json({ ok: false, error: error.message }, { status: 502 });
+    }
+    return NextResponse.json({ ok: true, degraded: true });
+  }
 }
 
 async function handleSingle(body: ValidReindexPayload): Promise<Response> {

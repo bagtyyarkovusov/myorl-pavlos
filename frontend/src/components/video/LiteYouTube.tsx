@@ -14,6 +14,8 @@ type LiteYouTubeProps = {
   variant?: "compact" | "full";
   activated?: boolean;
   onActivate?: () => void;
+  /** When false, renders a decorative preview (parent handles activation). */
+  interactive?: boolean;
 };
 
 export function LiteYouTube({
@@ -23,6 +25,7 @@ export function LiteYouTube({
   variant = "full",
   activated,
   onActivate,
+  interactive = true,
 }: LiteYouTubeProps) {
   const [internalActivated, setInternalActivated] = useState(false);
   const thumbnail = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
@@ -52,18 +55,33 @@ export function LiteYouTube({
     );
   }
 
-  return (
-    <button
-      type="button"
-      className={cn(styles.shell, isCompact && styles["shell--compact"])}
-      onClick={handleActivate}
-      aria-label={playLabel}
-    >
+  const shellClassName = cn(
+    styles.shell,
+    isCompact && styles["shell--compact"],
+    !interactive && styles["shell--preview"],
+  );
+  const preview = (
+    <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={thumbnail} alt="" className={styles.thumbnail} loading="lazy" decoding="async" />
       <span className={styles.play} aria-hidden="true">
         <span className={styles["play-icon"]} />
       </span>
+    </>
+  );
+
+  if (!interactive) {
+    return <div className={shellClassName}>{preview}</div>;
+  }
+
+  return (
+    <button
+      type="button"
+      className={shellClassName}
+      onClick={handleActivate}
+      aria-label={playLabel}
+    >
+      {preview}
     </button>
   );
 }

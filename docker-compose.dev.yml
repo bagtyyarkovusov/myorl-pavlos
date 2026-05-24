@@ -74,6 +74,11 @@ services:
       STRAPI_TOKEN: 991f8b99165498a27ba3fbd047413c88dbb3cbcfcbaec64d18034c4055f698a07f8d538b1e16d0c8fcd4a103b9ce907052fdb2c81784d61cef692bacd8655375018cf75a8ca487ac7565b8f7090c5b9b355808df95f4be65a781df037be02340ac98ebd953120583e52647172d74290478c3417009c91faa2c2c1f7acfacd298
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
       STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET:-dev-revalidate-secret}
+      SEARCH_ENABLED: ${SEARCH_ENABLED:-true}
+      MEILI_HOST: ${MEILI_HOST:-http://meilisearch:7700}
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY_DEV:-dev-master-key-do-not-use-in-prod}
+      NEXT_PUBLIC_MEILI_SEARCH_KEY: ${NEXT_PUBLIC_MEILI_SEARCH_KEY:-dev-master-key-do-not-use-in-prod}
+      STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET:-dev-search-webhook-secret}
     extra_hosts:
       - "localhost:host-gateway"
     ports:

@@ -112,6 +112,48 @@ export async function getPageResult(locale: Locale, slug: string): Promise<PageR
 }
 
 /**
+ * Fetches a single page by Strapi document ID through the CMS gateway.
+ *
+ * This is used by the Search Index reindex endpoint, where webhook/operator
+ * payloads identify content by document ID rather than localized slug.
+ *
+ * @param locale - The page locale.
+ * @param documentId - The Strapi document ID.
+ * @returns A {@link PageResult} with the matched page or an explicit error.
+ */
+export async function getPageByDocumentIdResult(
+  locale: Locale,
+  documentId: string,
+): Promise<PageResult> {
+  const gateway = getGateway();
+
+  try {
+    const pages = await gateway.pages.all({
+      locale,
+      filters: { documentId: { $eq: documentId } },
+      populate: PAGE_POPULATE,
+      pageSize: 1,
+      maxPages: 1,
+    });
+    const page = pages[0];
+    if (!page) {
+      return {
+        ok: false,
+        error: {
+          kind: "not_found",
+          locale,
+          slug: documentId,
+          message: "Page not found: " + locale + "/" + documentId,
+        },
+      };
+    }
+    return { ok: true, page };
+  } catch (error) {
+    return { ok: false, error: toCmsPageError(error, locale, documentId) };
+  }
+}
+
+/**
  * Fetches a single page and returns its {@link PageDTO}, or throws.
  *
  * A `not_found` error triggers Next.js `notFound()`. All other errors are

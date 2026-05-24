@@ -197,7 +197,9 @@
 }
 
 .contact-link:hover,
-.contact-link:focus-visible {
+.contact-link:focus-visible,
+.contact-block a:hover,
+.contact-block a:focus-visible {
   color: rgba(251, 252, 254, 1);
   outline: none;
 }

@@ -19,6 +19,7 @@ function makePage(
     hideFromMenu: false,
     isFolder: false,
     layoutVariant: "standard",
+    tags: [],
     ...overrides,
   };
 }

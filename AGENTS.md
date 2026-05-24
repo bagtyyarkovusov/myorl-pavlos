@@ -12,12 +12,16 @@ Canonical defaults: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-
 
 Single-context — ADRs at `docs/adr/`, `CONTEXT.md` at root. See `docs/agents/domain.md`.
 
+### Search subsystem
+
+Meilisearch-backed full-site search. Architecture in [ADR-011](docs/adr/ADR-011-full-site-search-via-meilisearch.md), operator procedures in [docs/runbooks/search-reindex.md](docs/runbooks/search-reindex.md), agent file map in [docs/agents/search.md](docs/agents/search.md). Implementation brief: [PRD #117](https://github.com/bagtyyarkovusov/myorl-pavlos/issues/117).
+
 ### Documentation inventory for agents
 
 Read these in this order when entering the project:
 
 1. **`CONTEXT.md`** — Domain glossary and canonical vocabulary. Read first.
-2. **`docs/adr/`** — Architecture Decision Records (9 accepted ADRs). Source of truth for product decisions.
+2. **`docs/adr/`** — Architecture Decision Records (11 accepted ADRs). Source of truth for product decisions.
 3. **`docs/architecture/README.md`** — Architecture MOC. Navigation entry point for deep dives.
 4. **`docs/runbooks/ci-cd-and-workflow.md`** — CI/CD pipelines and dev/prod/rehearsal workflow.
 

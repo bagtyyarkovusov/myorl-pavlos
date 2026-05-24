@@ -89,6 +89,24 @@ _Avoid_: contact page fallback clinics, Resend delivery config
 Server-side email routing for `/api/contact` submissions via Resend (`CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `RESEND_API_KEY`). Independent of the public **Primary Contact** display email; uses a test Resend sender until production mail is configured.
 _Avoid_: primary contact email, Global Settings
 
+## Search
+
+**Search Index**:
+A Meilisearch index containing all searchable content for a single locale. Two exist — `el` and `ru` — each with locale-appropriate tokenizer and stemmer. Combines **Pages** and **Video Entries** as **Search Documents** distinguished by a `type` facet. The canonical truth source is Strapi; the index is a derived projection rebuilt by [`tools/seed_search_index.py`](tools/seed_search_index.py) and incrementally updated via Strapi webhooks into [`/api/search/reindex`](frontend/src/app/api/search/reindex/route.ts). See [ADR-011](docs/adr/ADR-011-full-site-search-via-meilisearch.md).
+_Avoid_: search database, full-text index (when referring to Postgres FTS), Algolia index
+
+**Search Document**:
+A single indexed record in a **Search Index**, representing one Page or one Video Entry in one locale. Carries searchable fields (`title`, `excerpt`, `body`), display fields (`href`, `thumbnail`, `parentTitle`), facet fields (`type`, `parentSection`, `tags`, `layoutVariant`), and cross-locale fields (`localizations`) for the locale-fallback redirect path. Composite ID format `page:{id}` or `video:{id}`.
+_Avoid_: search row, search entry, Meili record (use when speaking specifically about the storage layer)
+
+**Search Synonym Dictionary**:
+The repo-versioned YAML files (`frontend/src/lib/search/synonyms.el.yaml`, `synonyms.ru.yaml`) defining colloquial / cross-locale / clinical-term equivalences pushed to Meilisearch via the `sync-synonyms` subcommand of the seed tool. Owned by dev in v1 — editor requests an addition, dev commits a PR. Migrate to Strapi-managed only if the dictionary outgrows YAML.
+_Avoid_: Meili synonyms config (when referring to the canonical source), search aliases
+
+**Search Query Log**:
+The anonymous Postgres table `search_query_log` capturing `{ query, locale, result_count, session_id, created_at }` for every search submitted. No IP, no user account, no persistent identifier. Session UUID is generated per browsing session in `sessionStorage`. 90-day TTL enforced by scheduled SQL job. Powers the internal `/admin/search-analytics` view; the input to the editor's synonym + content backlog. GDPR-defensible under the anonymous-data carve-out and documented in the user-facing privacy notice.
+_Avoid_: search analytics database, search telemetry, query tracking
+
 ## Relationships
 
 - A **Video Entry** may point to zero or one **Related Article**.
@@ -121,6 +139,13 @@ _Avoid_: primary contact email, Global Settings
 - Hard-coded **Primary Contact** fallbacks in frontend code remain until **Global Settings** is populated and verified in staging; then they are removed so Strapi is the sole source of truth.
 - Hard-coded **Contact Page** fallbacks (`contact-section-fallbacks.ts`) follow the same phased removal: keep until contact pages are verified from CMS, then delete.
 - **Global Settings** canonical Primary Contact and **Social Links** are seeded idempotently via `backend/src/bootstrap/seed-global.ts` (version marker); editors override in Strapi afterward.
+- The **Search Index** is locale-scoped: visitors see results from their current locale first. When the current-locale query returns zero, a transparent fallback to the other locale fires with a banner; result links auto-swap to the visitor's locale when a `localizations` translation exists.
+- A **Search Document** is derived from a Page or Video Entry via the existing CMS gateway transformation; indexing logic lives next to the gateway, never in Strapi backend code.
+- Strapi lifecycle events for Pages and Video Entries trigger Strapi webhooks → `/api/search/reindex` → Meilisearch upsert/delete. Bulk `pg_restore` operations bypass webhooks; `tools/orchestrate_migration.py` therefore chains restore + reindex + smoke-test into a single command.
+- The browser talks directly to Meilisearch for the instant dropdown (scoped search-only key, low latency); the dedicated `/search-results` page is SSR'd via Next.js with the master key server-side. The master key never appears in the browser bundle — enforced by `import "server-only"` in the admin client module.
+- The **Search Synonym Dictionary** is part of the **Search Index** lifecycle: synonyms + stop words push as part of every full reindex via `tools/seed_search_index.py sync-synonyms`.
+- The **Search Query Log** stores no personally identifying data and is automatically pruned at 90 days; the privacy contract is encoded in code (table schema) and disclosed to users in the privacy notice.
+- Section Sub-pages (`hideFromMenu: true`) are present in the **Search Index** even though they are hidden from the header mega-menu — they are real content reachable via section hubs. System layouts (`not-found`, `search-results`, `sitemap`, `appointment-form`) are excluded.
 
 ---
 
@@ -214,6 +239,9 @@ The **fixed port mapping** that prevents collisions. PostgreSQL host ports are o
 | `55432` | Dev Docker PostgreSQL (`myorl-pg`, `pgdata_dev` volume) |
 | `55532` | Rehearsal Docker PostgreSQL (`myorl-pg-rehearsal`, `pgdata-rehearsal` volume) |
 | _internal_ | Production Docker PostgreSQL (`myorl-pg-prod`, `pgdata-prod` volume) — no host exposure |
+| `57700` | Dev Docker Meilisearch (`myorl-meili-dev`, `meilidata_dev` volume) |
+| `57701` | Rehearsal Docker Meilisearch (`myorl-meili-rehearsal`, `meilidata_rehearsal` volume) |
+| _internal_ | Production Railway Meilisearch service (no host exposure) |
 
 This contract is enforced by the Port Guard module via the manifest.
 
@@ -242,3 +270,19 @@ npm run dev:local    # Native host (Strapi + Next.js, needs Docker PostgreSQL)
 npm run dev:db       # Start only PostgreSQL for local dev
 npm run dev:down     # Stop Docker dev stack
 ```
+
+## Search Stack (Meilisearch)
+
+The **search projection layer** runs as a separate per-environment service alongside PostgreSQL. Indexes are derived from Strapi state and rebuilt via [`tools/seed_search_index.py`](tools/seed_search_index.py); incremental updates flow Strapi webhook → `/api/search/reindex` → Meilisearch.
+
+| Environment | Container / service | Host port | Volume |
+|-------------|---------------------|-----------|--------|
+| Dev | `myorl-meili-dev` (Docker, `meilisearch:v1.x`) | `57700` | `meilidata_dev` |
+| Rehearsal | `myorl-meili-rehearsal` (Docker, `meilisearch:v1.x`) | `57701` | `meilidata_rehearsal` |
+| Production | Railway service `meilisearch` | _internal_ | Railway persistent volume |
+
+**Keys:**
+- `MEILI_MASTER_KEY` — server-only env var. Admin access for the seed tool and the Next.js `/api/search/reindex` endpoint. Never exposed to the browser.
+- `NEXT_PUBLIC_MEILI_SEARCH_KEY` — public env var. Scoped to `actions: ["search"]`, `indexes: ["el", "ru"]`. Embedded in the browser bundle for the instant dropdown.
+
+**Feature flag:** `SEARCH_ENABLED` (per environment). When `false`, the header search icon hides, `/search-results` renders a placeholder, and the webhook receiver is a no-op. Graceful degradation when Meilisearch is unreachable in dev/CI.

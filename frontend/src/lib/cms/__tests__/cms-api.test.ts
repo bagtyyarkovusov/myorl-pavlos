@@ -226,7 +226,9 @@ describe("getSite", () => {
   it("reuses Greek social links when the locale entry has none", async () => {
     const { getSite, injectCmsGatewayForTesting: inject } = await import("../cms-api");
     const navFixture = loadFixture("navigation-pages.json");
-    const globalRuEmptySocial = loadFixture("global-settings.json");
+    const globalRuEmptySocial = loadFixture("global-settings.json") as {
+      data: { locale: string; socialLinks: unknown[] };
+    };
     globalRuEmptySocial.data.locale = "ru";
     globalRuEmptySocial.data.socialLinks = [];
     const globalEl = loadFixture("global-settings.json");

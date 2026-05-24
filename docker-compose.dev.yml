@@ -85,6 +85,21 @@ services:
       - nextjs_node_modules:/app/node_modules
       - ./data/manifests:/data/manifests:ro
 
+  meilisearch:
+    image: getmeili/meilisearch:v1.11
+    container_name: myorl-meili-dev
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY_DEV:-dev-master-key-do-not-use-in-prod}
+    ports:
+      - "57700:7700"
+    volumes:
+      - meilidata_dev:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:7700/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata_dev:
     name: myorl-pavlos_pgdata_dev
@@ -92,3 +107,5 @@ volumes:
     name: myorl-pavlos_strapi_node_modules
   nextjs_node_modules:
     name: myorl-pavlos_nextjs_node_modules
+  meilidata_dev:
+    name: myorl-pavlos_meilidata_dev

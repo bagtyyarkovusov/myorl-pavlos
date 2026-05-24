@@ -103,5 +103,39 @@ class TestComposeMatchesManifest(unittest.TestCase):
         self._check_env("production")
 
 
+class TestMeilisearchFields(unittest.TestCase):
+    """Assert meili identity fields are present and unique across env records."""
+
+    def test_dev_meili_fields(self):
+        env = ENVIRONMENTS["dev"]
+        self.assertEqual(env["meili_host_port"], 57700)
+        self.assertEqual(env["meili_container"], "myorl-meili-dev")
+        self.assertEqual(env["meili_volume"], "meilidata_dev")
+        self.assertEqual(env["meili_master_key_env"], "MEILI_MASTER_KEY_DEV")
+
+    def test_rehearsal_meili_fields(self):
+        env = ENVIRONMENTS["rehearsal"]
+        self.assertEqual(env["meili_host_port"], 57701)
+        self.assertEqual(env["meili_container"], "myorl-meili-rehearsal")
+        self.assertEqual(env["meili_volume"], "meilidata_rehearsal")
+        self.assertEqual(env["meili_master_key_env"], "MEILI_MASTER_KEY_REHEARSAL")
+
+    def test_no_duplicate_meili_host_ports(self):
+        ports = [
+            env["meili_host_port"]
+            for env in ENVIRONMENTS.values()
+            if env.get("meili_host_port") is not None
+        ]
+        self.assertEqual(len(ports), len(set(ports)), "duplicate meili host ports")
+
+    def test_no_duplicate_meili_containers(self):
+        containers = [
+            env["meili_container"]
+            for env in ENVIRONMENTS.values()
+            if env.get("meili_container")
+        ]
+        self.assertEqual(len(containers), len(set(containers)), "duplicate meili container names")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

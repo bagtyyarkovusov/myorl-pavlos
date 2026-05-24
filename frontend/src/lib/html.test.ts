@@ -1,5 +1,16 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { removeBrokenImages, sanitizeCmsHtml, stripTags, upgradeImageOnlyParagraphs } from "./html";
+import {
+  extractYoutubeVideoId,
+  groupConsecutiveFigures,
+  normalizeLegacyCmsMarkup,
+  preserveLegacyAlignment,
+  removeBrokenImages,
+  replaceYoutubeIframes,
+  sanitizeCmsHtml,
+  stripTags,
+  unwrapLegacyWrapperDivs,
+  upgradeImageOnlyParagraphs,
+} from "./html";
 
 describe("sanitizeCmsHtml", () => {
   afterEach(() => {
@@ -23,16 +34,39 @@ describe("sanitizeCmsHtml", () => {
     expect(sanitizeCmsHtml(input)).toBe("");
   });
 
-  it("keeps iframes from allowlisted hosts (youtube)", () => {
+  it("converts youtube iframes to hydration placeholders", () => {
     const input = '<iframe src="https://www.youtube.com/embed/abc"></iframe>';
     const result = sanitizeCmsHtml(input);
-    expect(result).toContain("iframe");
-    expect(result).toContain("youtube.com");
+    expect(result).not.toContain("<iframe");
+    expect(result).toContain('data-cms-youtube="abc"');
+    expect(result).toContain("cms-html__video");
   });
 
   it("strips inline style attributes", () => {
     const input = '<p style="color:red">hi</p>';
     expect(sanitizeCmsHtml(input)).toBe("<p>hi</p>");
+  });
+
+  it("preserves legacy centered alignment as a safe layout class", () => {
+    const input =
+      '<p align="center"><iframe src="https://www.youtube.com/embed/abc"></iframe></p>' +
+      '<h5 style="text-align: center;"><strong>Title</strong></h5>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).toContain('class="cms-html__align-center"');
+    expect(result).toContain('data-cms-youtube="abc"');
+    expect(result).not.toContain("align=");
+    expect(result).not.toContain("style=");
+  });
+
+  it("unwraps legacy tab-content wrappers so cms-html spacing applies", () => {
+    const input = '<div class="tab-content"><p>One</p><p>Two</p></div>';
+    expect(sanitizeCmsHtml(input)).toBe("<p>One</p><p>Two</p>");
+  });
+
+  it("normalizes protocol-relative youtube embeds to video placeholders", () => {
+    const input = '<iframe src="//www.youtube.com/embed/abc"></iframe>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).toContain('data-cms-youtube="abc"');
   });
 
   it("returns empty string for null/undefined", () => {
@@ -57,6 +91,12 @@ describe("sanitizeCmsHtml", () => {
     expect(result).not.toMatch(/<p>\s*<img/);
   });
 
+  it("keeps centered image-only paragraphs aligned after figure promotion", () => {
+    const input = '<p style="text-align:center"><img src="/uploads/a.jpg" alt="diagram"></p>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).toContain('class="cms-html__figure cms-html__align-center"');
+  });
+
   it("leaves paragraphs that mix text and images unchanged", () => {
     const input = '<p>See <img src="/b.jpg" alt=""> for detail.</p>';
     expect(sanitizeCmsHtml(input)).not.toContain("cms-html__figure");
@@ -71,6 +111,114 @@ describe("sanitizeCmsHtml", () => {
     expect(result).not.toContain('height="15"');
     expect(result).toContain("/uploads/img2.jpg");
     expect(result).toContain('<figure class="cms-html__figure">');
+  });
+
+  it("replaces youtube iframes with hydration placeholders", () => {
+    const input =
+      '<h4>Procedure video</h4><iframe src="https://www.youtube.com/embed/abc123" title="Clip"></iframe>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).not.toContain("<iframe");
+    expect(result).toContain('data-cms-youtube="abc123"');
+    expect(result).toContain('data-cms-title="Procedure video"');
+    expect(result).toContain("cms-html__video");
+  });
+
+  it("keeps vimeo iframes as native embeds", () => {
+    const input = '<iframe src="https://player.vimeo.com/video/12345"></iframe>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).toContain("<iframe");
+    expect(result).toContain("vimeo.com");
+    expect(result).not.toContain("data-cms-youtube");
+  });
+
+  it("wraps consecutive image figures in a two-up row", () => {
+    const input =
+      '<figure class="cms-html__figure"><img src="/1.jpg" alt=""></figure>' +
+      '<figure class="cms-html__figure"><img src="/2.jpg" alt=""></figure>' +
+      "<p>Between</p>" +
+      '<figure class="cms-html__figure"><img src="/3.jpg" alt=""></figure>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).toContain('class="cms-html__figure-row"');
+    expect(result.match(/cms-html__figure-row/g)?.length).toBe(1);
+    expect(result).toContain("Between");
+  });
+
+  it("wraps three or more consecutive figures in a media stack", () => {
+    const input =
+      '<figure class="cms-html__figure"><img src="/1.jpg" alt=""></figure>' +
+      '<figure class="cms-html__figure"><img src="/2.jpg" alt=""></figure>' +
+      '<figure class="cms-html__figure"><img src="/3.jpg" alt=""></figure>';
+    const result = groupConsecutiveFigures(input);
+    expect(result).toContain('class="cms-html__media-stack"');
+    expect(result).toContain('class="cms-html__figure-row"');
+    expect(result).not.toMatch(/cms-html__media-stack[\s\S]*cms-html__media-stack/);
+  });
+
+  it("does not pair figures separated by paragraphs", () => {
+    const input =
+      '<figure class="cms-html__figure"><img src="/1.jpg" alt=""></figure>' +
+      "<p>Caption</p>" +
+      '<figure class="cms-html__figure"><img src="/2.jpg" alt=""></figure>';
+    const result = groupConsecutiveFigures(input);
+    expect(result).not.toContain("cms-html__figure-row");
+  });
+
+  it("preserves centered youtube wrappers as centered figures", () => {
+    const input =
+      '<p align="center"><iframe src="https://www.youtube.com/embed/xyz99"></iframe></p>';
+    const result = sanitizeCmsHtml(input);
+    expect(result).toContain("cms-html__align-center");
+    expect(result).toContain('data-cms-youtube="xyz99"');
+  });
+});
+
+describe("extractYoutubeVideoId", () => {
+  it("reads embed URLs", () => {
+    expect(extractYoutubeVideoId("https://www.youtube.com/embed/abc123")).toBe("abc123");
+    expect(extractYoutubeVideoId("//www.youtube-nocookie.com/embed/xyz")).toBe("xyz");
+  });
+
+  it("reads watch URLs", () => {
+    expect(extractYoutubeVideoId("https://www.youtube.com/watch?v=abc123")).toBe("abc123");
+  });
+
+  it("returns null for non-youtube hosts", () => {
+    expect(extractYoutubeVideoId("https://player.vimeo.com/video/123")).toBeNull();
+  });
+});
+
+describe("replaceYoutubeIframes", () => {
+  it("uses iframe title when no heading precedes the embed", () => {
+    const input = '<iframe src="https://www.youtube.com/embed/id1" title="Surgery clip"></iframe>';
+    const result = replaceYoutubeIframes(input);
+    expect(result).toContain('data-cms-title="Surgery clip"');
+  });
+});
+
+describe("normalizeLegacyCmsMarkup", () => {
+  it("unwraps tab-content and preserves centered headings", () => {
+    const input =
+      '<div class="tab-content"><p style="text-align:center">Intro</p><h5 align="center">Title</h5></div>';
+    const result = normalizeLegacyCmsMarkup(input);
+    expect(result).not.toContain("tab-content");
+    expect(result).toContain('class="cms-html__align-center"');
+  });
+});
+
+describe("unwrapLegacyWrapperDivs", () => {
+  it("only unwraps a single outer tab-content container", () => {
+    expect(unwrapLegacyWrapperDivs('<div class="tab-content"><p>A</p></div>')).toBe("<p>A</p>");
+    expect(
+      unwrapLegacyWrapperDivs('<div><p>A</p><div class="tab-content">B</div></div>'),
+    ).toContain("tab-content");
+  });
+});
+
+describe("preserveLegacyAlignment", () => {
+  it("maps align=center to cms-html__align-center", () => {
+    expect(preserveLegacyAlignment('<p align="center">Video</p>')).toBe(
+      '<p class="cms-html__align-center">Video</p>',
+    );
   });
 });
 

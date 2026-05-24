@@ -55,4 +55,13 @@ describe("CmsHtml", () => {
 
     expect(container.firstChild).toBeNull();
   });
+
+  it("outputs youtube hydration placeholders for cms embeds", () => {
+    render(
+      <CmsHtml html='<iframe src="https://www.youtube.com/embed/testid"></iframe>' locale="ru" />,
+    );
+
+    expect(document.querySelector("[data-cms-youtube]")).toBeTruthy();
+    expect(document.querySelector("iframe")).toBeNull();
+  });
 });

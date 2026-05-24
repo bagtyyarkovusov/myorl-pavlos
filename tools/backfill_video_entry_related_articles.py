@@ -352,6 +352,7 @@ def apply_plan(client: StrapiClient, plan: dict[str, Any]) -> dict[str, Any]:
                 f"/api/video-entries/{document_id}",
                 {"data": {"relatedArticle": target}},
                 locale=locale,
+                status="published",
             )
             applied += 1
             logger.info(

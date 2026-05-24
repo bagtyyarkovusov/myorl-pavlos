@@ -7,12 +7,18 @@ if str(_TOOLS) not in sys.path:
     sys.path.insert(0, str(_TOOLS))
 
 from cms_html_cleanup import (
+    convert_prose_pre_to_p,
+    count_legacy_markup_issues,
     html_has_broken_images,
     is_valid_img_src,
+    normalize_legacy_modx_markup,
+    normalize_youtube_iframes,
     promote_h3_to_h2,
     remove_broken_images,
     split_long_paragraphs,
+    split_multi_image_paragraphs,
     strip_nbsp_from_html,
+    unwrap_legacy_wrappers,
 )
 
 
@@ -96,6 +102,55 @@ class PromoteHeadingTests(unittest.TestCase):
         self.assertEqual(n, 2)
         self.assertNotIn("<h3>", out.lower())
         self.assertGreaterEqual(out.lower().count("<h2"), 2)
+
+
+class NormalizeLegacyModxMarkupTests(unittest.TestCase):
+    def test_unwraps_tab_content_and_strips_alignment(self) -> None:
+        html = (
+            '<div class="tab-content">'
+            '<p align="center"><img alt="" height="444" src="/uploads/x.png" width="784"/></p>'
+            '<p align="center"><iframe height="360" src="//www.youtube.com/embed/abc" width="640"></iframe></p>'
+            "</div>"
+        )
+        out, stats = normalize_legacy_modx_markup(html)
+        self.assertNotIn("tab-content", out)
+        self.assertNotIn('align="center"', out)
+        self.assertNotIn('height="360"', out)
+        self.assertIn('src="https://www.youtube.com/embed/abc"', out)
+        self.assertGreater(stats.get("unwrap_wrappers", 0), 0)
+
+    def test_splits_multi_image_paragraph(self) -> None:
+        html = (
+            '<p><img alt="a" src="/uploads/a.jpg" width="400"/>'
+            '<img alt="b" src="/uploads/b.jpg" width="400"/></p>'
+        )
+        out, stats = normalize_legacy_modx_markup(html)
+        self.assertEqual(out.count("<img"), 2)
+        self.assertEqual(out.count("<p>"), 2)
+        self.assertGreaterEqual(stats.get("split_multi_image_paragraphs", 0), 1)
+
+    def test_converts_prose_pre_to_paragraph(self) -> None:
+        html = "<pre>PDS plate description text for readers.</pre>"
+        out, stats = normalize_legacy_modx_markup(html)
+        self.assertIn("<p>PDS plate description text for readers.</p>", out)
+        self.assertNotIn("<pre>", out)
+        self.assertGreaterEqual(stats.get("convert_prose_pre_to_p", 0), 1)
+
+    def test_removes_legacy_video_tags(self) -> None:
+        html = '<p><video controls="controls"><source src="files/video/x.mp4" type="video/mp4"/></video></p>'
+        out, stats = normalize_legacy_modx_markup(html)
+        self.assertNotIn("<video", out)
+        self.assertGreaterEqual(stats.get("remove_legacy_video_tags", 0), 1)
+
+
+class LegacyMarkupAuditTests(unittest.TestCase):
+    def test_counts_legacy_patterns(self) -> None:
+        html = '<div class="tab-content"><p style="text-align:center" align="center"><img width="1" src="file://x"/></p></div>'
+        counts = count_legacy_markup_issues(html)
+        self.assertGreater(counts["tab_content_wrapper"], 0)
+        self.assertGreater(counts["inline_style"], 0)
+        self.assertGreater(counts["align_attr"], 0)
+        self.assertGreater(counts["file_or_msohtmlclip"], 0)
 
 
 if __name__ == "__main__":

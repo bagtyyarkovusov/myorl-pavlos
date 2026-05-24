@@ -48,10 +48,10 @@ describe("VideoDirectoryGrid", () => {
   it("renders video rows and category filters", () => {
     render(<VideoDirectoryGrid entries={entries} locale="el" />);
 
-    expect(screen.getByRole("heading", { name: entries[0]!.title })).toBeDefined();
-    expect(screen.getByRole("heading", { name: entries[1]!.title })).toBeDefined();
+    expect(screen.getByText(entries[0]!.title)).toBeDefined();
+    expect(screen.getByText(entries[1]!.title)).toBeDefined();
     expect(screen.getByRole("button", { name: "Ρινός" })).toBeDefined();
-    expect(screen.queryByRole("link", { name: "Σχετικό άρθρο" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Διαβάστε περισσότερα για το θέμα" })).toBeNull();
   });
 
   it("filters entries by category", async () => {
@@ -60,8 +60,8 @@ describe("VideoDirectoryGrid", () => {
 
     await user.click(screen.getByRole("button", { name: "Παιδο-ΩΡΛ" }));
 
-    expect(screen.getByRole("heading", { name: entries[1]!.title })).toBeDefined();
-    expect(screen.queryByRole("heading", { name: entries[0]!.title })).toBeNull();
+    expect(screen.getByText(entries[1]!.title)).toBeDefined();
+    expect(screen.queryByText(entries[0]!.title)).toBeNull();
   });
 
   it("shows the first 12 entries then loads more", async () => {
@@ -69,12 +69,12 @@ describe("VideoDirectoryGrid", () => {
     const many = makeManyEntries(15);
     render(<VideoDirectoryGrid entries={many} locale="el" />);
 
-    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(12);
+    expect(document.querySelectorAll("[data-video-directory] ol > li")).toHaveLength(12);
     expect(screen.getByRole("button", { name: "Περισσότερα (+3)" })).toBeDefined();
 
     await user.click(screen.getByRole("button", { name: "Περισσότερα (+3)" }));
 
-    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(15);
+    expect(document.querySelectorAll("[data-video-directory] ol > li")).toHaveLength(15);
     expect(screen.queryByRole("button", { name: "Περισσότερα (+3)" })).toBeNull();
   });
 
@@ -92,11 +92,11 @@ describe("VideoDirectoryGrid", () => {
     render(<VideoDirectoryGrid entries={[...manyRhino, pedEntry]} locale="el" />);
 
     await user.click(screen.getByRole("button", { name: "Περισσότερα (+3)" }));
-    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(15);
+    expect(document.querySelectorAll("[data-video-directory] ol > li")).toHaveLength(15);
 
     await user.click(screen.getByRole("button", { name: "Παιδο-ΩΡΛ" }));
 
-    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(1);
+    expect(document.querySelectorAll("[data-video-directory] ol > li")).toHaveLength(1);
     expect(screen.queryByRole("button", { name: /Περισσότερα/ })).toBeNull();
   });
 
@@ -105,16 +105,12 @@ describe("VideoDirectoryGrid", () => {
     render(<VideoDirectoryGrid entries={entries} locale="el" />);
 
     expect(document.querySelector("iframe")).toBeNull();
-    expect(screen.queryByRole("link", { name: "Σχετικό άρθρο" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Διαβάστε περισσότερα για το θέμα" })).toBeNull();
 
-    await user.click(
-      screen.getByRole("button", {
-        name: `Αναπαραγωγή βίντεο: ${entries[0]!.title}`,
-      }),
-    );
+    await user.click(screen.getByText(entries[0]!.title));
 
     expect(document.querySelector("iframe")).toHaveAttribute("title", entries[0]!.title);
-    expect(screen.getByRole("link", { name: "Σχετικό άρθρο" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Διαβάστε περισσότερα για το θέμα" })).toHaveAttribute(
       "href",
       "/el/skoliosi",
     );
@@ -127,6 +123,6 @@ describe("VideoDirectoryGrid", () => {
 
     expect(screen.getByTitle(entries[1]!.title)).toBeDefined();
     expect(screen.queryByTitle(entries[0]!.title)).toBeNull();
-    expect(screen.queryByRole("link", { name: "Σχετικό άρθρο" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Διαβάστε περισσότερα για το θέμα" })).toBeNull();
   });
 });

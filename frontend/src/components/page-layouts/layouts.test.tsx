@@ -990,12 +990,15 @@ describe("SectionIndexPage", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Videos" })).toBeDefined();
-    expect(screen.getByRole("heading", { name: "Clinic Tour" })).toBeDefined();
-    expect(screen.queryByRole("link", { name: "Σχετικό άρθρο" })).toBeNull();
+    expect(screen.getByText("Clinic Tour")).toBeDefined();
+    expect(screen.queryByRole("link", { name: "Διαβάστε περισσότερα για το θέμα" })).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: "Αναπαραγωγή βίντεο: Clinic Tour" }));
+    fireEvent.click(screen.getByText("Clinic Tour"));
 
-    expect(screen.getByRole("link", { name: "Σχετικό άρθρο" })).toHaveAttribute("href", "/el/tour");
+    expect(screen.getByRole("link", { name: "Διαβάστε περισσότερα για το θέμα" })).toHaveAttribute(
+      "href",
+      "/el/tour",
+    );
   });
 
   it("renders tag filter pills derived from child navigation tags", () => {

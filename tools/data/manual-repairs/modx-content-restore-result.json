@@ -1,0 +1,55 @@
+{
+  "okCount": 8,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
+      "locale": "el",
+      "slug": "diafragma-me-laser",
+      "itemCount": 20012
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "el",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "itemCount": 40720
+    },
+    {
+      "documentId": "iukw4zqwwyxji9n7qqqnid1o",
+      "locale": "el",
+      "slug": "eutheiasmos-rinikou-diafragmatos",
+      "itemCount": 72309
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "el",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "itemCount": 70499
+    },
+    {
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
+      "locale": "ru",
+      "slug": "diafragma-me-laser",
+      "itemCount": 4714
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "ru",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "itemCount": 8012
+    },
+    {
+      "documentId": "iukw4zqwwyxji9n7qqqnid1o",
+      "locale": "ru",
+      "slug": "eutheiasmos-rinikou-diafragmatos",
+      "itemCount": 13073
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "ru",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "itemCount": 11142
+    }
+  ],
+  "errors": []
+}

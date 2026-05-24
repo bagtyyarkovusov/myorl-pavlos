@@ -1,0 +1,25 @@
+{
+  "okCount": 3,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "el",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "itemCount": 1
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "ru",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "itemCount": 1
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "ru",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "itemCount": 1
+    }
+  ],
+  "errors": []
+}

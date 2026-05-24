@@ -16,7 +16,7 @@ function SitemapBranch({ nodes }: { nodes: NavigationNodeDTO[] }) {
   if (nodes.length === 0) return null;
 
   return (
-    <ul className={styles["sitemap-list"]}>
+    <ol className={styles["sitemap-list"]}>
       {nodes.map((node) => (
         <li key={node.documentId} className={styles["sitemap-item"]}>
           <Link href={node.href} className={styles["sitemap-link"]}>
@@ -25,7 +25,7 @@ function SitemapBranch({ nodes }: { nodes: NavigationNodeDTO[] }) {
           {node.children.length > 0 ? <SitemapBranch nodes={node.children} /> : null}
         </li>
       ))}
-    </ul>
+    </ol>
   );
 }
 

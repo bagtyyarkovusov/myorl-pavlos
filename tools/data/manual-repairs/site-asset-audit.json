@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-05-23T01:18:42.826252+00:00",
+  "publishedPageCount": 325,
+  "summary": {
+    "totalFindings": 5,
+    "directoryListingThumbnailGaps": 0,
+    "byCategory": {
+      "missing-listing-media": 5
+    },
+    "bySeverity": {
+      "low": 4,
+      "medium": 1
+    }
+  },
+  "findings": [
+    {
+      "category": "missing-listing-media",
+      "severity": "low",
+      "locale": "el",
+      "slug": "epikoinonia",
+      "title": "Επικοινωνία",
+      "detail": "No featuredImage, imageCenter, or seo.ogImage linked",
+      "uiImpact": "none",
+      "parentSlug": null,
+      "layoutVariant": "contact",
+      "field": null,
+      "src": null
+    },
+    {
+      "category": "missing-listing-media",
+      "severity": "low",
+      "locale": "el",
+      "slug": "sitemap",
+      "title": "Sitemap",
+      "detail": "No featuredImage, imageCenter, or seo.ogImage linked",
+      "uiImpact": "none",
+      "parentSlug": null,
+      "layoutVariant": "sitemap",
+      "field": null,
+      "src": null
+    },
+    {
+      "category": "missing-listing-media",
+      "severity": "low",
+      "locale": "ru",
+      "slug": "epikoinonia",
+      "title": "Контакты",
+      "detail": "No featuredImage, imageCenter, or seo.ogImage linked",
+      "uiImpact": "none",
+      "parentSlug": null,
+      "layoutVariant": "contact",
+      "field": null,
+      "src": null
+    },
+    {
+      "category": "missing-listing-media",
+      "severity": "medium",
+      "locale": "ru",
+      "slug": "plastika-litsa",
+      "title": "Пластика лица",
+      "detail": "No featuredImage, imageCenter, or seo.ogImage linked",
+      "uiImpact": "none",
+      "parentSlug": null,
+      "layoutVariant": "section-index",
+      "field": null,
+      "src": null
+    },
+    {
+      "category": "missing-listing-media",
+      "severity": "low",
+      "locale": "ru",
+      "slug": "sitemap",
+      "title": "Карта сайта",
+      "detail": "No featuredImage, imageCenter, or seo.ogImage linked",
+      "uiImpact": "none",
+      "parentSlug": null,
+      "layoutVariant": "sitemap",
+      "field": null,
+      "src": null
+    }
+  ]
+}

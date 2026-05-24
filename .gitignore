@@ -67,7 +67,12 @@ docs/obsidian/.obsidian/
 Thumbs.db
 *.swp
 *.swo
+*.bak
+.codex/
 .gitnexus
+
+# Database dumps (large, transient — regenerate via pg_dump)
+tools/data/manual-repairs/*.dump
 
 # Test artifacts
 test-results/

@@ -11,9 +11,17 @@ type UtilityBarProps = {
   settings: GlobalSettingsDTO;
   locale: Locale;
   languageLabel: string;
+  localeUnavailableLabel: string;
 };
 
-export function UtilityBar({ address, hours, settings, locale, languageLabel }: UtilityBarProps) {
+export function UtilityBar({
+  address,
+  hours,
+  settings,
+  locale,
+  languageLabel,
+  localeUnavailableLabel,
+}: UtilityBarProps) {
   const hasContactChrome = Boolean(address || hours || resolveHasPhones(settings));
   const utilityBarHours = formatUtilityBarHours(hours);
 
@@ -22,7 +30,11 @@ export function UtilityBar({ address, hours, settings, locale, languageLabel }: 
       <div className={styles["site-utility"]} data-locale={locale}>
         <div className={`container ${styles["site-utility__inner"]}`}>
           <div className={`${styles["site-utility__zone"]} ${styles["site-utility__zone--end"]}`}>
-            <LocaleSwitcher locale={locale} languageLabel={languageLabel} />
+            <LocaleSwitcher
+              locale={locale}
+              languageLabel={languageLabel}
+              localeUnavailableLabel={localeUnavailableLabel}
+            />
           </div>
         </div>
       </div>
@@ -54,7 +66,11 @@ export function UtilityBar({ address, hours, settings, locale, languageLabel }: 
             linkClassName={`${styles["u-link"]} ${styles["site-utility__phone"]}`}
             separatorClassName={styles["site-utility__phone-separator"]}
           />
-          <LocaleSwitcher locale={locale} languageLabel={languageLabel} />
+          <LocaleSwitcher
+            locale={locale}
+            languageLabel={languageLabel}
+            localeUnavailableLabel={localeUnavailableLabel}
+          />
         </div>
       </div>
     </div>

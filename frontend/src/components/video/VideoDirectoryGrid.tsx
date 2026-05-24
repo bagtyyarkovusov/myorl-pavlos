@@ -113,6 +113,42 @@ export function VideoDirectoryGrid({ entries, locale }: VideoDirectoryGridProps)
             {visibleEntries.map((entry) => {
               const articleHref = resolveVideoEntryArticleHref(entry);
               const isExpanded = expandedEntryId === entry.documentId;
+              const playLabel = `${t.videoPlayLabel}: ${entry.title}`;
+              const itemMainContent = (
+                <>
+                  <div className={styles.media}>
+                    <LiteYouTube
+                      videoId={entry.youtubeId}
+                      title={entry.title}
+                      playLabel={playLabel}
+                      variant={isExpanded ? "full" : "compact"}
+                      activated={isExpanded}
+                      interactive={false}
+                      onActivate={() => setExpandedEntryId(entry.documentId)}
+                    />
+                  </div>
+                  <div className={styles.copy}>
+                    {isExpanded ? (
+                      <h2 className={styles.title}>{entry.title}</h2>
+                    ) : (
+                      <span className={styles.title}>{entry.title}</span>
+                    )}
+                    {entry.categories.length > 0 ? (
+                      <ul className={styles.tags} aria-label={t.sections}>
+                        {entry.categories.map((category) => (
+                          <li key={category.slug}>{category.label}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {isExpanded && articleHref ? (
+                      <Link href={articleHref} className={styles.cta}>
+                        {t.videoReadMore}
+                      </Link>
+                    ) : null}
+                  </div>
+                </>
+              );
+
               return (
                 <li
                   key={entry.documentId}
@@ -121,33 +157,19 @@ export function VideoDirectoryGrid({ entries, locale }: VideoDirectoryGridProps)
                   <article
                     className={`${styles.itemArticle}${isExpanded ? ` ${styles["itemArticle--expanded"]}` : ""}`}
                   >
-                    <div className={styles.itemMain}>
-                      <div className={styles.media}>
-                        <LiteYouTube
-                          videoId={entry.youtubeId}
-                          title={entry.title}
-                          playLabel={`${t.videoPlayLabel}: ${entry.title}`}
-                          variant={isExpanded ? "full" : "compact"}
-                          activated={isExpanded}
-                          onActivate={() => setExpandedEntryId(entry.documentId)}
-                        />
-                      </div>
-                      <div className={styles.copy}>
-                        <h2 className={styles.title}>{entry.title}</h2>
-                        {entry.categories.length > 0 ? (
-                          <ul className={styles.tags} aria-label={t.sections}>
-                            {entry.categories.map((category) => (
-                              <li key={category.slug}>{category.label}</li>
-                            ))}
-                          </ul>
-                        ) : null}
-                        {isExpanded && articleHref ? (
-                          <Link href={articleHref} className={styles.cta}>
-                            {t.videoReadMore}
-                          </Link>
-                        ) : null}
-                      </div>
-                    </div>
+                    {isExpanded ? (
+                      <div className={styles.itemMain}>{itemMainContent}</div>
+                    ) : (
+                      <button
+                        type="button"
+                        className={styles.itemMain}
+                        aria-label={playLabel}
+                        aria-expanded={false}
+                        onClick={() => setExpandedEntryId(entry.documentId)}
+                      >
+                        {itemMainContent}
+                      </button>
+                    )}
                   </article>
                 </li>
               );

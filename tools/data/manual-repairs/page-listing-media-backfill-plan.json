@@ -1,0 +1,127 @@
+{
+  "generatedAt": "2026-05-23T01:16:56.313018+00:00",
+  "summary": {
+    "plannedCount": 3,
+    "skippedCount": 13,
+    "errorCount": 0
+  },
+  "plannedUpdates": [
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "el",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "hasPublished": true,
+      "repairKind": "page-listing-media-backfill",
+      "itemCount": 1,
+      "reason": "Septum FAQ article under hub",
+      "payload": {
+        "featuredImage": 1464
+      }
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "ru",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "hasPublished": true,
+      "repairKind": "page-listing-media-backfill",
+      "itemCount": 1,
+      "reason": "Septum FAQ article under hub",
+      "payload": {
+        "featuredImage": 1464
+      }
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "ru",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "hasPublished": true,
+      "repairKind": "page-listing-media-backfill",
+      "itemCount": 1,
+      "reason": "Septum deviation article under hub (RU locale)",
+      "payload": {
+        "featuredImage": 1464
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "documentId": "nkgl6v5e8j0u9d9hnodffo12",
+      "locale": "el",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-dafragma",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "nkgl6v5e8j0u9d9hnodffo12",
+      "locale": "ru",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-dafragma",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "t5p48kwy6ynfbuzbxtb3lcyi",
+      "locale": "el",
+      "slug": "parotida-ypognathios-adenas",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "m6h1i32tqtq3s25uc0k9y4yz",
+      "locale": "el",
+      "slug": "preauricular-cyst",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "xol5hvue3ppy26k6y966scr9",
+      "locale": "ru",
+      "slug": "roxalito-kai-apnoia",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "n3ryx3cfn7jvdofsw0ktycle",
+      "locale": "el",
+      "slug": "blepharoplasty",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "mals56qxfw1ckzcm9jm3kq1j",
+      "locale": "ru",
+      "slug": "blefaroplastika-plastika-glaz",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "oonn5dhu645e9usec4bu1lbh",
+      "locale": "el",
+      "slug": "endoskopiki-kryoxeirourgiki",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "el",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "iukw4zqwwyxji9n7qqqnid1o",
+      "locale": "el",
+      "slug": "eutheiasmos-rinikou-diafragmatos",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "iukw4zqwwyxji9n7qqqnid1o",
+      "locale": "ru",
+      "slug": "eutheiasmos-rinikou-diafragmatos",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
+      "locale": "el",
+      "slug": "diafragma-me-laser",
+      "reason": "already has listing media"
+    },
+    {
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
+      "locale": "ru",
+      "slug": "diafragma-me-laser",
+      "reason": "already has listing media"
+    }
+  ],
+  "errors": []
+}

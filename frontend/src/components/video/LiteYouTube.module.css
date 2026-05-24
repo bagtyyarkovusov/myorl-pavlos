@@ -21,6 +21,11 @@
   aspect-ratio: 4 / 3;
 }
 
+.shell--preview {
+  cursor: inherit;
+  pointer-events: none;
+}
+
 .shell:hover {
   border-color: color-mix(in oklch, var(--accent) 55%, var(--line));
 }

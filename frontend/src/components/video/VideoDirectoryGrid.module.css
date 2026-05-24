@@ -34,6 +34,22 @@
   min-width: 0;
 }
 
+button.itemMain {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.itemMain:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .itemArticle--expanded .itemMain {
   grid-template-columns: minmax(0, 1fr);
   align-items: stretch;

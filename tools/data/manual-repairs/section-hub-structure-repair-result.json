@@ -1,0 +1,109 @@
+{
+  "okCount": 17,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "n3ryx3cfn7jvdofsw0ktycle",
+      "locale": "el",
+      "slug": "blepharoplasty",
+      "itemCount": 1
+    },
+    {
+      "documentId": "nkgl6v5e8j0u9d9hnodffo12",
+      "locale": "el",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-dafragma",
+      "itemCount": 1
+    },
+    {
+      "documentId": "t5p48kwy6ynfbuzbxtb3lcyi",
+      "locale": "el",
+      "slug": "parotida-ypognathios-adenas",
+      "itemCount": 1
+    },
+    {
+      "documentId": "mals56qxfw1ckzcm9jm3kq1j",
+      "locale": "ru",
+      "slug": "blefaroplastika-plastika-glaz",
+      "itemCount": 1
+    },
+    {
+      "documentId": "nkgl6v5e8j0u9d9hnodffo12",
+      "locale": "ru",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-dafragma",
+      "itemCount": 1
+    },
+    {
+      "documentId": "wn2k0el3opa926ibqr0ractv",
+      "locale": "ru",
+      "slug": "iatreio",
+      "itemCount": 1
+    },
+    {
+      "documentId": "jwo4jdihc76be0oi75wk0lnx",
+      "locale": "ru",
+      "slug": "amygdales-adenoeideis-ekvlastiseis",
+      "itemCount": 1
+    },
+    {
+      "documentId": "iukw4zqwwyxji9n7qqqnid1o",
+      "locale": "el",
+      "slug": "eutheiasmos-rinikou-diafragmatos",
+      "itemCount": 1
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "el",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "itemCount": 1
+    },
+    {
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
+      "locale": "el",
+      "slug": "diafragma-me-laser",
+      "itemCount": 1
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "el",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "itemCount": 1
+    },
+    {
+      "documentId": "iukw4zqwwyxji9n7qqqnid1o",
+      "locale": "ru",
+      "slug": "eutheiasmos-rinikou-diafragmatos",
+      "itemCount": 1
+    },
+    {
+      "documentId": "xa2ye9997t98whtp0gjc555t",
+      "locale": "ru",
+      "slug": "skoliosi-rinikou-diafragmatos-stravo-diafragma-1",
+      "itemCount": 1
+    },
+    {
+      "documentId": "z6tqqahnldom1lgryrdma3vz",
+      "locale": "ru",
+      "slug": "diafragma-me-laser",
+      "itemCount": 1
+    },
+    {
+      "documentId": "lmnz0a5bqobf5nhrp17pckz6",
+      "locale": "ru",
+      "slug": "diafragma-syxnes-erwtiseis-apantiseis",
+      "itemCount": 1
+    },
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "ru",
+      "slug": "iatreio-alexandras",
+      "itemCount": 1
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "ru",
+      "slug": "iatreio-koukaki",
+      "itemCount": 1
+    }
+  ],
+  "errors": []
+}

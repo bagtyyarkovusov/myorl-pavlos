@@ -1,10 +1,17 @@
 import { sanitizeCmsHtml } from "@/lib/html";
+import { getPageStrings } from "@/lib/i18n/page";
+import type { Locale } from "@/lib/cms/types";
 import { cn } from "@/lib/utils";
+
+import { CmsHtmlEnhancer } from "@/components/cms/CmsHtmlEnhancer";
 
 type CmsHtmlProps = {
   html?: string | null;
   className?: string;
   variant?: "luxury" | "service" | "encyclopedia" | "specialized";
+  /** Localized LiteYouTube play control label. Defaults to Greek when omitted. */
+  playLabel?: string;
+  locale?: Locale;
 };
 
 const PROSE_VARIANT_CLASSES: Record<NonNullable<CmsHtmlProps["variant"]>, string | null> = {
@@ -14,18 +21,27 @@ const PROSE_VARIANT_CLASSES: Record<NonNullable<CmsHtmlProps["variant"]>, string
   specialized: "prose-specialized",
 };
 
-export function CmsHtml({ html, className, variant = "luxury" }: CmsHtmlProps) {
+export function CmsHtml({
+  html,
+  className,
+  variant = "luxury",
+  playLabel,
+  locale = "el",
+}: CmsHtmlProps) {
   const sanitized = sanitizeCmsHtml(html);
 
   if (!sanitized.trim()) {
     return null;
   }
 
+  const resolvedPlayLabel = playLabel ?? getPageStrings(locale).videoPlayLabel;
+
   return (
-    <div
+    <CmsHtmlEnhancer
+      html={sanitized}
       className={cn("cms-html prose-luxury", PROSE_VARIANT_CLASSES[variant], className)}
       data-variant={variant === "luxury" ? undefined : variant}
-      dangerouslySetInnerHTML={{ __html: sanitized }}
+      playLabel={resolvedPlayLabel}
     />
   );
 }

@@ -5,7 +5,9 @@ import type { PageDTO } from "@/lib/cms/types";
 
 const addDocuments = vi.fn();
 const deleteDocument = vi.fn();
-const index = vi.fn(() => ({ addDocuments, deleteDocument }));
+const updateSynonyms = vi.fn();
+const updateStopWords = vi.fn();
+const index = vi.fn(() => ({ addDocuments, deleteDocument, updateSynonyms, updateStopWords }));
 const getMeiliAdminClient = vi.fn(() => ({ index }));
 const getPageByDocumentIdResult = vi.fn();
 const getVideoEntryByDocumentIdResult = vi.fn();
@@ -33,6 +35,12 @@ vi.mock("@/lib/search/meili-client", () => ({
 vi.mock("@/lib/cms/cms-api", () => ({
   getPageByDocumentIdResult,
   getVideoEntryByDocumentIdResult,
+}));
+
+const loadSynonymsAndStopWords = vi.fn();
+
+vi.mock("@/lib/search/synonyms", () => ({
+  loadSynonymsAndStopWords,
 }));
 
 function makePage(overrides: Partial<PageDTO> = {}): PageDTO {
@@ -691,5 +699,162 @@ describe("POST /api/search/reindex - Strapi webhooks", () => {
     expect(json).toEqual({ ok: false, error: "Unsupported locale." });
     expect(addDocuments).not.toHaveBeenCalled();
     expect(deleteDocument).not.toHaveBeenCalled();
+  });
+});
+
+function syncSynonymsSignedRequest(payload: unknown, secret = "test-webhook-secret"): Request {
+  const body = JSON.stringify(payload);
+  const signature = createHmac("sha256", secret).update(body).digest("hex");
+
+  return new Request("http://localhost/api/search/reindex", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-webhook-signature": signature,
+    },
+    body,
+  });
+}
+
+describe("POST /api/search/reindex - sync-synonyms", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.stubEnv("SEARCH_ENABLED", "true");
+    vi.stubEnv("STRAPI_WEBHOOK_SECRET", "test-webhook-secret");
+    getMeiliAdminClient.mockReturnValue({ index });
+    addDocuments.mockReturnValue(enqueuedTask());
+    deleteDocument.mockReturnValue(enqueuedTask());
+    updateSynonyms.mockReturnValue(enqueuedTask());
+    updateStopWords.mockReturnValue(enqueuedTask());
+    loadSynonymsAndStopWords.mockReturnValue({
+      synonyms: { a: ["b"] },
+      stopWords: ["x", "y"],
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.clearAllMocks();
+  });
+
+  it("calls updateSynonyms and updateStopWords on the locale index", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      syncSynonymsSignedRequest({ action: "sync-synonyms", locale: "el" }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toMatchObject({
+      ok: true,
+      action: "sync-synonyms",
+      locale: "el",
+      index: "el",
+    });
+    expect(loadSynonymsAndStopWords).toHaveBeenCalledWith("el");
+    expect(updateSynonyms).toHaveBeenCalledWith({ a: ["b"] });
+    expect(updateStopWords).toHaveBeenCalledWith(["x", "y"]);
+    expect(updateSynonyms.mock.results[0]?.value.waitTask).toHaveBeenCalledWith({
+      timeout: 5000,
+      interval: 50,
+    });
+    expect(updateStopWords.mock.results[0]?.value.waitTask).toHaveBeenCalledWith({
+      timeout: 5000,
+      interval: 50,
+    });
+  });
+
+  it("targets only the el index for a Greek locale", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      syncSynonymsSignedRequest({ action: "sync-synonyms", locale: "el" }),
+    );
+    expect(response.status).toBe(200);
+
+    expect(index).toHaveBeenCalledWith("el");
+    expect(index).not.toHaveBeenCalledWith("ru");
+  });
+
+  it("targets only the ru index for a Russian locale", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      syncSynonymsSignedRequest({ action: "sync-synonyms", locale: "ru" }),
+    );
+    expect(response.status).toBe(200);
+
+    expect(index).toHaveBeenCalledWith("ru");
+    expect(index).not.toHaveBeenCalledWith("el");
+  });
+
+  it("is idempotent: running the same sync twice yields the same result", async () => {
+    const { POST } = await import("./route");
+    const payload = { action: "sync-synonyms", locale: "el" };
+
+    const response1 = await POST(syncSynonymsSignedRequest(payload));
+    expect(response1.status).toBe(200);
+
+    const response2 = await POST(syncSynonymsSignedRequest(payload));
+    expect(response2.status).toBe(200);
+
+    expect(updateSynonyms).toHaveBeenCalledTimes(2);
+    expect(updateStopWords).toHaveBeenCalledTimes(2);
+  });
+
+  it("rejects sync-synonyms with HMAC rejection → 401", async () => {
+    const { POST } = await import("./route");
+    const body = JSON.stringify({ action: "sync-synonyms", locale: "el" });
+
+    const response = await POST(
+      new Request("http://localhost/api/search/reindex", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-webhook-signature": "invalid",
+        },
+        body,
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(json).toEqual({ ok: false, error: "Invalid webhook signature." });
+    expect(loadSynonymsAndStopWords).not.toHaveBeenCalled();
+    expect(updateSynonyms).not.toHaveBeenCalled();
+    expect(updateStopWords).not.toHaveBeenCalled();
+  });
+
+  it("returns no-op when search is disabled", async () => {
+    vi.stubEnv("SEARCH_ENABLED", "false");
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      syncSynonymsSignedRequest({ action: "sync-synonyms", locale: "el" }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toEqual({ ok: true, noop: true });
+    expect(getMeiliAdminClient).not.toHaveBeenCalled();
+    expect(loadSynonymsAndStopWords).not.toHaveBeenCalled();
+    expect(updateSynonyms).not.toHaveBeenCalled();
+    expect(updateStopWords).not.toHaveBeenCalled();
+  });
+
+  it("rejects unknown locale with 400", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      syncSynonymsSignedRequest({ action: "sync-synonyms", locale: "fr" }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(json).toEqual({ ok: false, error: "Unsupported locale." });
+    expect(loadSynonymsAndStopWords).not.toHaveBeenCalled();
+    expect(updateSynonyms).not.toHaveBeenCalled();
+    expect(updateStopWords).not.toHaveBeenCalled();
   });
 });

@@ -9,6 +9,7 @@ import {
   indexNameForLocale,
   isSearchEnabled,
 } from "@/lib/search/meili-client";
+import { loadSynonymsAndStopWords } from "@/lib/search/synonyms";
 
 type ReindexPayload = {
   contentType?: unknown;
@@ -33,6 +34,11 @@ type BulkItem = {
 type BulkReindexPayload = {
   contentType: "page" | "video";
   items: BulkItem[];
+};
+
+type SyncSynonymsPayload = {
+  action: "sync-synonyms";
+  locale: Locale;
 };
 
 type StrapiEvent = "entry.create" | "entry.update" | "entry.delete";
@@ -66,6 +72,11 @@ export async function POST(request: Request) {
   // Detect Strapi webhook format first
   if (isStrapiWebhookPayload(payload)) {
     return handleStrapiWebhook(payload);
+  }
+
+  // Detect sync-synonyms action
+  if (payload.action === "sync-synonyms") {
+    return handleSyncSynonyms(payload);
   }
 
   // Detect bulk vs single-doc
@@ -314,6 +325,45 @@ async function handleBulk(payload: ReindexPayload): Promise<Response> {
   });
 }
 
+async function handleSyncSynonyms(payload: ReindexPayload): Promise<Response> {
+  const syncPayload = validateSyncSynonymsPayload(payload);
+  if (!syncPayload.ok) {
+    return NextResponse.json({ ok: false, error: syncPayload.error }, { status: 400 });
+  }
+
+  if (!isLocale(syncPayload.payload.locale)) {
+    return NextResponse.json({ ok: false, error: "Unsupported locale." }, { status: 400 });
+  }
+
+  const admin = getMeiliAdminClient();
+  if (!admin) {
+    return NextResponse.json({ ok: true, degraded: true });
+  }
+
+  const { synonyms, stopWords } = loadSynonymsAndStopWords(syncPayload.payload.locale);
+  const indexName = indexNameForLocale(syncPayload.payload.locale);
+  const meiliIndex = admin.index(indexName);
+
+  try {
+    await waitForMeiliTask(meiliIndex.updateSynonyms(synonyms));
+    await waitForMeiliTask(meiliIndex.updateStopWords(stopWords));
+
+    return NextResponse.json({
+      ok: true,
+      action: "sync-synonyms",
+      locale: syncPayload.payload.locale,
+      index: indexName,
+      synonymCount: Object.keys(synonyms).length,
+      stopWordCount: stopWords.length,
+    });
+  } catch (error) {
+    if (error instanceof MeiliTaskFailedError) {
+      return NextResponse.json({ ok: false, error: error.message }, { status: 502 });
+    }
+    return NextResponse.json({ ok: true, degraded: true });
+  }
+}
+
 async function fetchAndMapItem(
   contentType: "page" | "video",
   item: BulkItem,
@@ -410,6 +460,22 @@ function validateBulkPayload(
     payload: {
       contentType: payload.contentType,
       items: payload.items as BulkItem[],
+    },
+  };
+}
+
+function validateSyncSynonymsPayload(
+  payload: ReindexPayload,
+): { ok: true; payload: SyncSynonymsPayload } | { ok: false; error: string } {
+  if (typeof payload.locale !== "string" || !isLocale(payload.locale)) {
+    return { ok: false, error: "Unsupported locale." };
+  }
+
+  return {
+    ok: true,
+    payload: {
+      action: "sync-synonyms",
+      locale: payload.locale,
     },
   };
 }

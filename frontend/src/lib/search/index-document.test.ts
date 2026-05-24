@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import type { PageDTO } from "@/lib/cms/types";
+import type { PageDTO, VideoEntryDTO } from "@/lib/cms/types";
 
-import { indexPageDocument } from "./index-document";
+import { indexPageDocument, indexVideoDocument } from "./index-document";
 
 function makePage(overrides: Partial<PageDTO> = {}): PageDTO {
   return {
@@ -151,5 +151,73 @@ describe("indexPageDocument", () => {
     );
 
     expect(document).toBeNull();
+  });
+});
+
+function makeVideo(overrides: Partial<VideoEntryDTO> = {}): VideoEntryDTO {
+  return {
+    documentId: "video789xy",
+    locale: "el",
+    title: "Rhinoplasty Recovery",
+    youtubeId: "dQw4w9WgXcQ",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    categories: [
+      { slug: "rhinoplasty", label: "Rhinoplasty" },
+      { slug: "recovery", label: "Recovery" },
+    ],
+    sortOrder: 1,
+    relatedArticle: {
+      documentId: "page123",
+      slug: "rinoplastika",
+      title: "Rhinoplasty Guide",
+    },
+    legacyArticleUrl: null,
+    ...overrides,
+  };
+}
+
+describe("indexVideoDocument", () => {
+  it("maps a VideoEntryDTO to the canonical Search Document shape", () => {
+    const document = indexVideoDocument(makeVideo());
+
+    expect(document).toEqual({
+      id: "video:video789xy",
+      type: "video",
+      locale: "el",
+      title: "Rhinoplasty Recovery",
+      excerpt: "Rhinoplasty, Recovery",
+      body: "Rhinoplasty Recovery",
+      slug: "",
+      href: "/el/video",
+      thumbnail: null,
+      parentTitle: null,
+      parentSlug: null,
+      publishedAt: expect.any(String),
+      parentSection: null,
+      tags: ["rhinoplasty", "recovery"],
+      layoutVariant: "video-index",
+      _rankBoost: 50,
+      localizations: [],
+    });
+  });
+
+  it("null for entries without a title", () => {
+    expect(indexVideoDocument(makeVideo({ title: "" }))).toBeNull();
+    expect(indexVideoDocument(makeVideo({ title: "   " }))).toBeNull();
+  });
+
+  it("uses empty categories for excerpt and body when there are none", () => {
+    const document = indexVideoDocument(makeVideo({ categories: [] }));
+    expect(document?.excerpt).toBe("");
+    expect(document?.body).toBe("");
+    expect(document?.tags).toEqual([]);
+  });
+
+  it("resolves href to the video directory", () => {
+    const el = indexVideoDocument(makeVideo({ locale: "el" }));
+    expect(el?.href).toBe("/el/video");
+
+    const ru = indexVideoDocument(makeVideo({ locale: "ru" }));
+    expect(ru?.href).toBe("/ru/video");
   });
 });

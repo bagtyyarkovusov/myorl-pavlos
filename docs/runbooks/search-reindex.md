@@ -11,7 +11,7 @@ For architectural context see [ADR-011](../adr/ADR-011-full-site-search-via-meil
 | Initial seed (dev) | `python3 tools/seed_search_index.py --target dev --mode full` |
 | Initial seed (rehearsal) | `python3 tools/seed_search_index.py --target rehearsal --mode full` |
 | Initial seed (production) | `python3 tools/seed_search_index.py --target prod --mode full --force` |
-| Full reindex after `pg_restore` (production) | `python3 tools/orchestrate_migration.py --target prod --rebuild-search --force` |
+| Full reindex after `pg_restore` (production) | `python3 tools/orchestrate_migration.py --target production --backup backups/strapi_full_*.sql.gz --force` |
 | Single-doc reindex (drift repair) | `python3 tools/seed_search_index.py --target dev --mode single --slug ρινοπλαστική --locale el` |
 | Sync synonyms + stop words only | `python3 tools/seed_search_index.py --target dev --mode sync-synonyms` |
 | Wipe all indexes (dev only) | `python3 tools/seed_search_index.py --target dev --mode wipe` |
@@ -93,18 +93,19 @@ A healthy response returns at least one hit with `title`, `href`, and `_formatte
 After any database migration to production:
 
 ```bash
-python3 tools/orchestrate_migration.py --target prod --rebuild-search --force
+python3 tools/orchestrate_migration.py --target production --backup backups/strapi_full_<timestamp>.sql.gz --force
 ```
 
-The orchestrator:
-1. Runs preflight guards.
-2. Performs the `pg_restore`.
-3. Waits for Strapi to be reachable.
-4. Wipes Meilisearch indexes.
-5. Runs the full seed against production Strapi.
-6. Pushes synonyms + stop words.
-7. Runs the smoke test query.
-8. Reports success or fails loudly.
+The orchestrator runs a four-step pipeline:
+
+| # | Step | What it does | Exit on failure |
+|---|------|-------------|----------------|
+| 1 | `restore` | Delegates to `backup_runner.py restore` — drops DB, recreates, psql restores, verifies row counts | Abort — a failed restore leaves the database in an undefined state; re-run from a known-good backup |
+| 2 | `verify-strapi` | Polls Strapi `/admin/init` until 200 (120s timeout) | Abort — Strapi must be reachable before reindex can pull data from it |
+| 3 | `reindex` | Delegates to `seed_search_index.py --mode full` — crawls Strapi, bulk-posts to `/api/search/reindex` | Abort — partial index must not replace a healthy one |
+| 4 | `smoke` | Queries Meilisearch for known term `ρινοπλαστική` and asserts ≥1 hit | Abort — zero results means the index is empty or broken |
+
+**Rollback behavior**: If any step fails, the pipeline stops immediately with exit code 1. Steps 1–3 are destructive and must be re-run from the beginning after fixing the root cause. Step 4 (smoke) failure means the index is empty — re-run from step 3 if Strapi is still healthy, or from step 1 if the restore is suspect.
 
 This sequence is non-skippable. Manual `pg_restore` without the orchestrator is a defect.
 

@@ -29,6 +29,10 @@ class Environment(TypedDict, total=False):
     db_user: str
     compose_file: str
     access: Literal["local", "remote"]
+    meili_host_port: int | None
+    meili_container: str
+    meili_volume: str
+    meili_master_key_env: str
 
 
 ENVIRONMENTS: dict[str, Environment] = {
@@ -40,6 +44,10 @@ ENVIRONMENTS: dict[str, Environment] = {
         "db_user": "strapi",
         "compose_file": "docker-compose.dev.yml",
         "access": "local",
+        "meili_host_port": 57700,
+        "meili_container": "myorl-meili-dev",
+        "meili_volume": "meilidata_dev",
+        "meili_master_key_env": "MEILI_MASTER_KEY_DEV",
     },
     "rehearsal": {
         "host_port": 55532,
@@ -49,6 +57,10 @@ ENVIRONMENTS: dict[str, Environment] = {
         "db_user": "strapi",
         "compose_file": "docker-compose.rehearsal.yml",
         "access": "local",
+        "meili_host_port": 57701,
+        "meili_container": "myorl-meili-rehearsal",
+        "meili_volume": "meilidata_rehearsal",
+        "meili_master_key_env": "MEILI_MASTER_KEY_REHEARSAL",
     },
     "production": {
         "host_port": None,  # internal-network only, no host exposure
@@ -58,6 +70,10 @@ ENVIRONMENTS: dict[str, Environment] = {
         "db_user": "strapi",
         "compose_file": "docker-compose.prod.yml",
         "access": "remote",
+        "meili_host_port": None,  # Railway internal network only
+        "meili_container": "meilisearch",  # Railway service name; #119 provisions this
+        "meili_volume": "meilidata_prod",
+        "meili_master_key_env": "MEILI_MASTER_KEY",
     },
 }
 

@@ -16,6 +16,23 @@ services:
       timeout: 5s
       retries: 5
 
+  meilisearch:
+    image: getmeili/meilisearch:v1.11
+    container_name: myorl-meili-rehearsal
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY_REHEARSAL:-rehearsal-master-key-do-not-use-in-prod}
+    ports:
+      - "57701:7700"
+    volumes:
+      - meilidata_rehearsal:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:7700/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata-rehearsal:
     name: myorl-pavlos_pgdata-rehearsal
+  meilidata_rehearsal:
+    name: myorl-pavlos_meilidata_rehearsal

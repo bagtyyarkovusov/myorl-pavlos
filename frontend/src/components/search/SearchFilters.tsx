@@ -81,8 +81,8 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
       </nav>
 
       {/* Type filter */}
-      <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
-        <legend>{t[locale].typeLabel}</legend>
+      <section>
+        <h3>{t[locale].typeLabel}</h3>
         {[
           { value: "", label: t[locale].typeAll },
           { value: "page", label: t[locale].typePage },
@@ -96,11 +96,11 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             {option.label}
           </a>
         ))}
-      </fieldset>
+      </section>
 
       {/* Sort filter */}
-      <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
-        <legend>{t[locale].sortLabel}</legend>
+      <section>
+        <h3>{t[locale].sortLabel}</h3>
         {[
           { value: "", label: t[locale].sortRelevance },
           { value: "newest", label: t[locale].sortNewest },
@@ -113,7 +113,7 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             {option.label}
           </a>
         ))}
-      </fieldset>
+      </section>
     </div>
   );
 }

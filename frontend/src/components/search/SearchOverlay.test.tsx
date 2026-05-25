@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SearchOverlay } from "./SearchOverlay";
 
@@ -86,7 +86,7 @@ describe("SearchOverlay", () => {
 
   it("does not fire search for short queries", async () => {
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "a");
     expect(mockSearch).not.toHaveBeenCalled();
   });
@@ -99,7 +99,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "ab", { delay: 50 });
 
     await waitFor(() => {
@@ -115,7 +115,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "ab", { delay: 50 });
 
     expect(await screen.findByText(/Δεν βρέθηκαν αποτελέσματα/)).toBeInTheDocument();
@@ -132,7 +132,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     expect(await screen.findByText("Άρθρα")).toBeInTheDocument();
@@ -156,7 +156,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     await waitFor(() => {
@@ -181,7 +181,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     const groupSeeAll = await screen.findByText(/Δείτε όλα τα 8 αποτελέσματα στα Άρθρα/);
@@ -200,7 +200,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     await waitFor(() => {
@@ -217,7 +217,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     const link = await screen.findByText(/Δείτε όλα τα.*αποτελέσματα για "test"/);
@@ -232,7 +232,7 @@ describe("SearchOverlay", () => {
     mockSearch.mockRejectedValue(new Error("Network error"));
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     expect(await screen.findByText(/Σφάλμα αναζήτησης/)).toBeInTheDocument();
@@ -274,7 +274,7 @@ describe("SearchOverlay", () => {
       });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     expect(await screen.findByText(/Δεν βρέθηκαν αποτελέσματα στα ελληνικά/)).toBeInTheDocument();
@@ -297,7 +297,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     await waitFor(() => {
@@ -320,7 +320,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     await waitFor(() => {
@@ -343,7 +343,7 @@ describe("SearchOverlay", () => {
     });
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     await waitFor(() => {
@@ -387,7 +387,7 @@ describe("SearchOverlay", () => {
     );
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "test", { delay: 50 });
 
     await waitFor(() => {
@@ -419,7 +419,7 @@ describe("SearchOverlay", () => {
     );
 
     render(<SearchOverlay {...baseProps} />);
-    const input = screen.getByRole("searchbox");
+    const input = screen.getByRole("combobox");
     await userEvent.type(input, "xy", { delay: 50 });
 
     await waitFor(() => {
@@ -446,5 +446,320 @@ describe("SearchOverlay", () => {
     expect(closeButton).toBeInTheDocument();
     await userEvent.click(closeButton);
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  describe("ARIA attributes", () => {
+    it("has aria-modal on the dialog", () => {
+      render(<SearchOverlay {...baseProps} />);
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toHaveAttribute("aria-modal", "true");
+    });
+
+    it("renders input with combobox role", () => {
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      expect(input).toBeInTheDocument();
+      expect(input).toHaveAttribute("aria-autocomplete", "list");
+    });
+
+    it("renders results container with listbox role when results exist", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [makeHit()],
+        estimatedTotalHits: 1,
+        facetDistribution: { type: { page: 1, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+
+      const listbox = await screen.findByRole("listbox");
+      expect(listbox).toBeInTheDocument();
+    });
+
+    it("renders result items with option role and aria-selected", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [
+          makeHit({ id: "page:1", type: "page", title: "First" }),
+          makeHit({ id: "video:1", type: "video", title: "Second", layoutVariant: "video-index", slug: "" }),
+        ],
+        estimatedTotalHits: 2,
+        facetDistribution: { type: { page: 1, video: 1 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+
+      await waitFor(() => {
+        const options = screen.getAllByRole("option");
+        expect(options.length).toBeGreaterThanOrEqual(2);
+      });
+
+      const options = screen.getAllByRole("option");
+      expect(options[0]).toHaveAttribute("aria-selected", "false");
+    });
+
+    it("input has aria-expanded=true when results are shown", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [makeHit()],
+        estimatedTotalHits: 1,
+        facetDistribution: { type: { page: 1, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+
+      await waitFor(() => {
+        expect(input).toHaveAttribute("aria-expanded", "true");
+      });
+    });
+
+    it("input has aria-expanded=false when no results", () => {
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      expect(input).toHaveAttribute("aria-expanded", "false");
+    });
+
+    it("renders aria-live region that announces result count", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [
+          makeHit({ id: "page:1" }),
+          makeHit({ id: "page:2" }),
+        ],
+        estimatedTotalHits: 2,
+        facetDistribution: { type: { page: 2, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+
+      await waitFor(() => {
+        const live = screen.getByRole("status");
+        expect(live).toHaveAttribute("aria-live", "polite");
+        expect(live.textContent).toBeTruthy();
+      });
+    });
+  });
+
+  describe("focus trap", () => {
+    it("cycles Tab from last to first tabbable element", async () => {
+      render(<SearchOverlay {...baseProps} />);
+      const overlay = screen.getByRole("dialog");
+
+      const tabbables = overlay.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      expect(tabbables.length).toBeGreaterThanOrEqual(2);
+
+      const lastEl = tabbables[tabbables.length - 1] as HTMLElement;
+      lastEl.focus();
+      fireEvent.keyDown(lastEl, { key: "Tab" });
+
+      expect(document.activeElement).toBe(tabbables[0]);
+    });
+
+    it("cycles Shift+Tab from first to last tabbable element", async () => {
+      render(<SearchOverlay {...baseProps} />);
+      const overlay = screen.getByRole("dialog");
+
+      const tabbables = overlay.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      expect(tabbables.length).toBeGreaterThanOrEqual(2);
+
+      const firstEl = tabbables[0] as HTMLElement;
+      firstEl.focus();
+      fireEvent.keyDown(firstEl, { key: "Tab", shiftKey: true });
+
+      expect(document.activeElement).toBe(tabbables[tabbables.length - 1]);
+    });
+  });
+
+  describe("keyboard navigation", () => {
+    it("ArrowDown selects first result item", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [
+          makeHit({ id: "page:1", type: "page", title: "First", href: "/el/first" }),
+          makeHit({ id: "page:2", type: "page", title: "Second", href: "/el/second" }),
+        ],
+        estimatedTotalHits: 2,
+        facetDistribution: { type: { page: 2, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+      await waitFor(() => {
+        expect(screen.getAllByRole("option").length).toBeGreaterThanOrEqual(2);
+      });
+
+      const overlay = screen.getByRole("dialog");
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+
+      const options = screen.getAllByRole("option");
+      expect(options[0]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("ArrowDown selects next result item", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [
+          makeHit({ id: "page:1", type: "page", title: "First", href: "/el/first" }),
+          makeHit({ id: "page:2", type: "page", title: "Second", href: "/el/second" }),
+          makeHit({ id: "page:3", type: "page", title: "Third", href: "/el/third" }),
+        ],
+        estimatedTotalHits: 3,
+        facetDistribution: { type: { page: 3, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+      await waitFor(() => {
+        expect(screen.getAllByRole("option").length).toBeGreaterThanOrEqual(3);
+      });
+
+      const overlay = screen.getByRole("dialog");
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+
+      const options = screen.getAllByRole("option");
+      expect(options[1]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("ArrowUp selects previous result item", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [
+          makeHit({ id: "page:1", type: "page", title: "First", href: "/el/first" }),
+          makeHit({ id: "page:2", type: "page", title: "Second", href: "/el/second" }),
+        ],
+        estimatedTotalHits: 2,
+        facetDistribution: { type: { page: 2, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+      await waitFor(() => {
+        expect(screen.getAllByRole("option").length).toBeGreaterThanOrEqual(2);
+      });
+
+      const overlay = screen.getByRole("dialog");
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+      fireEvent.keyDown(overlay, { key: "ArrowUp" });
+
+      const options = screen.getAllByRole("option");
+      expect(options[0]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("ArrowDown wraps from last to first", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [
+          makeHit({ id: "page:1", type: "page", title: "First", href: "/el/first" }),
+          makeHit({ id: "page:2", type: "page", title: "Second", href: "/el/second" }),
+        ],
+        estimatedTotalHits: 2,
+        facetDistribution: { type: { page: 2, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+      await waitFor(() => {
+        expect(screen.getAllByRole("option").length).toBe(2);
+      });
+
+      const overlay = screen.getByRole("dialog");
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+
+      const options = screen.getAllByRole("option");
+      expect(options[0]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("ArrowUp wraps from first to last", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [
+          makeHit({ id: "page:1", type: "page", title: "First", href: "/el/first" }),
+          makeHit({ id: "page:2", type: "page", title: "Second", href: "/el/second" }),
+        ],
+        estimatedTotalHits: 2,
+        facetDistribution: { type: { page: 2, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+      await waitFor(() => {
+        expect(screen.getAllByRole("option").length).toBe(2);
+      });
+
+      const overlay = screen.getByRole("dialog");
+      fireEvent.keyDown(overlay, { key: "ArrowUp" });
+
+      const options = screen.getAllByRole("option");
+      expect(options[1]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("Enter on selected result navigates to its href", async () => {
+      const assignSpy = vi.fn();
+      vi.stubGlobal("location", { assign: assignSpy, href: "" });
+
+      mockSearch.mockResolvedValue({
+        hits: [
+          makeHit({ id: "page:1", type: "page", title: "First", href: "/el/first" }),
+          makeHit({ id: "page:2", type: "page", title: "Second", href: "/el/second" }),
+        ],
+        estimatedTotalHits: 2,
+        facetDistribution: { type: { page: 2, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+      await waitFor(() => {
+        expect(screen.getAllByRole("option").length).toBe(2);
+      });
+
+      const overlay = screen.getByRole("dialog");
+      fireEvent.keyDown(overlay, { key: "ArrowDown" });
+      fireEvent.keyDown(overlay, { key: "Enter" });
+
+      expect(assignSpy).toHaveBeenCalledWith("/el/first");
+
+      vi.unstubAllGlobals();
+    });
+
+    it("Enter does nothing when no result is selected", async () => {
+      mockSearch.mockResolvedValue({
+        hits: [makeHit()],
+        estimatedTotalHits: 1,
+        facetDistribution: { type: { page: 1, video: 0 } },
+      });
+
+      render(<SearchOverlay {...baseProps} />);
+      const input = screen.getByRole("combobox");
+      await userEvent.type(input, "test", { delay: 50 });
+      await waitFor(() => {
+        expect(screen.getAllByRole("option").length).toBe(1);
+      });
+
+      const overlay = screen.getByRole("dialog");
+      fireEvent.keyDown(overlay, { key: "Enter" });
+
+      // No navigation should have happened — test passes if no error
+    });
+  });
+
+  describe("shortcut hint", () => {
+    it("renders a / keybinding hint element", () => {
+      render(<SearchOverlay {...baseProps} />);
+      const hint = screen.getByText("/");
+      expect(hint.tagName).toBe("KBD");
+    });
   });
 });

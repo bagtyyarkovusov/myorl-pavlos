@@ -53,6 +53,40 @@
   color: var(--muted);
 }
 
+.shortcut-hint {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: transparent;
+}
+
+/* Hide shortcut hint on mobile where keyboard shortcut isn't available */
+@media (max-width: 767px) {
+  .shortcut-hint {
+    display: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .spinner {
   flex-shrink: 0;
   width: 18px;

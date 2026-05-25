@@ -2,7 +2,9 @@
 
 import { Meilisearch } from "meilisearch";
 import type { Hit } from "meilisearch";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 
 import type { SearchDocument } from "@/lib/search/index-document";
 import { getSessionId } from "@/lib/search/session";
@@ -92,6 +94,12 @@ function seeAllGroupLabel(locale: Locale, count: number, groupLabel: string): st
     : `→ Смотреть все ${count} результатов в ${groupLabel} »`;
 }
 
+function resultCountAnnouncement(locale: Locale, count: number): string {
+  return locale === "el"
+    ? `${count} αποτελέσματα βρέθηκαν`
+    : `Найдено ${count} результатов`;
+}
+
 function buildSearchParams() {
   return {
     limit: MAX_TOTAL,
@@ -132,10 +140,13 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
   const [error, setError] = useState(false);
   const [fallbackLocale, setFallbackLocale] = useState<Locale | null>(null);
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clientRef = useRef<InstanceType<typeof Meilisearch> | null>(null);
+
+  useFocusTrap(overlayRef, isOpen);
 
   // Create Meilisearch client once (lazy)
   useEffect(() => {
@@ -157,6 +168,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       setError(false);
       setFallbackLocale(null);
       setTypeFilter("all");
+      setSelectedIndex(-1);
       inputRef.current?.focus();
     }
   }, [isOpen]);
@@ -280,6 +292,60 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
     };
   }, []);
 
+  // Reset selection when results change
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [results, typeFilter]);
+
+  // Build flat list of visible results for keyboard navigation
+  const visibleResults = useMemo(() => {
+    const items: Array<{ id: string; href: string; docId: string }> = [];
+    if (query.trim().length >= MIN_QUERY_LENGTH && results) {
+      if (typeFilter !== "video") {
+        for (const page of results.pages) {
+          items.push({ id: page.id, href: page.href, docId: page.id });
+        }
+      }
+      if (typeFilter !== "page") {
+        for (const video of results.videos) {
+          items.push({ id: video.id, href: video.href, docId: video.id });
+        }
+      }
+    }
+    return items;
+  }, [query, results, typeFilter]);
+
+  const handleOverlayKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (visibleResults.length === 0) return;
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setSelectedIndex((i) => {
+            if (i === -1) return 0;
+            return (i + 1) % visibleResults.length;
+          });
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setSelectedIndex((i) => {
+            if (i === -1) return visibleResults.length - 1;
+            return (i - 1 + visibleResults.length) % visibleResults.length;
+          });
+          break;
+        case "Enter":
+          if (selectedIndex >= 0 && selectedIndex < visibleResults.length) {
+            e.preventDefault();
+            const href = visibleResults[selectedIndex]?.href;
+            if (href) window.location.assign(href);
+          }
+          break;
+      }
+    },
+    [visibleResults, selectedIndex],
+  );
+
   if (!isOpen) return null;
   if (process.env.NEXT_PUBLIC_SEARCH_ENABLED === "false") return null;
 
@@ -303,7 +369,9 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
         className={styles["overlay"]}
         id="search-overlay"
         role="dialog"
+        aria-modal="true"
         aria-label={searchLabel}
+        onKeyDown={handleOverlayKeyDown}
       >
         <div className={styles["overlay-header"]}>
           <svg
@@ -324,8 +392,17 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
             placeholder={placeholder}
             value={query}
             onChange={handleInputChange}
+            role="combobox"
             aria-label={searchLabel}
+            aria-expanded={hasResults ? "true" : "false"}
+            aria-haspopup="listbox"
+            aria-controls="search-results-listbox"
+            aria-autocomplete="list"
+            aria-activedescendant={
+              selectedIndex >= 0 ? `search-result-${selectedIndex}` : undefined
+            }
           />
+          <kbd className={styles["shortcut-hint"]} aria-hidden="true">/</kbd>
           {isLoading && <span className={styles["spinner"]} />}
           <button
             type="button"
@@ -356,14 +433,30 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           </div>
         )}
 
-        <div className={`${styles["results"]} ${isLoading && results ? styles["results--loading"] : ""}`}>
+        <div
+          className={`${styles["results"]} ${isLoading && results ? styles["results--loading"] : ""}`}
+          role={hasResults ? "listbox" : undefined}
+          id={hasResults ? "search-results-listbox" : undefined}
+        >
           {!hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
 
           {hasQuery && !hasResults && !isLoading && !error && (
             <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
           )}
 
-          {error && <p className={styles["error-state"]}>{ERROR_MSGS[locale]}</p>}
+          {error && <p className={styles["error-state"]} role="alert">{ERROR_MSGS[locale]}</p>}
+
+          {/* aria-live result count announcer — always in DOM so SR picks up changes */}
+          <div
+            className={styles["sr-only"]}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {hasResults && results
+              ? resultCountAnnouncement(locale, results.totalHits)
+              : ""}
+          </div>
 
           {hasResults && results && (
             <>
@@ -376,19 +469,25 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
               {filteredPages.length > 0 && (
                 <div className={styles["result-group"]}>
                   <h4 className={styles["result-group-title"]}>{GROUP_LABELS[locale].articles}</h4>
-                  {filteredPages.map((hit) => (
-                    <ResultCard
+                  {filteredPages.map((hit, i) => (
+                    <div
                       key={hit.id}
-                      title={hit._formatted?.title ?? hit.title}
-                      excerpt={hit._formatted?.excerpt ?? hit.excerpt}
-                      href={hit.href}
-                      type={hit.type}
-                      thumbnail={null}
-                      parentTitle={hit.parentTitle}
-                      parentSlug={hit.parentSlug}
-                      locale={resultLocale}
-                      localePill={fallbackLocale ? hit.locale : undefined}
-                    />
+                      id={`search-result-${i}`}
+                      role="option"
+                      aria-selected={selectedIndex === i}
+                    >
+                      <ResultCard
+                        title={hit._formatted?.title ?? hit.title}
+                        excerpt={hit._formatted?.excerpt ?? hit.excerpt}
+                        href={hit.href}
+                        type={hit.type}
+                        thumbnail={null}
+                        parentTitle={hit.parentTitle}
+                        parentSlug={hit.parentSlug}
+                        locale={resultLocale}
+                        localePill={fallbackLocale ? hit.locale : undefined}
+                      />
+                    </div>
                   ))}
                   {results.pageFacetCount > MAX_PER_GROUP && typeFilter !== "video" && (
                     <a
@@ -404,20 +503,29 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
               {filteredVideos.length > 0 && (
                 <div className={styles["result-group"]}>
                   <h4 className={styles["result-group-title"]}>{GROUP_LABELS[locale].videos}</h4>
-                  {filteredVideos.map((hit) => (
-                    <ResultCard
-                      key={hit.id}
-                      title={hit._formatted?.title ?? hit.title}
-                      excerpt={hit._formatted?.excerpt ?? hit.excerpt}
-                      href={hit.href}
-                      type={hit.type}
-                      thumbnail={hit.thumbnail}
-                      parentTitle={hit.parentTitle}
-                      parentSlug={hit.parentSlug}
-                      locale={resultLocale}
-                      localePill={fallbackLocale ? hit.locale : undefined}
-                    />
-                  ))}
+                  {filteredVideos.map((hit, i) => {
+                    const globalIndex = filteredPages.length + i;
+                    return (
+                      <div
+                        key={hit.id}
+                        id={`search-result-${globalIndex}`}
+                        role="option"
+                        aria-selected={selectedIndex === globalIndex}
+                      >
+                        <ResultCard
+                          title={hit._formatted?.title ?? hit.title}
+                          excerpt={hit._formatted?.excerpt ?? hit.excerpt}
+                          href={hit.href}
+                          type={hit.type}
+                          thumbnail={hit.thumbnail}
+                          parentTitle={hit.parentTitle}
+                          parentSlug={hit.parentSlug}
+                          locale={resultLocale}
+                          localePill={fallbackLocale ? hit.locale : undefined}
+                        />
+                      </div>
+                    );
+                  })}
                   {results.videoFacetCount > MAX_PER_GROUP && typeFilter !== "page" && (
                     <a
                       href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=video`}

@@ -53,6 +53,25 @@ export function SiteHeaderClient({
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  // Global / shortcut to open search — skipped when input/textarea/contenteditable is focused
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== "/") return;
+
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const tag = target.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || target.closest('[contenteditable="true"]')) {
+        return;
+      }
+
+      e.preventDefault();
+      setIsSearchOpen(true);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
+
   const activeMenu = navigation.find((n) => n.documentId === nav.openMenuId) ?? null;
   const featureBlurb = activeMenu
     ? activeMenu.excerpt?.trim() || t.sectionOverviewBlurb(activeMenu.title)

@@ -56,6 +56,11 @@ const planHooks = {};
 // Monorepo: deps live under each workspace, not the repo root.
 const copyToWorktree = ["frontend/node_modules", "backend/node_modules"];
 
+// Bumped from default 60s — copying frontend + backend node_modules (~1.2GB
+// combined) across many sandboxes in parallel saturates disk I/O and can blow
+// past the default well before any single copy actually fails.
+const sandboxTimeouts = { copyToWorktreeMs: 600_000 };
+
 // Attach the sandbox container to the dev compose network so the agent can
 // reach the running Strapi (myorl-strapi-dev:1337), Postgres (myorl-pg:5432),
 // and Meilisearch (myorl-meili-dev:7700) containers by name when running
@@ -133,6 +138,7 @@ for (let iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
         sandbox: docker(sandboxOptions),
         hooks: installHooks,
         copyToWorktree,
+        timeouts: sandboxTimeouts,
       });
 
       try {

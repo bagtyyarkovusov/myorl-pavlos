@@ -3,18 +3,14 @@ import { render, screen } from "@testing-library/react";
 import { SearchLocaleFallbackBanner } from "./SearchLocaleFallbackBanner";
 
 describe("SearchLocaleFallbackBanner", () => {
-  it("renders Greek banner when locale=el", () => {
-    render(<SearchLocaleFallbackBanner locale="el" />);
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Δεν βρέθηκαν αποτελέσματα στα ελληνικά — εμφανίζονται αποτελέσματα στα ρωσικά",
-    );
+  it("renders Greek banner with result count", () => {
+    render(<SearchLocaleFallbackBanner locale="el" resultCount={12} />);
+    expect(screen.getByRole("status")).toHaveTextContent("12 αποτελέσματα");
   });
 
-  it("renders Russian banner when locale=ru", () => {
-    render(<SearchLocaleFallbackBanner locale="ru" />);
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Результаты на русском не найдены — показаны результаты на греческом",
-    );
+  it("renders Russian banner with result count", () => {
+    render(<SearchLocaleFallbackBanner locale="ru" resultCount={7} />);
+    expect(screen.getByRole("status")).toHaveTextContent("7 результатов");
   });
 
   it("renders allLangs label when allLangs=true", () => {

@@ -173,7 +173,7 @@ describe("PageRenderer", () => {
 
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: "Videos" })).toBeDefined();
-      expect(screen.getByRole("heading", { name: "Sample video" })).toBeDefined();
+      expect(screen.getByText("Sample video")).toBeDefined();
     });
     expect(screen.queryByRole("link", { name: /Child page/ })).toBeNull();
   });

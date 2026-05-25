@@ -378,7 +378,7 @@ export function unwrapLegacyWrapperDivs(html: string): string {
   const tabContentMatch = result.match(
     /^<div\s+class=["']tab-content["'][^>]*>([\s\S]*)<\/div>\s*$/i,
   );
-  if (tabContentMatch) {
+  if (tabContentMatch?.[1] != null) {
     result = tabContentMatch[1].trim();
   }
   return result;

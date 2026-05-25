@@ -36,6 +36,7 @@ const t = {
     resultsCount: "Αποτελέσματα {{from}}–{{to}} από {{total}}",
     paginationPrev: "Προηγούμενο",
     paginationNext: "Επόμενο",
+    filtersLabel: "Φίλτρα",
   },
   ru: {
     prompt: "Введите поисковый запрос",
@@ -48,6 +49,7 @@ const t = {
     resultsCount: "Результаты {{from}}–{{to}} из {{total}}",
     paginationPrev: "Назад",
     paginationNext: "Вперёд",
+    filtersLabel: "Фильтры",
   },
 } as const;
 
@@ -125,7 +127,12 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
           <SearchFilters sections={sectionOptions} locale={locale} />
         </div>
         <div className="mobile-only">
-          <SearchFilters sections={sectionOptions} locale={locale} />
+          <details style={{ marginBottom: "16px" }}>
+            <summary style={{ cursor: "pointer", fontWeight: 600 }}>
+              {t[locale].filtersLabel || "Filters"}
+            </summary>
+            <SearchFilters sections={sectionOptions} locale={locale} />
+          </details>
         </div>
         <p>{t[locale].noResultsWithFilters}</p>
       </div>
@@ -161,7 +168,12 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
       <div style={{ flex: 1, minWidth: 0 }}>
         {/* Mobile collapsible filters */}
         <div className="mobile-only">
-          <SearchFilters sections={sectionOptions} locale={locale} />
+          <details style={{ marginBottom: "16px" }}>
+            <summary style={{ cursor: "pointer", fontWeight: 600 }}>
+              {t[locale].filtersLabel || "Filters"}
+            </summary>
+            <SearchFilters sections={sectionOptions} locale={locale} />
+          </details>
         </div>
 
         <p>{resultsCountLabel}</p>

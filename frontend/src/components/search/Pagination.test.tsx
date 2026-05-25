@@ -1,21 +1,13 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { Pagination } from "./Pagination";
-
-const mockReplace = vi.fn();
 
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams("q=test&type=page"),
   usePathname: () => "/el/search-results",
-  useRouter: () => ({ push: mockReplace }),
 }));
 
 describe("Pagination", () => {
-  beforeEach(() => {
-    mockReplace.mockClear();
-  });
-
   it("returns null when totalPages <= 1", () => {
     const { container } = render(
       <Pagination currentPage={1} totalPages={1} prevLabel="Prev" nextLabel="Next" />,
@@ -32,22 +24,30 @@ describe("Pagination", () => {
     expect(screen.getByText("Next")).toBeInTheDocument();
   });
 
-  it("disables prev button on page 1", () => {
+  it("renders prev as <span> on first page", () => {
     render(<Pagination currentPage={1} totalPages={5} prevLabel="Prev" nextLabel="Next" />);
-    expect(screen.getByText("Prev")).toBeDisabled();
-    expect(screen.getByText("Next")).not.toBeDisabled();
+    const prev = screen.getByText("Prev");
+    expect(prev.tagName).toBe("SPAN");
+    expect(prev).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("disables next button on last page", () => {
+  it("renders next as <span> on last page", () => {
     render(<Pagination currentPage={5} totalPages={5} prevLabel="Prev" nextLabel="Next" />);
-    expect(screen.getByText("Prev")).not.toBeDisabled();
-    expect(screen.getByText("Next")).toBeDisabled();
+    const next = screen.getByText("Next");
+    expect(next.tagName).toBe("SPAN");
+    expect(next).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("renders prev as link when not on first page", () => {
+    render(<Pagination currentPage={3} totalPages={5} prevLabel="Prev" nextLabel="Next" />);
+    expect(screen.getByText("Prev").tagName).toBe("A");
   });
 
   it("sets aria-current on active page", () => {
     render(<Pagination currentPage={3} totalPages={5} prevLabel="Prev" nextLabel="Next" />);
-    const activeBtn = screen.getByText("3");
-    expect(activeBtn).toHaveAttribute("aria-current", "page");
+    const activeLink = screen.getByText("3");
+    expect(activeLink.tagName).toBe("A");
+    expect(activeLink).toHaveAttribute("aria-current", "page");
   });
 
   it("shows ellipsis for large page counts", () => {
@@ -56,18 +56,18 @@ describe("Pagination", () => {
     expect(ellipses.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("navigates when page number clicked", async () => {
-    const user = userEvent.setup();
+  it("renders <a> links with correct href for page numbers", () => {
     render(<Pagination currentPage={1} totalPages={5} prevLabel="Prev" nextLabel="Next" />);
-    await user.click(screen.getByText("3"));
-    expect(mockReplace).toHaveBeenCalledWith("/el/search-results?q=test&type=page&page=3");
+    const page3 = screen.getByText("3");
+    expect(page3.tagName).toBe("A");
+    expect(page3).toHaveAttribute("href", "/el/search-results?q=test&type=page&page=3");
   });
 
-  it("removes page param when going to page 1", async () => {
-    const user = userEvent.setup();
+  it("removes page param in href when page is 1", () => {
     render(<Pagination currentPage={2} totalPages={5} prevLabel="Prev" nextLabel="Next" />);
-    await user.click(screen.getByText("1"));
-    expect(mockReplace).toHaveBeenCalledWith("/el/search-results?q=test&type=page");
+    const page1Link = screen.getByText("1");
+    expect(page1Link.tagName).toBe("A");
+    expect(page1Link).toHaveAttribute("href", "/el/search-results?q=test&type=page");
   });
 
   it("uses custom prev/next labels", () => {

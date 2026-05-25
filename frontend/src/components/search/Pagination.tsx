@@ -1,7 +1,6 @@
 "use client";
 
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useSearchParams, usePathname } from "next/navigation";
 
 export type PaginationProps = {
   currentPage: number;
@@ -24,23 +23,19 @@ function getPageNumbers(current: number, total: number): (number | "...")[] {
   return pages;
 }
 
+function buildPageUrl(page: number, currentParams: URLSearchParams, pathname: string): string {
+  const params = new URLSearchParams(currentParams.toString());
+  if (page <= 1) {
+    params.delete("page");
+  } else {
+    params.set("page", String(page));
+  }
+  return `${pathname}?${params.toString()}`;
+}
+
 export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: PaginationProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const router = useRouter();
-
-  const goToPage = useCallback(
-    (page: number) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (page <= 1) {
-        params.delete("page");
-      } else {
-        params.set("page", String(page));
-      }
-      router.push(`${pathname}?${params.toString()}`);
-    },
-    [searchParams, pathname, router],
-  );
 
   if (totalPages <= 1) {
     return null;
@@ -50,35 +45,34 @@ export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: Pa
 
   return (
     <nav aria-label="pagination" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-      <button type="button" onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}>
-        {prevLabel}
-      </button>
+      {currentPage <= 1 ? (
+        <span aria-hidden="true">{prevLabel}</span>
+      ) : (
+        <a href={buildPageUrl(currentPage - 1, searchParams, pathname)}>{prevLabel}</a>
+      )}
       {pageNumbers.map((page, idx) =>
         page === "..." ? (
           <span key={`ellipsis-${idx}`} style={{ padding: "0 4px" }}>
             ...
           </span>
         ) : (
-          <button
+          <a
             key={page}
-            type="button"
-            onClick={() => goToPage(page)}
+            href={buildPageUrl(page, searchParams, pathname)}
             aria-current={page === currentPage ? "page" : undefined}
             style={
               page === currentPage ? { fontWeight: 700, textDecoration: "underline" } : undefined
             }
           >
             {page}
-          </button>
+          </a>
         ),
       )}
-      <button
-        type="button"
-        onClick={() => goToPage(currentPage + 1)}
-        disabled={currentPage >= totalPages}
-      >
-        {nextLabel}
-      </button>
+      {currentPage >= totalPages ? (
+        <span aria-hidden="true">{nextLabel}</span>
+      ) : (
+        <a href={buildPageUrl(currentPage + 1, searchParams, pathname)}>{nextLabel}</a>
+      )}
     </nav>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useSearchParams, usePathname } from "next/navigation";
 import type { Locale } from "@/lib/cms/types";
 
 export type SearchFiltersProps = {
@@ -32,27 +31,28 @@ const t: Record<Locale, Record<string, string>> = {
   },
 };
 
+function buildFilterUrl(
+  key: string,
+  value: string,
+  currentParams: URLSearchParams,
+  pathname: string,
+): string {
+  const params = new URLSearchParams(currentParams.toString());
+  if (value) {
+    params.set(key, value);
+  } else {
+    params.delete(key);
+  }
+  params.set("page", "1");
+  return `${pathname}?${params.toString()}`;
+}
+
 export function SearchFilters({ sections, locale }: SearchFiltersProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const router = useRouter();
   const currentSection = searchParams.get("sectionLabel") ?? "";
   const currentType = searchParams.get("type") ?? "";
   const currentSort = searchParams.get("sort") ?? "";
-
-  const navigateWithParams = useCallback(
-    (key: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-      params.set("page", "1");
-      router.push(`${pathname}?${params.toString()}`);
-    },
-    [searchParams, pathname, router],
-  );
 
   return (
     <div>
@@ -60,23 +60,21 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
       <nav>
         <ul>
           <li>
-            <button
-              type="button"
-              onClick={() => navigateWithParams("sectionLabel", "")}
+            <a
+              href={buildFilterUrl("sectionLabel", "", searchParams, pathname)}
               aria-current={!currentSection ? "page" : undefined}
             >
               {t[locale].allSections}
-            </button>
+            </a>
           </li>
           {sections.map((section) => (
             <li key={section}>
-              <button
-                type="button"
-                onClick={() => navigateWithParams("sectionLabel", section)}
+              <a
+                href={buildFilterUrl("sectionLabel", section, searchParams, pathname)}
                 aria-current={currentSection === section ? "page" : undefined}
               >
                 {section}
-              </button>
+              </a>
             </li>
           ))}
         </ul>
@@ -90,15 +88,13 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
           { value: "page", label: t[locale].typePage },
           { value: "video", label: t[locale].typeVideo },
         ].map((option) => (
-          <button
+          <a
             key={option.value}
-            type="button"
-            role="radio"
-            aria-checked={currentType === option.value}
-            onClick={() => navigateWithParams("type", option.value)}
+            href={buildFilterUrl("type", option.value, searchParams, pathname)}
+            aria-current={currentType === option.value ? "page" : undefined}
           >
             {option.label}
-          </button>
+          </a>
         ))}
       </fieldset>
 
@@ -109,15 +105,13 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
           { value: "", label: t[locale].sortRelevance },
           { value: "newest", label: t[locale].sortNewest },
         ].map((option) => (
-          <button
+          <a
             key={option.value}
-            type="button"
-            role="radio"
-            aria-checked={currentSort === option.value}
-            onClick={() => navigateWithParams("sort", option.value)}
+            href={buildFilterUrl("sort", option.value, searchParams, pathname)}
+            aria-current={currentSort === option.value ? "page" : undefined}
           >
             {option.label}
-          </button>
+          </a>
         ))}
       </fieldset>
     </div>

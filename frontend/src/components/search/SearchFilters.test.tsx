@@ -1,23 +1,15 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { SearchFilters } from "./SearchFilters";
-
-const mockReplace = vi.fn();
 
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams("q=test"),
   usePathname: () => "/el/search-results",
-  useRouter: () => ({ push: mockReplace }),
 }));
 
 const sampleSections = ["Ωτορινολαρυγγολογία", "Πλαστική Χειρουργική"];
 
 describe("SearchFilters", () => {
-  beforeEach(() => {
-    mockReplace.mockClear();
-  });
-
   it("renders type filter with three options", () => {
     render(<SearchFilters sections={sampleSections} locale="el" />);
     expect(screen.getByText("Όλα")).toBeInTheDocument();
@@ -41,24 +33,22 @@ describe("SearchFilters", () => {
   it("renders no sections when sections array empty", () => {
     render(<SearchFilters sections={[]} locale="el" />);
     expect(screen.getByText("Όλες οι ενότητες")).toBeInTheDocument();
-    // Only the "All sections" button — no section-specific buttons
-    const buttons = screen.getAllByRole("button");
-    expect(buttons).toHaveLength(1);
-    expect(buttons[0]).toHaveTextContent("Όλες οι ενότητες");
+    expect(screen.queryByText("Ωτορινολαρυγγολογία")).not.toBeInTheDocument();
+    expect(screen.queryByText("Πλαστική Χειρουργική")).not.toBeInTheDocument();
   });
 
-  it("navigates when type filter clicked", async () => {
-    const user = userEvent.setup();
+  it("renders <a> links with correct href for type filter", () => {
     render(<SearchFilters sections={sampleSections} locale="el" />);
-    await user.click(screen.getByText("Άρθρα"));
-    expect(mockReplace).toHaveBeenCalledWith("/el/search-results?q=test&type=page&page=1");
+    const articlesLink = screen.getByText("Άρθρα");
+    expect(articlesLink.tagName).toBe("A");
+    expect(articlesLink).toHaveAttribute("href", "/el/search-results?q=test&type=page&page=1");
   });
 
-  it("navigates when sort changed", async () => {
-    const user = userEvent.setup();
+  it("renders <a> links with correct href for sort filter", () => {
     render(<SearchFilters sections={sampleSections} locale="el" />);
-    await user.click(screen.getByText("Νεότερα"));
-    expect(mockReplace).toHaveBeenCalledWith("/el/search-results?q=test&sort=newest&page=1");
+    const newestLink = screen.getByText("Νεότερα");
+    expect(newestLink.tagName).toBe("A");
+    expect(newestLink).toHaveAttribute("href", "/el/search-results?q=test&sort=newest&page=1");
   });
 
   it("uses Russian labels for ru locale", () => {
@@ -71,11 +61,12 @@ describe("SearchFilters", () => {
     expect(screen.getByText("Новые")).toBeInTheDocument();
   });
 
-  it("resets page to 1 when section filter changes", async () => {
-    const user = userEvent.setup();
+  it("resets page to 1 when section filter changes", () => {
     render(<SearchFilters sections={sampleSections} locale="el" />);
-    await user.click(screen.getByText("Ωτορινολαρυγγολογία"));
-    expect(mockReplace).toHaveBeenCalledWith(
+    const sectionLink = screen.getByText("Ωτορινολαρυγγολογία");
+    expect(sectionLink.tagName).toBe("A");
+    expect(sectionLink).toHaveAttribute(
+      "href",
       "/el/search-results?q=test&sectionLabel=%CE%A9%CF%84%CE%BF%CF%81%CE%B9%CE%BD%CE%BF%CE%BB%CE%B1%CF%81%CF%85%CE%B3%CE%B3%CE%BF%CE%BB%CE%BF%CE%B3%CE%AF%CE%B1&page=1",
     );
   });

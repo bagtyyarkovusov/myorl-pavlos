@@ -30,6 +30,8 @@ export async function generateMetadata(): Promise<Metadata> {
 const t = {
   el: {
     prompt: "Πληκτρολογήστε έναν όρο αναζήτησης",
+    searchLabel: "Αναζήτηση",
+    searchButton: "Αναζήτηση",
     noResults: "Δεν βρέθηκαν αποτελέσματα για",
     unavailable: "Η αναζήτηση δεν είναι διαθέσιμη",
     error: "Παρουσιάστηκε σφάλμα",
@@ -43,6 +45,8 @@ const t = {
   },
   ru: {
     prompt: "Введите поисковый запрос",
+    searchLabel: "Поиск",
+    searchButton: "Поиск",
     noResults: "Результатов не найдено для",
     unavailable: "Поиск временно недоступен",
     error: "Произошла ошибка",
@@ -75,7 +79,13 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   const allLangs = sp.allLangs === "1";
 
   if (!q) {
-    return <p>{t[locale].prompt}</p>;
+    return (
+      <form action={`/${locale}/search-results`} method="get">
+        <label htmlFor="search-input">{t[locale].searchLabel}</label>
+        <input id="search-input" type="search" name="q" required />
+        <button type="submit">{t[locale].searchButton}</button>
+      </form>
+    );
   }
 
   const validType = type === "page" || type === "video" ? type : undefined;

@@ -32,6 +32,12 @@ import { docker } from "@ai-hero/sandcastle/sandboxes/docker";
 // Raise this if your backlog is large; lower it for a quick smoke-test run.
 const MAX_ITERATIONS = 10;
 
+// Maximum number of implementer sandboxes running concurrently. Each one is a
+// (1.2GB copy + npm install + Claude Code + native rebuild) workload; 4 keeps
+// disk I/O and CPU pressure on one machine within budget. Lower to 2-3 if you
+// see copy timeouts or sluggishness; raise only if you have headroom.
+const MAX_PARALLEL = 4;
+
 // Workspace install — reconciles deps for both workspaces. copyToWorktree
 // seeds host node_modules; this pass rebuilds native modules for the
 // sandbox's Node 22 (sharp / bcrypt / better-sqlite3 are host-built for
@@ -129,10 +135,28 @@ for (let iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
   // runs first; if it produces commits, the reviewer runs in the same sandbox.
   //
   // Promise.allSettled means one failing pipeline doesn't cancel the others.
+  // A simple semaphore caps concurrent sandboxes at MAX_PARALLEL — extra
+  // issues queue and pick up a slot as earlier ones complete.
   // -------------------------------------------------------------------------
+
+  let running = 0;
+  const queue: Array<() => void> = [];
+  const acquire = (): Promise<void> =>
+    running < MAX_PARALLEL
+      ? (running++, Promise.resolve())
+      : new Promise<void>((resolve) => queue.push(resolve));
+  const release = (): void => {
+    running--;
+    const next = queue.shift();
+    if (next) {
+      running++;
+      next();
+    }
+  };
 
   const settled = await Promise.allSettled(
     issues.map(async (issue) => {
+      await acquire();
       const sandbox = await sandcastle.createSandbox({
         branch: issue.branch,
         sandbox: docker(sandboxOptions),
@@ -178,6 +202,7 @@ for (let iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
         return implement;
       } finally {
         await sandbox.close();
+        release();
       }
     }),
   );

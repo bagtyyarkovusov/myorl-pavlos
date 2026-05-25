@@ -83,8 +83,8 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
       </nav>
 
       {/* Type filter */}
-      <div>
-        <p>{t[locale].typeLabel}</p>
+      <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+        <legend>{t[locale].typeLabel}</legend>
         {[
           { value: "", label: t[locale].typeAll },
           { value: "page", label: t[locale].typePage },
@@ -100,11 +100,11 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             {option.label}
           </button>
         ))}
-      </div>
+      </fieldset>
 
       {/* Sort filter */}
-      <div>
-        <p>{t[locale].sortLabel}</p>
+      <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+        <legend>{t[locale].sortLabel}</legend>
         {[
           { value: "", label: t[locale].sortRelevance },
           { value: "newest", label: t[locale].sortNewest },
@@ -119,7 +119,7 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             {option.label}
           </button>
         ))}
-      </div>
+      </fieldset>
     </div>
   );
 }

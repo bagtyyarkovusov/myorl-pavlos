@@ -105,7 +105,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
       });
 
       hits = result.hits;
-      estimatedTotalHits = result.estimatedTotalHits;
+      estimatedTotalHits = result.estimatedTotalHits ?? 0;
 
       if (result.facetDistribution?.parentSectionLabel) {
         sectionOptions = Object.keys(result.facetDistribution.parentSectionLabel);
@@ -127,7 +127,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
           <SearchFilters sections={sectionOptions} locale={locale} />
         </div>
         <div className="mobile-only">
-          <details style={{ marginBottom: "16px" }}>
+          <details style={{ marginBottom: "16px" }} open>
             <summary style={{ cursor: "pointer", fontWeight: 600 }}>
               {t[locale].filtersLabel || "Filters"}
             </summary>
@@ -168,7 +168,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
       <div style={{ flex: 1, minWidth: 0 }}>
         {/* Mobile collapsible filters */}
         <div className="mobile-only">
-          <details style={{ marginBottom: "16px" }}>
+          <details style={{ marginBottom: "16px" }} open={!!(type || sectionLabel || sort)}>
             <summary style={{ cursor: "pointer", fontWeight: 600 }}>
               {t[locale].filtersLabel || "Filters"}
             </summary>

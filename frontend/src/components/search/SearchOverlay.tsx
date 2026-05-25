@@ -297,20 +297,15 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
     setSelectedIndex(-1);
   }, [results, typeFilter]);
 
-  // Build flat list of visible results for keyboard navigation
   const visibleResults = useMemo(() => {
-    const items: Array<{ id: string; href: string; docId: string }> = [];
-    if (query.trim().length >= MIN_QUERY_LENGTH && results) {
-      if (typeFilter !== "video") {
-        for (const page of results.pages) {
-          items.push({ id: page.id, href: page.href, docId: page.id });
-        }
-      }
-      if (typeFilter !== "page") {
-        for (const video of results.videos) {
-          items.push({ id: video.id, href: video.href, docId: video.id });
-        }
-      }
+    if (query.trim().length < MIN_QUERY_LENGTH || !results) return [];
+
+    const items: Array<{ href: string }> = [];
+    if (typeFilter !== "video") {
+      items.push(...results.pages.map((p) => ({ href: p.href })));
+    }
+    if (typeFilter !== "page") {
+      items.push(...results.videos.map((v) => ({ href: v.href })));
     }
     return items;
   }, [query, results, typeFilter]);

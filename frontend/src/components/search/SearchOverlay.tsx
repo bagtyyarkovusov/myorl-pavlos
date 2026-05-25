@@ -7,11 +7,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { SearchDocument } from "@/lib/search/index-document";
 import type { Locale } from "@/lib/cms/types";
 
-// indexNameForLocale inlined: el → "el", ru → "ru"
-function indexNameForLocale(locale: Locale): "el" | "ru" {
-  return locale;
-}
-
 import { ResultCard } from "./ResultCard";
 import styles from "./SearchOverlay.module.css";
 
@@ -122,8 +117,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       setIsLoading(true);
       setError(false);
       try {
-        const indexName = indexNameForLocale(locale);
-        const response = await clientRef.current.index<SearchDocument>(indexName).search(trimmed, {
+        const response = await clientRef.current.index<SearchDocument>(locale).search(trimmed, {
           limit: MAX_TOTAL,
           attributesToRetrieve: [
             "id",

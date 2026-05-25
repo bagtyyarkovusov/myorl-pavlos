@@ -212,7 +212,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p role="alert">{error}</p>;
   }
 
   // Empty results with active filters — show filters + guidance message

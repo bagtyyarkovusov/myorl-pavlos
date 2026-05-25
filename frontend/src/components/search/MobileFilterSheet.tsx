@@ -17,7 +17,7 @@ const labels: Record<Locale, { filtersLabel: string; close: string }> = {
 
 export function MobileFilterSheet({ sections, locale, activeFilterCount }: MobileFilterSheetProps) {
   const [open, setOpen] = useState(false);
-  const l = labels[locale];
+  const { filtersLabel, close: closeLabel } = labels[locale];
   const countSuffix = activeFilterCount > 0 ? ` (${activeFilterCount})` : "";
 
   return (
@@ -35,14 +35,14 @@ export function MobileFilterSheet({ sections, locale, activeFilterCount }: Mobil
           marginBottom: "16px",
         }}
       >
-        {l.filtersLabel}
+        {filtersLabel}
         {countSuffix}
       </button>
 
       {open && (
         <div
           role="dialog"
-          aria-label={l.filtersLabel}
+          aria-label={filtersLabel}
           onClick={() => setOpen(false)}
           style={{
             position: "fixed",
@@ -78,7 +78,7 @@ export function MobileFilterSheet({ sections, locale, activeFilterCount }: Mobil
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <h3 style={{ margin: 0, fontSize: "1.1rem" }}>{l.filtersLabel}</h3>
+              <h3 style={{ margin: 0, fontSize: "1.1rem" }}>{filtersLabel}</h3>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -91,7 +91,7 @@ export function MobileFilterSheet({ sections, locale, activeFilterCount }: Mobil
                   fontSize: "0.85rem",
                 }}
               >
-                {l.close}
+                {closeLabel}
               </button>
             </div>
             <SearchFilters sections={sections} locale={locale} />

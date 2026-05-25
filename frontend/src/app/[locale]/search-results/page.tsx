@@ -34,8 +34,6 @@ const t = {
   el: {
     noResults: "Δεν βρέθηκαν αποτελέσματα για",
     resultsFor: "Αποτελέσματα για",
-    noResultsWithFilters:
-      "Δεν βρέθηκαν αποτελέσματα με τα επιλεγμένα φίλτρα. Δοκιμάστε να αλλάξετε ή να αφαιρέσετε φίλτρα.",
     resultsCount: "Αποτελέσματα {{from}}–{{to}} από {{total}}",
     paginationPrev: "Προηγούμενο",
     paginationNext: "Επόμενο",
@@ -46,8 +44,6 @@ const t = {
   ru: {
     noResults: "Результатов не найдено для",
     resultsFor: "Результаты для",
-    noResultsWithFilters:
-      "Результаты с выбранными фильтрами не найдены. Попробуйте изменить или убрать фильтры.",
     resultsCount: "Результаты {{from}}–{{to}} из {{total}}",
     paginationPrev: "Назад",
     paginationNext: "Вперёд",
@@ -81,6 +77,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
 
   const validType = type === "page" || type === "video" ? type : undefined;
   const hasFilters = !!validType || !!sectionLabel;
+  const activeFilterCount = (type ? 1 : 0) + (sectionLabel ? 1 : 0) + (sort ? 1 : 0);
   const resultsPerPage = 20;
 
   let error: { type: "unavailable" | "network" } | null = null;
@@ -213,13 +210,13 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   }
 
   if (error) {
-    const queryParts: string[] = [];
-    if (q) queryParts.push(`q=${encodeURIComponent(q)}`);
-    if (type) queryParts.push(`type=${type}`);
-    if (sectionLabel) queryParts.push(`sectionLabel=${encodeURIComponent(sectionLabel)}`);
-    if (sort) queryParts.push(`sort=${sort}`);
-    if (page > 1) queryParts.push(`page=${page}`);
-    const retryQs = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+    const retryParams = new URLSearchParams();
+    if (q) retryParams.set("q", q);
+    if (type) retryParams.set("type", type);
+    if (sectionLabel) retryParams.set("sectionLabel", sectionLabel);
+    if (sort) retryParams.set("sort", sort);
+    if (page > 1) retryParams.set("page", String(page));
+    const retryQs = retryParams.size > 0 ? `?${retryParams.toString()}` : "";
     return (
       <SearchResultsError
         type={error.type}
@@ -228,8 +225,6 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
       />
     );
   }
-
-  const otherLocaleHint = otherLocale(locale);
 
   // Empty results with active filters — show filters + guidance message
   if (hits.length === 0 && hasFilters) {
@@ -243,7 +238,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
             <MobileFilterSheet
               sections={sectionOptions}
               locale={locale}
-              activeFilterCount={(type ? 1 : 0) + (sectionLabel ? 1 : 0) + (sort ? 1 : 0)}
+              activeFilterCount={activeFilterCount}
             />
           </div>
           <p>
@@ -308,7 +303,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
           <MobileFilterSheet
             sections={sectionOptions}
             locale={locale}
-            activeFilterCount={(type ? 1 : 0) + (sectionLabel ? 1 : 0) + (sort ? 1 : 0)}
+            activeFilterCount={activeFilterCount}
           />
         </div>
 

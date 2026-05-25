@@ -6,7 +6,16 @@ export type SearchResultsErrorProps = {
   retryPath?: string;
 };
 
-const t: Record<Locale, Record<string, string>> = {
+type Labels = {
+  unavailableTitle: string;
+  unavailableBody: string;
+  articlesLabel: string;
+  videosLabel: string;
+  networkTitle: string;
+  retry: string;
+};
+
+const t: Record<Locale, Labels> = {
   el: {
     unavailableTitle: "Η αναζήτηση είναι προσωρινά μη διαθέσιμη",
     unavailableBody: "Δοκιμάστε ξανά σε λίγο ή περιηγηθείτε απευθείας στο περιεχόμενό μας.",

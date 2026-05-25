@@ -15,6 +15,7 @@ export type SearchDocument = {
   parentSlug: string | null;
   publishedAt: string;
   parentSection: string | null;
+  parentSectionLabel: string | null; // Human-readable section title, populated from page.parentPage?.title
   tags: string[];
   layoutVariant: LayoutVariant;
   _rankBoost: number;
@@ -46,6 +47,7 @@ export function indexPageDocument(page: PageDTO): SearchDocument | null {
     parentSlug: page.parentPage?.slug ?? null,
     publishedAt: new Date().toISOString(),
     parentSection: page.parentPage?.slug ?? null,
+    parentSectionLabel: page.parentPage?.title ?? null,
     tags: page.tags.map((tag) => tag.slug),
     layoutVariant: page.layoutVariant,
     _rankBoost: PAGE_RANK_BOOST,
@@ -70,6 +72,7 @@ export function indexVideoDocument(video: VideoEntryDTO): SearchDocument | null 
     parentSlug: null,
     publishedAt: new Date().toISOString(),
     parentSection: null,
+    parentSectionLabel: null,
     tags: video.categories.map((c) => c.slug),
     layoutVariant: "video-index",
     _rankBoost: VIDEO_RANK_BOOST,

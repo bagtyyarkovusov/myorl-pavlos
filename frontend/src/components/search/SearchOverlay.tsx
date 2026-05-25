@@ -258,6 +258,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
   }, []);
 
   if (!isOpen) return null;
+  if (process.env.NEXT_PUBLIC_SEARCH_ENABLED === "false") return null;
 
   const sessionId = getSessionId();
   const hasQuery = query.trim().length >= MIN_QUERY_LENGTH;

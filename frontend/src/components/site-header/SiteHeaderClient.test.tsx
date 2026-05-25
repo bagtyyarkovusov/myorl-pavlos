@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { SiteHeaderClient } from "../SiteHeaderClient";
@@ -93,6 +93,24 @@ const defaultSettings = {
 };
 
 describe("SiteHeaderClient", () => {
+  afterEach(() => {
+    delete process.env.NEXT_PUBLIC_SEARCH_ENABLED;
+  });
+
+  it("hides search icon when NEXT_PUBLIC_SEARCH_ENABLED is false", () => {
+    process.env.NEXT_PUBLIC_SEARCH_ENABLED = "false";
+    render(
+      <SiteHeaderClient
+        locale="el"
+        navigation={mockNavigation}
+        appointmentHref="/el/rantevou"
+        settings={defaultSettings}
+      />,
+    );
+
+    expect(screen.queryByLabelText("Αναζήτηση")).toBeNull();
+  });
+
   it("renders desktop navigation links", () => {
     render(
       <SiteHeaderClient

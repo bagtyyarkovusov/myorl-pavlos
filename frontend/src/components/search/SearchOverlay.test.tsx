@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { afterEach, describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SearchOverlay } from "./SearchOverlay";
@@ -33,8 +33,15 @@ vi.mock("next/link", () => ({
 beforeEach(() => {
   vi.clearAllMocks();
   mockSearch.mockReset();
+  process.env.NEXT_PUBLIC_SEARCH_ENABLED = "true";
   process.env.NEXT_PUBLIC_MEILI_HOST = "http://localhost:57700";
   process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY = "test-key";
+});
+
+afterEach(() => {
+  delete process.env.NEXT_PUBLIC_SEARCH_ENABLED;
+  delete process.env.NEXT_PUBLIC_MEILI_HOST;
+  delete process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
 });
 
 const baseProps = {
@@ -423,5 +430,11 @@ describe("SearchOverlay", () => {
     expect(body.result_count).toBe(0);
 
     fetchSpy.mockRestore();
+  });
+
+  it("returns null when NEXT_PUBLIC_SEARCH_ENABLED is false", () => {
+    process.env.NEXT_PUBLIC_SEARCH_ENABLED = "false";
+    const { container } = render(<SearchOverlay {...baseProps} isOpen={true} />);
+    expect(container.innerHTML).toBe("");
   });
 });

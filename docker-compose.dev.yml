@@ -76,6 +76,7 @@ services:
       STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET:-dev-revalidate-secret}
       SEARCH_ENABLED: ${SEARCH_ENABLED:-true}
       MEILI_HOST: ${MEILI_HOST:-http://meilisearch:7700}
+      NEXT_PUBLIC_MEILI_HOST: ${NEXT_PUBLIC_MEILI_HOST:-http://localhost:57700}
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY_DEV:-dev-master-key-do-not-use-in-prod}
       NEXT_PUBLIC_MEILI_SEARCH_KEY: ${NEXT_PUBLIC_MEILI_SEARCH_KEY:-dev-master-key-do-not-use-in-prod}
       STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET:-dev-search-webhook-secret}

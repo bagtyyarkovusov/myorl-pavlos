@@ -16,6 +16,8 @@ export type HeaderStrings = {
   sectionOverviewBlurb: (sectionTitle: string) => string;
   sectionOverviewMoreHint: (hiddenCount: number) => string;
   topicsLabel: (count: number) => string;
+  searchLabel: string;
+  searchPlaceholder: string;
 };
 
 const STRINGS: Record<Locale, HeaderStrings> = {
@@ -37,6 +39,8 @@ const STRINGS: Record<Locale, HeaderStrings> = {
     sectionOverviewMoreHint: (hiddenCount) =>
       `+${hiddenCount} ${hiddenCount === 1 ? "ακόμη θέμα" : "ακόμη θέματα"} μέσα`,
     topicsLabel: (count) => `${count} ${count === 1 ? "θέμα" : "θέματα"}`,
+    searchLabel: "Αναζήτηση",
+    searchPlaceholder: "Αναζητήστε άρθρα και βίντεο...",
   },
   ru: {
     brandLogoAlt: "MyORL — ЛОР хирургическая клиника, Афины",
@@ -69,6 +73,8 @@ const STRINGS: Record<Locale, HeaderStrings> = {
       if (last >= 2 && last <= 4) return `${count} темы`;
       return `${count} тем`;
     },
+    searchLabel: "Поиск",
+    searchPlaceholder: "Поиск статей и видео...",
   },
 };
 

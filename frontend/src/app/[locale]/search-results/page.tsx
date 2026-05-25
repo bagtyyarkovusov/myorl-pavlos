@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { randomUUID } from "node:crypto";
 import { isLocale } from "@/lib/cms/types";
 import { getMeiliAdminClient } from "@/lib/search/meili-client";
 import type { SearchDocument } from "@/lib/search/index-document";
@@ -8,6 +9,7 @@ import { ResultCard } from "@/components/search/ResultCard";
 import { SearchFilters } from "@/components/search/SearchFilters";
 import { Pagination } from "@/components/search/Pagination";
 import { SearchLocaleFallbackBanner } from "@/components/search/SearchLocaleFallbackBanner";
+import { query } from "@/lib/db";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -18,6 +20,7 @@ type Props = {
     sort?: string | string[] | undefined;
     page?: string | string[] | undefined;
     allLangs?: string | string[] | undefined;
+    sid?: string | string[] | undefined;
   }>;
 };
 
@@ -77,6 +80,8 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   const rawPage = parseInt(typeof sp.page === "string" ? sp.page : "1", 10);
   const page = isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
   const allLangs = sp.allLangs === "1";
+  const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const sid = typeof sp.sid === "string" && uuidRe.test(sp.sid) ? sp.sid : randomUUID();
 
   if (!q) {
     return (
@@ -213,6 +218,17 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
 
   if (error) {
     return <p>{error}</p>;
+  }
+
+  // Log the search query (fire-and-forget; tolerate DB being unreachable)
+  try {
+    await query(
+      `INSERT INTO search_query_log (query, locale, result_count, session_id)
+       VALUES ($1, $2, $3, $4::uuid)`,
+      [q, locale, estimatedTotalHits, sid],
+    );
+  } catch {
+    // DB unreachable or DATABASE_URL not set — degrade gracefully
   }
 
   // Empty results with active filters — show filters + guidance message

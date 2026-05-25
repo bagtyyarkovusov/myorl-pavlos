@@ -5,6 +5,7 @@ import type { Hit } from "meilisearch";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { SearchDocument } from "@/lib/search/index-document";
+import { getSessionId } from "@/lib/search/session";
 import type { Locale } from "@/lib/cms/types";
 
 // indexNameForLocale inlined: el → "el", ru → "ru"
@@ -152,6 +153,23 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
         const totalHits = response.estimatedTotalHits ?? hits.length;
 
         setResults({ pages, videos, totalHits });
+
+        // Fire-and-forget search query log
+        const sessionId = getSessionId();
+        if (sessionId) {
+          fetch("/api/search/log", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              query: trimmed,
+              locale,
+              result_count: totalHits,
+              session_id: sessionId,
+            }),
+          }).catch(() => {
+            // fire-and-forget — tolerate network failures
+          });
+        }
       } catch {
         setResults(null);
         setError(true);
@@ -189,8 +207,12 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
 
   if (!isOpen) return null;
 
+  const sessionId = getSessionId();
   const hasQuery = query.trim().length >= MIN_QUERY_LENGTH;
   const hasResults = results && (results.pages.length > 0 || results.videos.length > 0);
+  const seeAllHref = `/${locale}/search-results?q=${encodeURIComponent(query.trim())}${
+    sessionId ? `&sid=${sessionId}` : ""
+  }`;
 
   return (
     <div className={styles["backdrop"]}>
@@ -284,7 +306,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
 
               <div className={styles["footer"]}>
                 <a
-                  href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}`}
+                  href={seeAllHref}
                   className={styles["see-all-link"]}
                 >
                   {seeAllLabel(locale, results.totalHits)}

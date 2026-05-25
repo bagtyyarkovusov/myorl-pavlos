@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { randomUUID } from "node:crypto";
 import { isLocale } from "@/lib/cms/types";
 import { getMeiliAdminClient } from "@/lib/search/meili-client";
 import type { SearchDocument } from "@/lib/search/index-document";
@@ -11,6 +12,8 @@ import { SearchLocaleFallbackBanner } from "@/components/search/SearchLocaleFall
 import { SearchResultsHero } from "@/components/search/SearchResultsHero";
 import { SearchResultsError } from "@/components/search/SearchResultsError";
 import { MobileFilterSheet } from "@/components/search/MobileFilterSheet";
+import { logSearchQuery } from "@/lib/db";
+import { UUID_RE } from "@/lib/search/session";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -21,6 +24,7 @@ type Props = {
     sort?: string | string[] | undefined;
     page?: string | string[] | undefined;
     allLangs?: string | string[] | undefined;
+    sid?: string | string[] | undefined;
   }>;
 };
 
@@ -70,6 +74,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   const rawPage = parseInt(typeof sp.page === "string" ? sp.page : "1", 10);
   const page = isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
   const allLangs = sp.allLangs === "1";
+  const sid = typeof sp.sid === "string" && UUID_RE.test(sp.sid) ? sp.sid : randomUUID();
 
   if (!q || q.length < 2) {
     return <SearchResultsHero locale={locale} />;
@@ -224,6 +229,13 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
         retryPath={error.type === "network" ? `/${locale}/search-results${retryQs}` : undefined}
       />
     );
+  }
+
+  // Log the search query (fire-and-forget; tolerate DB being unreachable)
+  try {
+    await logSearchQuery(q, locale, estimatedTotalHits, sid);
+  } catch {
+    // DB unreachable or DATABASE_URL not set — degrade gracefully
   }
 
   // Empty results with active filters — show filters + guidance message

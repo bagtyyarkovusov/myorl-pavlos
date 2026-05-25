@@ -5,6 +5,7 @@ import type { Hit } from "meilisearch";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { SearchDocument } from "@/lib/search/index-document";
+import { getSessionId } from "@/lib/search/session";
 import type { Locale } from "@/lib/cms/types";
 import { otherLocale } from "@/lib/search/locale-fallback";
 
@@ -184,6 +185,8 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
 
         const hits: Hit<SearchDocument>[] = response.hits ?? [];
 
+        let totalHits = 0;
+
         if (hits.length === 0) {
           // Try fallback locale
           const fallback = otherLocale(locale);
@@ -195,11 +198,28 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           if (fallbackHits.length > 0) {
             setResults(groupHits(fallbackHits, fallbackResponse.facetDistribution as Record<string, Record<string, number>> | undefined));
             setFallbackLocale(fallback);
+            totalHits = fallbackResponse.estimatedTotalHits ?? fallbackHits.length;
           } else {
             setResults(null);
           }
         } else {
           setResults(groupHits(hits, response.facetDistribution as Record<string, Record<string, number>> | undefined));
+          totalHits = response.estimatedTotalHits ?? hits.length;
+        }
+
+        // Fire-and-forget search query log
+        const sessionId = getSessionId();
+        if (sessionId) {
+          fetch("/api/search/log", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              query: trimmed,
+              locale,
+              result_count: totalHits,
+              session_id: sessionId,
+            }),
+          }).catch(() => {});
         }
       } catch {
         setResults(null);
@@ -239,8 +259,12 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
 
   if (!isOpen) return null;
 
+  const sessionId = getSessionId();
   const hasQuery = query.trim().length >= MIN_QUERY_LENGTH;
   const hasResults = results && (results.pages.length > 0 || results.videos.length > 0);
+  const seeAllHref = `/${locale}/search-results?q=${encodeURIComponent(query.trim())}${
+    sessionId ? `&sid=${sessionId}` : ""
+  }`;
 
   const filteredPages = typeFilter === "video" ? [] : results?.pages ?? [];
   const filteredVideos = typeFilter === "page" ? [] : results?.videos ?? [];
@@ -393,7 +417,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
         {hasFilteredResults && results && (
           <div className={styles["footer"]}>
             <a
-              href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}`}
+              href={seeAllHref}
               className={styles["see-all-link"]}
             >
               {seeAllFooterLabel(locale, results.totalHits, query.trim())}

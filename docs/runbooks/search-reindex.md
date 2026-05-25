@@ -109,6 +109,69 @@ The orchestrator runs a four-step pipeline:
 
 This sequence is non-skippable. Manual `pg_restore` without the orchestrator is a defect.
 
+## Search Query Log TTL — 90-day prune job
+
+The **Search Query Log** (`search_query_log` table) accumulates anonymous query records. A 90-day TTL is enforced by a scheduled prune job to back the GDPR-defensible privacy posture (see [ADR-011](../adr/ADR-011-full-site-search-via-meilisearch.md)).
+
+### Quick reference
+
+| Task | Command |
+|------|---------|
+| Prune dev | `python3 tools/prune_search_query_log.py --target dev` |
+| Prune rehearsal | `python3 tools/prune_search_query_log.py --target rehearsal` |
+| Prune production | `python3 tools/prune_search_query_log.py --target production --force` |
+| Dry-run (count rows, no delete) | `python3 tools/prune_search_query_log.py --target <env> --dry-run` |
+| Shell wrapper (production) | `bash tools/prune-search-log.sh production` |
+
+Production-targeted operations refuse to run without `--force`, matching the safety pattern of `migration_runner.py` and `backup_runner.py`.
+
+### SQL
+
+```sql
+DELETE FROM search_query_log WHERE created_at < NOW() - INTERVAL '90 days';
+```
+
+**Idempotent**: running the prune twice in a row deletes zero additional rows the second time. The predicate targets rows whose `created_at` is strictly before the 90-day cutoff — rows exactly at the boundary are preserved.
+
+### Scheduling
+
+The tool is designed to run as a daily cron job. The companion bash script at `tools/prune-search-log.sh` wraps the Python tool with logging and suggests crontab lines:
+
+```bash
+# Production — prune search_query_log nightly at 3 AM
+0 3 * * * cd /path/to/repo && bash /path/to/repo/tools/prune-search-log.sh production >> logs/prune-search-log.log 2>&1
+```
+
+In Railway (production), the same SQL can be run as a scheduled task via `psql` with `DATABASE_URL`, or invoked manually post-deployment until a Railway-native scheduler is provisioned.
+
+### Manual invocation
+
+```bash
+# Dry-run first to see what would be deleted
+python3 tools/prune_search_query_log.py --target dev --dry-run
+
+# Execute
+python3 tools/prune_search_query_log.py --target dev
+```
+
+### Failure signals
+
+A non-zero exit code indicates:
+- Docker container not running
+- Database unreachable
+- psql execution error
+
+The bash wrapper writes timestamped log lines to `LOG_FILE` (default: stdout). Cron invocations should redirect to a log file for visibility.
+
+### Verification
+
+After running, verify the prune had effect by checking row counts:
+
+```bash
+docker exec -i myorl-pg psql -U strapi -d strapi -At \
+  -c "SELECT COUNT(*) FROM search_query_log;"
+```
+
 ## Related runbooks
 
 - [Postgres rehearsal](postgres-rehearsal.md) — validates query plans before production migration.

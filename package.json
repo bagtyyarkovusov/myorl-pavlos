@@ -24,10 +24,13 @@
     "e2e": "npm run e2e --prefix frontend",
     "e2e:ui": "npm run e2e:ui --prefix frontend",
     "e2e:report": "npm run e2e:report --prefix frontend",
-    "prepare": "husky"
+    "prepare": "husky",
+    "sandcastle": "tsx .sandcastle/main.mts"
   },
   "devDependencies": {
+    "@ai-hero/sandcastle": "^0.5.11",
     "@testing-library/user-event": "^14.6.1",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "tsx": "^4.22.3"
   }
 }

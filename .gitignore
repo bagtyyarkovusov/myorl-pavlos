@@ -86,3 +86,10 @@ playwright/.cache/
 
 .claude/worktrees/
 .claude/skills/
+
+# Sandcastle — local secrets, run artifacts, and preserved worktrees.
+# Belt-and-suspenders for the nested .sandcastle/.gitignore.
+.sandcastle/.env
+.sandcastle/logs/
+.sandcastle/worktrees/
+.sandcastle/*.local.*

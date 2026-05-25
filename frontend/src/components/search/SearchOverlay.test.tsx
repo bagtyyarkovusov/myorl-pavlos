@@ -39,6 +39,8 @@ beforeEach(() => {
 
 const baseProps = {
   locale: "el" as const,
+  placeholder: "Αναζητήστε άρθρα και βίντεο...",
+  searchLabel: "Αναζήτηση",
   isOpen: true,
   onClose: vi.fn(),
 };
@@ -165,6 +167,16 @@ describe("SearchOverlay", () => {
     const link = await screen.findByText(/Δείτε όλα τα/);
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/el/search-results?q=test");
+  });
+
+  it("shows error message when search fails", async () => {
+    mockSearch.mockRejectedValue(new Error("Network error"));
+
+    render(<SearchOverlay {...baseProps} />);
+    const input = screen.getByRole("searchbox");
+    await userEvent.type(input, "test", { delay: 50 });
+
+    expect(await screen.findByText(/Σφάλμα αναζήτησης/)).toBeInTheDocument();
   });
 
   it("calls onClose on Escape key", async () => {

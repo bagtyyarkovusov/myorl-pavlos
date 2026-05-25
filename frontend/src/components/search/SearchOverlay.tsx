@@ -17,6 +17,8 @@ import styles from "./SearchOverlay.module.css";
 
 type Props = {
   locale: Locale;
+  placeholder: string;
+  searchLabel: string;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -54,10 +56,11 @@ function seeAllLabel(locale: Locale, count: number): string {
     : `Смотреть все ${count} результатов »`;
 }
 
-export function SearchOverlay({ locale, isOpen, onClose }: Props) {
+export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClose }: Props) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<GroupedHits | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -117,6 +120,7 @@ export function SearchOverlay({ locale, isOpen, onClose }: Props) {
       }
 
       setIsLoading(true);
+      setError(false);
       try {
         const indexName = indexNameForLocale(locale);
         const response = await clientRef.current.index<SearchDocument>(indexName).search(trimmed, {
@@ -150,6 +154,7 @@ export function SearchOverlay({ locale, isOpen, onClose }: Props) {
         setResults({ pages, videos, totalHits });
       } catch {
         setResults(null);
+        setError(true);
       } finally {
         setIsLoading(false);
       }
@@ -194,7 +199,7 @@ export function SearchOverlay({ locale, isOpen, onClose }: Props) {
         className={styles["overlay"]}
         id="search-overlay"
         role="dialog"
-        aria-label={locale === "el" ? "Αναζήτηση" : "Поиск"}
+        aria-label={searchLabel}
       >
         <div className={styles["overlay-header"]}>
           <svg
@@ -212,12 +217,10 @@ export function SearchOverlay({ locale, isOpen, onClose }: Props) {
             ref={inputRef}
             type="search"
             className={styles["search-input"]}
-            placeholder={
-              locale === "el" ? "Αναζητήστε άρθρα και βίντεο..." : "Поиск статей и видео..."
-            }
+            placeholder={placeholder}
             value={query}
             onChange={handleInputChange}
-            aria-label={locale === "el" ? "Αναζήτηση" : "Поиск"}
+            aria-label={searchLabel}
           />
           {isLoading && <span className={styles["spinner"]} />}
         </div>
@@ -227,8 +230,16 @@ export function SearchOverlay({ locale, isOpen, onClose }: Props) {
         >
           {!hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
 
-          {hasQuery && !hasResults && !isLoading && (
+          {hasQuery && !hasResults && !isLoading && !error && (
             <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
+          )}
+
+          {error && (
+            <p className={styles["error-state"]}>
+              {locale === "el"
+                ? "Σφάλμα αναζήτησης. Παρακαλώ δοκιμάστε ξανά."
+                : "Ошибка поиска. Пожалуйста, попробуйте еще раз."}
+            </p>
           )}
 
           {hasResults && results && (

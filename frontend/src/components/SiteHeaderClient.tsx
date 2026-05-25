@@ -165,7 +165,13 @@ export function SiteHeaderClient({
         bookAppointmentLabel={t.bookAppointment}
       />
 
-      <SearchOverlay locale={locale} isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <SearchOverlay
+        locale={locale}
+        placeholder={t.searchPlaceholder}
+        searchLabel={t.searchLabel}
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </>
   );
 }

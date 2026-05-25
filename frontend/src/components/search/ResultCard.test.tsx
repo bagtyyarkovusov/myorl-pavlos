@@ -76,4 +76,15 @@ describe("ResultCard", () => {
     const { container } = render(<ResultCard {...baseProps} title="Test" thumbnail={null} />);
     expect(container.querySelector("img")).not.toBeInTheDocument();
   });
+
+  it("renders locale pill when localePill is set", () => {
+    render(<ResultCard {...baseProps} title="Test" localePill="ru" />);
+    expect(screen.getByText("[ru]")).toBeInTheDocument();
+  });
+
+  it("omits locale pill when localePill is undefined", () => {
+    render(<ResultCard {...baseProps} title="Test" />);
+    expect(screen.queryByText("[el]")).not.toBeInTheDocument();
+    expect(screen.queryByText("[ru]")).not.toBeInTheDocument();
+  });
 });

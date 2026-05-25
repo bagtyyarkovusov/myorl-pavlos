@@ -12,6 +12,7 @@ export type ResultCardProps = {
   parentTitle: string | null;
   parentSlug: string | null;
   locale: Locale;
+  localePill?: Locale;
 };
 
 const typeLabel: Record<Locale, Record<string, string>> = {
@@ -28,6 +29,7 @@ export function ResultCard({
   parentTitle,
   parentSlug,
   locale,
+  localePill,
 }: ResultCardProps) {
   const safeTitle = DOMPurify.sanitize(title, { ALLOWED_TAGS: ["em"] });
 
@@ -48,6 +50,7 @@ export function ResultCard({
         </h2>
         {excerpt && <p>{DOMPurify.sanitize(excerpt)}</p>}
         <span>{typeLabel[locale][type]}</span>
+        {localePill && <span className="result-locale-pill">[{localePill}]</span>}
       </div>
     </article>
   );

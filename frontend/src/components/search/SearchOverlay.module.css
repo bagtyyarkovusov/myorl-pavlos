@@ -94,7 +94,6 @@
   background: var(--accent-soft);
 }
 
-/* Type filter pills */
 .filter-pills {
   display: flex;
   gap: 6px;
@@ -127,7 +126,6 @@
   color: #fff;
 }
 
-/* Results area — scrollable */
 .results {
   flex: 1;
   overflow-y: auto;
@@ -200,7 +198,6 @@
   min-width: 0;
 }
 
-/* Locale pill in result cards */
 .result-group :global(.result-locale-pill) {
   display: inline-block;
   font-size: 0.65rem;
@@ -226,7 +223,6 @@
   color: var(--color-error, #d32f2f);
 }
 
-/* Group see-all link */
 .group-see-all {
   display: block;
   padding: 6px 16px;
@@ -241,7 +237,6 @@
   text-decoration: underline;
 }
 
-/* Fallback banner */
 .fallback-banner {
   padding: 0 16px;
   margin-top: 8px;
@@ -252,7 +247,6 @@
   font-size: 0.8rem;
 }
 
-/* Sticky footer */
 .footer {
   border-top: 1px solid var(--line);
   padding: 12px 16px;

@@ -12,10 +12,6 @@ import { ResultCard } from "./ResultCard";
 import { SearchLocaleFallbackBanner } from "./SearchLocaleFallbackBanner";
 import styles from "./SearchOverlay.module.css";
 
-function indexNameForLocale(locale: Locale): "el" | "ru" {
-  return locale;
-}
-
 type Props = {
   locale: Locale;
   placeholder: string;
@@ -77,7 +73,7 @@ function seeAllGroupLabel(locale: Locale, count: number, groupLabel: string): st
     : `→ Смотреть все ${count} результатов в ${groupLabel} »`;
 }
 
-function buildSearchParams(term: string) {
+function buildSearchParams() {
   return {
     limit: MAX_TOTAL,
     attributesToRetrieve: [
@@ -182,20 +178,18 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       setFallbackLocale(null);
 
       try {
-        const indexName = indexNameForLocale(locale);
         const response = await clientRef.current
-          .index<SearchDocument>(indexName)
-          .search(trimmed, buildSearchParams(term));
+          .index<SearchDocument>(locale)
+          .search(trimmed, buildSearchParams());
 
         const hits: Hit<SearchDocument>[] = response.hits ?? [];
 
         if (hits.length === 0) {
           // Try fallback locale
           const fallback = otherLocale(locale);
-          const fallbackIdx = indexNameForLocale(fallback);
           const fallbackResponse = await clientRef.current
-            .index<SearchDocument>(fallbackIdx)
-            .search(trimmed, buildSearchParams(term));
+            .index<SearchDocument>(fallback)
+            .search(trimmed, buildSearchParams());
 
           const fallbackHits: Hit<SearchDocument>[] = fallbackResponse.hits ?? [];
           if (fallbackHits.length > 0) {
@@ -263,7 +257,6 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
         role="dialog"
         aria-label={searchLabel}
       >
-        {/* Header: input + close X */}
         <div className={styles["overlay-header"]}>
           <svg
             className={styles["search-icon"]}
@@ -298,7 +291,6 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           </button>
         </div>
 
-        {/* Type filter pills */}
         {hasQuery && (
           <div className={styles["filter-pills"]}>
             {(["all", "page", "video"] as TypeFilter[]).map((filter) => (
@@ -339,7 +331,6 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
                 </div>
               )}
 
-              {/* Articles group */}
               {filteredPages.length > 0 && (
                 <div className={styles["result-group"]}>
                   <h4 className={styles["result-group-title"]}>{GROUP_LABELS[locale].articles}</h4>
@@ -368,7 +359,6 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
                 </div>
               )}
 
-              {/* Videos group */}
               {filteredVideos.length > 0 && (
                 <div className={styles["result-group"]}>
                   <h4 className={styles["result-group-title"]}>{GROUP_LABELS[locale].videos}</h4>
@@ -400,7 +390,6 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           )}
         </div>
 
-        {/* Sticky footer */}
         {hasFilteredResults && results && (
           <div className={styles["footer"]}>
             <a

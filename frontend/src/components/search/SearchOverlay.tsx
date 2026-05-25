@@ -36,6 +36,24 @@ const MIN_QUERY_LENGTH = 2;
 const MAX_PER_GROUP = 3;
 const MAX_TOTAL = 10;
 
+const ATTRIBUTES_TO_RETRIEVE = [
+  "id",
+  "type",
+  "locale",
+  "title",
+  "excerpt",
+  "href",
+  "thumbnail",
+  "parentTitle",
+  "parentSlug",
+  "publishedAt",
+  "parentSection",
+  "parentSectionLabel",
+  "tags",
+  "layoutVariant",
+  "slug",
+];
+
 const GROUP_LABELS: Record<Locale, { articles: string; videos: string }> = {
   el: { articles: "Άρθρα", videos: "Βίντεο" },
   ru: { articles: "Статьи", videos: "Видео" },
@@ -101,6 +119,11 @@ function groupHits(hits: Hit<SearchDocument>[], facetDistribution?: Record<strin
     videoFacetCount,
   };
 }
+
+const ERROR_MSGS: Record<Locale, string> = {
+  el: "Σφάλμα αναζήτησης. Παρακαλώ δοκιμάστε ξανά.",
+  ru: "Ошибка поиска. Пожалуйста, попробуйте еще раз.",
+};
 
 export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClose }: Props) {
   const [query, setQuery] = useState("");
@@ -340,13 +363,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
             <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
           )}
 
-          {error && (
-            <p className={styles["error-state"]}>
-              {locale === "el"
-                ? "Σφάλμα αναζήτησης. Παρακαλώ δοκιμάστε ξανά."
-                : "Ошибка поиска. Пожалуйста, попробуйте еще раз."}
-            </p>
-          )}
+          {error && <p className={styles["error-state"]}>{ERROR_MSGS[locale]}</p>}
 
           {hasResults && results && (
             <>

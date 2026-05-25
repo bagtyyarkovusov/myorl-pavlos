@@ -12,9 +12,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from prune_search_query_log import (  # noqa: E402
     DELETE_QUERY,
     COUNT_QUERY,
-    SQL_DELETE,
-    SQL_COUNT,
-    build_prune_sql,
 )
 
 
@@ -34,28 +31,6 @@ class TestSQLConstants(unittest.TestCase):
     def test_count_is_select_not_delete(self):
         self.assertIn("SELECT COUNT(*)", COUNT_QUERY)
         self.assertNotIn("DELETE", COUNT_QUERY)
-
-    def test_sql_delete_is_the_delete_query(self):
-        self.assertEqual(SQL_DELETE, DELETE_QUERY)
-
-    def test_sql_count_is_the_count_query(self):
-        self.assertEqual(SQL_COUNT, COUNT_QUERY)
-
-
-class TestBuildPruneSql(unittest.TestCase):
-    """build_prune_sql returns the right query based on dry_run flag."""
-
-    def test_dry_run_true_returns_count_query(self):
-        sql = build_prune_sql(dry_run=True)
-        self.assertEqual(sql, COUNT_QUERY)
-
-    def test_dry_run_false_returns_delete_query(self):
-        sql = build_prune_sql(dry_run=False)
-        self.assertEqual(sql, DELETE_QUERY)
-
-    def test_default_is_delete(self):
-        sql = build_prune_sql()
-        self.assertEqual(sql, DELETE_QUERY)
 
 
 class TestDeleteIdempotency(unittest.TestCase):

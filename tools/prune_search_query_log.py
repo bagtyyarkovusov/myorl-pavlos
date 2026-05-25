@@ -1,21 +1,15 @@
 #!/usr/bin/env python3
 """Prune Search Query Log — enforce the 90-day anonymity TTL.
 
-Runs the idempotent DELETE against the target PostgreSQL database via Docker exec:
-
-.. code-block:: sql
-
-    DELETE FROM search_query_log WHERE created_at < NOW() - INTERVAL '90 days';
-
-Interface::
-
-    python3 tools/prune_search_query_log.py --target=<dev|rehearsal|production>
-    python3 tools/prune_search_query_log.py --target=<target> --dry-run
-    python3 tools/prune_search_query_log.py --target=production --force
-
+Runs an idempotent DELETE against the target PostgreSQL database via Docker exec.
 ``--dry-run`` counts how many rows *would* be deleted without deleting them.
 Production requires ``--force``, matching the safety conventions of
 ``migration_runner.py`` and ``backup_runner.py``.
+
+Interface:
+  python3 tools/prune_search_query_log.py --target=<dev|rehearsal|production>
+  python3 tools/prune_search_query_log.py --target=<target> --dry-run
+  python3 tools/prune_search_query_log.py --target=production --force
 """
 
 from __future__ import annotations
@@ -30,9 +24,6 @@ from environments import ENVIRONMENTS, get
 DELETE_QUERY = "DELETE FROM search_query_log WHERE created_at < NOW() - INTERVAL '90 days';"
 COUNT_QUERY = "SELECT COUNT(*) FROM search_query_log WHERE created_at < NOW() - INTERVAL '90 days';"
 
-SQL_DELETE = DELETE_QUERY
-SQL_COUNT = COUNT_QUERY
-
 
 @dataclass
 class Target:
@@ -41,11 +32,6 @@ class Target:
     db_user: str
     db_name: str
     access: str
-
-
-def build_prune_sql(*, dry_run: bool = False) -> str:
-    """Return the SQL to execute. ``dry_run=True`` returns a COUNT instead of DELETE."""
-    return COUNT_QUERY if dry_run else DELETE_QUERY
 
 
 def _resolve_target(name: str) -> Target:
@@ -94,7 +80,7 @@ def cmd_prune(target_name: str, *, dry_run: bool, force: bool) -> int:
         return 1
 
     target = _resolve_target(target_name)
-    sql = build_prune_sql(dry_run=dry_run)
+    sql = COUNT_QUERY if dry_run else DELETE_QUERY
 
     label = "[DRY-RUN] " if dry_run else ""
     verb = "Counting" if dry_run else "Pruning"

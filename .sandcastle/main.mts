@@ -32,19 +32,26 @@ import { docker } from "@ai-hero/sandcastle/sandboxes/docker";
 // Raise this if your backlog is large; lower it for a quick smoke-test run.
 const MAX_ITERATIONS = 10;
 
-// Hooks run inside the sandbox before the agent starts each iteration.
-// Reconcile dependencies for both workspaces — copyToWorktree below seeds
-// host node_modules; this install pass handles platform-specific binaries.
-const hooks = {
+// Workspace install — reconciles deps for both workspaces. copyToWorktree
+// seeds host node_modules; this pass rebuilds native modules for the
+// sandbox's Node 22 (sharp / bcrypt / better-sqlite3 are host-built for
+// Node 24 and must be rebuilt). 10-min timeout covers a cold install with
+// native rebuilds; --prefer-offline + --no-audit + --no-fund cut wall time.
+const installHooks = {
   sandbox: {
     onSandboxReady: [
       {
         command:
-          "npm install --prefix frontend && npm install --prefix backend",
+          "npm install --prefix frontend --prefer-offline --no-audit --no-fund && npm install --prefix backend --prefer-offline --no-audit --no-fund",
+        timeoutMs: 600_000,
       },
     ],
   },
 };
+
+// The planner only runs `gh issue list` — no need to install workspace deps.
+// Empty hooks keep the planner sandbox boot under a few seconds.
+const planHooks = {};
 
 // Monorepo: deps live under each workspace, not the repo root.
 const copyToWorktree = ["frontend/node_modules", "backend/node_modules"];
@@ -72,7 +79,7 @@ for (let iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
   // It outputs a <plan> JSON block — we parse that to drive Phase 2.
   // -------------------------------------------------------------------------
   const plan = await sandcastle.run({
-    hooks,
+    hooks: planHooks,
     sandbox: docker(sandboxOptions),
     name: "planner",
     // One iteration is enough: the planner just needs to read and reason,
@@ -124,7 +131,7 @@ for (let iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
       const sandbox = await sandcastle.createSandbox({
         branch: issue.branch,
         sandbox: docker(sandboxOptions),
-        hooks,
+        hooks: installHooks,
         copyToWorktree,
       });
 
@@ -214,7 +221,7 @@ for (let iteration = 1; iteration <= MAX_ITERATIONS; iteration++) {
   // uses to know which branches to merge and which issues to close.
   // -------------------------------------------------------------------------
   await sandcastle.run({
-    hooks,
+    hooks: installHooks,
     sandbox: docker(sandboxOptions),
     name: "merger",
     maxIterations: 1,

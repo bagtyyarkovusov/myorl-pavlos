@@ -33,6 +33,7 @@ vi.mock("next/link", () => ({
 beforeEach(() => {
   vi.clearAllMocks();
   mockSearch.mockReset();
+  process.env.NEXT_PUBLIC_SEARCH_ENABLED = "true";
   process.env.NEXT_PUBLIC_MEILI_HOST = "http://localhost:57700";
   process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY = "test-key";
 });
@@ -185,5 +186,11 @@ describe("SearchOverlay", () => {
 
     await userEvent.keyboard("{Escape}");
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns null when NEXT_PUBLIC_SEARCH_ENABLED is false", () => {
+    process.env.NEXT_PUBLIC_SEARCH_ENABLED = "false";
+    const { container } = render(<SearchOverlay {...baseProps} isOpen={true} />);
+    expect(container.innerHTML).toBe("");
   });
 });

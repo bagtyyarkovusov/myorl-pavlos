@@ -166,9 +166,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
               result_count: totalHits,
               session_id: sessionId,
             }),
-          }).catch(() => {
-            // fire-and-forget — tolerate network failures
-          });
+          }).catch(() => {});
         }
       } catch {
         setResults(null);

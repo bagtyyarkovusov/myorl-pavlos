@@ -34,3 +34,16 @@ export async function query(
     client.release();
   }
 }
+
+export async function logSearchQuery(
+  q: string,
+  locale: string,
+  resultCount: number,
+  sessionId: string,
+): Promise<void> {
+  await query(
+    `INSERT INTO search_query_log (query, locale, result_count, session_id)
+     VALUES ($1, $2, $3, $4::uuid)`,
+    [q, locale, resultCount, sessionId],
+  );
+}

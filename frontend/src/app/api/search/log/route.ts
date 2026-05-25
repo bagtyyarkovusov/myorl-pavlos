@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { query } from "@/lib/db";
+import { logSearchQuery } from "@/lib/db";
 import { isLocale } from "@/lib/cms/types";
+import { UUID_RE } from "@/lib/search/session";
 
 type LogPayload = {
   query: string;
@@ -9,8 +10,6 @@ type LogPayload = {
   result_count: number;
   session_id: string;
 };
-
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function validatePayload(
   body: unknown,
@@ -64,11 +63,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const { query: q, locale, result_count, session_id } = validation.payload;
 
   try {
-    await query(
-      `INSERT INTO search_query_log (query, locale, result_count, session_id)
-       VALUES ($1, $2, $3, $4::uuid)`,
-      [q, locale, result_count, session_id],
-    );
+    await logSearchQuery(q, locale, result_count, session_id);
   } catch {
     return new NextResponse(null, { status: 500 });
   }

@@ -7,11 +7,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { SearchDocument } from "@/lib/search/index-document";
 import type { Locale } from "@/lib/cms/types";
 
-// indexNameForLocale inlined: el → "el", ru → "ru"
-function indexNameForLocale(locale: Locale): "el" | "ru" {
-  return locale;
-}
-
 import { ResultCard } from "./ResultCard";
 import styles from "./SearchOverlay.module.css";
 
@@ -33,6 +28,24 @@ const SEARCH_DEBOUNCE_MS = 120;
 const MIN_QUERY_LENGTH = 2;
 const MAX_PER_GROUP = 5;
 const MAX_TOTAL = 10;
+
+const ATTRIBUTES_TO_RETRIEVE = [
+  "id",
+  "type",
+  "locale",
+  "title",
+  "excerpt",
+  "href",
+  "thumbnail",
+  "parentTitle",
+  "parentSlug",
+  "publishedAt",
+  "parentSection",
+  "parentSectionLabel",
+  "tags",
+  "layoutVariant",
+  "slug",
+];
 
 const GROUP_LABELS: Record<Locale, { articles: string; videos: string }> = {
   el: { articles: "Άρθρα", videos: "Βίντεο" },
@@ -59,6 +72,11 @@ function seeAllLabel(locale: Locale, count: number): string {
 const CLOSE_LABELS: Record<Locale, string> = {
   el: "Κλείσιμο",
   ru: "Закрыть",
+};
+
+const ERROR_MSGS: Record<Locale, string> = {
+  el: "Σφάλμα αναζήτησης. Παρακαλώ δοκιμάστε ξανά.",
+  ru: "Ошибка поиска. Пожалуйста, попробуйте еще раз.",
 };
 
 export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClose }: Props) {
@@ -127,26 +145,9 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       setIsLoading(true);
       setError(false);
       try {
-        const indexName = indexNameForLocale(locale);
-        const response = await clientRef.current.index<SearchDocument>(indexName).search(trimmed, {
+        const response = await clientRef.current.index<SearchDocument>(locale).search(trimmed, {
           limit: MAX_TOTAL,
-          attributesToRetrieve: [
-            "id",
-            "type",
-            "locale",
-            "title",
-            "excerpt",
-            "href",
-            "thumbnail",
-            "parentTitle",
-            "parentSlug",
-            "publishedAt",
-            "parentSection",
-            "parentSectionLabel",
-            "tags",
-            "layoutVariant",
-            "slug",
-          ],
+          attributesToRetrieve: ATTRIBUTES_TO_RETRIEVE,
           attributesToHighlight: ["title", "excerpt"],
           showMatchesPosition: true,
         });
@@ -249,13 +250,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
             <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
           )}
 
-          {error && (
-            <p className={styles["error-state"]}>
-              {locale === "el"
-                ? "Σφάλμα αναζήτησης. Παρακαλώ δοκιμάστε ξανά."
-                : "Ошибка поиска. Пожалуйста, попробуйте еще раз."}
-            </p>
-          )}
+          {error && <p className={styles["error-state"]}>{ERROR_MSGS[locale]}</p>}
 
           {hasResults && results && (
             <>

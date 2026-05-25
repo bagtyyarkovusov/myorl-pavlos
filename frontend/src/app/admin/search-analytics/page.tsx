@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { query } from "@/lib/db";
 
 type Props = {
@@ -17,7 +19,7 @@ interface QueryRow {
 
 function localeFilterClause(locale: string | undefined): {
   clause: string;
-  params: unknown[];
+  params: string[];
 } {
   if (locale && VALID_LOCALES.includes(locale as (typeof VALID_LOCALES)[number])) {
     return { clause: "AND locale = $1", params: [locale] };
@@ -107,7 +109,7 @@ function LocaleTabs({ selected }: { selected?: string }) {
       {tabs.map((tab) => {
         const isActive = (tab.label === "All" && !selected) || tab.label === selected;
         return (
-          <a
+          <Link
             key={tab.label}
             href={tab.href}
             aria-current={isActive ? "page" : undefined}
@@ -123,7 +125,7 @@ function LocaleTabs({ selected }: { selected?: string }) {
             }}
           >
             {tab.label}
-          </a>
+          </Link>
         );
       })}
     </nav>
@@ -141,9 +143,9 @@ function QueryTable({ rows }: { rows: QueryRow[] }) {
         </tr>
       </thead>
       <tbody>
-        {rows.map((row, i) => (
+        {rows.map((row) => (
           <tr
-            key={`${row.query}-${row.locale}-${i}`}
+            key={`${row.query}-${row.locale}`}
             style={{ borderBottom: "1px solid #edf2f7" }}
           >
             <td style={{ padding: "0.5rem 0.75rem" }}>{row.query}</td>

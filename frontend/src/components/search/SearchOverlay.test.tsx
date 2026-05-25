@@ -186,4 +186,14 @@ describe("SearchOverlay", () => {
     await userEvent.keyboard("{Escape}");
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it("renders a close button that calls onClose when clicked", async () => {
+    const onClose = vi.fn();
+    render(<SearchOverlay {...baseProps} onClose={onClose} />);
+
+    const closeButton = screen.getByLabelText("Κλείσιμο");
+    expect(closeButton).toBeInTheDocument();
+    await userEvent.click(closeButton);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 });

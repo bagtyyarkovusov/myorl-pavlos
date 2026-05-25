@@ -56,6 +56,11 @@ function seeAllLabel(locale: Locale, count: number): string {
     : `Смотреть все ${count} результатов »`;
 }
 
+const CLOSE_LABELS: Record<Locale, string> = {
+  el: "Κλείσιμο",
+  ru: "Закрыть",
+};
+
 export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClose }: Props) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<GroupedHits | null>(null);
@@ -223,6 +228,16 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
             aria-label={searchLabel}
           />
           {isLoading && <span className={styles["spinner"]} />}
+          <button
+            type="button"
+            className={styles["close-button"]}
+            aria-label={CLOSE_LABELS[locale]}
+            onClick={onClose}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         <div

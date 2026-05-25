@@ -342,7 +342,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
             parentTitle={doc.parentTitle}
             parentSlug={doc.parentSlug}
             locale={locale}
-            resultLocale={(isFallback || allLangs) ? doc.locale : undefined}
+            localePill={(isFallback || allLangs) ? doc.locale : undefined}
           />
         ))}
 

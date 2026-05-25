@@ -76,4 +76,15 @@ describe("ResultCard", () => {
     const { container } = render(<ResultCard {...baseProps} title="Test" thumbnail={null} />);
     expect(container.querySelector("img")).not.toBeInTheDocument();
   });
+
+  it("shows locale pill when resultLocale differs from locale", () => {
+    render(<ResultCard {...baseProps} title="Test" locale="el" resultLocale="ru" />);
+    expect(screen.getByText(/\[ru\]/)).toBeInTheDocument();
+  });
+
+  it("omits locale pill when resultLocale is undefined", () => {
+    render(<ResultCard {...baseProps} title="Test" locale="el" />);
+    expect(screen.queryByText(/\[el\]/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/\[ru\]/)).not.toBeInTheDocument();
+  });
 });

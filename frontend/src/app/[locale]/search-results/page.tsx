@@ -8,6 +8,9 @@ import { ResultCard } from "@/components/search/ResultCard";
 import { SearchFilters } from "@/components/search/SearchFilters";
 import { Pagination } from "@/components/search/Pagination";
 import { SearchLocaleFallbackBanner } from "@/components/search/SearchLocaleFallbackBanner";
+import { SearchResultsHero } from "@/components/search/SearchResultsHero";
+import { SearchResultsError } from "@/components/search/SearchResultsError";
+import { MobileFilterSheet } from "@/components/search/MobileFilterSheet";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -29,12 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const t = {
   el: {
-    prompt: "Πληκτρολογήστε έναν όρο αναζήτησης",
-    searchLabel: "Αναζήτηση",
-    searchButton: "Αναζήτηση",
     noResults: "Δεν βρέθηκαν αποτελέσματα για",
-    unavailable: "Η αναζήτηση δεν είναι διαθέσιμη",
-    error: "Παρουσιάστηκε σφάλμα",
     resultsFor: "Αποτελέσματα για",
     noResultsWithFilters:
       "Δεν βρέθηκαν αποτελέσματα με τα επιλεγμένα φίλτρα. Δοκιμάστε να αλλάξετε ή να αφαιρέσετε φίλτρα.",
@@ -42,14 +40,11 @@ const t = {
     paginationPrev: "Προηγούμενο",
     paginationNext: "Επόμενο",
     filtersLabel: "Φίλτρα",
+    tryOtherLocale: "Δοκιμάστε στα ρωσικά",
+    noResultsHint: "Δοκιμάστε έναν ευρύτερο όρο ή ελέγξτε την ορθογραφία.",
   },
   ru: {
-    prompt: "Введите поисковый запрос",
-    searchLabel: "Поиск",
-    searchButton: "Поиск",
     noResults: "Результатов не найдено для",
-    unavailable: "Поиск временно недоступен",
-    error: "Произошла ошибка",
     resultsFor: "Результаты для",
     noResultsWithFilters:
       "Результаты с выбранными фильтрами не найдены. Попробуйте изменить или убрать фильтры.",
@@ -57,6 +52,8 @@ const t = {
     paginationPrev: "Назад",
     paginationNext: "Вперёд",
     filtersLabel: "Фильтры",
+    tryOtherLocale: "Попробовать на греческом",
+    noResultsHint: "Попробуйте более широкий термин или проверьте правописание.",
   },
 } as const;
 
@@ -78,21 +75,15 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   const page = isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
   const allLangs = sp.allLangs === "1";
 
-  if (!q) {
-    return (
-      <form action={`/${locale}/search-results`} method="get">
-        <label htmlFor="search-input">{t[locale].searchLabel}</label>
-        <input id="search-input" type="search" name="q" required />
-        <button type="submit">{t[locale].searchButton}</button>
-      </form>
-    );
+  if (!q || q.length < 2) {
+    return <SearchResultsHero locale={locale} />;
   }
 
   const validType = type === "page" || type === "video" ? type : undefined;
   const hasFilters = !!validType || !!sectionLabel;
   const resultsPerPage = 20;
 
-  let error: string | null = null;
+  let error: { type: "unavailable" | "network" } | null = null;
   let hits: Array<SearchDocument & { _formatted?: Partial<SearchDocument>; _fallback?: boolean }> =
     [];
   let estimatedTotalHits = 0;
@@ -101,7 +92,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   try {
     const admin = getMeiliAdminClient();
     if (!admin) {
-      error = t[locale].unavailable;
+      error = { type: "unavailable" };
     } else {
       const currentIndex = admin.index<SearchDocument>(locale);
 
@@ -207,40 +198,87 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
         }
       }
     }
-  } catch {
-    error = t[locale].error;
+  } catch (err: unknown) {
+    // Meilisearch-specific errors (connection refused, API errors) → unavailable
+    // Other unexpected errors → network/generic
+    if (
+      err instanceof Error &&
+      (("code" in err && typeof (err as NodeJS.ErrnoException).code === "string") ||
+        (err.constructor && err.constructor.name === "MeiliSearchApiError"))
+    ) {
+      error = { type: "unavailable" };
+    } else {
+      error = { type: "network" };
+    }
   }
 
   if (error) {
-    return <p>{error}</p>;
+    const queryParts: string[] = [];
+    if (q) queryParts.push(`q=${encodeURIComponent(q)}`);
+    if (type) queryParts.push(`type=${type}`);
+    if (sectionLabel) queryParts.push(`sectionLabel=${encodeURIComponent(sectionLabel)}`);
+    if (sort) queryParts.push(`sort=${sort}`);
+    if (page > 1) queryParts.push(`page=${page}`);
+    const retryQs = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+    return (
+      <SearchResultsError
+        type={error.type}
+        locale={locale}
+        retryPath={error.type === "network" ? `/${locale}/search-results${retryQs}` : undefined}
+      />
+    );
   }
+
+  const otherLocaleHint = otherLocale(locale);
 
   // Empty results with active filters — show filters + guidance message
   if (hits.length === 0 && hasFilters) {
     return (
-      <div>
-        <div className="desktop-only">
+      <div style={{ display: "flex", gap: "2rem" }}>
+        <aside className="desktop-only" style={{ width: 260, flexShrink: 0 }}>
           <SearchFilters sections={sectionOptions} locale={locale} />
+        </aside>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="mobile-only">
+            <MobileFilterSheet
+              sections={sectionOptions}
+              locale={locale}
+              activeFilterCount={(type ? 1 : 0) + (sectionLabel ? 1 : 0) + (sort ? 1 : 0)}
+            />
+          </div>
+          <p>
+            {t[locale].noResults} &quot;{q}&quot;. {t[locale].noResultsHint}
+          </p>
+          <p>
+            <a
+              href={`/${locale}/search-results?q=${encodeURIComponent(q)}&allLangs=1`}
+              style={{ fontSize: "0.9em" }}
+            >
+              {t[locale].tryOtherLocale}
+            </a>
+          </p>
         </div>
-        <div className="mobile-only">
-          <details style={{ marginBottom: "16px" }} open>
-            <summary style={{ cursor: "pointer", fontWeight: 600 }}>
-              {t[locale].filtersLabel || "Filters"}
-            </summary>
-            <SearchFilters sections={sectionOptions} locale={locale} />
-          </details>
-        </div>
-        <p>{t[locale].noResultsWithFilters}</p>
       </div>
     );
   }
 
-  // Empty results without filters — show original no-results message
+  // Empty results without filters — both locales returned 0
   if (hits.length === 0) {
     return (
-      <p>
-        {t[locale].noResults} &quot;{q}&quot;
-      </p>
+      <div style={{ padding: "48px 24px", textAlign: "center" }}>
+        <p style={{ fontSize: "1.15rem", marginBottom: "8px" }}>
+          {t[locale].noResults} &quot;{q}&quot;
+        </p>
+        <p style={{ color: "var(--muted, #666)", marginBottom: "16px" }}>
+          {t[locale].noResultsHint}
+        </p>
+        <a
+          href={`/${locale}/search-results?q=${encodeURIComponent(q)}&allLangs=1`}
+          style={{ fontSize: "0.9em" }}
+        >
+          {t[locale].tryOtherLocale}
+        </a>
+      </div>
     );
   }
 
@@ -259,24 +297,27 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   return (
     <div style={{ display: "flex", gap: "2rem" }}>
       {/* Desktop sidebar */}
-      <aside className="desktop-only" style={{ width: 280, flexShrink: 0 }}>
+      <aside className="desktop-only" style={{ width: 260, flexShrink: 0 }}>
         <SearchFilters sections={sectionOptions} locale={locale} />
       </aside>
 
       {/* Main results area */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        {/* Mobile collapsible filters */}
+        {/* Mobile filter bottom-sheet */}
         <div className="mobile-only">
-          <details style={{ marginBottom: "16px" }} open={!!(type || sectionLabel || sort)}>
-            <summary style={{ cursor: "pointer", fontWeight: 600 }}>
-              {t[locale].filtersLabel || "Filters"}
-            </summary>
-            <SearchFilters sections={sectionOptions} locale={locale} />
-          </details>
+          <MobileFilterSheet
+            sections={sectionOptions}
+            locale={locale}
+            activeFilterCount={(type ? 1 : 0) + (sectionLabel ? 1 : 0) + (sort ? 1 : 0)}
+          />
         </div>
 
         {(isFallback || allLangs) && (
-          <SearchLocaleFallbackBanner locale={locale} allLangs={allLangs} />
+          <SearchLocaleFallbackBanner
+            locale={locale}
+            allLangs={allLangs}
+            resultCount={estimatedTotalHits}
+          />
         )}
 
         <p>{resultsCountLabel}</p>
@@ -306,6 +347,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
             parentTitle={doc.parentTitle}
             parentSlug={doc.parentSlug}
             locale={locale}
+            resultLocale={(isFallback || allLangs) ? doc.locale : undefined}
           />
         ))}
 

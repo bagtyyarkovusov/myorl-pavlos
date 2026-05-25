@@ -4,6 +4,173 @@ How to operate the Meilisearch-backed **Search Index** — initial seed, drift r
 
 For architectural context see [ADR-011](../adr/ADR-011-full-site-search-via-meilisearch.md). Domain terms (**Search Index**, **Search Document**, **Search Synonym Dictionary**, **Search Query Log**) are defined in [CONTEXT.md](../../CONTEXT.md).
 
+## Provisioning a new environment
+
+Meilisearch is deployed as a separate service per environment. Dev and rehearsal use Docker Compose; production uses Railway.
+
+### Dev / rehearsal (Docker Compose)
+
+The `docker-compose.dev.yml` and `docker-compose.rehearsal.yml` files already include a `meilisearch` service. To stand up a fresh instance:
+
+```bash
+# Dev
+docker compose -f docker-compose.dev.yml up -d meilisearch
+
+# Rehearsal
+docker compose -f docker-compose.rehearsal.yml up -d meilisearch
+```
+
+Verify the service is healthy:
+
+```bash
+# Dev
+curl http://localhost:57700/health
+# → {"status":"available"}
+
+# Rehearsal
+curl http://localhost:57701/health
+# → {"status":"available"}
+```
+
+The master key defaults to `dev-master-key-do-not-use-in-prod` (dev) or `rehearsal-master-key-do-not-use-in-prod` (rehearsal) unless overridden via `MEILI_MASTER_KEY_DEV` / `MEILI_MASTER_KEY_REHEARSAL`. For dev/rehearsal, the master key doubles as the search key — no scoped key provisioning is required.
+
+### Production (Railway)
+
+Meilisearch runs as an internal-only Railway service, reachable from the Next.js service via Railway's private network (`http://meilisearch:7700`). No host port is exposed to the public internet.
+
+#### Step 1: Create the Railway service
+
+In the Railway project dashboard:
+
+1. **New Service → Docker Image** — enter `getmeili/meilisearch:v1.11`.
+2. Name the service `meilisearch` (this becomes the internal DNS name).
+3. Under **Networking**, keep it **Private** (no public domain). The Next.js service reaches it at `http://meilisearch:7700` via Railway's internal network.
+
+#### Step 2: Attach a persistent volume
+
+1. In the `meilisearch` service, go to **Volumes**.
+2. Add a volume with mount path `/meili_data` (this is where Meilisearch persists indexes, keys, and dumps).
+3. Name the volume `meilidata_prod`.
+
+#### Step 3: Generate and set the master key
+
+Generate a cryptographically random master key:
+
+```bash
+openssl rand -hex 32
+```
+
+Set it as a **shared variable** (available to both `meilisearch` and `nextjs` services) in the Railway dashboard:
+
+| Variable | Scope | Value |
+|----------|-------|-------|
+| `MEILI_MASTER_KEY` | Shared (`meilisearch` + `nextjs`) | `<output from openssl rand -hex 32>` |
+
+The Meilisearch service reads `MEILI_MASTER_KEY` automatically — Meilisearch maps it to the `MEILI_MASTER_KEY` env var at startup. If the service starts without a master key, Meilisearch auto-generates one and logs it (check the deploy log).
+
+#### Step 4: Derive a scoped search-only key
+
+Once the Meilisearch service is healthy, generate a scoped API key that is restricted to search operations on the `el` and `ru` indexes. This key is safe to expose to the browser (via `NEXT_PUBLIC_*`).
+
+Use the internal-healthcheck endpoint exposed by Railway to reach Meilisearch from a Railway shell, or tunnel via the Railway CLI:
+
+```bash
+# From a Railway shell in the meilisearch service:
+curl -X POST "http://localhost:7700/keys" \
+  -H "Authorization: Bearer $MEILI_MASTER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Search-only key (el + ru)",
+    "description": "Scoped to search action on el and ru indexes. Safe for browser exposure.",
+    "actions": ["search"],
+    "indexes": ["el", "ru"],
+    "expiresAt": null
+  }'
+```
+
+The response includes a `key` field — this is the scoped search-only key. Copy it.
+
+> **Key restrictions**: `actions: ["search"]`, `indexes: ["el", "ru"]`. This key cannot create, update, or delete documents, change settings, or access indexes outside `el`/`ru`. It is safe for the `NEXT_PUBLIC_MEILI_SEARCH_KEY` env var.
+
+#### Step 5: Set production environment variables
+
+In the Railway dashboard, set the following variables on the **Next.js service** (or as shared variables):
+
+| Variable | Source | Notes |
+|----------|--------|-------|
+| `MEILI_HOST` | `http://meilisearch:7700` | Internal Railway networking; no scheme other than `http` |
+| `MEILI_MASTER_KEY` | Step 3 | **Server-only** — must NOT appear in `NEXT_PUBLIC_*` |
+| `NEXT_PUBLIC_MEILI_SEARCH_KEY` | Step 4 (`key` field) | Scoped search-only key; browser-safe |
+| `SEARCH_ENABLED` | `true` | Activates search in the deployed environment |
+| `NEXT_PUBLIC_SEARCH_ENABLED` | `true` | Activates the client-side search UI |
+
+The `NEXT_PUBLIC_MEILI_HOST` env var is **not needed** in Railway production because the browser-based instant dropdown connects through a different path (see ADR-011). The SSR path uses `MEILI_HOST` server-side.
+
+#### Step 6: Verify end-to-end
+
+After deploying both services with the new env vars:
+
+```bash
+# From within the Next.js service container or Railway shell:
+# 1. Meilisearch health
+curl -s http://meilisearch:7700/health
+# → {"status":"available"}
+
+# 2. Seed the index
+python3 tools/seed_search_index.py --target production --mode full --force
+
+# 3. Smoke test a known query (server-side)
+curl -X POST "http://meilisearch:7700/indexes/el/search" \
+  -H "Authorization: Bearer $MEILI_MASTER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"q":"ρινοπλαστική","limit":3}'
+# → at least one hit with title, href, _formatted.title
+```
+
+#### Master key safety check
+
+The master key must never appear in a client bundle or be prefixed with `NEXT_PUBLIC_`. Verify:
+
+```bash
+# In the built frontend output, search for the master key value:
+grep -r "$MEILI_MASTER_KEY" frontend/.next/static/
+# → must return nothing (exit code 1)
+```
+
+The `meili-client.ts` module imports `"server-only"` which causes a build error if master-keyed code is imported from a client component. This is a compile-time guard.
+
+#### Railway config-as-code (optional)
+
+For teams that prefer config-as-code over dashboard clicks, create a `railway/services/meilisearch.toml` file:
+
+```toml
+# Railway Config-as-Code — Meilisearch Service
+# Provision with: railway up --service meilisearch
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+image = "getmeili/meilisearch:v1.11"
+startCommand = "meilisearch"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+```
+
+Note: Railway's config-as-code for prebuilt images has limited support. The primary provisioning path is the dashboard-based procedure above.
+
+### Re-provisioning after data loss
+
+If the Meilisearch persistent volume is destroyed or corrupted:
+
+1. Re-create the volume per Step 2.
+2. Re-deploy the service — Meilisearch starts fresh with no indexes.
+3. Re-generate the master key (Step 3) and scoped key (Step 4).
+4. Update all env vars with the new key values.
+5. Run a full seed: `python3 tools/seed_search_index.py --target production --mode full --force`.
+6. Run the smoke test (Step 6).
+
 ## Quick reference
 
 | Task | Command |

@@ -49,6 +49,22 @@ services:
     networks:
       - internal
 
+  meilisearch:
+    image: getmeili/meilisearch:v1.11
+    container_name: meilisearch
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+    volumes:
+      - meilidata_prod:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:7700/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - internal
+
   nextjs:
     build:
       context: .
@@ -59,10 +75,16 @@ services:
       STRAPI_TOKEN: ${STRAPI_TOKEN}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
       STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET}
-      SEARCH_ENABLED: false
-      NEXT_PUBLIC_SEARCH_ENABLED: false
+      SEARCH_ENABLED: ${SEARCH_ENABLED:-false}
+      NEXT_PUBLIC_SEARCH_ENABLED: ${SEARCH_ENABLED:-false}
+      MEILI_HOST: ${MEILI_HOST:-http://meilisearch:7700}
+      NEXT_PUBLIC_MEILI_HOST: ${NEXT_PUBLIC_MEILI_HOST}
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      NEXT_PUBLIC_MEILI_SEARCH_KEY: ${NEXT_PUBLIC_MEILI_SEARCH_KEY}
+      STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET}
     depends_on:
       - strapi
+      - meilisearch
     restart: unless-stopped
     networks:
       - internal
@@ -91,6 +113,8 @@ volumes:
     name: myorl-pavlos_pgdata-prod
   uploads:
     name: myorl-pavlos_uploads
+  meilidata_prod:
+    name: myorl-pavlos_meilidata_prod
   caddy-data:
     name: myorl-pavlos_caddy-data
   caddy-config:

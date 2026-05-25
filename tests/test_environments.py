@@ -102,6 +102,36 @@ class TestComposeMatchesManifest(unittest.TestCase):
     def test_production(self):
         self._check_env("production")
 
+    def _check_meili(self, name: str) -> None:
+        env = ENVIRONMENTS[name]
+        compose = _load_compose(ROOT / env["compose_file"])
+        meili = compose["services"]["meilisearch"]
+
+        self.assertEqual(
+            meili["container_name"], env["meili_container"],
+            f"{name}: meili container_name drift"
+        )
+
+        # Volume — match against the meili data mount (/meili_data)
+        data_mount = next(v for v in meili["volumes"] if "/meili_data" in v)
+        self.assertIn(env["meili_volume"], data_mount, f"{name}: meili volume drift")
+
+        # Host port: present for dev/rehearsal, absent for production
+        if env["meili_host_port"] is None:
+            self.assertNotIn("ports", meili, f"{name}: meili host port should not be exposed")
+        else:
+            mapping = f"{env['meili_host_port']}:7700"
+            self.assertIn(mapping, meili["ports"], f"{name}: meili host port drift")
+
+    def test_meili_dev(self):
+        self._check_meili("dev")
+
+    def test_meili_rehearsal(self):
+        self._check_meili("rehearsal")
+
+    def test_meili_production(self):
+        self._check_meili("production")
+
 
 class TestMeilisearchFields(unittest.TestCase):
     """Assert meili identity fields are present and unique across env records."""
@@ -119,6 +149,13 @@ class TestMeilisearchFields(unittest.TestCase):
         self.assertEqual(env["meili_container"], "myorl-meili-rehearsal")
         self.assertEqual(env["meili_volume"], "meilidata_rehearsal")
         self.assertEqual(env["meili_master_key_env"], "MEILI_MASTER_KEY_REHEARSAL")
+
+    def test_production_meili_fields(self):
+        env = ENVIRONMENTS["production"]
+        self.assertIsNone(env["meili_host_port"])
+        self.assertEqual(env["meili_container"], "meilisearch")
+        self.assertEqual(env["meili_volume"], "meilidata_prod")
+        self.assertEqual(env["meili_master_key_env"], "MEILI_MASTER_KEY")
 
     def test_no_duplicate_meili_host_ports(self):
         ports = [

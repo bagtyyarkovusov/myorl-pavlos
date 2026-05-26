@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, JetBrains_Mono, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import WebVitalsReporter from "@/components/WebVitalsReporter";
 import { getSiteUrl } from "@/lib/cms/site-url";
 
 const display = Instrument_Serif({
@@ -40,7 +41,10 @@ export default function RootLayout({
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
       suppressHydrationWarning
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <WebVitalsReporter />
+      </body>
     </html>
   );
 }

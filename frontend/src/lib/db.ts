@@ -47,3 +47,18 @@ export async function logSearchQuery(
     [q, locale, resultCount, sessionId],
   );
 }
+
+export async function logWebVital(
+  metric: string,
+  value: number,
+  path: string,
+  locale: string,
+  deviceType: string,
+  sessionId: string,
+): Promise<void> {
+  await query(
+    `INSERT INTO web_vitals_log (metric, value, path, locale, device_type, session_id)
+     VALUES ($1, $2, $3, $4, $5, $6::uuid)`,
+    [metric, value, path, locale, deviceType, sessionId],
+  );
+}

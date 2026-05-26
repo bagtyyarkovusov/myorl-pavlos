@@ -305,43 +305,30 @@ def _extract_anchor_hrefs(html: str) -> list[str]:
 
 
 def find_broken_anchor_links(sources: list[TextSource]) -> list[BrokenAnchorFinding]:
-    page_groups: dict[str, list[TextSource]] = {}
-    component_sources: list[TextSource] = []
-
+    page_ids: dict[str, set[str]] = {}
     for src in sources:
         if src.source.startswith("page:"):
             doc_id = src.source.rsplit(":", 1)[-1]
-            page_groups.setdefault(doc_id, []).append(src)
-        else:
-            component_sources.append(src)
+            page_ids.setdefault(doc_id, set()).update(_extract_anchor_ids(src.text))
 
     findings: list[BrokenAnchorFinding] = []
+    for src in sources:
+        if src.source.startswith("page:"):
+            valid_ids = page_ids[src.source.rsplit(":", 1)[-1]]
+            page_path = _page_path(src.source)
+            source_label = f"page.{src.field}"
+        else:
+            valid_ids = _extract_anchor_ids(src.text)
+            page_path = _page_path(src.source)
+            source_label = src.source
 
-    for _doc_id, group in page_groups.items():
-        combined_html = " ".join(src.text for src in group)
-        valid_ids = _extract_anchor_ids(combined_html)
-        page_path = _page_path(group[0].source)
-
-        for src in group:
-            for anchor in _extract_anchor_hrefs(src.text):
-                if anchor not in valid_ids:
-                    findings.append(
-                        BrokenAnchorFinding(
-                            page=page_path,
-                            href=f"#{anchor}",
-                            source=f"page.{src.field}",
-                        )
-                    )
-
-    for src in component_sources:
-        valid_ids = _extract_anchor_ids(src.text)
         for anchor in _extract_anchor_hrefs(src.text):
             if anchor not in valid_ids:
                 findings.append(
                     BrokenAnchorFinding(
-                        page=_page_path(src.source),
+                        page=page_path,
                         href=f"#{anchor}",
-                        source=src.source,
+                        source=source_label,
                     )
                 )
 

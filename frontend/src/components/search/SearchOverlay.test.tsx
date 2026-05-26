@@ -762,4 +762,26 @@ describe("SearchOverlay", () => {
       expect(hint.tagName).toBe("KBD");
     });
   });
+
+  describe("misconfiguration", () => {
+    it("shows 'not configured' message when env vars are missing", () => {
+      delete process.env.NEXT_PUBLIC_MEILI_HOST;
+      delete process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
+      process.env.NEXT_PUBLIC_SEARCH_ENABLED = "true";
+
+      render(<SearchOverlay {...baseProps} />);
+
+      expect(screen.getByText("Η αναζήτηση δεν έχει ρυθμιστεί")).toBeInTheDocument();
+    });
+
+    it("shows Russian 'not configured' message when env vars are missing", () => {
+      delete process.env.NEXT_PUBLIC_MEILI_HOST;
+      delete process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
+      process.env.NEXT_PUBLIC_SEARCH_ENABLED = "true";
+
+      render(<SearchOverlay {...baseProps} locale="ru" placeholder="Поиск..." searchLabel="Поиск" />);
+
+      expect(screen.getByText("Поиск не настроен")).toBeInTheDocument();
+    });
+  });
 });

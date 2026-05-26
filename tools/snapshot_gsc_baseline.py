@@ -123,7 +123,7 @@ def _format_query_response(
     response: dict[str, Any], key_field: str, value_fields: list[str]
 ) -> list[dict[str, Any]]:
     """Format a raw GSC query response into a list of row dicts."""
-    rows = response.get("rows", []) or []
+    rows = response.get("rows", [])
     return [_parse_row(row, key_field, value_fields) for row in rows]
 
 
@@ -157,7 +157,7 @@ def fetch_by_country(
     response = _query_gsc(
         service, property_uri, start_date, end_date, ["query", "country"], DEFAULT_ROW_LIMIT
     )
-    rows = response.get("rows", []) or []
+    rows = response.get("rows", [])
     by_country: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
         country = row["keys"][1]
@@ -172,7 +172,7 @@ def fetch_by_device(
     response = _query_gsc(
         service, property_uri, start_date, end_date, ["query", "device"], DEFAULT_ROW_LIMIT
     )
-    rows = response.get("rows", []) or []
+    rows = response.get("rows", [])
     by_device: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
         device = row["keys"][1]

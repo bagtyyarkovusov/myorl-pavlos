@@ -1,6 +1,5 @@
 import datetime
 import json
-import os
 import sys
 import tempfile
 import unittest
@@ -12,11 +11,18 @@ if str(_TOOLS) not in sys.path:
     sys.path.insert(0, str(_TOOLS))
 
 from snapshot_gsc_baseline import (
+    _build_gsc_service,
     _build_output_path,
-    _validate_dates,
-    _parse_row,
     _format_query_response,
+    _parse_row,
+    _validate_dates,
     build_snapshot,
+    fetch_by_country,
+    fetch_by_device,
+    fetch_top_pages,
+    fetch_top_queries,
+    main,
+    write_snapshot,
 )
 
 
@@ -197,7 +203,6 @@ class WriteSnapshotTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "2026-05-26.json"
-            from snapshot_gsc_baseline import write_snapshot
 
             write_snapshot(snapshot, path)
             self.assertTrue(path.exists())
@@ -220,7 +225,6 @@ class WriteSnapshotTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "nested" / "deeply" / "2026-05-26.json"
-            from snapshot_gsc_baseline import write_snapshot
 
             write_snapshot(snapshot, path)
             self.assertTrue(path.exists())
@@ -228,8 +232,6 @@ class WriteSnapshotTests(unittest.TestCase):
 
 class MainErrorHandlingTests(unittest.TestCase):
     def test_missing_credentials_file_exits_with_error(self) -> None:
-        from snapshot_gsc_baseline import main
-
         with patch("sys.argv", ["snapshot_gsc_baseline.py",
                                 "--credentials", "/nonexistent/creds.json",
                                 "--property", "sc-domain:myorl.gr"]):
@@ -238,8 +240,6 @@ class MainErrorHandlingTests(unittest.TestCase):
                 self.assertEqual(rc, 1)
 
     def test_start_date_after_end_date_exits_with_error(self) -> None:
-        from snapshot_gsc_baseline import main
-
         with patch("sys.argv", ["snapshot_gsc_baseline.py",
                                 "--credentials", "/tmp/fake-creds.json",
                                 "--property", "sc-domain:myorl.gr",
@@ -293,15 +293,6 @@ class MainIntegrationTests(unittest.TestCase):
         return mock_service
 
     def test_full_snapshot_flow_with_mocked_gsc(self) -> None:
-        from snapshot_gsc_baseline import (
-            fetch_top_queries,
-            fetch_top_pages,
-            fetch_by_country,
-            fetch_by_device,
-            build_snapshot,
-            write_snapshot,
-        )
-
         mock_service = self._mock_gsc_service()
 
         queries = fetch_top_queries(mock_service, "sc-domain:myorl.gr", "2026-01-01", "2026-05-26")
@@ -331,8 +322,6 @@ class MainIntegrationTests(unittest.TestCase):
         self.assertEqual(len(loaded["top_queries"]), 2)
 
     def test_top_queries_request_has_correct_params(self) -> None:
-        from snapshot_gsc_baseline import fetch_top_queries
-
         mock_service = self._mock_gsc_service()
         fetch_top_queries(mock_service, "sc-domain:myorl.gr", "2026-01-01", "2026-05-26", limit=50)
 
@@ -344,8 +333,6 @@ class MainIntegrationTests(unittest.TestCase):
         self.assertEqual(call_kwargs["body"]["rowLimit"], 50)
 
     def test_country_breakdown_uses_country_dimension(self) -> None:
-        from snapshot_gsc_baseline import fetch_by_country
-
         mock_service = self._mock_gsc_service()
         fetch_by_country(mock_service, "sc-domain:myorl.gr", "2026-01-01", "2026-05-26")
 
@@ -353,8 +340,6 @@ class MainIntegrationTests(unittest.TestCase):
         self.assertEqual(call_kwargs["body"]["dimensions"], ["query", "country"])
 
     def test_device_breakdown_uses_device_dimension(self) -> None:
-        from snapshot_gsc_baseline import fetch_by_device
-
         mock_service = self._mock_gsc_service()
         fetch_by_device(mock_service, "sc-domain:myorl.gr", "2026-01-01", "2026-05-26")
 
@@ -364,8 +349,6 @@ class MainIntegrationTests(unittest.TestCase):
 
 class GscAuthErrorTests(unittest.TestCase):
     def test_build_service_with_invalid_credentials_raises_clear_error(self) -> None:
-        from snapshot_gsc_baseline import _build_gsc_service
-
         with tempfile.TemporaryDirectory() as tmpdir:
             creds_path = Path(tmpdir) / "bad-creds.json"
             creds_path.write_text('{"type": "service_account", "private_key": "bad"}')

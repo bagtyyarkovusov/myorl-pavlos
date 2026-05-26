@@ -139,47 +139,42 @@ describe("loadSynonymsAndStopWords", () => {
 });
 
 describe("seed list validation", () => {
+  function validTerms(raw: unknown[]): string[] {
+    return raw.filter((t): t is string => typeof t === "string" && t.trim().length > 0);
+  }
+
   async function readYamlFile(filename: string): Promise<unknown> {
-    const actual = await vi.importActual<typeof import("node:fs")>("node:fs");
+    const realFs = await vi.importActual<typeof import("node:fs")>("node:fs");
     const filePath = join(import.meta.dirname, filename);
-    return yaml.load(actual.readFileSync(filePath, "utf-8"));
+    return yaml.load(realFs.readFileSync(filePath, "utf-8"));
   }
 
   async function readGroups(locale: string): Promise<string[][]> {
     const raw = await readYamlFile(`synonyms.${locale}.yaml`);
     if (!Array.isArray(raw)) return [];
     return raw.filter(
-      (g): g is string[] =>
-        Array.isArray(g) &&
-        g.filter((t): t is string => typeof t === "string" && t.trim().length > 0).length >= 2,
+      (g): g is string[] => Array.isArray(g) && validTerms(g).length >= 2,
     );
   }
 
   async function readStopWords(locale: string): Promise<string[]> {
     const raw = await readYamlFile(`stopwords.${locale}.yaml`);
     if (!Array.isArray(raw)) return [];
-    return raw.filter((w): w is string => typeof w === "string" && w.trim().length > 0);
+    return validTerms(raw);
   }
 
-  it("el synonym file has ≥ 30 groups", async () => {
-    const groups = await readGroups("el");
+  it.each(["el", "ru"])("%s synonym file has ≥ 30 groups", async (locale) => {
+    const groups = await readGroups(locale);
     expect(groups.length).toBeGreaterThanOrEqual(30);
   });
 
-  it("ru synonym file has ≥ 30 groups", async () => {
-    const groups = await readGroups("ru");
-    expect(groups.length).toBeGreaterThanOrEqual(30);
-  });
-
-  it("every synonym group in el has ≥ 2 terms", async () => {
-    const raw = await readYamlFile("synonyms.el.yaml");
+  it.each(["el", "ru"])("every synonym group in %s has ≥ 2 terms", async (locale) => {
+    const raw = await readYamlFile(`synonyms.${locale}.yaml`);
     if (!Array.isArray(raw)) return;
     for (let i = 0; i < raw.length; i++) {
       const group = raw[i];
       if (!Array.isArray(group)) continue;
-      const terms = group.filter(
-        (t): t is string => typeof t === "string" && t.trim().length > 0,
-      );
+      const terms = validTerms(group);
       if (terms.length > 0) {
         expect(
           terms.length,
@@ -189,68 +184,32 @@ describe("seed list validation", () => {
     }
   });
 
-  it("every synonym group in ru has ≥ 2 terms", async () => {
-    const raw = await readYamlFile("synonyms.ru.yaml");
-    if (!Array.isArray(raw)) return;
-    for (let i = 0; i < raw.length; i++) {
-      const group = raw[i];
-      if (!Array.isArray(group)) continue;
-      const terms = group.filter(
-        (t): t is string => typeof t === "string" && t.trim().length > 0,
-      );
-      if (terms.length > 0) {
-        expect(
-          terms.length,
-          `group ${i} has < 2 terms: [${terms.join(", ")}]`,
-        ).toBeGreaterThanOrEqual(2);
-      }
-    }
-  });
-
-  it("cross-locale abbreviations appear in both locale files (ORL/ENT)", async () => {
+  it.each([
+    {
+      label: "ORL/ENT",
+      elCheck: (g: string[]) => g.includes("ΩΡΛ") || g.includes("ORL") || g.includes("ENT"),
+      ruCheck: (g: string[]) => g.includes("ЛОР") || g.includes("ORL") || g.includes("ENT"),
+    },
+    {
+      label: "FESS",
+      elCheck: (g: string[]) => g.some((t) => t.toLowerCase() === "fess"),
+      ruCheck: (g: string[]) => g.some((t) => t.toLowerCase() === "fess"),
+    },
+    {
+      label: "DCR",
+      elCheck: (g: string[]) => g.some((t) => t.toUpperCase() === "DCR"),
+      ruCheck: (g: string[]) => g.some((t) => t.toUpperCase() === "DCR"),
+    },
+  ])("cross-locale abbreviation present in both files: $label", async ({ elCheck, ruCheck }) => {
     const elGroups = await readGroups("el");
     const ruGroups = await readGroups("ru");
 
-    const elHasORL = elGroups.some(
-      (g) => g.includes("ΩΡΛ") || g.includes("ORL") || g.includes("ENT"),
-    );
-    const ruHasORL = ruGroups.some(
-      (g) => g.includes("ЛОР") || g.includes("ORL") || g.includes("ENT"),
-    );
-
-    expect(elHasORL).toBe(true);
-    expect(ruHasORL).toBe(true);
+    expect(elGroups.some(elCheck)).toBe(true);
+    expect(ruGroups.some(ruCheck)).toBe(true);
   });
 
-  it("cross-locale abbreviations appear in both locale files (FESS)", async () => {
-    const elGroups = await readGroups("el");
-    const ruGroups = await readGroups("ru");
-
-    const elHasFESS = elGroups.some((g) => g.some((t) => t.toLowerCase() === "fess"));
-    const ruHasFESS = ruGroups.some((g) => g.some((t) => t.toLowerCase() === "fess"));
-
-    expect(elHasFESS).toBe(true);
-    expect(ruHasFESS).toBe(true);
-  });
-
-  it("cross-locale abbreviations appear in both locale files (DCR)", async () => {
-    const elGroups = await readGroups("el");
-    const ruGroups = await readGroups("ru");
-
-    const elHasDCR = elGroups.some((g) => g.some((t) => t.toUpperCase() === "DCR"));
-    const ruHasDCR = ruGroups.some((g) => g.some((t) => t.toUpperCase() === "DCR"));
-
-    expect(elHasDCR).toBe(true);
-    expect(ruHasDCR).toBe(true);
-  });
-
-  it("stopwords el has ≥ 10 entries", async () => {
-    const words = await readStopWords("el");
-    expect(words.length).toBeGreaterThanOrEqual(10);
-  });
-
-  it("stopwords ru has ≥ 10 entries", async () => {
-    const words = await readStopWords("ru");
+  it.each(["el", "ru"])("stopwords %s has ≥ 10 entries", async (locale) => {
+    const words = await readStopWords(locale);
     expect(words.length).toBeGreaterThanOrEqual(10);
   });
 });

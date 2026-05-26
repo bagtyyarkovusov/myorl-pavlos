@@ -71,6 +71,11 @@ const CLOSE_LABELS: Record<Locale, string> = {
   ru: "Закрыть",
 };
 
+const NOT_CONFIGURED_MSGS: Record<Locale, string> = {
+  el: "Η αναζήτηση δεν έχει ρυθμιστεί",
+  ru: "Поиск не настроен",
+};
+
 const PLACEHOLDER_MSGS: Record<Locale, string> = {
   el: "Πληκτρολογήστε τουλάχιστον 2 χαρακτήρες...",
   ru: "Введите не менее 2 символов...",
@@ -155,6 +160,10 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       const apiKey = process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
       if (host && apiKey) {
         clientRef.current = new Meilisearch({ host, apiKey });
+      } else {
+        console.warn(
+          "SearchOverlay: NEXT_PUBLIC_MEILI_HOST or NEXT_PUBLIC_MEILI_SEARCH_KEY is missing. Search will not work.",
+        );
       }
     }
   }, []);
@@ -344,6 +353,8 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
   if (!isOpen) return null;
   if (process.env.NEXT_PUBLIC_SEARCH_ENABLED === "false") return null;
 
+  const isMisconfigured = !process.env.NEXT_PUBLIC_MEILI_HOST || !process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
+
   const sessionId = getSessionId();
   const hasQuery = query.trim().length >= MIN_QUERY_LENGTH;
   const hasResults = results && (results.pages.length > 0 || results.videos.length > 0);
@@ -411,7 +422,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           </button>
         </div>
 
-        {hasQuery && (
+        {!isMisconfigured && hasQuery && (
           <div className={styles["filter-pills"]}>
             {(["all", "page", "video"] as TypeFilter[]).map((filter) => (
               <button
@@ -433,13 +444,19 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           role={hasResults ? "listbox" : undefined}
           id={hasResults ? "search-results-listbox" : undefined}
         >
-          {!hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
+          {isMisconfigured ? (
+            <p className={styles["error-state"]} role="alert">{NOT_CONFIGURED_MSGS[locale]}</p>
+          ) : (
+            <>
+              {!hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
 
-          {hasQuery && !hasResults && !isLoading && !error && (
-            <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
+              {hasQuery && !hasResults && !isLoading && !error && (
+                <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
+              )}
+
+              {error && <p className={styles["error-state"]} role="alert">{ERROR_MSGS[locale]}</p>}
+            </>
           )}
-
-          {error && <p className={styles["error-state"]} role="alert">{ERROR_MSGS[locale]}</p>}
 
           {/* aria-live result count announcer — always in DOM so SR picks up changes */}
           <div

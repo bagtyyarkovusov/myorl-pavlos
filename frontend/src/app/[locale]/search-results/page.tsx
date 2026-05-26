@@ -44,6 +44,8 @@ const t = {
     filtersLabel: "Φίλτρα",
     tryOtherLocale: "Δοκιμάστε στα ρωσικά",
     noResultsHint: "Δοκιμάστε έναν ευρύτερο όρο ή ελέγξτε την ορθογραφία.",
+    searchPlaceholder: "Πληκτρολογήστε έναν όρο αναζήτησης",
+    searchButton: "Αναζήτηση",
   },
   ru: {
     noResults: "Результатов не найдено для",
@@ -54,6 +56,8 @@ const t = {
     filtersLabel: "Фильтры",
     tryOtherLocale: "Попробовать на греческом",
     noResultsHint: "Попробуйте более широкий термин или проверьте правописание.",
+    searchPlaceholder: "Введите поисковый запрос",
+    searchButton: "Поиск",
   },
 } as const;
 
@@ -61,6 +65,48 @@ const allLangsLabel = {
   el: "Όλες οι γλώσσες",
   ru: "Все языки",
 } as const;
+
+function SearchResultsForm({ locale, q }: { locale: string; q: string }) {
+  const labels = t[locale as keyof typeof t];
+  return (
+    <form
+      role="search"
+      action={`/${locale}/search-results`}
+      method="get"
+      style={{ display: "flex", gap: "8px", marginBottom: "24px" }}
+    >
+      <input
+        type="search"
+        name="q"
+        defaultValue={q}
+        placeholder={labels.searchPlaceholder}
+        style={{
+          flex: 1,
+          padding: "8px 12px",
+          minWidth: 0,
+          border: "1px solid var(--line, #ddd)",
+          borderRadius: "6px",
+          fontSize: "0.95rem",
+        }}
+      />
+      <button
+        type="submit"
+        style={{
+          padding: "8px 16px",
+          border: "1px solid var(--accent, #0052cc)",
+          borderRadius: "6px",
+          background: "var(--accent, #0052cc)",
+          color: "#fff",
+          fontSize: "0.95rem",
+          cursor: "pointer",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {labels.searchButton}
+      </button>
+    </form>
+  );
+}
 
 export default async function SearchResultsPage({ params, searchParams }: Props) {
   const { locale } = await params;
@@ -201,16 +247,22 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
       }
     }
   } catch (err: unknown) {
-    // Meilisearch-specific errors (connection refused, API errors) → unavailable
-    // Other unexpected errors → network/generic
-    if (
-      err instanceof Error &&
-      (("code" in err && typeof (err as NodeJS.ErrnoException).code === "string") ||
-        (err.constructor && err.constructor.name === "MeiliSearchApiError"))
-    ) {
-      error = { type: "unavailable" };
-    } else {
-      error = { type: "network" };
+    error = { type: "network" };
+    if (err instanceof Error) {
+      // Transport-level errors (ECONNREFUSED, EAI_AGAIN) from Node.js DNS/TCP
+      const isTransportError =
+        "code" in err && typeof (err as NodeJS.ErrnoException).code === "string";
+
+      // Meilisearch API errors carry a cause object shaped like { message, code, type, link }.
+      // Duck-typed because MeiliSearchApiError is not a runtime export from meilisearch.
+      const isMeiliApiError =
+        typeof (err as any).cause === "object" &&
+        (err as any).cause !== null &&
+        "code" in (err as any).cause;
+
+      if (isTransportError || isMeiliApiError) {
+        error = { type: "unavailable" };
+      }
     }
   }
 
@@ -253,6 +305,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
               activeFilterCount={activeFilterCount}
             />
           </div>
+          <SearchResultsForm locale={locale} q={q} />
           <p>
             {t[locale].noResults} &quot;{q}&quot;. {t[locale].noResultsHint}
           </p>
@@ -273,6 +326,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   if (hits.length === 0) {
     return (
       <div style={{ padding: "48px 24px", textAlign: "center" }}>
+        <SearchResultsForm locale={locale} q={q} />
         <p style={{ fontSize: "1.15rem", marginBottom: "8px" }}>
           {t[locale].noResults} &quot;{q}&quot;
         </p>
@@ -318,6 +372,8 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
             activeFilterCount={activeFilterCount}
           />
         </div>
+
+        <SearchResultsForm locale={locale} q={q} />
 
         {(isFallback || allLangs) && (
           <SearchLocaleFallbackBanner

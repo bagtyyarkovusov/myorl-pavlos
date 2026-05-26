@@ -11,6 +11,8 @@ import {
 } from "@/lib/search/meili-client";
 import { loadSynonymsAndStopWords } from "@/lib/search/synonyms";
 
+export const maxDuration = 30;
+
 type ReindexPayload = {
   contentType?: unknown;
   id?: unknown;

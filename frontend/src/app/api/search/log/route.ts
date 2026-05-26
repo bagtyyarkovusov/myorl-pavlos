@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 
-import { logSearchQuery } from "@/lib/db";
 import { isLocale } from "@/lib/cms/types";
+import { logSearchQuery } from "@/lib/db";
+import { checkRateLimit } from "@/lib/search/rate-limiter";
 import { UUID_RE } from "@/lib/search/session";
+
+export const maxDuration = 10;
 
 type LogPayload = {
   query: string;
@@ -47,7 +50,24 @@ function validatePayload(
   };
 }
 
+function getClientIP(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  const firstForwarded = forwarded?.split(",")[0]?.trim();
+  if (firstForwarded) {
+    return firstForwarded;
+  }
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
+
 export async function POST(request: Request): Promise<NextResponse> {
+  const clientIP = getClientIP(request);
+  if (!checkRateLimit(clientIP)) {
+    return NextResponse.json(
+      { ok: false, error: "Too many requests. Try again later." },
+      { status: 429 },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();

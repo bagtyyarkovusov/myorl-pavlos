@@ -23,7 +23,10 @@ function makeRequest(pathname: string, acceptLanguage?: string): Parameters<Prox
   } as unknown as Parameters<ProxyFn>[0];
 }
 
-const mockRedirect = vi.fn((url: URL | string) => {
+let lastRedirectStatus: number | undefined;
+
+const mockRedirect = vi.fn((url: URL | string, status?: number) => {
+  lastRedirectStatus = status;
   return typeof url === "string" ? { url: new URL(url) } : { url };
 });
 
@@ -36,6 +39,7 @@ vi.mock("next/server", () => ({
 describe("proxy", () => {
   beforeEach(() => {
     mockRedirect.mockClear();
+    lastRedirectStatus = undefined;
   });
 
   it("does not redirect when locale is already el", async () => {
@@ -52,64 +56,33 @@ describe("proxy", () => {
     expect(response).toBeUndefined();
   });
 
-  it("redirects bare path to el when Accept-Language is el", async () => {
+  it("passes through bare slugs — handled by next.config.ts redirects()", async () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/about", "el");
-    proxy(request);
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toContain("/el/about");
+    const response = proxy(request);
+    expect(response).toBeUndefined();
+    expect(mockRedirect).not.toHaveBeenCalled();
   });
 
-  it("redirects bare path to ru when Accept-Language is ru", async () => {
+  it("passes through bare slugs regardless of Accept-Language", async () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/about", "ru");
-    proxy(request);
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toContain("/ru/about");
+    const response = proxy(request);
+    expect(response).toBeUndefined();
+    expect(mockRedirect).not.toHaveBeenCalled();
   });
 
-  it("redirects to el as default when no Accept-Language header", async () => {
+  it("passes through bare slug with no Accept-Language header", async () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/about");
-    proxy(request);
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toContain("/el/about");
+    const response = proxy(request);
+    expect(response).toBeUndefined();
   });
 
   it("does not crash on malformed Accept-Language (*)", async () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/about", "*");
     expect(() => proxy(request)).not.toThrow();
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toContain("/el/about");
-  });
-
-  it("defaults to el when Accept-Language is unsupported (fr)", async () => {
-    const { proxy } = await import("@/proxy");
-    const request = makeRequest("/about", "fr");
-    proxy(request);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toContain("/el/about");
-  });
-
-  it("matches el from el-GR (region-stripped)", async () => {
-    const { proxy } = await import("@/proxy");
-    const request = makeRequest("/about", "el-GR");
-    proxy(request);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toContain("/el/about");
-  });
-
-  it("respects q-value ordering in Accept-Language", async () => {
-    const { proxy } = await import("@/proxy");
-    const request = makeRequest("/about", "ru;q=0.5, el;q=0.9");
-    proxy(request);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toContain("/el/about");
   });
 
   it("skips file extension paths", async () => {
@@ -140,12 +113,33 @@ describe("proxy", () => {
     expect(response).toBeUndefined();
   });
 
-  it("redirects root / to /ru with Russian preference", async () => {
+  it("redirects root / to /el with 308 permanent when Accept-Language is el", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/", "el");
+    proxy(request);
+    expect(mockRedirect).toHaveBeenCalledTimes(1);
+    const url = mockRedirect.mock.calls[0]![0];
+    expect(url.toString()).toContain("/el");
+    expect(lastRedirectStatus).toBe(308);
+  });
+
+  it("redirects root / to /ru with 308 permanent when Accept-Language is ru", async () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/", "ru");
     proxy(request);
     expect(mockRedirect).toHaveBeenCalledTimes(1);
     const url = mockRedirect.mock.calls[0]![0];
     expect(url.toString()).toContain("/ru");
+    expect(lastRedirectStatus).toBe(308);
+  });
+
+  it("redirects root / to /el with 308 when no Accept-Language header", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/");
+    proxy(request);
+    expect(mockRedirect).toHaveBeenCalledTimes(1);
+    const url = mockRedirect.mock.calls[0]![0];
+    expect(url.toString()).toContain("/el");
+    expect(lastRedirectStatus).toBe(308);
   });
 });

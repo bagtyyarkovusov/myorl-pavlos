@@ -126,6 +126,12 @@ const nextConfig: NextConfig = {
         destination: "/ru/zapis",
         permanent: true,
       },
+      {
+        source:
+          "/:slug((?!el|ru|api|admin|_next|uploads|sitemap.xml|robots.txt|favicon.ico)[^/]+)",
+        destination: "/el/:slug",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

@@ -107,6 +107,20 @@ _Avoid_: Meili synonyms config (when referring to the canonical source), search 
 The anonymous Postgres table `search_query_log` capturing `{ query, locale, result_count, session_id, created_at }` for every search submitted. No IP, no user account, no persistent identifier. Session UUID is generated per browsing session in `sessionStorage`. 90-day TTL enforced by scheduled SQL job. Powers the internal `/admin/search-analytics` view; the input to the editor's synonym + content backlog. GDPR-defensible under the anonymous-data carve-out and documented in the user-facing privacy notice.
 _Avoid_: search analytics database, search telemetry, query tracking
 
+## SEO
+
+**URL Mapping**:
+The Strapi content type holding legacy → canonical URL pairs that drive every per-page `301` and `410` after the MODX cutover. Editor-owned post-seed. Seeded once from the **Legacy URL Inventory** (slug-changed and retired rows) and the 31 `Redirect 301` lines in the legacy MODX `.htaccess` (lives outside this repo at `~/Projects/public_html/.htaccess`). Replaces the dev-only [`data/manifests/slug_redirects_next.json`](data/manifests/slug_redirects_next.json), which collapses into a one-time seed input rather than a runtime source. See [gh-issue-13 plan](../myorl-migrate/plans/gh-issue-13-seo-redirects-schema.md).
+_Avoid_: slug redirects manifest (post-cutover), htaccess rules, hand-written `next.config.ts` redirects (these collapse into URL Mapping entries)
+
+**Legacy URL Inventory**:
+The 367-row CSV exporting every published MODX `modx_site_content` resource with locale, URI, alias, parent, publish/delete/hidemenu flags, and a `status_guess` triage column (`candidate`, `review`). Lives outside this repo at `~/Projects/myorl-migrate/old_url_inventory_clean.csv`. Primary seed input for [[URL Mapping]] and the source of truth for "did this URL exist in the legacy site?" questions.
+_Avoid_: redirect manifest (the inventory is broader — many rows are slug-unchanged and do not become URL Mapping entries)
+
+**Canonical Home**:
+The locale-specific home page at `/el` (and `/ru`). The bare apex `https://myorl.gr/` does **not** render a page — it returns a permanent (`308`) redirect to `/el`. There is no apex landing page, no language picker, no Accept-Language–driven home; the EL home is the brand-default landing. Every Strapi page lives at `/<locale>/<slug>` without exception — the home is just the page whose slug is `index`, which `hrefForLocaleSlug` collapses to `/<locale>`. Canonical tag on the EL home is `https://myorl.gr/el`; the sitemap lists `https://myorl.gr/el`, never `https://myorl.gr`.
+_Avoid_: apex home, root home, language picker, bare-domain canonical
+
 ## Relationships
 
 - A **Video Entry** may point to zero or one **Related Article**.

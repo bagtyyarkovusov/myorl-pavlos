@@ -18,6 +18,7 @@ from seed_url_mappings import (
     run_seed,
     build_markdown_summary,
 )
+from strapi_client import StrapiClient
 
 # ---------------------------------------------------------------------------
 # JSON loader
@@ -416,6 +417,31 @@ class UnicodeTests(unittest.TestCase):
             existing,
         )
         self.assertEqual(action, "skip-identical")
+
+
+class StrapiClientUrlEncodingTests(unittest.TestCase):
+    """Verify that StrapiClient preserves brackets in Strapi query params."""
+
+    def test_pagination_params_preserve_brackets(self) -> None:
+        client = StrapiClient(base_url="http://localhost:1337", dry_run=True)
+        url = client._build_url("/api/url-mappings", {
+            "pagination[page]": 1,
+            "pagination[pageSize]": 100,
+        })
+        self.assertIn("pagination[page]=1", url)
+        self.assertIn("pagination[pageSize]=100", url)
+
+    def test_filter_params_preserve_brackets(self) -> None:
+        client = StrapiClient(base_url="http://localhost:1337", dry_run=True)
+        url = client._build_url("/api/url-mappings", {
+            "filters[slug][$eq]": "test-slug",
+        })
+        self.assertIn("filters[slug][$eq]=test-slug", url)
+
+    def test_path_not_encoded_twice(self) -> None:
+        client = StrapiClient(base_url="http://localhost:1337", dry_run=True)
+        url = client._build_url("/api/url-mappings", {})
+        self.assertEqual(url, "http://localhost:1337/api/url-mappings")
 
 
 if __name__ == "__main__":

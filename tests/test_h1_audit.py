@@ -245,6 +245,97 @@ class AuditH1HierarchyTests(unittest.TestCase):
         self.assertEqual(result[0]["severity"], "warn")
         self.assertEqual(result[0]["h1Count"], 0)
 
+    # ── title-aware H1 audit (virtual H1 from page.title) ────────────
+
+    def test_title_only_page_passes(self) -> None:
+        """Page with a title but zero <h1> in content has 1 virtual H1 → clean."""
+        sources = [
+            self._make_source("page:el:slug:doc1", "content", "<p>No H1 here</p>"),
+        ]
+        titles = {"page:el:slug": "My Page Title"}
+        result = self.fn(sources, page_titles=titles)
+        self.assertEqual(len(result), 0)
+
+    def test_title_plus_body_h1_flags_multiple(self) -> None:
+        """Title (virtual H1) + one <h1> in body = 2 → flag."""
+        sources = [
+            self._make_source(
+                "page:el:slug:doc1",
+                "content",
+                "<h1>Body H1</h1><p>Text</p>",
+            ),
+        ]
+        titles = {"page:el:slug": "My Page Title"}
+        result = self.fn(sources, page_titles=titles)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["h1Count"], 2)
+        self.assertEqual(result[0]["severity"], "flag")
+        self.assertIn("title", [f["field"] for f in result[0]["fields"]])
+
+    def test_title_plus_two_body_h1_flags(self) -> None:
+        """Title (virtual H1) + two <h1> in body = 3 → flag."""
+        sources = [
+            self._make_source(
+                "page:el:slug:doc1",
+                "content",
+                "<h1>A</h1><p>Body</p><h1>B</h1>",
+            ),
+        ]
+        titles = {"page:el:slug": "Extra H1s"}
+        result = self.fn(sources, page_titles=titles)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["h1Count"], 3)
+        self.assertEqual(result[0]["severity"], "flag")
+
+    def test_empty_title_no_h1_warns(self) -> None:
+        """Page without a title and without content H1 → warn (no H1 at all)."""
+        sources = [
+            self._make_source("page:el:slug:doc1", "content", "<p>Just text</p>"),
+        ]
+        titles: dict[str, str] = {}
+        result = self.fn(sources, page_titles=titles)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["h1Count"], 0)
+        self.assertEqual(result[0]["severity"], "warn")
+
+    def test_title_only_page_no_sources_still_virtual(self) -> None:
+        """Page with a title but no text sources; still 1 virtual H1 → clean."""
+        titles = {"page:el:slug": "Only a title"}
+        result = self.fn([], page_titles=titles)
+        # No sources → page_h1 is empty → nothing to report
+        self.assertEqual(len(result), 0)
+
+    def test_multiple_pages_mixed_titles(self) -> None:
+        sources = [
+            self._make_source("page:el:good:doc1", "content", "<p>No H1</p>"),
+            self._make_source("page:el:bad:doc2", "content", "<h1>Extra</h1>"),
+            self._make_source("page:el:none:doc3", "content", "<p>None</p>"),
+        ]
+        titles = {"page:el:good": "Has Title", "page:el:bad": "Also Has Title"}
+        result = self.fn(sources, page_titles=titles)
+        # good: title + no content H1 = 1 → clean
+        # bad: title + 1 content H1 = 2 → flag
+        # none: no title + no content H1 = 0 → warn
+        self.assertEqual(len(result), 2)
+        severities = {r["page"]: r["severity"] for r in result}
+        self.assertEqual(severities.get("page:el:bad"), "flag")
+        self.assertEqual(severities.get("page:el:none"), "warn")
+
+    def test_component_not_affected_by_titles(self) -> None:
+        """Components don't have titles in page_titles and are unaffected."""
+        sources = [
+            self._make_source(
+                "component:components_items_accordion_items:42",
+                "content",
+                "<h1>One</h1><h1>Two</h1>",
+            ),
+        ]
+        titles = {"page:el:slug": "Has Title"}
+        result = self.fn(sources, page_titles=titles)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["h1Count"], 2)
+        self.assertEqual(result[0]["severity"], "flag")
+
 
 class StripExtraH1TagsScriptTests(unittest.TestCase):
     """Integration-style tests for the strip_extra_h1_tags script module."""

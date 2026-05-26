@@ -298,8 +298,8 @@ class AuditH1HierarchyTests(unittest.TestCase):
         self.assertEqual(result[0]["h1Count"], 0)
         self.assertEqual(result[0]["severity"], "warn")
 
-    def test_title_only_page_no_sources_still_virtual(self) -> None:
-        """Page with a title but no text sources; still 1 virtual H1 → clean."""
+    def test_title_only_page_no_sources_not_reported(self) -> None:
+        """Page with a title but no text sources: nothing to audit → no findings."""
         titles = {"page:el:slug": "Only a title"}
         result = self.fn([], page_titles=titles)
         # No sources → page_h1 is empty → nothing to report

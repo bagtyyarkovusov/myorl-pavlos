@@ -417,14 +417,13 @@ def audit_h1_hierarchy(
 
     if page_titles:
         for page_key, info in page_h1.items():
-            if not page_key.startswith("page:"):
-                continue
             title = page_titles.get(page_key)
-            if title:
-                info["h1Count"] += 1
-                info["fields"].append(
-                    {"field": "title", "source": page_key, "h1InField": 1, "virtual": True}
-                )
+            if title is None:
+                continue
+            info["h1Count"] += 1
+            info["fields"].append(
+                {"field": "title", "source": page_key, "h1InField": 1, "virtual": True}
+            )
 
     result: list[dict[str, Any]] = []
     for page_key, info in sorted(page_h1.items()):

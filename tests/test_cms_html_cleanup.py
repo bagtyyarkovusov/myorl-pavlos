@@ -9,6 +9,9 @@ if str(_TOOLS) not in sys.path:
 from cms_html_cleanup import (
     convert_prose_pre_to_p,
     count_legacy_markup_issues,
+    flag_deprecated_semantic_tags,
+    flag_essential_style_attrs,
+    flag_mixed_semantic_presentational,
     html_has_broken_images,
     is_valid_img_src,
     normalize_legacy_modx_markup,
@@ -17,6 +20,8 @@ from cms_html_cleanup import (
     remove_broken_images,
     split_long_paragraphs,
     split_multi_image_paragraphs,
+    strip_font_tags,
+    strip_modx_snippets,
     strip_nbsp_from_html,
     unwrap_legacy_wrappers,
 )
@@ -151,6 +156,190 @@ class LegacyMarkupAuditTests(unittest.TestCase):
         self.assertGreater(counts["inline_style"], 0)
         self.assertGreater(counts["align_attr"], 0)
         self.assertGreater(counts["file_or_msohtmlclip"], 0)
+
+
+class StripFontTagsTests(unittest.TestCase):
+    def test_unwraps_font_tags_preserving_inner_content(self) -> None:
+        html = '<p><font color="red">Important text</font> and normal</p>'
+        out, count = strip_font_tags(html)
+        self.assertEqual(count, 1)
+        self.assertNotIn("<font", out.lower())
+        self.assertIn("Important text", out)
+        self.assertIn("and normal", out)
+
+    def test_unwraps_nested_font_tags(self) -> None:
+        html = '<p><font size="4"><font color="blue">Nested</font></font></p>'
+        out, count = strip_font_tags(html)
+        self.assertNotIn("<font", out.lower())
+        self.assertIn("Nested", out)
+        self.assertEqual(count, 2)
+
+    def test_noop_when_no_font_tags(self) -> None:
+        html = "<p>Plain paragraph with <strong>bold</strong> text.</p>"
+        out, count = strip_font_tags(html)
+        self.assertEqual(count, 0)
+        self.assertEqual(out, html)
+
+    def test_handles_none_input(self) -> None:
+        out, count = strip_font_tags(None)
+        self.assertEqual(out, "")
+        self.assertEqual(count, 0)
+
+
+class StripModxSnippetsTests(unittest.TestCase):
+    def test_strips_simple_snippet(self) -> None:
+        html = "<p>Before [[MySnippet]] after</p>"
+        out, count = strip_modx_snippets(html)
+        self.assertEqual(count, 1)
+        self.assertNotIn("[[MySnippet]]", out)
+        self.assertIn("Before  after", out)
+
+    def test_strips_multiple_snippets(self) -> None:
+        html = "<p>[[Header]] body [[Footer]] end</p>"
+        out, count = strip_modx_snippets(html)
+        self.assertEqual(count, 2)
+        self.assertNotIn("[[Header]]", out)
+        self.assertNotIn("[[Footer]]", out)
+
+    def test_strips_snippet_inside_paragraph(self) -> None:
+        html = "<p>Text [[inlineSnippet]] more text</p>"
+        out, count = strip_modx_snippets(html)
+        self.assertEqual(count, 1)
+        self.assertNotIn("[[inlineSnippet]]", out)
+        self.assertIn("Text  more text", out)
+
+    def test_noop_when_no_snippets(self) -> None:
+        html = "<p>Plain text with [single brackets] and no double brackets.</p>"
+        out, count = strip_modx_snippets(html)
+        self.assertEqual(count, 0)
+        self.assertEqual(out, html)
+
+    def test_handles_empty_input(self) -> None:
+        out, count = strip_modx_snippets("")
+        self.assertEqual(out, "")
+        self.assertEqual(count, 0)
+
+
+class FlagDeprecatedSemanticTagsTests(unittest.TestCase):
+    def test_flags_center_tag(self) -> None:
+        html = '<p>Intro</p><center>Centered content</center><p>Outro</p>'
+        findings = flag_deprecated_semantic_tags(html)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0]["tag"], "center")
+        self.assertIn("Centered content", findings[0]["textPreview"])
+
+    def test_flags_u_tag(self) -> None:
+        html = '<p>Some <u>underlined</u> text</p>'
+        findings = flag_deprecated_semantic_tags(html)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0]["tag"], "u")
+
+    def test_flags_multiple_deprecated_tags(self) -> None:
+        html = '<center>Title</center><p><u>underline</u></p>'
+        findings = flag_deprecated_semantic_tags(html)
+        self.assertEqual(len(findings), 2)
+
+    def test_no_findings_for_clean_html(self) -> None:
+        html = "<p><strong>Bold</strong> and <em>italic</em></p>"
+        findings = flag_deprecated_semantic_tags(html)
+        self.assertEqual(len(findings), 0)
+
+
+class FlagEssentialStyleAttrsTests(unittest.TestCase):
+    def test_flags_td_with_style(self) -> None:
+        html = '<table><tr><td style="width: 50%">Column 1</td></tr></table>'
+        findings = flag_essential_style_attrs(html)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0]["tag"], "td")
+        self.assertIn("width: 50%", findings[0]["style"])
+
+    def test_flags_th_with_style(self) -> None:
+        html = '<table><tr><th style="text-align: left">Header</th></tr></table>'
+        findings = flag_essential_style_attrs(html)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0]["tag"], "th")
+
+    def test_no_findings_for_td_without_style(self) -> None:
+        html = "<table><tr><td>Plain cell</td></tr></table>"
+        findings = flag_essential_style_attrs(html)
+        self.assertEqual(len(findings), 0)
+
+    def test_no_findings_for_style_on_non_essential_elements(self) -> None:
+        html = '<p style="color: red">This style is auto-stripped elsewhere</p>'
+        findings = flag_essential_style_attrs(html)
+        self.assertEqual(len(findings), 0)
+
+
+class FlagMixedSemanticPresentationalTests(unittest.TestCase):
+    def test_flags_center_with_strong_inside(self) -> None:
+        html = '<center><strong>Bold centered</strong></center>'
+        findings = flag_mixed_semantic_presentational(html)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0]["tag"], "center")
+        self.assertIn("strong", findings[0]["children"])
+
+    def test_flags_u_with_style_attr(self) -> None:
+        html = '<u style="color: blue">Styled underline</u>'
+        findings = flag_mixed_semantic_presentational(html)
+        self.assertEqual(len(findings), 1)
+
+    def test_no_findings_for_simple_deprecated_tag(self) -> None:
+        html = "<center>Plain centered text</center>"
+        findings = flag_mixed_semantic_presentational(html)
+        self.assertEqual(len(findings), 0)
+
+    def test_no_findings_for_clean_html(self) -> None:
+        html = "<p><strong>Semantic bold</strong></p>"
+        findings = flag_mixed_semantic_presentational(html)
+        self.assertEqual(len(findings), 0)
+
+
+class FullPipelineWithNewPatternsTests(unittest.TestCase):
+    def test_strips_font_tags_in_full_pipeline(self) -> None:
+        html = (
+            '<p>Text before</p>'
+            '<p><font color="red">Legacy font text</font></p>'
+            '<p>Text after</p>'
+        )
+        out, stats = normalize_legacy_modx_markup(html)
+        self.assertNotIn("<font", out.lower())
+        self.assertIn("Legacy font text", out)
+        self.assertGreater(stats.get("strip_font_tags", 0), 0)
+
+    def test_strips_modx_snippets_in_full_pipeline(self) -> None:
+        html = "<p>Before [[MySnippet]] after</p>"
+        out, stats = normalize_legacy_modx_markup(html)
+        self.assertNotIn("[[MySnippet]]", out)
+        self.assertGreater(stats.get("strip_modx_snippets", 0), 0)
+
+    def test_idempotent_re_run_produces_zero_changes(self) -> None:
+        html = (
+            '<p><font color="red">Text</font> [[Snippet]] more &nbsp;text</p>'
+            '<p></p><div></div>'
+        )
+        out, stats = normalize_legacy_modx_markup(html)
+        self.assertGreater(sum(stats.values()), 0)
+
+        second_out, second_stats = normalize_legacy_modx_markup(out)
+        self.assertEqual(sum(second_stats.values()), 0,
+                         f"Second pass should change nothing, got: {second_stats}")
+        self.assertEqual(second_out, out)
+
+    def test_counts_legacy_patterns_including_new_ones(self) -> None:
+        html = (
+            '<div class="tab-content">'
+            '<center>Centered</center>'
+            '<p><font color="red">Old font</font></p>'
+            '<p>[[MySnippet]] text</p>'
+            '<table><tr><td style="width:50%">Cell</td></tr></table>'
+            "</div>"
+        )
+        counts = count_legacy_markup_issues(html)
+        self.assertGreater(counts["tab_content_wrapper"], 0)
+        self.assertGreater(counts["font_tags"], 0)
+        self.assertGreater(counts["modx_snippets"], 0)
+        self.assertGreater(counts["deprecated_tags"], 0)
+        self.assertGreater(counts["essential_style_attrs"], 0)
 
 
 if __name__ == "__main__":

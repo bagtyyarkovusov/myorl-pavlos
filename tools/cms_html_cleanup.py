@@ -10,6 +10,12 @@ from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning, NavigableString
 
 _INVISIBLE_SRC_CHARS = re.compile(r"[\u200b-\u200d\ufeff\u2060\u00ad]+")
 
+_MODX_SNIPPET_RE = re.compile(r"\[\[[a-zA-Z_][a-zA-Z0-9_]*\]\]")
+
+_DEPRECATED_TAGS = frozenset({"center", "u", "font", "strike", "marquee"})
+
+_SEMANTIC_TAGS = frozenset({"strong", "em", "b", "i", "article", "section", "header", "footer"})
+
 
 _BROKEN_IMG_SRC_RE = re.compile(
     r"""
@@ -461,6 +467,29 @@ def remove_legacy_video_tags(html: str | None) -> tuple[str, int]:
     return str(soup), len(videos)
 
 
+def strip_font_tags(html: str | None) -> tuple[str, int]:
+    """Unwrap ``<font>`` tags, preserving their inner content."""
+
+    if not html or "<font" not in html.lower():
+        return html or "", 0
+
+    soup = _parse_soup(html)
+    tags = list(soup.find_all("font"))
+    for tag in tags:
+        tag.unwrap()
+    return str(soup), len(tags)
+
+
+def strip_modx_snippets(html: str | None) -> tuple[str, int]:
+    """Remove MODX ``[[snippetName]]`` insertion markers (snippets no longer resolve)."""
+
+    if not html or "[[" not in html:
+        return html or "", 0
+
+    result, count = _MODX_SNIPPET_RE.subn("", html)
+    return result, count
+
+
 def normalize_legacy_modx_markup(html: str | None) -> tuple[str, dict[str, int]]:
     """Full MODX-era HTML normalization pipeline for Strapi page fields."""
 
@@ -472,6 +501,8 @@ def normalize_legacy_modx_markup(html: str | None) -> tuple[str, dict[str, int]]
     steps: tuple[tuple[str, Any], ...] = (
         ("unwrap_wrappers", unwrap_legacy_wrappers),
         ("strip_presentation_attrs", strip_presentation_attrs),
+        ("strip_font_tags", strip_font_tags),
+        ("strip_modx_snippets", strip_modx_snippets),
         ("remove_broken_images", lambda h: (remove_broken_images(h), 0)),
         ("split_multi_image_paragraphs", split_multi_image_paragraphs),
         ("normalize_youtube_iframes", normalize_youtube_iframes),
@@ -510,6 +541,10 @@ def count_legacy_markup_issues(html: str | None) -> dict[str, int]:
         "fixed_dimension_iframe": 0,
         "empty_paragraphs": 0,
         "prose_pre": 0,
+        "font_tags": 0,
+        "modx_snippets": 0,
+        "deprecated_tags": 0,
+        "essential_style_attrs": 0,
     }
     if not html:
         return counts
@@ -536,5 +571,79 @@ def count_legacy_markup_issues(html: str | None) -> dict[str, int]:
     for tag in soup.find_all("p"):
         if _element_is_empty(tag):
             counts["empty_paragraphs"] += 1
+    for tag in soup.find_all("font"):
+        counts["font_tags"] += 1
+    counts["modx_snippets"] += len(_MODX_SNIPPET_RE.findall(html))
+    for tag in soup.find_all(True):
+        if getattr(tag, "name", None) in _DEPRECATED_TAGS:
+            counts["deprecated_tags"] += 1
+        if getattr(tag, "name", None) in {"td", "th"} and tag.has_attr("style"):
+            counts["essential_style_attrs"] += 1
 
     return counts
+
+
+def flag_deprecated_semantic_tags(html: str | None) -> list[dict[str, str]]:
+    """Find deprecated semantic tags (``<center>``, ``<u>``) that need editorial review."""
+
+    if not html:
+        return []
+
+    soup = _parse_soup(html)
+    findings: list[dict[str, str]] = []
+    for tag in soup.find_all(_DEPRECATED_TAGS):
+        name = getattr(tag, "name", "?")
+        findings.append({
+            "tag": name,
+            "reason": "deprecated semantic tag — requires editorial decision",
+            "textPreview": tag.get_text(strip=True)[:120],
+        })
+    return findings
+
+
+def flag_essential_style_attrs(html: str | None) -> list[dict[str, str]]:
+    """Find ``style`` attributes on essential elements (table cells) that need manual review.
+    These were deliberately authored (e.g. column widths) and should not be auto-stripped."""
+
+    if not html or "style=" not in html.lower():
+        return []
+
+    soup = _parse_soup(html)
+    findings: list[dict[str, str]] = []
+    for tag in soup.find_all(["td", "th"]):
+        style = tag.get("style")
+        if not isinstance(style, str) or not style.strip():
+            continue
+        findings.append({
+            "tag": tag.name,
+            "style": style.strip()[:200],
+            "textPreview": tag.get_text(strip=True)[:120],
+        })
+    return findings
+
+
+def flag_mixed_semantic_presentational(html: str | None) -> list[dict[str, str]]:
+    """Find mixed semantic + presentational markup that needs editorial review.
+    Example: ``<strong>`` inside ``<center>`` with inline ``style`` attributes."""
+
+    if not html:
+        return []
+
+    soup = _parse_soup(html)
+    findings: list[dict[str, str]] = []
+
+    for deprecated_tag in soup.find_all(_DEPRECATED_TAGS):
+        child_tags = sorted({
+            child.name
+            for child in deprecated_tag.descendants
+            if getattr(child, "name", None) in _SEMANTIC_TAGS
+        })
+        has_style = deprecated_tag.has_attr("style")
+        if child_tags or has_style:
+            findings.append({
+                "tag": getattr(deprecated_tag, "name", "?"),
+                "reason": "mixed semantic + presentational markup",
+                "children": ", ".join(child_tags) if child_tags else "(has style attr)",
+                "textPreview": deprecated_tag.get_text(strip=True)[:120],
+            })
+    return findings

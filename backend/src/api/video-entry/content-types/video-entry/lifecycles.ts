@@ -1,4 +1,4 @@
-import { notifyRevalidation } from "../../../../utils/revalidate";
+import { createLifecycleHandlers } from "../../../../utils/revalidate";
 
 function tagsForVideoEntry(event: any): string[] {
   const result = event?.result;
@@ -17,14 +17,4 @@ function tagsForVideoEntry(event: any): string[] {
   return tags;
 }
 
-export default {
-  async afterCreate(event: any) {
-    await notifyRevalidation(tagsForVideoEntry(event));
-  },
-  async afterUpdate(event: any) {
-    await notifyRevalidation(tagsForVideoEntry(event));
-  },
-  async afterDelete(event: any) {
-    await notifyRevalidation(tagsForVideoEntry(event));
-  },
-};
+export default createLifecycleHandlers(tagsForVideoEntry);

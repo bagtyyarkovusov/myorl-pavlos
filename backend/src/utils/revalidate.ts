@@ -12,6 +12,19 @@ function env(name: string): string | undefined {
   return process.env[name]?.trim() || undefined;
 }
 
+export function createLifecycleHandlers(
+  tagsFn: (event: any) => string[],
+): {
+  afterCreate(event: any): Promise<void>;
+  afterUpdate(event: any): Promise<void>;
+  afterDelete(event: any): Promise<void>;
+} {
+  const handler = async (event: any) => {
+    await notifyRevalidation(tagsFn(event));
+  };
+  return { afterCreate: handler, afterUpdate: handler, afterDelete: handler };
+}
+
 export async function notifyRevalidation(tags: string[]): Promise<void> {
   const url = env("NEXT_REVALIDATE_URL");
   const secret = env("REVALIDATE_SECRET");

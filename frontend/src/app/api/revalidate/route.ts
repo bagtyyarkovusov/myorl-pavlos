@@ -119,7 +119,7 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
   const locale = stringValue(payload.entry?.locale);
   const documentId = stringValue(payload.entry?.documentId);
 
-  if (isPageModel(model)) {
+  if (modelMatches(model, "page")) {
     const tags = new Set<string>(["pages", "sitemap"]);
     const slug = stringValue(payload.entry?.slug);
 
@@ -137,7 +137,7 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
     return [...tags];
   }
 
-  if (isVideoEntryModel(model)) {
+  if (modelMatches(model, "video-entry")) {
     const tags = new Set<string>(["pages", "sitemap"]);
     if (locale) {
       tags.add(`locale:${locale}`);
@@ -148,7 +148,7 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
     return [...tags];
   }
 
-  if (isGlobalModel(model)) {
+  if (modelMatches(model, "global")) {
     const tags = new Set<string>(["pages", "sitemap"]);
     if (locale) {
       tags.add(`global:${locale}`);
@@ -157,7 +157,7 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
     return [...tags];
   }
 
-  if (isTagModel(model)) {
+  if (modelMatches(model, "tag")) {
     const tags = new Set<string>(["tags", "pages", "sitemap"]);
     if (locale) {
       tags.add(`locale:${locale}`);
@@ -168,20 +168,8 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
   return ["pages", "sitemap"];
 }
 
-function isVideoEntryModel(model: string | undefined): boolean {
-  return model === "api::video-entry.video-entry" || model === "video-entry";
-}
-
-function isGlobalModel(model: string | undefined): boolean {
-  return model === "api::global.global" || model === "global";
-}
-
-function isPageModel(model: string | undefined): boolean {
-  return model === "api::page.page" || model === "page";
-}
-
-function isTagModel(model: string | undefined): boolean {
-  return model === "api::tag.tag" || model === "tag";
+function modelMatches(model: string | undefined, shortName: string): boolean {
+  return model === `api::${shortName}.${shortName}` || model === shortName;
 }
 
 function stringValue(value: unknown): string | undefined {

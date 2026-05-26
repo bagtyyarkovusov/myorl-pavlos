@@ -1,4 +1,4 @@
-import { notifyRevalidation } from "../../../../utils/revalidate";
+import { createLifecycleHandlers } from "../../../../utils/revalidate";
 
 function tagsForPage(event: any): string[] {
   const result = event?.result;
@@ -18,14 +18,4 @@ function tagsForPage(event: any): string[] {
   return tags;
 }
 
-export default {
-  async afterCreate(event: any) {
-    await notifyRevalidation(tagsForPage(event));
-  },
-  async afterUpdate(event: any) {
-    await notifyRevalidation(tagsForPage(event));
-  },
-  async afterDelete(event: any) {
-    await notifyRevalidation(tagsForPage(event));
-  },
-};
+export default createLifecycleHandlers(tagsForPage);

@@ -1,4 +1,4 @@
-import { notifyRevalidation } from "../../../../utils/revalidate";
+import { createLifecycleHandlers } from "../../../../utils/revalidate";
 
 function tagsForGlobal(event: any): string[] {
   const result = event?.result;
@@ -14,14 +14,4 @@ function tagsForGlobal(event: any): string[] {
   return tags;
 }
 
-export default {
-  async afterCreate(event: any) {
-    await notifyRevalidation(tagsForGlobal(event));
-  },
-  async afterUpdate(event: any) {
-    await notifyRevalidation(tagsForGlobal(event));
-  },
-  async afterDelete(event: any) {
-    await notifyRevalidation(tagsForGlobal(event));
-  },
-};
+export default createLifecycleHandlers(tagsForGlobal);

@@ -18,6 +18,27 @@ const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
   "specialized-article",
 ]);
 
+function formatDate(dateString?: string | null): string | null {
+  if (!dateString) return null;
+  return dateString.slice(0, 10);
+}
+
+function ArticleDateLine({ page }: { page: PageDTO }) {
+  if (!MEDICAL_LAYOUT_VARIANTS.has(page.layoutVariant)) return null;
+
+  const published = formatDate(page.publishedAt);
+  const updated = formatDate(page.updatedAt);
+
+  if (!published && !updated) return null;
+
+  const t = getPageStrings(page.locale);
+  const parts: string[] = [];
+  if (published) parts.push(`${t.publishedOn} ${published}`);
+  if (updated) parts.push(`${t.updatedOn} ${updated}`);
+
+  return <div className={styles["article-dates"]}>{parts.join(" · ")}</div>;
+}
+
 function shouldShowDisclaimer(
   page: PageDTO,
   disclaimerText?: string | null,
@@ -112,6 +133,7 @@ function DefaultPageBody({
         proseStackGap === "compact" && styles["prose-shell--compact-stack"],
       )}
     >
+      <ArticleDateLine page={page} />
       <CmsHtml html={page.content} locale={page.locale} />
       {page.sections.map((section, index) => (
         <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
@@ -205,6 +227,7 @@ function ServiceArticleBody({
         data-service-layout="true"
       >
         <article className={styles["service-layout__content"]}>
+          <ArticleDateLine page={page} />
           <CmsHtml html={mainContentHtml} variant="service" locale={page.locale} />
           {page.sections.map((section, index) => (
             <SectionRenderer
@@ -351,6 +374,7 @@ function ArticleAsideBody({
       {mobileRelatedTopics}
       <main className={styles["reference-layout"]} {...layoutProps}>
         <article className={styles["reference-layout__content"]}>
+          <ArticleDateLine page={page} />
           <CmsHtml html={contentWithHeadingIds} variant={cmsVariant} locale={page.locale} />
           {bodySections.map((section, index) => (
             <SectionRenderer

@@ -34,6 +34,11 @@ type StructuredDataComposerProps = {
 const DEFAULT_BRAND_NAME = "MyORL";
 const DEFAULT_HOME_LABEL = "Home";
 
+function formatIsoDate(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  return value.slice(0, 10);
+}
+
 function firstClinicPhone(sections: SectionDTO[]): string | undefined {
   const contact = sections.find(
     (s): s is Extract<SectionDTO, { __component: "sections.contact" }> =>
@@ -156,15 +161,42 @@ export function StructuredDataComposer({
   }
 
   if (schemaTypes.has("MedicalProcedure")) {
-    blocks.push(buildMedicalProcedureLd({ title: page.title, pageUrl, description, locale }));
+    blocks.push(
+      buildMedicalProcedureLd({
+        title: page.title,
+        pageUrl,
+        description,
+        locale,
+        datePublished: formatIsoDate(page.publishedAt),
+        dateModified: formatIsoDate(page.updatedAt),
+      }),
+    );
   }
 
   if (schemaTypes.has("MedicalCondition")) {
-    blocks.push(buildMedicalConditionLd({ title: page.title, pageUrl, description, locale }));
+    blocks.push(
+      buildMedicalConditionLd({
+        title: page.title,
+        pageUrl,
+        description,
+        locale,
+        datePublished: formatIsoDate(page.publishedAt),
+        dateModified: formatIsoDate(page.updatedAt),
+      }),
+    );
   }
 
   if (schemaTypes.has("Article")) {
-    blocks.push(buildArticleLd({ title: page.title, pageUrl, description, locale }));
+    blocks.push(
+      buildArticleLd({
+        title: page.title,
+        pageUrl,
+        description,
+        locale,
+        datePublished: formatIsoDate(page.publishedAt),
+        dateModified: formatIsoDate(page.updatedAt),
+      }),
+    );
   }
 
   return <StructuredData data={{ "@context": "https://schema.org", "@graph": blocks }} />;

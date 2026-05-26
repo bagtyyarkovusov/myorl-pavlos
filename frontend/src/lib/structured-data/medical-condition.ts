@@ -8,6 +8,8 @@ export type MedicalConditionInput = {
   pageUrl: string;
   description?: string;
   locale: string;
+  datePublished?: string | null;
+  dateModified?: string | null;
 };
 
 export type MedicalConditionLd = {
@@ -17,6 +19,8 @@ export type MedicalConditionLd = {
   url: string;
   description?: string;
   inLanguage: string;
+  datePublished?: string;
+  dateModified?: string;
 };
 
 export function buildMedicalConditionLd(input: MedicalConditionInput): MedicalConditionLd {
@@ -30,6 +34,14 @@ export function buildMedicalConditionLd(input: MedicalConditionInput): MedicalCo
 
   if (input.description) {
     result.description = input.description;
+  }
+
+  if (input.datePublished) {
+    result.datePublished = input.datePublished;
+  }
+
+  if (input.dateModified) {
+    result.dateModified = input.dateModified;
   }
 
   return result;

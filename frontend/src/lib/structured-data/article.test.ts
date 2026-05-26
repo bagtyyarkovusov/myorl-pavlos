@@ -38,16 +38,38 @@ describe("buildArticleLd", () => {
     expect(ld).not.toHaveProperty("description");
   });
 
-  it("does not include Phase 2 fields", () => {
+  it("includes datePublished and dateModified when provided", () => {
     const ld = buildArticleLd({
-      title: "Νέες εξελίξεις στην ΩΡΛ χειρουργική",
-      pageUrl: "https://myorl.example.com/el/nees-exelixeis",
+      title: "Test Article",
+      pageUrl: "https://myorl.example.com/el/test",
+      locale: "el",
+      datePublished: "2024-06-15",
+      dateModified: "2024-12-01",
+    });
+
+    expect(ld.datePublished).toBe("2024-06-15");
+    expect(ld.dateModified).toBe("2024-12-01");
+  });
+
+  it("omits datePublished and dateModified when not provided", () => {
+    const ld = buildArticleLd({
+      title: "Test Article",
+      pageUrl: "https://myorl.example.com/el/test",
+      locale: "el",
+    });
+
+    expect(ld).not.toHaveProperty("datePublished");
+    expect(ld).not.toHaveProperty("dateModified");
+  });
+
+  it("does not include Phase 2 author field", () => {
+    const ld = buildArticleLd({
+      title: "Test Article",
+      pageUrl: "https://myorl.example.com/el/test",
       locale: "el",
     });
 
     expect(ld).not.toHaveProperty("author");
-    expect(ld).not.toHaveProperty("datePublished");
-    expect(ld).not.toHaveProperty("dateModified");
   });
 
   it("does not have a name field — uses headline per Article schema", () => {

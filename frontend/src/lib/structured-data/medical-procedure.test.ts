@@ -38,6 +38,30 @@ describe("buildMedicalProcedureLd", () => {
     expect(ld).not.toHaveProperty("description");
   });
 
+  it("includes datePublished and dateModified when provided", () => {
+    const ld = buildMedicalProcedureLd({
+      title: "Ρινοπλαστική",
+      pageUrl: "https://myorl.example.com/el/rinoplasty",
+      locale: "el",
+      datePublished: "2024-06-15",
+      dateModified: "2024-12-01",
+    });
+
+    expect(ld.datePublished).toBe("2024-06-15");
+    expect(ld.dateModified).toBe("2024-12-01");
+  });
+
+  it("omits datePublished and dateModified when not provided", () => {
+    const ld = buildMedicalProcedureLd({
+      title: "Ρινοπλαστική",
+      pageUrl: "https://myorl.example.com/el/rinoplasty",
+      locale: "el",
+    });
+
+    expect(ld).not.toHaveProperty("datePublished");
+    expect(ld).not.toHaveProperty("dateModified");
+  });
+
   it("does not include Phase 2 fields", () => {
     const ld = buildMedicalProcedureLd({
       title: "Ρινοπλαστική",

@@ -182,6 +182,27 @@ def valid_slug_sets(connection: sqlite3.Connection) -> tuple[set[str], dict[str,
     return all_slugs, by_locale
 
 
+def fetch_page_titles(connection: sqlite3.Connection) -> dict[str, str]:
+    """Return ``page:locale:slug`` → title for every published page.
+
+    Only pages with a non-empty title are included.  The keys match the
+    ``_extract_page_key`` convention so they can be looked up during the
+    H1-audit pass.
+    """
+    titles: dict[str, str] = {}
+    for row in connection.execute(
+        """
+        SELECT locale, slug, title
+        FROM pages
+        WHERE published_at IS NOT NULL
+          AND title IS NOT NULL
+          AND TRIM(title) != ''
+        """
+    ):
+        titles[f"page:{row['locale']}:{row['slug']}"] = row["title"].strip()
+    return titles
+
+
 def normalize_internal_path(href: str) -> tuple[str | None, str]:
     parsed = urlparse(href.strip())
     if parsed.scheme in IGNORED_SCHEMES or href.startswith("#"):
@@ -365,11 +386,21 @@ def _extract_page_key(source_id: str) -> str:
     return source_id
 
 
-def audit_h1_hierarchy(sources: list[TextSource]) -> list[dict[str, Any]]:
+def audit_h1_hierarchy(
+    sources: list[TextSource],
+    *,
+    page_titles: dict[str, str] | None = None,
+) -> list[dict[str, Any]]:
     """Count ``<h1>`` tags per page and flag violations of the "exactly one H1" rule.
 
     Returns a list of violation dicts for pages with 0 or 2+ H1s.
     Pages with exactly 1 H1 are clean and excluded from the result.
+
+    When ``page_titles`` is supplied, every page-level source that has a
+    non-empty title is treated as contributing one *virtual* H1 (the title
+    is rendered as ``<h1>{page.title}</h1>`` in the Next.js template).  This
+    means a page with a title but zero ``<h1>`` tags in its rich-text body
+    has exactly one H1 and will NOT be flagged.
     """
     page_h1: dict[str, dict[str, Any]] = {}
 
@@ -382,6 +413,16 @@ def audit_h1_hierarchy(sources: list[TextSource]) -> list[dict[str, Any]]:
             page_h1[page_key]["h1Count"] += count
             page_h1[page_key]["fields"].append(
                 {"field": source.field, "source": source.source, "h1InField": count}
+            )
+
+    if page_titles:
+        for page_key, info in page_h1.items():
+            title = page_titles.get(page_key)
+            if title is None:
+                continue
+            info["h1Count"] += 1
+            info["fields"].append(
+                {"field": "title", "source": page_key, "h1InField": 1, "virtual": True}
             )
 
     result: list[dict[str, Any]] = []
@@ -552,7 +593,8 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
     )
     html_data = audit_html_markers(text_sources)
     broken_anchor_links = find_broken_anchor_links(text_sources)
-    h1_violations = audit_h1_hierarchy(text_sources)
+    page_titles = fetch_page_titles(connection)
+    h1_violations = audit_h1_hierarchy(text_sources, page_titles=page_titles)
     h1_flags = [v for v in h1_violations if v["severity"] == "flag"]
     empty_content_leaves = fetch_empty_content_leaves(connection)
     navigation = check_navigation_render(skip=args.skip_strapi_navigation)

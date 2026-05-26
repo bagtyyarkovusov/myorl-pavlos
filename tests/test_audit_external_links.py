@@ -248,6 +248,40 @@ class CheckOneLinkTests(unittest.IsolatedAsyncioTestCase):
             self.assertIn(result.classification, ("flaky", "allowlisted"))
             self.assertIn("connection refused", str(result.error or ""))
 
+    async def test_remote_protocol_error_recorded_as_flaky(self) -> None:
+        async with respx.mock(assert_all_called=False) as mock:
+            mock.head("https://disconnect.example").mock(
+                side_effect=httpx.RemoteProtocolError(
+                    "Server disconnected without sending a response."
+                )
+            )
+            async with httpx.AsyncClient(
+                timeout=10, follow_redirects=True, headers={"User-Agent": USER_AGENT},
+            ) as client:
+                result = await check_one_link(
+                    client, "https://disconnect.example",
+                    source="page:el:test:1", field="content",
+                )
+        self.assertEqual(result.classification, "flaky")
+        self.assertEqual(result.status, 0)
+        self.assertEqual(result.error, "RemoteProtocolError")
+
+    async def test_proxy_error_recorded_as_flaky(self) -> None:
+        async with respx.mock(assert_all_called=False) as mock:
+            mock.head("https://via-proxy.example").mock(
+                side_effect=httpx.ProxyError("proxy connect failure")
+            )
+            async with httpx.AsyncClient(
+                timeout=10, follow_redirects=True, headers={"User-Agent": USER_AGENT},
+            ) as client:
+                result = await check_one_link(
+                    client, "https://via-proxy.example",
+                    source="page:el:test:1", field="content",
+                )
+        self.assertEqual(result.classification, "flaky")
+        self.assertEqual(result.status, 0)
+        self.assertEqual(result.error, "ProxyError")
+
 
 class BuildReportTests(unittest.TestCase):
     def test_report_structure(self) -> None:

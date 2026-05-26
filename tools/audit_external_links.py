@@ -160,6 +160,18 @@ async def check_one_link(
                 source=source, field=field, href=href,
                 classification="flaky", error=str(exc),
             )
+        except (httpx.HTTPError, httpx.RequestError) as exc:
+            if is_allowlisted(href):
+                return CheckResult(
+                    source=source, field=field, href=href,
+                    classification="allowlisted", status=0,
+                    error=type(exc).__name__,
+                )
+            return CheckResult(
+                source=source, field=field, href=href,
+                classification="flaky", status=0,
+                error=type(exc).__name__,
+            )
 
     result = await _do()
 

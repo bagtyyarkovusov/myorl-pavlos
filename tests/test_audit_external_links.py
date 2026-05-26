@@ -263,7 +263,7 @@ class CheckOneLinkTests(unittest.IsolatedAsyncioTestCase):
                     source="page:el:test:1", field="content",
                 )
         self.assertEqual(result.classification, "flaky")
-        self.assertEqual(result.status, 0)
+        self.assertIsNone(result.status)
         self.assertEqual(result.error, "RemoteProtocolError")
 
     async def test_proxy_error_recorded_as_flaky(self) -> None:
@@ -279,7 +279,7 @@ class CheckOneLinkTests(unittest.IsolatedAsyncioTestCase):
                     source="page:el:test:1", field="content",
                 )
         self.assertEqual(result.classification, "flaky")
-        self.assertEqual(result.status, 0)
+        self.assertIsNone(result.status)
         self.assertEqual(result.error, "ProxyError")
 
 

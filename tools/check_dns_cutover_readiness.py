@@ -17,6 +17,7 @@ import os
 import socket
 import sys
 from dataclasses import dataclass, field
+from typing import TextIO
 
 
 APEX_HOSTNAME = "myorl.gr"
@@ -83,7 +84,7 @@ def run_checks(
     ]
 
 
-def format_report(results: list[CheckResult], file: object = sys.stdout) -> None:
+def format_report(results: list[CheckResult], file: TextIO = sys.stdout) -> None:
     """Print a human-readable report of check results to *file*."""
     passed = sum(1 for r in results if r.passed)
     total = len(results)

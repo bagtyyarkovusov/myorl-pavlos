@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import socket
 import sys
 import unittest
@@ -38,8 +39,8 @@ class TestCheckDnsRecord(unittest.TestCase):
             result = check_dns_record("myorl.gr", "93.184.216.34")
 
         self.assertTrue(result.passed)
-        self.assertIn("myorl.gr", result.hostname)
-        self.assertIn("93.184.216.34", result.resolved_ips[0])
+        self.assertEqual(result.hostname, "myorl.gr")
+        self.assertEqual(result.resolved_ips, ["93.184.216.34"])
 
     def test_apex_resolves_to_unexpected_ip(self):
         with patch("socket.getaddrinfo") as mock_resolve:
@@ -55,7 +56,7 @@ class TestCheckDnsRecord(unittest.TestCase):
             result = check_dns_record("myorl.gr", "93.184.216.34")
 
         self.assertFalse(result.passed)
-        self.assertIn("203.0.113.1", result.resolved_ips[0])
+        self.assertEqual(result.resolved_ips, ["203.0.113.1"])
         self.assertNotIn("93.184.216.34", result.resolved_ips)
 
     def test_legacy_subdomain_resolves_to_expected_ip(self):
@@ -72,7 +73,8 @@ class TestCheckDnsRecord(unittest.TestCase):
             result = check_dns_record("legacy.myorl.gr", "198.51.100.1")
 
         self.assertTrue(result.passed)
-        self.assertIn("legacy.myorl.gr", result.hostname)
+        self.assertEqual(result.hostname, "legacy.myorl.gr")
+        self.assertEqual(result.resolved_ips, ["198.51.100.1"])
 
     def test_legacy_subdomain_resolves_to_wrong_ip(self):
         with patch("socket.getaddrinfo") as mock_resolve:
@@ -309,8 +311,6 @@ class TestFormatReportJson(unittest.TestCase):
                 message="myorl.gr resolves to 93.184.216.34",
             ),
         ]
-        import json
-
         output = format_report_json(results)
         parsed = json.loads(output)
 
@@ -331,7 +331,6 @@ class TestFormatReportJson(unittest.TestCase):
                 message="myorl.gr resolves to 203.0.113.1, expected 93.184.216.34",
             ),
         ]
-        import json
 
         output = format_report_json(results)
         parsed = json.loads(output)

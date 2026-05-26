@@ -14,7 +14,7 @@ import argparse
 import re
 import sys
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -473,13 +473,13 @@ def _md_link(slug: str, locale: str) -> str:
 
 def build_report(pages: list[tuple[str, str, str, str]]) -> tuple[str, list[SlugFinding]]:
     """Return (markdown_report, all_findings)."""
-    criteria: list[tuple[str, Any]] = [
-        ("criterion-1-broken-typos", lambda: flag_broken_typos(pages)),
-        ("criterion-2-duplicates", lambda: flag_duplicates(pages)),
-        ("criterion-2b-near-duplicates", lambda: flag_near_duplicates(pages)),
-        ("criterion-3-collision-suffixes", lambda: flag_collision_suffixes(pages)),
-        ("criterion-4-locale-mismatch", lambda: flag_locale_mismatch(pages)),
-        ("criterion-5-garbage", lambda: flag_garbage(pages)),
+    criteria: list[tuple[str, str, Any]] = [
+        ("criterion-1-broken-typos", "typo", flag_broken_typos),
+        ("criterion-2-duplicates", "duplicate", flag_duplicates),
+        ("criterion-2b-near-duplicates", "near-duplicate", flag_near_duplicates),
+        ("criterion-3-collision-suffixes", "collision-suffix", flag_collision_suffixes),
+        ("criterion-4-locale-mismatch", "locale-mismatch", flag_locale_mismatch),
+        ("criterion-5-garbage", "garbage", flag_garbage),
     ]
 
     all_findings: list[SlugFinding] = []
@@ -489,8 +489,8 @@ def build_report(pages: list[tuple[str, str, str, str]]) -> tuple[str, list[Slug
     sections.append("# Slug Quality Audit\n")
     sections.append(f"**{total} published pages** audited.\n")
 
-    for anchor, fn in criteria:
-        findings = fn()
+    for anchor, _criterion_key, check_fn in criteria:
+        findings = check_fn(pages)
         all_findings.extend(findings)
         if not findings:
             sections.append(f"## {anchor}\n\n_No issues found._\n")
@@ -510,24 +510,14 @@ def build_report(pages: list[tuple[str, str, str, str]]) -> tuple[str, list[Slug
     for f in all_findings:
         by_criterion[f.criterion] += 1
 
-    criterion_map = {
-        "criterion-1-broken-typos": "typo",
-        "criterion-2-duplicates": "duplicate",
-        "criterion-2b-near-duplicates": "near-duplicate",
-        "criterion-3-collision-suffixes": "collision-suffix",
-        "criterion-4-locale-mismatch": "locale-mismatch",
-        "criterion-5-garbage": "garbage",
-    }
-
     summary_lines = [
         "## Summary\n",
-        f"| Criterion | Flagged |",
-        f"|---|---|",
+        "| Criterion | Flagged |",
+        "|---|---|",
     ]
-    for anchor, _fn in criteria:
+    for anchor, criterion_key, _check_fn in criteria:
         label = anchor.replace("criterion-", "").replace("-", " ")
-        c_val = criterion_map.get(anchor, "")
-        count = by_criterion.get(c_val, 0)
+        count = by_criterion.get(criterion_key, 0)
         summary_lines.append(f"| {label} | {count} |")
 
     summary_lines.append(f"| **Total flagged** | **{len(all_findings)}** |")

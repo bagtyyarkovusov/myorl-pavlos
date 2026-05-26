@@ -2,7 +2,25 @@ import type { Metadata } from "next";
 
 import { getCmsConfig } from "./env";
 import { hrefForPage } from "./navigation";
-import type { PageDTO } from "./types";
+import type { Locale, PageDTO } from "./types";
+
+function xDefaultLanguages(
+  alternateUrls: Partial<Record<Locale, string>>,
+): Record<string, string> {
+  const languages: Record<string, string> = { ...alternateUrls };
+
+  const xDefault = languages.el ?? languages.ru;
+  if (xDefault) {
+    if (!languages.el && languages.ru) {
+      console.warn(
+        "No EL alternate URL for x-default hreflang, falling back to RU",
+      );
+    }
+    languages["x-default"] = xDefault;
+  }
+
+  return languages;
+}
 
 /**
  * Converts a {@link PageDTO} into a Next.js {@link Metadata} object.
@@ -29,7 +47,7 @@ export function toPageMetadata(page: PageDTO): Metadata {
     description: page.seo.metaDescription ?? undefined,
     alternates: {
       canonical,
-      languages: page.alternateUrls,
+      languages: xDefaultLanguages(page.alternateUrls),
     },
     openGraph: {
       title: page.seoTitle,

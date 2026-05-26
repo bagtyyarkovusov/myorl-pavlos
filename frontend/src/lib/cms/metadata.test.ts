@@ -116,4 +116,37 @@ describe("toPageMetadata", () => {
       },
     ]);
   });
+
+  describe("x-default hreflang", () => {
+    it("includes x-default pointing at EL when both locales exist", () => {
+      const meta = toPageMetadata(basePage);
+      expect(meta.alternates?.languages).toHaveProperty("x-default", "/el/about");
+    });
+
+    it("falls back to RU with warning when EL alternate is missing", () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      try {
+        const page: PageDTO = {
+          ...basePage,
+          alternateUrls: { ru: "/ru/o-nas" },
+        };
+        const meta = toPageMetadata(page);
+        expect(meta.alternates?.languages).toHaveProperty("x-default", "/ru/o-nas");
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining("No EL alternate URL for x-default hreflang"),
+        );
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it("omits x-default when no alternates exist", () => {
+      const page: PageDTO = {
+        ...basePage,
+        alternateUrls: {},
+      };
+      const meta = toPageMetadata(page);
+      expect(meta.alternates?.languages).not.toHaveProperty("x-default");
+    });
+  });
 });

@@ -5,7 +5,7 @@ import { hrefForPage } from "@/lib/cms/dto";
 import { getSiteUrl } from "@/lib/cms/site-url";
 import type { PageDTO } from "@/lib/cms/types";
 
-function buildAlternates(
+export function buildAlternates(
   page: PageDTO,
   siteUrl: string,
 ): MetadataRoute.Sitemap[number]["alternates"] {
@@ -15,7 +15,22 @@ function buildAlternates(
       languages[locale] = new URL(altPath, siteUrl).toString();
     }
   }
-  return Object.keys(languages).length > 0 ? { languages } : undefined;
+
+  if (Object.keys(languages).length === 0) {
+    return undefined;
+  }
+
+  const xDefault = languages.el ?? languages.ru;
+  if (xDefault) {
+    if (!languages.el && languages.ru) {
+      console.warn(
+        "No EL alternate URL for x-default hreflang, falling back to RU",
+      );
+    }
+    languages["x-default"] = xDefault;
+  }
+
+  return { languages };
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

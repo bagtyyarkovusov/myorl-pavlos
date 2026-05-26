@@ -75,7 +75,7 @@ function validatePayload(
     if (typeof entry.device_type !== "string" || !VALID_DEVICE_TYPES.has(entry.device_type)) {
       return {
         ok: false,
-        error: `metrics[${i}].device_type must be one of: mobile, desktop, tablet.`,
+        error: `metrics[${i}].device_type must be one of: ${[...VALID_DEVICE_TYPES].join(", ")}.`,
       };
     }
 

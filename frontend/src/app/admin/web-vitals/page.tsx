@@ -52,7 +52,7 @@ function filterClauses(
     clauses.push(`AND device_type = $${params.length}`);
   }
 
-  return { clauses: clauses.join("\n"), params };
+  return { clauses: clauses.join(" "), params };
 }
 
 function p75Sql(

@@ -25,6 +25,8 @@ from urllib.parse import unquote, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "tools/data/manual-repairs/site-asset-audit.json"
+DEFAULT_ALT_TEXT_REPORT = ROOT / "artifacts/reports/alt-text-audit.md"
+DEFAULT_MIN_ALT_COVERAGE = 95
 POSTGRES_CONTAINER = "myorl-pg"
 
 DIRECTORY_PARENT_LAYOUTS = ("section-index", "encyclopedia-index", "clinic-index")
@@ -36,6 +38,31 @@ BROKEN_SRC_RE = re.compile(
     re.IGNORECASE,
 )
 WEBP_PREFIX_RE = re.compile(r"^/?webp/(?:ru|el)/(.+\.webp)$", re.IGNORECASE)
+
+IMG_TAG_RE = re.compile(r"""<img\b([^>]*)>""", re.IGNORECASE)
+ALT_RE = re.compile(r"""\balt\s*=\s*["']([^"']*)["']""", re.IGNORECASE)
+
+PAGE_HTML_FIELDS_FOR_ALT = ("content", "excerpt", "info_block_bottom", "sources")
+
+
+@dataclass(frozen=True)
+class AltTextEntry:
+    status: str       # "has-alt", "empty-alt", "missing-alt"
+    alt_value: str    # the alt text (empty string when missing)
+    src: str          # the img src attribute value
+    field: str        # which HTML field the img was found in
+
+
+@dataclass(frozen=True)
+class PageAltTextStats:
+    locale: str
+    slug: str
+    title: str
+    entries: list[AltTextEntry]
+    total: int
+    has_alt: int
+    empty_alt: int
+    missing_alt: int
 
 
 @dataclass(frozen=True)
@@ -87,6 +114,148 @@ def normalize_upload_path(src: str) -> str:
     if parsed.scheme in {"http", "https"}:
         return unquote(parsed.path)
     return unquote(path if path.startswith("/") else f"/{path}")
+
+
+def classify_img_alt(img_tag: str) -> tuple[str, str]:
+    """Classify an <img> tag's alt text into one of three states.
+
+    Returns (status, alt_value) where status is:
+      "has-alt"     — non-empty alt text after trimming
+      "empty-alt"   — alt="" or alt with only whitespace
+      "missing-alt" — no alt attribute at all
+    """
+    alt_match = ALT_RE.search(img_tag)
+    if alt_match is None:
+        return ("missing-alt", "")
+    alt_value = alt_match.group(1)
+    if not alt_value.strip():
+        return ("empty-alt", alt_value)
+    return ("has-alt", alt_value.strip())
+
+
+def calculate_alt_coverage(stats: dict[str, int]) -> float:
+    """Return the alt-text coverage percentage (images with non-empty alt / total)."""
+    total = stats.get("total", 0)
+    if total == 0:
+        return 100.0
+    return (stats["has-alt"] / total) * 100
+
+
+def audit_inline_image_alt_text(
+    pages: list[dict[str, Any]],
+) -> list[PageAltTextStats]:
+    """Scan page HTML fields for <img> tags and classify alt text status."""
+    result: list[PageAltTextStats] = []
+
+    for page in pages:
+        entries: list[AltTextEntry] = []
+        for field in PAGE_HTML_FIELDS_FOR_ALT:
+            html = page.get(field) or ""
+            if not html or "<img" not in html.lower():
+                continue
+            for match in IMG_TAG_RE.finditer(html):
+                full_tag = match.group(0)
+                src_match = IMG_SRC_RE.search(full_tag)
+                src = src_match.group(1) if src_match else ""
+                status, alt_value = classify_img_alt(full_tag)
+                entries.append(
+                    AltTextEntry(
+                        status=status,
+                        alt_value=alt_value,
+                        src=src[:160],
+                        field=field,
+                    )
+                )
+
+        if entries:
+            counts: dict[str, int] = {"has-alt": 0, "empty-alt": 0, "missing-alt": 0}
+            for e in entries:
+                counts[e.status] += 1
+            result.append(
+                PageAltTextStats(
+                    locale=page["locale"],
+                    slug=page["slug"],
+                    title=page["title"],
+                    entries=entries,
+                    total=len(entries),
+                    has_alt=counts["has-alt"],
+                    empty_alt=counts["empty-alt"],
+                    missing_alt=counts["missing-alt"],
+                )
+            )
+
+    return result
+
+
+def aggregate_alt_text_stats(
+    page_stats: list[PageAltTextStats],
+) -> dict[str, int]:
+    """Aggregate counts across all pages."""
+    totals = {"has-alt": 0, "empty-alt": 0, "missing-alt": 0, "total": 0}
+    for ps in page_stats:
+        totals["has-alt"] += ps.has_alt
+        totals["empty-alt"] += ps.empty_alt
+        totals["missing-alt"] += ps.missing_alt
+        totals["total"] += ps.total
+    return totals
+
+
+def generate_alt_text_markdown_report(
+    page_stats: list[PageAltTextStats],
+    min_coverage: float = 95.0,
+) -> str:
+    """Generate a per-page markdown report of alt text status."""
+    totals = aggregate_alt_text_stats(page_stats)
+    coverage = calculate_alt_coverage(totals)
+    passed = coverage >= min_coverage
+    gate_status = "PASS" if passed else "FAIL"
+
+    now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    lines = [
+        "# Alt Text Audit Report",
+        "",
+        f"**Generated:** {now_iso}",
+        "",
+        "## Summary",
+        "",
+        f"- Total images: {totals['total']}",
+        f"- Has alt text: {totals['has-alt']} ({coverage:.1f}%)",
+        f"- Empty alt (decorative): {totals['empty-alt']}",
+        f"- Missing alt attribute: {totals['missing-alt']}",
+        f"- Coverage: {coverage:.1f}% (gate: {min_coverage:.0f}%) — **{gate_status}**",
+        "",
+    ]
+
+    if not page_stats:
+        lines.append("No content images found across any page.")
+        return "\n".join(lines)
+
+    lines.extend(["## Per-Page Breakdown", ""])
+
+    for ps in page_stats:
+        page_coverage = (ps.has_alt / ps.total * 100) if ps.total else 100.0
+        lines.append(f"### /{ps.locale}/{ps.slug} — {ps.title}")
+        lines.append("")
+        lines.append(
+            f"Total: {ps.total} | Has alt: {ps.has_alt} | "
+            f"Empty: {ps.empty_alt} | Missing: {ps.missing_alt} "
+            f"({page_coverage:.0f}% coverage)"
+        )
+        lines.append("")
+        lines.append("| Status | Alt Text | Image Src | Field |")
+        lines.append("|--------|----------|-----------|-------|")
+
+        for entry in ps.entries:
+            alt_display = entry.alt_value if entry.status == "has-alt" else (
+                '(empty)' if entry.status == "empty-alt" else '(missing)'
+            )
+            lines.append(
+                f"| {entry.status} | {alt_display} | {entry.src} | {entry.field} |"
+            )
+
+        lines.append("")
+
+    return "\n".join(lines)
 
 
 def page_has_listing_media(page_id: int) -> bool:
@@ -416,6 +585,18 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_OUTPUT,
         help="Where to write the JSON audit report.",
     )
+    parser.add_argument(
+        "--min-alt-coverage",
+        type=float,
+        default=DEFAULT_MIN_ALT_COVERAGE,
+        help=f"Launch gate: minimum alt text coverage percentage (default: {DEFAULT_MIN_ALT_COVERAGE}).",
+    )
+    parser.add_argument(
+        "--alt-text-report",
+        type=Path,
+        default=DEFAULT_ALT_TEXT_REPORT,
+        help="Where to write the alt text markdown report.",
+    )
     return parser.parse_args()
 
 
@@ -439,11 +620,30 @@ def main() -> int:
     findings.extend(audit_inline_html_images(html_pages, file_urls, asset_map))
     findings.extend(audit_component_media())
 
+    # Alt text audit
+    alt_text_stats = audit_inline_image_alt_text(html_pages)
+    alt_totals = aggregate_alt_text_stats(alt_text_stats)
+    alt_coverage = calculate_alt_coverage(alt_totals)
+
+    alt_report_md = generate_alt_text_markdown_report(alt_text_stats, args.min_alt_coverage)
+    args.alt_text_report.parent.mkdir(parents=True, exist_ok=True)
+    args.alt_text_report.write_text(alt_report_md + "\n", encoding="utf-8")
+
     report = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "publishedPageCount": len(pages),
         "summary": summarize(findings),
         "findings": [asdict(f) for f in findings],
+        "altText": {
+            "coverage": round(alt_coverage, 2),
+            "totalImages": alt_totals["total"],
+            "hasAlt": alt_totals["has-alt"],
+            "emptyAlt": alt_totals["empty-alt"],
+            "missingAlt": alt_totals["missing-alt"],
+            "minCoverageGate": args.min_alt_coverage,
+            "coverageGatePassed": alt_coverage >= args.min_alt_coverage,
+            "reportPath": str(args.alt_text_report),
+        },
     }
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -451,6 +651,7 @@ def main() -> int:
 
     summary = report["summary"]
     print(f"Audit written to {args.output}")
+    print(f"Alt text report written to {args.alt_text_report}")
     print(
         f"Findings: {summary['totalFindings']} total, "
         f"{summary['directoryListingThumbnailGaps']} directory listing thumbnail gap(s)"
@@ -458,6 +659,20 @@ def main() -> int:
     for category, count in sorted(summary["byCategory"].items()):
         print(f"  - {category}: {count}")
 
+    print()
+    print(
+        f"Alt text coverage: {alt_coverage:.1f}% ({alt_totals['has-alt']}/{alt_totals['total']} images) — "
+        f"gate: {args.min_alt_coverage:.0f}%"
+    )
+
+    if alt_coverage < args.min_alt_coverage:
+        print(
+            f"[FAIL] Alt text coverage {alt_coverage:.1f}% is below the "
+            f"{args.min_alt_coverage:.0f}% minimum. See {args.alt_text_report}."
+        )
+        return 1
+
+    print(f"[PASS] Alt text coverage meets the {args.min_alt_coverage:.0f}% minimum.")
     return 0
 
 

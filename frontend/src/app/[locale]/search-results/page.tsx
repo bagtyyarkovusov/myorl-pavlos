@@ -247,6 +247,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
       }
     }
   } catch (err: unknown) {
+    error = { type: "network" };
     if (err instanceof Error) {
       // Transport-level errors (ECONNREFUSED, EAI_AGAIN) from Node.js DNS/TCP
       const isTransportError =
@@ -261,11 +262,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
 
       if (isTransportError || isMeiliApiError) {
         error = { type: "unavailable" };
-      } else {
-        error = { type: "network" };
       }
-    } else {
-      error = { type: "network" };
     }
   }
 

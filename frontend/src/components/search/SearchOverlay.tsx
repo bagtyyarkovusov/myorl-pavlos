@@ -444,17 +444,19 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           role={hasResults ? "listbox" : undefined}
           id={hasResults ? "search-results-listbox" : undefined}
         >
-          {isMisconfigured && (
+          {isMisconfigured ? (
             <p className={styles["error-state"]} role="alert">{NOT_CONFIGURED_MSGS[locale]}</p>
+          ) : (
+            <>
+              {!hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
+
+              {hasQuery && !hasResults && !isLoading && !error && (
+                <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
+              )}
+
+              {error && <p className={styles["error-state"]} role="alert">{ERROR_MSGS[locale]}</p>}
+            </>
           )}
-
-          {!isMisconfigured && !hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
-
-          {!isMisconfigured && hasQuery && !hasResults && !isLoading && !error && (
-            <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
-          )}
-
-          {!isMisconfigured && error && <p className={styles["error-state"]} role="alert">{ERROR_MSGS[locale]}</p>}
 
           {/* aria-live result count announcer — always in DOM so SR picks up changes */}
           <div

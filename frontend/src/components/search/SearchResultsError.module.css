@@ -1,0 +1,69 @@
+.alert {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.heading {
+  font-family: var(--font-display, Instrument Serif, Georgia, serif);
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.body {
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin: 0;
+  max-width: 420px;
+}
+
+.navLinks {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 20px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  color: var(--accent);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background var(--motion-duration-fast, 150ms) ease;
+}
+
+.navLink:hover {
+  background: var(--accent-soft);
+}
+
+.networkTitle {
+  font-size: 1.15rem;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.retryLink {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 24px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  color: var(--accent);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background var(--motion-duration-fast, 150ms) ease;
+}
+
+.retryLink:hover {
+  background: var(--accent-soft);
+}

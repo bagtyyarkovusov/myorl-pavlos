@@ -7,11 +7,10 @@
 
 .overlay {
   position: fixed;
-  top: calc(88px + 36px); /* header height + utility bar */
-  left: 50%;
+  top: calc(88px + 36px + 4px); /* header height + utility bar + gap */
+  right: max(16px, calc((100vw - 1280px) / 2 + 16px));
   z-index: 31;
-  width: min(640px, calc(100vw - 32px));
-  transform: translateX(-50%);
+  width: min(520px, calc(100vw - 32px));
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: var(--surface);
@@ -146,7 +145,10 @@
   color: var(--muted);
   cursor: pointer;
   white-space: nowrap;
-  transition: background 100ms ease, color 100ms ease, border-color 100ms ease;
+  transition:
+    background 100ms ease,
+    color 100ms ease,
+    border-color 100ms ease;
 }
 
 .filter-pill:hover {

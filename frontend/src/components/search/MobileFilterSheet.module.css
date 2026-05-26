@@ -1,0 +1,82 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--foreground);
+  background: var(--surface);
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: border-color var(--motion-duration-fast, 150ms) ease;
+}
+
+.trigger:hover {
+  border-color: var(--accent);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 42, 74, 0.35);
+}
+
+.sheet {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  padding: 24px 20px 32px;
+  box-shadow: 0 -4px 24px rgba(15, 42, 74, 0.1);
+}
+
+.sheetHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sheetTitle {
+  font-family: var(--font-display, Instrument Serif, Georgia, serif);
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background var(--motion-duration-fast, 150ms) ease;
+}
+
+.closeBtn:hover {
+  background: var(--accent-soft);
+}

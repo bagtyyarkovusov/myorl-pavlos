@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/cms/types";
+import styles from "./SearchLocaleFallbackBanner.module.css";
 
 function bannerText(locale: Locale, count: number): string {
   const other = locale === "el" ? "ρωσικά" : "греческом";
@@ -25,16 +26,7 @@ export function SearchLocaleFallbackBanner({
   resultCount = 0,
 }: SearchLocaleFallbackBannerProps) {
   return (
-    <p
-      role="status"
-      style={{
-        padding: "12px 16px",
-        marginBottom: "16px",
-        backgroundColor: "var(--color-warning-bg, #fff3cd)",
-        border: "1px solid var(--color-warning-border, #ffc107)",
-        borderRadius: "6px",
-      }}
-    >
+    <p role="status" className={styles.banner}>
       {allLangs ? allLangsLabel[locale] : bannerText(locale, resultCount)}
     </p>
   );

@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/cms/types";
+import styles from "./SearchResultsHero.module.css";
 
 const t: Record<Locale, { heading: string; placeholder: string; button: string }> = {
   el: {
@@ -13,12 +14,7 @@ const t: Record<Locale, { heading: string; placeholder: string; button: string }
   },
 };
 
-const exampleQueries = [
-  "ωτορινολαρυγγολόγος",
-  "rinoplastiki",
-  "ЛОР",
-  "septum surgery",
-];
+const exampleQueries = ["ωτορινολαρυγγολόγος", "rinoplastiki", "ЛОР", "septum surgery"];
 
 type SearchResultsHeroProps = {
   locale: Locale;
@@ -28,49 +24,28 @@ export function SearchResultsHero({ locale }: SearchResultsHeroProps) {
   const labels = t[locale];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "64px 24px",
-        textAlign: "center",
-      }}
-    >
-      <h1 style={{ fontSize: "1.5rem", marginBottom: "24px" }}>{labels.heading}</h1>
+    <div className={styles.hero}>
+      <h1 className={styles.heading}>{labels.heading}</h1>
 
-      <form
-        role="search"
-        action={`/${locale}/search-results`}
-        method="get"
-        style={{ marginBottom: "32px", display: "flex", gap: "8px" }}
-      >
+      <form role="search" action={`/${locale}/search-results`} method="get" className={styles.form}>
         <input
           type="search"
           name="q"
           placeholder={labels.placeholder}
           required
-          style={{ padding: "8px 12px", minWidth: "280px" }}
+          className={styles.input}
         />
-        <button type="submit" style={{ padding: "8px 16px" }}>
+        <button type="submit" className={styles.submit}>
           {labels.button}
         </button>
       </form>
 
-      <nav aria-label="example queries" style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center" }}>
+      <nav aria-label="example queries" className={styles.examples}>
         {exampleQueries.map((q) => (
           <a
             key={q}
             href={`/${locale}/search-results?q=${encodeURIComponent(q)}`}
-            style={{
-              padding: "6px 14px",
-              border: "1px solid var(--line, #ddd)",
-              borderRadius: "20px",
-              fontSize: "0.9rem",
-              color: "var(--foreground, inherit)",
-              textDecoration: "none",
-            }}
+            className={styles.exampleLink}
           >
             {q}
           </a>

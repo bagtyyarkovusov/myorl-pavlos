@@ -2,6 +2,7 @@
 
 import { useSearchParams, usePathname } from "next/navigation";
 import type { Locale } from "@/lib/cms/types";
+import styles from "./SearchFilters.module.css";
 
 export type SearchFiltersProps = {
   sections: string[];
@@ -55,34 +56,25 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
   const currentSort = searchParams.get("sort") ?? "";
 
   return (
-    <div>
+    <div className={styles.sidebar}>
       {/* Section filter */}
-      <nav>
-        <ul>
-          <li>
-            <a
-              href={buildFilterUrl("sectionLabel", "", searchParams, pathname)}
-              aria-current={!currentSection ? "page" : undefined}
-            >
-              {t[locale].allSections}
-            </a>
-          </li>
-          {sections.map((section) => (
-            <li key={section}>
-              <a
-                href={buildFilterUrl("sectionLabel", section, searchParams, pathname)}
-                aria-current={currentSection === section ? "page" : undefined}
-              >
-                {section}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <div className={styles.group}>
+        <h3 className={styles.groupTitle}>{t[locale].allSections}</h3>
+        {sections.map((section) => (
+          <a
+            key={section}
+            href={buildFilterUrl("sectionLabel", section, searchParams, pathname)}
+            aria-current={currentSection === section ? "page" : undefined}
+            className={styles.filterLink}
+          >
+            {section}
+          </a>
+        ))}
+      </div>
 
       {/* Type filter */}
-      <section>
-        <h3>{t[locale].typeLabel}</h3>
+      <div className={styles.group}>
+        <h3 className={styles.groupTitle}>{t[locale].typeLabel}</h3>
         {[
           { value: "", label: t[locale].typeAll },
           { value: "page", label: t[locale].typePage },
@@ -92,15 +84,16 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             key={option.value}
             href={buildFilterUrl("type", option.value, searchParams, pathname)}
             aria-current={currentType === option.value ? "page" : undefined}
+            className={styles.filterLink}
           >
             {option.label}
           </a>
         ))}
-      </section>
+      </div>
 
       {/* Sort filter */}
-      <section>
-        <h3>{t[locale].sortLabel}</h3>
+      <div className={styles.group}>
+        <h3 className={styles.groupTitle}>{t[locale].sortLabel}</h3>
         {[
           { value: "", label: t[locale].sortRelevance },
           { value: "newest", label: t[locale].sortNewest },
@@ -109,11 +102,12 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             key={option.value}
             href={buildFilterUrl("sort", option.value, searchParams, pathname)}
             aria-current={currentSort === option.value ? "page" : undefined}
+            className={styles.filterLink}
           >
             {option.label}
           </a>
         ))}
-      </section>
+      </div>
     </div>
   );
 }

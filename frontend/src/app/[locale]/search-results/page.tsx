@@ -14,6 +14,7 @@ import { SearchResultsError } from "@/components/search/SearchResultsError";
 import { MobileFilterSheet } from "@/components/search/MobileFilterSheet";
 import { logSearchQuery } from "@/lib/db";
 import { UUID_RE } from "@/lib/search/session";
+import styles from "@/components/search/SearchResultsPage.module.css";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -73,35 +74,16 @@ function SearchResultsForm({ locale, q }: { locale: string; q: string }) {
       role="search"
       action={`/${locale}/search-results`}
       method="get"
-      style={{ display: "flex", gap: "8px", marginBottom: "24px" }}
+      className={styles.searchForm}
     >
       <input
         type="search"
         name="q"
         defaultValue={q}
         placeholder={labels.searchPlaceholder}
-        style={{
-          flex: 1,
-          padding: "8px 12px",
-          minWidth: 0,
-          border: "1px solid var(--line, #ddd)",
-          borderRadius: "6px",
-          fontSize: "0.95rem",
-        }}
+        className={styles.searchFormInput}
       />
-      <button
-        type="submit"
-        style={{
-          padding: "8px 16px",
-          border: "1px solid var(--accent, #0052cc)",
-          borderRadius: "6px",
-          background: "var(--accent, #0052cc)",
-          color: "#fff",
-          fontSize: "0.95rem",
-          cursor: "pointer",
-          whiteSpace: "nowrap",
-        }}
-      >
+      <button type="submit" className={styles.searchFormSubmit}>
         {labels.searchButton}
       </button>
     </form>
@@ -255,10 +237,8 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
 
       // Meilisearch API errors carry a cause object shaped like { message, code, type, link }.
       // Duck-typed because MeiliSearchApiError is not a runtime export from meilisearch.
-      const isMeiliApiError =
-        typeof (err as any).cause === "object" &&
-        (err as any).cause !== null &&
-        "code" in (err as any).cause;
+      const cause = (err as { cause?: unknown }).cause;
+      const isMeiliApiError = typeof cause === "object" && cause !== null && "code" in cause;
 
       if (isTransportError || isMeiliApiError) {
         error = { type: "unavailable" };
@@ -293,12 +273,12 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   // Empty results with active filters — show filters + guidance message
   if (hits.length === 0 && hasFilters) {
     return (
-      <div style={{ display: "flex", gap: "2rem" }}>
-        <aside className="desktop-only" style={{ width: 260, flexShrink: 0 }}>
+      <div className={styles.layout}>
+        <aside className={styles.sidebar}>
           <SearchFilters sections={sectionOptions} locale={locale} />
         </aside>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="mobile-only">
+        <div className={styles.main}>
+          <div className={styles.mobileFilters}>
             <MobileFilterSheet
               sections={sectionOptions}
               locale={locale}
@@ -306,17 +286,16 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
             />
           </div>
           <SearchResultsForm locale={locale} q={q} />
-          <p>
-            {t[locale].noResults} &quot;{q}&quot;. {t[locale].noResultsHint}
+          <p className={styles.emptyTitle}>
+            {t[locale].noResults} &quot;{q}&quot;
           </p>
-          <p>
-            <a
-              href={`/${locale}/search-results?q=${encodeURIComponent(q)}&allLangs=1`}
-              style={{ fontSize: "0.9em" }}
-            >
-              {t[locale].tryOtherLocale}
-            </a>
-          </p>
+          <p className={styles.emptyHint}>{t[locale].noResultsHint}</p>
+          <a
+            href={`/${locale}/search-results?q=${encodeURIComponent(q)}&allLangs=1`}
+            className={styles.emptyLink}
+          >
+            {t[locale].tryOtherLocale}
+          </a>
         </div>
       </div>
     );
@@ -325,17 +304,15 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   // Empty results without filters — both locales returned 0
   if (hits.length === 0) {
     return (
-      <div style={{ padding: "48px 24px", textAlign: "center" }}>
+      <div className={styles.emptyState}>
         <SearchResultsForm locale={locale} q={q} />
-        <p style={{ fontSize: "1.15rem", marginBottom: "8px" }}>
+        <p className={styles.emptyTitle}>
           {t[locale].noResults} &quot;{q}&quot;
         </p>
-        <p style={{ color: "var(--muted, #666)", marginBottom: "16px" }}>
-          {t[locale].noResultsHint}
-        </p>
+        <p className={styles.emptyHint}>{t[locale].noResultsHint}</p>
         <a
           href={`/${locale}/search-results?q=${encodeURIComponent(q)}&allLangs=1`}
-          style={{ fontSize: "0.9em" }}
+          className={styles.emptyLink}
         >
           {t[locale].tryOtherLocale}
         </a>
@@ -356,16 +333,13 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
   const isFallback = hits.some((h) => h._fallback === true);
 
   return (
-    <div style={{ display: "flex", gap: "2rem" }}>
-      {/* Desktop sidebar */}
-      <aside className="desktop-only" style={{ width: 260, flexShrink: 0 }}>
+    <div className={styles.layout}>
+      <aside className={styles.sidebar}>
         <SearchFilters sections={sectionOptions} locale={locale} />
       </aside>
 
-      {/* Main results area */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        {/* Mobile filter bottom-sheet */}
-        <div className="mobile-only">
+      <div className={styles.main}>
+        <div className={styles.mobileFilters}>
           <MobileFilterSheet
             sections={sectionOptions}
             locale={locale}
@@ -383,8 +357,8 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
           />
         )}
 
-        <p>{resultsCountLabel}</p>
-        <h1>
+        <p className={styles.resultCount}>{resultsCountLabel}</p>
+        <h1 className={styles.pageTitle}>
           {t[locale].resultsFor} &quot;{q}&quot;
         </h1>
 
@@ -392,27 +366,29 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
           <p>
             <a
               href={`/${locale}/search-results?q=${encodeURIComponent(q)}&allLangs=1${type ? `&type=${type}` : ""}${sectionLabel ? `&sectionLabel=${encodeURIComponent(sectionLabel)}` : ""}${sort ? `&sort=${sort}` : ""}`}
-              style={{ fontSize: "0.85em" }}
+              className={styles.allLangsLink}
             >
               {allLangsLabel[locale]}
             </a>
           </p>
         )}
 
-        {hits.map((doc) => (
-          <ResultCard
-            key={doc.id}
-            title={doc._formatted?.title ?? doc.title}
-            excerpt={doc.excerpt}
-            href={doc._fallback ? resolveFallbackHref(doc, locale) : doc.href}
-            type={doc.type}
-            thumbnail={doc.thumbnail}
-            parentTitle={doc.parentTitle}
-            parentSlug={doc.parentSlug}
-            locale={locale}
-            localePill={(isFallback || allLangs) ? doc.locale : undefined}
-          />
-        ))}
+        <div className={styles.resultsList}>
+          {hits.map((doc) => (
+            <ResultCard
+              key={doc.id}
+              title={doc._formatted?.title ?? doc.title}
+              excerpt={doc.excerpt}
+              href={doc._fallback ? resolveFallbackHref(doc, locale) : doc.href}
+              type={doc.type}
+              thumbnail={doc.thumbnail}
+              parentTitle={doc.parentTitle}
+              parentSlug={doc.parentSlug}
+              locale={locale}
+              localePill={isFallback || allLangs ? doc.locale : undefined}
+            />
+          ))}
+        </div>
 
         {totalPages > 1 && (
           <Pagination

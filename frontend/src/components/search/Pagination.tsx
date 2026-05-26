@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, usePathname } from "next/navigation";
+import styles from "./Pagination.module.css";
 
 export type PaginationProps = {
   currentPage: number;
@@ -44,15 +45,19 @@ export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: Pa
   const pageNumbers = getPageNumbers(currentPage, totalPages);
 
   return (
-    <nav aria-label="pagination" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+    <nav aria-label="pagination" className={styles.nav}>
       {currentPage <= 1 ? (
-        <span aria-hidden="true">{prevLabel}</span>
+        <span className={styles.disabled} aria-hidden="true">
+          {prevLabel}
+        </span>
       ) : (
-        <a href={buildPageUrl(currentPage - 1, searchParams, pathname)}>{prevLabel}</a>
+        <a href={buildPageUrl(currentPage - 1, searchParams, pathname)} className={styles.pageLink}>
+          {prevLabel}
+        </a>
       )}
       {pageNumbers.map((page, idx) =>
         page === "..." ? (
-          <span key={`ellipsis-${idx}`} style={{ padding: "0 4px" }}>
+          <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
             ...
           </span>
         ) : (
@@ -60,18 +65,20 @@ export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: Pa
             key={page}
             href={buildPageUrl(page, searchParams, pathname)}
             aria-current={page === currentPage ? "page" : undefined}
-            style={
-              page === currentPage ? { fontWeight: 700, textDecoration: "underline" } : undefined
-            }
+            className={styles.pageLink}
           >
             {page}
           </a>
         ),
       )}
       {currentPage >= totalPages ? (
-        <span aria-hidden="true">{nextLabel}</span>
+        <span className={styles.disabled} aria-hidden="true">
+          {nextLabel}
+        </span>
       ) : (
-        <a href={buildPageUrl(currentPage + 1, searchParams, pathname)}>{nextLabel}</a>
+        <a href={buildPageUrl(currentPage + 1, searchParams, pathname)} className={styles.pageLink}>
+          {nextLabel}
+        </a>
       )}
     </nav>
   );

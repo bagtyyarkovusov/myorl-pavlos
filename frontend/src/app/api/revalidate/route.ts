@@ -177,6 +177,16 @@ function modelMatches(model: string | undefined, shortName: string): boolean {
 }
 
 function isUrlMappingModel(model: string | undefined): boolean {
+  // Tag-based revalidation purges the Next.js data cache so the Strapi-admin
+  // UI reflects fresh URL Mapping rows.  However, the redirect table is
+  // materialised at *build time* in next.config.ts:async redirects() → a
+  // revalidateTag("url-mappings") call alone does NOT refresh it.
+  //
+  // For v1 the simplest path to refresh the redirect table is a server
+  // restart or redeploy.  A future iteration could wire the lifecycle hook
+  // to a CI/CD webhook (e.g. Railway redeploy trigger) so that editors
+  // adding URL Mapping rows in Strapi see redirects live without ops
+  // intervention.
   return model === "api::url-mapping.url-mapping" || model === "url-mapping";
 }
 

@@ -30,10 +30,24 @@ const mockRedirect = vi.fn((url: URL | string, status?: number) => {
   return typeof url === "string" ? { url: new URL(url) } : { url };
 });
 
+function MockNextResponse(
+  body?: string | null,
+  init?: { status?: number; headers?: Record<string, string> },
+) {
+  return {
+    body,
+    status: init?.status ?? 200,
+    headers: init?.headers ? new Headers(init.headers) : new Headers(),
+  };
+}
+MockNextResponse.redirect = mockRedirect;
+
 vi.mock("next/server", () => ({
-  NextResponse: {
-    redirect: mockRedirect,
-  },
+  NextResponse: MockNextResponse,
+}));
+
+vi.mock("../../data/gone-paths.json", () => ({
+  default: ["/retired-page", "/el/gone-article"],
 }));
 
 describe("proxy", () => {
@@ -141,5 +155,59 @@ describe("proxy", () => {
     const url = mockRedirect.mock.calls[0]![0];
     expect(url.toString()).toContain("/el");
     expect(lastRedirectStatus).toBe(308);
+  });
+
+  it("returns 410 for a gone path matching a bare legacy path", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/retired-page");
+    const response = proxy(request);
+    expect(response).toBeDefined();
+    expect(response!.status).toBe(410);
+  });
+
+  it("returns 410 for a gone path matching a locale-prefixed path", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/el/gone-article");
+    const response = proxy(request);
+    expect(response).toBeDefined();
+    expect(response!.status).toBe(410);
+  });
+
+  it("includes noindex in 410 response body", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/retired-page");
+    const response = proxy(request);
+    expect(response).toBeDefined();
+    expect(response!.body).toContain("noindex");
+  });
+
+  it("includes 'Page gone' text in 410 response body", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/retired-page");
+    const response = proxy(request);
+    expect(response).toBeDefined();
+    expect(response!.body).toContain("gone");
+  });
+
+  it("passes through non-gone bare slugs unchanged", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/about");
+    const response = proxy(request);
+    expect(response).toBeUndefined();
+  });
+
+  it("passes through locale-prefixed paths that are not gone", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/el/about");
+    const response = proxy(request);
+    expect(response).toBeUndefined();
+  });
+
+  it("skips gone-paths check for root /", async () => {
+    const { proxy } = await import("@/proxy");
+    const request = makeRequest("/");
+    proxy(request);
+    // Root should still redirect, not trigger 410
+    expect(mockRedirect).toHaveBeenCalledTimes(1);
   });
 });

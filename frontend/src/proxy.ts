@@ -1,7 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
 
+import gonePaths from "../../data/gone-paths.json";
+
 const LOCALES = ["el", "ru"] as const;
 const DEFAULT_LOCALE = "el";
+
+const GONE_PATHS = new Set(gonePaths as string[]);
 
 const PUBLIC_FILE = /\.(.*)$/;
 
@@ -64,6 +68,13 @@ export function proxy(request: NextRequest) {
     return;
   }
 
+  if (GONE_PATHS.has(pathname)) {
+    return new NextResponse(gonePageHtml(pathname), {
+      status: 410,
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+    });
+  }
+
   const segments = pathname.split("/").filter(Boolean);
   const locale: string | undefined = segments[0];
 
@@ -79,6 +90,41 @@ export function proxy(request: NextRequest) {
     url.pathname = `/${detected}`;
     return NextResponse.redirect(url, 308);
   }
+}
+
+function gonePageHtml(pathname: string): string {
+  return `<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Page gone</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 600px; margin: 80px auto; padding: 0 20px; color: #333; }
+  h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  p { color: #666; margin-bottom: 1.5rem; }
+  form { display: flex; gap: 8px; max-width: 400px; }
+  input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+  button { padding: 8px 16px; border: none; border-radius: 4px; background: #1a1a2e; color: #fff; font-weight: 600; cursor: pointer; }
+  nav { margin-top: 2rem; display: flex; gap: 12px; }
+  nav a { color: #1a1a2e; }
+</style>
+</head>
+<body>
+<p style="color:#999; font-size:0.85rem;">410</p>
+<h1>Page gone</h1>
+<p>The page you are looking for has been permanently removed.</p>
+<form role="search" action="/el/search-results" method="get">
+  <input type="search" name="q" placeholder="Search myorl.gr" required>
+  <button type="submit">Search</button>
+</form>
+<nav aria-label="home pages">
+  <a href="/el">Αρχική (Ελληνικά)</a>
+  <a href="/ru">Главная (Русский)</a>
+</nav>
+</body>
+</html>`;
 }
 
 export const config = {

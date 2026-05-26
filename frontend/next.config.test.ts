@@ -1,10 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 
 import nextConfig from "./next.config";
 
 function match(pathname: string, source: string): boolean {
-  const raw =
-    /^:([a-zA-Z_]\w*)\((.+)\)$|^:([a-zA-Z_]\w*)$/;
+  const raw = /^:([a-zA-Z_]\w*)\((.+)\)$|^:([a-zA-Z_]\w*)$/;
   let pattern = "^";
   let i = 0;
   while (i < source.length) {
@@ -95,5 +94,142 @@ describe("next.config.ts images", () => {
     expect(patterns[0]).toMatchObject({
       pathname: "/uploads/**",
     });
+  });
+});
+
+describe("next.config.ts redirects — URL Mapping materialization", () => {
+  let mockedFetch: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    mockedFetch = vi.fn();
+    vi.stubGlobal("fetch", mockedFetch);
+    vi.stubEnv("STRAPI_URL", "http://localhost:1337");
+  });
+
+  function mockUrlMappings(
+    mappings: Array<{
+      legacyPath: string;
+      destinationPath: string;
+      destinationKind: string;
+    }>,
+  ) {
+    mockedFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        data: mappings.map((m, i) => ({
+          id: i + 1,
+          documentId: `doc-${i}`,
+          ...m,
+        })),
+        meta: { pagination: { total: mappings.length } },
+      }),
+    });
+  }
+
+  it("materializes internal-301 URL mappings as permanent redirects", async () => {
+    mockUrlMappings([
+      {
+        legacyPath: "/old-page",
+        destinationPath: "/el/new-page",
+        destinationKind: "internal-301",
+      },
+    ]);
+
+    const redirects = await nextConfig.redirects!();
+    const entry = redirects.find((r) => r.source === "/old-page");
+    expect(entry).toBeDefined();
+    expect(entry!.destination).toBe("/el/new-page");
+    expect(entry!.permanent).toBe(true);
+  });
+
+  it("materializes external-301 URL mappings as permanent redirects", async () => {
+    mockUrlMappings([
+      {
+        legacyPath: "/old-external",
+        destinationPath: "https://example.com/new-page",
+        destinationKind: "external-301",
+      },
+    ]);
+
+    const redirects = await nextConfig.redirects!();
+    const entry = redirects.find((r) => r.source === "/old-external");
+    expect(entry).toBeDefined();
+    expect(entry!.destination).toBe("https://example.com/new-page");
+  });
+
+  it("does NOT materialize gone-410 mappings as redirect entries", async () => {
+    mockUrlMappings([
+      {
+        legacyPath: "/retired-page",
+        destinationPath: "",
+        destinationKind: "gone-410",
+      },
+    ]);
+
+    const redirects = await nextConfig.redirects!();
+    const goneEntry = redirects.find((r) => r.source === "/retired-page");
+    expect(goneEntry).toBeUndefined();
+  });
+
+  it("gracefully degrades when Strapi is unreachable", async () => {
+    mockedFetch.mockRejectedValueOnce(new Error("Connection refused"));
+
+    // Should not throw — redirects() must complete even when Strapi is down.
+    const redirects = await nextConfig.redirects!();
+    // Hardcoded redirects and wildcard should still be present.
+    expect(redirects.length).toBeGreaterThan(0);
+    expect(redirects.some((r) => r.source.includes("sitemap.xml"))).toBe(true);
+  });
+
+  it("handles empty URL mapping response gracefully", async () => {
+    mockedFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ data: [] }),
+    });
+
+    const redirects = await nextConfig.redirects!();
+    // Should still have hardcoded redirects + wildcard, but no extra
+    // URL-mapping entries.
+    expect(redirects.length).toBeGreaterThan(0);
+  });
+
+  it("handles non-ok Strapi response gracefully", async () => {
+    mockedFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+    });
+
+    const redirects = await nextConfig.redirects!();
+    expect(redirects.length).toBeGreaterThan(0);
+  });
+
+  it("handles Unicode legacy paths in internal-301 mappings", async () => {
+    mockUrlMappings([
+      {
+        legacyPath: "/αμυγδαλεκτομή",
+        destinationPath: "/el/amygdalektomi",
+        destinationKind: "internal-301",
+      },
+    ]);
+
+    const redirects = await nextConfig.redirects!();
+    const entry = redirects.find((r) => r.source === "/αμυγδαλεκτομή");
+    expect(entry).toBeDefined();
+    expect(entry!.destination).toBe("/el/amygdalektomi");
+  });
+
+  it("passes elapsed time URL mappings through", async () => {
+    mockUrlMappings([
+      {
+        legacyPath: "/el/old-slug",
+        destinationPath: "/el/new-slug",
+        destinationKind: "internal-301",
+      },
+    ]);
+
+    const redirects = await nextConfig.redirects!();
+    const entry = redirects.find((r) => r.source === "/el/old-slug");
+    expect(entry).toBeDefined();
+    expect(entry!.destination).toBe("/el/new-slug");
   });
 });

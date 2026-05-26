@@ -129,7 +129,7 @@ class StrapiClient:
     def _build_url(self, path: str, query: dict[str, Any] | None) -> str:
         url = f"{self.base_url}{path}" if path.startswith("/") else f"{self.base_url}/{path}"
         if query:
-            encoded = parse.urlencode({k: v for k, v in query.items() if v is not None})
+            encoded = parse.urlencode({k: v for k, v in query.items() if v is not None}, safe="[]$")
             if encoded:
                 url = f"{url}?{encoded}"
         return url

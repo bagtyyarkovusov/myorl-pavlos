@@ -9,8 +9,6 @@ import { SkipLink } from "@/components/SkipLink";
 import { getSite } from "@/lib/cms/cms-api";
 import { isLocale } from "@/lib/cms/types";
 
-export const dynamic = "force-dynamic";
-
 type LocaleLayoutProps = {
   children: React.ReactNode;
   params: Promise<{

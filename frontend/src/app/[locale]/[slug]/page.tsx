@@ -73,6 +73,9 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
   if (pageWithRelatedTopics.layoutVariant === "section-hub" && pageWithRelatedTopics.isFolder) {
     const self = findNodeByDocumentId(navigation, pageWithRelatedTopics.documentId);
     const firstChild = self?.children[0];
+    // Stays 307 (redirect, not permanentRedirect) — the first-child target
+    // changes when editors reorder children. A permanent redirect would pin
+    // the cached response to a stale URL. See ADR-013.
     if (firstChild) redirect(firstChild.href);
   }
 

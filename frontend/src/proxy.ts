@@ -71,11 +71,14 @@ export function proxy(request: NextRequest) {
     return;
   }
 
-  const detected = getLocaleFromAcceptLanguage(request);
-  const url = request.nextUrl.clone();
-  url.pathname = `/${detected}${pathname === "/" ? "" : pathname}`;
-
-  return NextResponse.redirect(url);
+  // Root → /<detected-locale>, 308 permanent (ADR-013).
+  // Bare slugs pass through — handled by next.config.ts redirects().
+  if (pathname === "/") {
+    const detected = getLocaleFromAcceptLanguage(request);
+    const url = request.nextUrl.clone();
+    url.pathname = `/${detected}`;
+    return NextResponse.redirect(url, 308);
+  }
 }
 
 export const config = {

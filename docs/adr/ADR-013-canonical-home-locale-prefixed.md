@@ -1,7 +1,7 @@
 # ADR-013: Canonical Home is `/el`, Apex Permanently Redirects
 
 ## Status
-Proposed
+Accepted (2026-05-26) — implemented via #157, #158
 
 ## Context
 

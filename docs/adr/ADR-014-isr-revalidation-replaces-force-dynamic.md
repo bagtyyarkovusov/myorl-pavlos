@@ -1,7 +1,7 @@
 # ADR-014: ISR + Tag-Based Revalidation Replaces `force-dynamic`
 
 ## Status
-Proposed
+Accepted (2026-05-26) — implemented via #159, #173
 
 ## Context
 

@@ -1,7 +1,7 @@
 # ADR-012: URL Mapping Content Type as the Source of Truth for Legacy → Canonical Redirects
 
 ## Status
-Proposed
+Accepted (2026-05-26) — implemented via #153, #154, #155, #156
 
 ## Context
 

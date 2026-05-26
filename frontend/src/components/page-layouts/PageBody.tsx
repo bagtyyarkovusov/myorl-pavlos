@@ -18,7 +18,10 @@ const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
   "specialized-article",
 ]);
 
-function shouldShowDisclaimer(page: PageDTO, disclaimerText?: string | null): boolean {
+function shouldShowDisclaimer(
+  page: PageDTO,
+  disclaimerText?: string | null,
+): disclaimerText is string {
   if (!disclaimerText) return false;
   if (page.disclaimerOverride === "force-hide") return false;
   if (page.disclaimerOverride === "force-show") return true;
@@ -128,7 +131,7 @@ function DefaultPageBody({
         />
       ) : null}
       {shouldShowDisclaimer(page, disclaimerText) ? (
-        <ArticleDisclaimer disclaimerText={disclaimerText!} locale={page.locale} />
+        <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
       ) : null}
     </div>
   );
@@ -228,7 +231,7 @@ function ServiceArticleBody({
             />
           ) : null}
           {shouldShowDisclaimer(page, disclaimerText) ? (
-            <ArticleDisclaimer disclaimerText={disclaimerText!} locale={page.locale} />
+            <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
           ) : null}
         </article>
         <aside className={styles["service-layout__sidebar"]}>
@@ -378,7 +381,7 @@ function ArticleAsideBody({
             </section>
           ) : null}
           {shouldShowDisclaimer(page, disclaimerText) ? (
-            <ArticleDisclaimer disclaimerText={disclaimerText!} locale={page.locale} />
+            <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
           ) : null}
         </article>
         <aside className={styles["reference-layout__sidebar"]}>

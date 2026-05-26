@@ -166,8 +166,7 @@ def run_seed(
         elif action == "update":
             updated_list.append({"entry": entry, "existing": existing})
         else:
-            reason = action
-            skipped_list.append({"entry": entry, "reason": reason})
+            skipped_list.append({"entry": entry, "reason": action})
 
     return {
         "added": len(created),
@@ -394,7 +393,7 @@ def main() -> int:
         print(f"  Applied with {len(errors)} errors")
     elif is_writable:
         print("  Nothing to apply.")
-    elif args.dry_run or not args.apply:
+    else:
         print("  Dry-run: no changes written. Use --apply to write.")
 
     # Write markdown summary report

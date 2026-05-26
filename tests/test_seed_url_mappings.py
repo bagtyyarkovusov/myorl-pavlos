@@ -5,7 +5,7 @@ import json
 import sys
 import unittest
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 _TOOLS = Path(__file__).resolve().parents[1] / "tools"

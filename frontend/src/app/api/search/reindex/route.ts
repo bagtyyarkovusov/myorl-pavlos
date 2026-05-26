@@ -43,6 +43,11 @@ type SyncSynonymsPayload = {
   locale: Locale;
 };
 
+type SyncSettingsPayload = {
+  action: "sync-settings";
+  locale: Locale;
+};
+
 type StrapiEvent = "entry.create" | "entry.update" | "entry.delete";
 type StrapiModel = "page" | "video-entry";
 
@@ -79,6 +84,11 @@ export async function POST(request: Request) {
   // Detect sync-synonyms action
   if (payload.action === "sync-synonyms") {
     return handleSyncSynonyms(payload);
+  }
+
+  // Detect sync-settings action
+  if (payload.action === "sync-settings") {
+    return handleSyncSettings(payload);
   }
 
   // Detect bulk vs single-doc
@@ -477,6 +487,91 @@ function validateSyncSynonymsPayload(
     ok: true,
     payload: {
       action: "sync-synonyms",
+      locale: payload.locale,
+    },
+  };
+}
+
+const INDEX_SEARCHABLE_ATTRIBUTES = [
+  "title",
+  "slug",
+  "parentSlug",
+  "parentTitle",
+  "excerpt",
+  "body",
+  "tags",
+];
+
+const INDEX_FILTERABLE_ATTRIBUTES = [
+  "layoutVariant",
+  "locale",
+  "parentSection",
+  "parentSectionLabel",
+  "tags",
+  "type",
+];
+
+const INDEX_SORTABLE_ATTRIBUTES = ["publishedAt"];
+
+const INDEX_RANKING_RULES = [
+  "words",
+  "typo",
+  "proximity",
+  "attribute",
+  "_rankBoost:desc",
+  "sort",
+  "exactness",
+];
+
+async function handleSyncSettings(payload: ReindexPayload): Promise<Response> {
+  const syncPayload = validateSyncSettingsPayload(payload);
+  if (!syncPayload.ok) {
+    return NextResponse.json({ ok: false, error: syncPayload.error }, { status: 400 });
+  }
+
+  if (!isLocale(syncPayload.payload.locale)) {
+    return NextResponse.json({ ok: false, error: "Unsupported locale." }, { status: 400 });
+  }
+
+  const admin = getMeiliAdminClient();
+  if (!admin) {
+    return NextResponse.json({ ok: true, degraded: true });
+  }
+
+  const indexName = indexNameForLocale(syncPayload.payload.locale);
+  const meiliIndex = admin.index(indexName);
+
+  try {
+    await waitForMeiliTask(meiliIndex.updateSearchableAttributes(INDEX_SEARCHABLE_ATTRIBUTES));
+    await waitForMeiliTask(meiliIndex.updateFilterableAttributes(INDEX_FILTERABLE_ATTRIBUTES));
+    await waitForMeiliTask(meiliIndex.updateSortableAttributes(INDEX_SORTABLE_ATTRIBUTES));
+    await waitForMeiliTask(meiliIndex.updateRankingRules(INDEX_RANKING_RULES));
+
+    return NextResponse.json({
+      ok: true,
+      action: "sync-settings",
+      locale: syncPayload.payload.locale,
+      index: indexName,
+    });
+  } catch (error) {
+    if (error instanceof MeiliTaskFailedError) {
+      return NextResponse.json({ ok: false, error: error.message }, { status: 502 });
+    }
+    return NextResponse.json({ ok: true, degraded: true });
+  }
+}
+
+function validateSyncSettingsPayload(
+  payload: ReindexPayload,
+): { ok: true; payload: SyncSettingsPayload } | { ok: false; error: string } {
+  if (typeof payload.locale !== "string" || !isLocale(payload.locale)) {
+    return { ok: false, error: "Unsupported locale." };
+  }
+
+  return {
+    ok: true,
+    payload: {
+      action: "sync-settings",
       locale: payload.locale,
     },
   };

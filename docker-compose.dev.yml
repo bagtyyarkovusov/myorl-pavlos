@@ -81,6 +81,7 @@ services:
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY_DEV:-dev-master-key-do-not-use-in-prod}
       NEXT_PUBLIC_MEILI_SEARCH_KEY: ${NEXT_PUBLIC_MEILI_SEARCH_KEY:-dev-master-key-do-not-use-in-prod}
       STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET:-dev-search-webhook-secret}
+      DATABASE_URL: postgresql://strapi:strapi@postgres:5432/strapi
     extra_hosts:
       - "localhost:host-gateway"
     ports:

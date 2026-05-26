@@ -287,6 +287,11 @@ def run_full_seed(target: Target) -> int:
     if errors_total:
         print(f"  Errors: {errors_total}", file=sys.stderr)
 
+    # Sync index settings (searchable, filterable, sortable, ranking)
+    print()
+    print("── Syncing index settings ──")
+    run_sync_settings(target)
+
     # Smoke test
     if target.meili_host_port:
         print()
@@ -412,6 +417,25 @@ def run_sync_synonyms(target: Target) -> int:
     return 0
 
 
+def run_sync_settings(target: Target) -> int:
+    """Push index settings (searchable, filterable, sortable, ranking) to Meilisearch."""
+    print(f"Syncing index settings — target: {target.name}")
+    print()
+
+    for locale in LOCALES:
+        print(f"  POSTING settings [{locale}]...", end=" ", flush=True)
+        payload = {"action": "sync-settings", "locale": locale}
+        result = _post_reindex(target, payload)
+        status = "ok" if result.get("ok") else "FAILED"
+        print(f"[{status}]")
+        if not result.get("ok"):
+            print(f"    Error: {result.get('error', 'unknown')}", file=sys.stderr)
+
+    print()
+    print("Done.")
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -427,9 +451,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--mode",
-        choices=["full", "single", "sync-synonyms"],
+        choices=["full", "single", "sync-synonyms", "sync-settings"],
         required=True,
-        help="full = crawl all content; single = one document; sync-synonyms = push synonyms + stop words",
+        help="full = crawl all content; single = one document; sync-synonyms = push synonyms + stop words; sync-settings = push index settings",
     )
     parser.add_argument(
         "--force",
@@ -459,6 +483,9 @@ def main() -> int:
 
     if args.mode == "sync-synonyms":
         return run_sync_synonyms(target)
+
+    if args.mode == "sync-settings":
+        return run_sync_settings(target)
 
     # Single mode
     if not args.content_type or not args.id or not args.locale:

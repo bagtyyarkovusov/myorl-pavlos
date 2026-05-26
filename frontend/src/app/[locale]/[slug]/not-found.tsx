@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { getPageResult } from "@/lib/cms/cms-api";
 import { isLocale, type Locale } from "@/lib/cms/types";
@@ -9,10 +8,6 @@ type NotFoundProps = {
     slug: string;
   }>;
 };
-
-export async function generateMetadata(): Promise<Metadata> {
-  return { robots: { index: false, follow: false } };
-}
 
 const localeNames: Record<Locale, string> = {
   el: "Ελληνικά",
@@ -115,7 +110,7 @@ function SearchForm({
   locale,
   labels,
 }: {
-  locale: string;
+  locale: Locale;
   labels: { searchPlaceholder: string; searchButton: string };
 }) {
   return (

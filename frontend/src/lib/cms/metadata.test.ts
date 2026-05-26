@@ -27,6 +27,7 @@ const basePage: PageDTO = {
   relatedTopics: [],
   tags: [],
   alternateUrls: { el: "/el/about", ru: "/ru/o-nas" },
+  disclaimerOverride: "default",
   sections: [],
 };
 

@@ -66,6 +66,7 @@ function makePage(slug: string, opts: { isFolder?: boolean; parentDocId?: string
     articleAuthor: null,
     sources: null,
     popUpClose: null,
+    disclaimerOverride: "default",
     alternateUrls: {},
     sections: [],
   };

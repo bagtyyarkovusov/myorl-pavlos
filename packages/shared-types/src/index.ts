@@ -68,6 +68,8 @@ export type PageSchemaType =
   | "ContactPage"
   | "CollectionPage";
 
+export type DisclaimerOverride = "default" | "force-show" | "force-hide";
+
 // RenderMode is frontend-native and not derived from Strapi schema
 export type RenderMode = "cms" | "frontend-native";
 

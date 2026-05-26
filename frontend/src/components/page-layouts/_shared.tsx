@@ -10,6 +10,7 @@ export type PageLayoutProps = {
   page: PageDTO;
   navigation?: NavigationNodeDTO[];
   appointmentHref?: string;
+  disclaimerText?: string | null;
 };
 
 export function PageHeader({

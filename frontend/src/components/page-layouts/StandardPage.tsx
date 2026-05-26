@@ -6,29 +6,35 @@ import { PageHeader, type PageLayoutProps } from "./_shared";
 
 import layoutStyles from "./_shared.module.css";
 
-export function StandardPage({ page, appointmentHref }: PageLayoutProps) {
+export function StandardPage({ page, appointmentHref, disclaimerText }: PageLayoutProps) {
   if (page.layoutVariant === "service-article") {
-    return <ServiceArticlePage page={page} appointmentHref={appointmentHref} />;
+    return (
+      <ServiceArticlePage
+        page={page}
+        appointmentHref={appointmentHref}
+        disclaimerText={disclaimerText}
+      />
+    );
   }
 
   if (
     page.layoutVariant === "encyclopedia-article" ||
     page.layoutVariant === "specialized-article"
   ) {
-    return <ReferenceArticlePage page={page} />;
+    return <ReferenceArticlePage page={page} disclaimerText={disclaimerText} />;
   }
 
   return (
     <div className={layoutStyles["page-shell"]}>
       <div className="container">
         <PageHeader page={page} />
-        <PageBody page={page} />
+        <PageBody page={page} disclaimerText={disclaimerText} />
       </div>
     </div>
   );
 }
 
-function ServiceArticlePage({ page, appointmentHref }: PageLayoutProps) {
+function ServiceArticlePage({ page, appointmentHref, disclaimerText }: PageLayoutProps) {
   const t = getPageStrings(page.locale);
   const bookHref = appointmentHref ?? defaultAppointmentHref(page.locale);
 
@@ -41,13 +47,13 @@ function ServiceArticlePage({ page, appointmentHref }: PageLayoutProps) {
         cta={{ label: t.bookConsultation, href: bookHref }}
       />
       <div className="container">
-        <PageBody page={page} appointmentHref={bookHref} />
+        <PageBody page={page} appointmentHref={bookHref} disclaimerText={disclaimerText} />
       </div>
     </>
   );
 }
 
-function ReferenceArticlePage({ page }: PageLayoutProps) {
+function ReferenceArticlePage({ page, disclaimerText }: PageLayoutProps) {
   const t = getPageStrings(page.locale);
   const variant = page.layoutVariant === "specialized-article" ? "specialized" : "encyclopedia";
 
@@ -60,7 +66,7 @@ function ReferenceArticlePage({ page }: PageLayoutProps) {
         metadata={buildArticleMetadata(page, variant, t)}
       />
       <div className="container">
-        <PageBody page={page} />
+        <PageBody page={page} disclaimerText={disclaimerText} />
       </div>
     </>
   );

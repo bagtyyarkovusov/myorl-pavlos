@@ -108,6 +108,7 @@ export function PageRenderer({
             secondaryPhoneDisplay: null,
             email: null,
             hours: null,
+            disclaimerText: null,
             socialLinks: [],
           }
         }
@@ -150,6 +151,7 @@ export function PageRenderer({
             secondaryPhoneDisplay: null,
             email: null,
             hours: null,
+            disclaimerText: null,
             socialLinks: [],
           }
         }
@@ -165,7 +167,13 @@ export function PageRenderer({
   } else if (page.pageType === "contact") {
     layout = <ContactPage page={page} />;
   } else {
-    layout = <StandardPage page={page} appointmentHref={appointmentHref} />;
+    layout = (
+      <StandardPage
+        page={page}
+        appointmentHref={appointmentHref}
+        disclaimerText={globalSettings?.disclaimerText}
+      />
+    );
   }
 
   return (

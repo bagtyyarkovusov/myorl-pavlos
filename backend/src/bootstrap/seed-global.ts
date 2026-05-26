@@ -1,12 +1,13 @@
 import type { Core } from "@strapi/strapi";
 
 import {
+  SEED_DISCLAIMER,
   SEED_PRIMARY_CONTACT,
   SEED_SOCIAL_LINKS,
   type SeedLocale,
 } from "./seed-global-data";
 
-const SEED_VERSION = "v5";
+const SEED_VERSION = "v6";
 const MARKER_KEY = "seed_global_version";
 
 const LOCALES: SeedLocale[] = ["el", "ru"];
@@ -33,6 +34,7 @@ export async function seedGlobal(strapi: Core.Strapi): Promise<void> {
       // the use site keeps the rest of the function strictly typed.
       const payload = {
         ...SEED_PRIMARY_CONTACT[locale],
+        ...SEED_DISCLAIMER[locale],
         socialLinks: SEED_SOCIAL_LINKS,
       } as unknown as Parameters<
         ReturnType<Core.Strapi["documents"]>["create"]

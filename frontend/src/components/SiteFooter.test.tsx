@@ -14,6 +14,7 @@ const SETTINGS: GlobalSettingsDTO = {
   secondaryPhoneDisplay: null,
   email: "test@example.com",
   hours: "Mon-Fri 9:00-17:00",
+  disclaimerText: null,
   socialLinks: [],
 };
 

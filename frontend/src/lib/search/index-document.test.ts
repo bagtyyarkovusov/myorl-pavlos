@@ -55,6 +55,7 @@ function makePage(overrides: Partial<PageDTO> = {}): PageDTO {
     articleAuthor: null,
     sources: null,
     popUpClose: null,
+    disclaimerOverride: "default",
     alternateUrls: {
       el: "https://example.com/el/about",
       ru: "https://example.com/ru/o-nas",

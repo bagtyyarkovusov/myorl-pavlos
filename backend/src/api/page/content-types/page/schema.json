@@ -247,6 +247,20 @@
         }
       }
     },
+    "disclaimerOverride": {
+      "type": "enumeration",
+      "enum": [
+        "default",
+        "force-show",
+        "force-hide"
+      ],
+      "default": "default",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
     "popUpClose": {
       "type": "richtext",
       "pluginOptions": {

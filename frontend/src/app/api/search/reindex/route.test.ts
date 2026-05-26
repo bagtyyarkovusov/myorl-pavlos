@@ -79,6 +79,7 @@ function makePage(overrides: Partial<PageDTO> = {}): PageDTO {
     relatedPages: [],
     relatedTopics: [],
     tags: [],
+    disclaimerOverride: "default",
     alternateUrls: { el: "/el/about" },
     sections: [],
     ...overrides,

@@ -1,0 +1,9 @@
+.disclaimer {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+  padding: clamp(16px, 2.5vw, 28px);
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-stone-soft, #5e6f7d);
+  line-height: 1.6;
+}

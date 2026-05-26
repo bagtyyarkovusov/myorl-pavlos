@@ -25,6 +25,7 @@ const basePage: PageDTO = {
   relatedTopics: [],
   tags: [],
   alternateUrls: {},
+  disclaimerOverride: "default",
   sections: [],
 };
 

@@ -37,6 +37,7 @@ const MOCK_GLOBAL_SETTINGS: GlobalSettingsDTO = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  disclaimerText: null,
   socialLinks: [],
 };
 
@@ -78,6 +79,7 @@ const BASE_PAGE: PageDTO = {
   articleAuthor: null,
   sources: null,
   popUpClose: null,
+  disclaimerOverride: "default",
   alternateUrls: {},
   sections: [],
 };
@@ -1513,6 +1515,111 @@ describe("PageBody", () => {
     );
     expect(screen.getByText("Dr Expert, MD")).toBeDefined();
     expect(screen.getByText("Journal source")).toBeDefined();
+  });
+});
+
+describe("ArticleDisclaimer", () => {
+  const DISCLAIMER_TEXT = "Medical disclaimer text for testing.";
+
+  const medicalLayouts = [
+    "encyclopedia-article",
+    "service-article",
+    "service-faq",
+    "service-accordion",
+    "service-tabs",
+    "specialized-article",
+  ] as const;
+
+  it.each(medicalLayouts)(
+    "shows disclaimer on %s when override is default (medical layout)",
+    (layoutVariant) => {
+      const page: PageDTO = {
+        ...BASE_PAGE,
+        layoutVariant,
+        disclaimerOverride: "default",
+      };
+
+      render(<PageBody page={page} disclaimerText={DISCLAIMER_TEXT} />);
+
+      expect(screen.getByRole("note")).toBeDefined();
+      expect(screen.getByText(DISCLAIMER_TEXT)).toBeDefined();
+    },
+  );
+
+  it("hides disclaimer on standard layout when override is default", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "standard",
+      disclaimerOverride: "default",
+    };
+
+    render(<PageBody page={page} disclaimerText={DISCLAIMER_TEXT} />);
+
+    expect(screen.queryByRole("note")).toBeNull();
+  });
+
+  it("shows disclaimer on any layout when override is force-show", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "standard",
+      disclaimerOverride: "force-show",
+    };
+
+    render(<PageBody page={page} disclaimerText={DISCLAIMER_TEXT} />);
+
+    expect(screen.getByRole("note")).toBeDefined();
+    expect(screen.getByText(DISCLAIMER_TEXT)).toBeDefined();
+  });
+
+  it("hides disclaimer on medical layout when override is force-hide", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      disclaimerOverride: "force-hide",
+    };
+
+    render(<PageBody page={page} disclaimerText={DISCLAIMER_TEXT} />);
+
+    expect(screen.queryByRole("note")).toBeNull();
+  });
+
+  it("hides disclaimer on medical layout when disclaimerText is null", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      disclaimerOverride: "default",
+    };
+
+    render(<PageBody page={page} disclaimerText={null} />);
+
+    expect(screen.queryByRole("note")).toBeNull();
+  });
+
+  it("renders aside with role note and locale-aware aria-label", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      disclaimerOverride: "default",
+    };
+
+    render(<PageBody page={page} disclaimerText={DISCLAIMER_TEXT} />);
+
+    const aside = screen.getByRole("note");
+    expect(aside.tagName).toBe("ASIDE");
+    expect(aside.getAttribute("aria-label")).toBe("Ιατρική αποποίηση");
+  });
+
+  it("renders russian aria-label for ru locale", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      locale: "ru",
+      layoutVariant: "service-article",
+      disclaimerOverride: "default",
+    };
+
+    render(<PageBody page={page} disclaimerText="Медицинский дисклеймер." />);
+
+    expect(screen.getByRole("note").getAttribute("aria-label")).toBe("Медицинский дисклеймер");
   });
 });
 

@@ -58,6 +58,7 @@ function makeArticlePage(overrides: Partial<PageDTO> = {}): PageDTO {
     relatedTopics: [],
     tags: [{ name: "Pediatric", slug: "pediatric" }],
     alternateUrls: {},
+    disclaimerOverride: "default",
     sections: [],
     ...overrides,
   };

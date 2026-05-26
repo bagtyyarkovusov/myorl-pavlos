@@ -113,6 +113,7 @@ _VALID_ENGLISH_WORDS = {
     "laser", "thread", "botox", "skin", "oral", "sleep", "apnea",
     "test", "copy", "page", "blog", "news", "post", "home", "about",
     "contact", "service", "price", "faq", "team",
+    "cyst",
 }
 
 

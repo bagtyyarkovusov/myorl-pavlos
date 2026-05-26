@@ -1,12 +1,32 @@
+import { ArticleDisclaimer } from "@/components/ArticleDisclaimer";
 import { CmsHtml } from "@/components/CmsHtml";
 import { MediaFrame } from "@/components/design-system";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getPageStrings } from "@/lib/i18n/page";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { defaultAppointmentHref } from "@/lib/navigation/appointment-href";
-import type { PageRefDTO, PageDTO } from "@/lib/cms/types";
+import type { PageRefDTO, PageDTO, LayoutVariant } from "@/lib/cms/types";
 import { cn } from "@/lib/utils";
 import styles from "./_shared.module.css";
+
+const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
+  "encyclopedia-article",
+  "service-article",
+  "service-faq",
+  "service-accordion",
+  "service-tabs",
+  "specialized-article",
+]);
+
+function shouldShowDisclaimer(
+  page: PageDTO,
+  disclaimerText?: string | null,
+): disclaimerText is string {
+  if (!disclaimerText) return false;
+  if (page.disclaimerOverride === "force-hide") return false;
+  if (page.disclaimerOverride === "force-show") return true;
+  return MEDICAL_LAYOUT_VARIANTS.has(page.layoutVariant);
+}
 
 type PageBodyProps = {
   page: PageDTO;
@@ -16,6 +36,8 @@ type PageBodyProps = {
   proseStackGap?: "default" | "compact";
   /** When true, page sits under section-hub chrome (tab bar): tighter stacks and TOC scroll offsets. */
   hubChild?: boolean;
+  /** Medical disclaimer text from Global Settings. Rendered when applicable. */
+  disclaimerText?: string | null;
 };
 
 export function PageBody({
@@ -23,30 +45,51 @@ export function PageBody({
   appointmentHref,
   proseStackGap = "default",
   hubChild = false,
+  disclaimerText,
 }: PageBodyProps) {
   if (page.layoutVariant === "service-article") {
-    return <ServiceArticleBody page={page} hubChild={hubChild} appointmentHref={appointmentHref} />;
+    return (
+      <ServiceArticleBody
+        page={page}
+        hubChild={hubChild}
+        appointmentHref={appointmentHref}
+        disclaimerText={disclaimerText}
+      />
+    );
   }
   if (
     page.layoutVariant === "encyclopedia-article" ||
     page.layoutVariant === "specialized-article"
   ) {
-    return <ReferenceArticleBody page={page} hubChild={hubChild} />;
+    return <ReferenceArticleBody page={page} hubChild={hubChild} disclaimerText={disclaimerText} />;
   }
-  return <DefaultPageBody page={page} proseStackGap={proseStackGap} hubChild={hubChild} />;
+  return (
+    <DefaultPageBody
+      page={page}
+      proseStackGap={proseStackGap}
+      hubChild={hubChild}
+      disclaimerText={disclaimerText}
+    />
+  );
 }
 
 type DefaultPageBodyProps = {
   page: PageDTO;
   proseStackGap: "default" | "compact";
   hubChild?: boolean;
+  disclaimerText?: string | null;
 };
 
 function hasProseAside(page: PageDTO): boolean {
   return page.relatedTopics.length > 0 || extractHeadings(page.content).length > 0;
 }
 
-function DefaultPageBody({ page, proseStackGap, hubChild = false }: DefaultPageBodyProps) {
+function DefaultPageBody({
+  page,
+  proseStackGap,
+  hubChild = false,
+  disclaimerText,
+}: DefaultPageBodyProps) {
   if (hasProseAside(page)) {
     return (
       <ArticleAsideBody
@@ -57,6 +100,7 @@ function DefaultPageBody({ page, proseStackGap, hubChild = false }: DefaultPageB
         layoutAttribute="data-prose-layout"
         layoutValue="standard"
         showAuthor={false}
+        disclaimerText={disclaimerText}
       />
     );
   }
@@ -86,11 +130,19 @@ function DefaultPageBody({ page, proseStackGap, hubChild = false }: DefaultPageB
           locale={page.locale}
         />
       ) : null}
+      {shouldShowDisclaimer(page, disclaimerText) ? (
+        <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
+      ) : null}
     </div>
   );
 }
 
-function ServiceArticleBody({ page, hubChild = false, appointmentHref }: PageBodyProps) {
+function ServiceArticleBody({
+  page,
+  hubChild = false,
+  appointmentHref,
+  disclaimerText,
+}: PageBodyProps) {
   const t = getPageStrings(page.locale);
   const bookHref = appointmentHref ?? defaultAppointmentHref(page.locale);
   const relatedTopics = page.relatedTopics;
@@ -178,6 +230,9 @@ function ServiceArticleBody({ page, hubChild = false, appointmentHref }: PageBod
               locale={page.locale}
             />
           ) : null}
+          {shouldShowDisclaimer(page, disclaimerText) ? (
+            <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
+          ) : null}
         </article>
         <aside className={styles["service-layout__sidebar"]}>
           {sectionLinks.length > 0 ? (
@@ -216,7 +271,7 @@ function ServiceArticleBody({ page, hubChild = false, appointmentHref }: PageBod
   );
 }
 
-function ReferenceArticleBody({ page, hubChild = false }: PageBodyProps) {
+function ReferenceArticleBody({ page, hubChild = false, disclaimerText }: PageBodyProps) {
   const variant = page.layoutVariant === "specialized-article" ? "specialized" : "encyclopedia";
 
   return (
@@ -228,6 +283,7 @@ function ReferenceArticleBody({ page, hubChild = false }: PageBodyProps) {
       layoutAttribute="data-article-layout"
       layoutValue={variant}
       showAuthor={variant === "specialized"}
+      disclaimerText={disclaimerText}
     />
   );
 }
@@ -240,6 +296,7 @@ type ArticleAsideBodyProps = {
   layoutAttribute: "data-article-layout" | "data-prose-layout";
   layoutValue: string;
   showAuthor: boolean;
+  disclaimerText?: string | null;
 };
 
 function ArticleAsideBody({
@@ -250,6 +307,7 @@ function ArticleAsideBody({
   layoutAttribute,
   layoutValue,
   showAuthor,
+  disclaimerText,
 }: ArticleAsideBodyProps) {
   const t = getPageStrings(page.locale);
   const headings = extractHeadings(page.content);
@@ -321,6 +379,9 @@ function ArticleAsideBody({
                 locale={page.locale}
               />
             </section>
+          ) : null}
+          {shouldShowDisclaimer(page, disclaimerText) ? (
+            <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
           ) : null}
         </article>
         <aside className={styles["reference-layout__sidebar"]}>

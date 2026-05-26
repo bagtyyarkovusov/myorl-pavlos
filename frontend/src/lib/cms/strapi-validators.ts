@@ -95,6 +95,10 @@ export const zodPageEntity = z
     articleAuthor: z.string().nullish(),
     sources: z.string().nullish(),
     popUpClose: z.string().nullish(),
+    disclaimerOverride: z
+      .enum(["default", "force-show", "force-hide"])
+      .nullish()
+      .transform((v) => v ?? "default"),
     pageSections: z.array(z.unknown()).nullish(),
     localizations: z.array(zodLocalization).nullish(),
   })
@@ -155,6 +159,7 @@ const strapiGlobalEntitySchema = z
     secondaryPhoneDisplay: optionalStringTransform,
     email: optionalStringTransform,
     hours: optionalStringTransform,
+    disclaimerText: optionalStringTransform,
     socialLinks: z.array(strapiSocialLinkSchema).nullish(),
   })
   .passthrough();
@@ -187,6 +192,7 @@ export const globalResponseSchema = z
       secondaryPhoneDisplay: response.data.secondaryPhoneDisplay,
       email: response.data.email,
       hours: response.data.hours,
+      disclaimerText: response.data.disclaimerText,
       socialLinks,
     };
   });

@@ -16,6 +16,7 @@ export type {
 } from "./types/global";
 
 export type {
+  DisclaimerOverride,
   FooterCategory,
   LayoutVariant,
   NavigationInput,

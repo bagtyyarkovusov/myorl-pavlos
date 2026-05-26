@@ -89,6 +89,7 @@ const defaultSettings = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  disclaimerText: null,
   socialLinks: [],
 };
 

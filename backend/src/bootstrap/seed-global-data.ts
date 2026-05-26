@@ -35,6 +35,21 @@ export const SEED_SOCIAL_LINKS: SeedSocialLink[] = [
   },
 ];
 
+export type SeedDisclaimer = {
+  disclaimerText: string;
+};
+
+export const SEED_DISCLAIMER: Record<SeedLocale, SeedDisclaimer> = {
+  el: {
+    disclaimerText:
+      "Οι πληροφορίες σε αυτό το άρθρο έχουν εκπαιδευτικό χαρακτήρα και δεν αντικαθιστούν την εξατομικευμένη ιατρική γνωμάτευση. Συμβουλευθείτε γιατρό για διάγνωση και θεραπεία.",
+  },
+  ru: {
+    disclaimerText:
+      "Информация в этой статье носит образовательный характер и не заменяет индивидуальную медицинскую консультацию. Обратитесь к врачу для диагностики и лечения.",
+  },
+};
+
 export const SEED_PRIMARY_CONTACT: Record<SeedLocale, SeedPrimaryContact> = {
   el: {
     address: "Λεωφόρος Αλεξάνδρας 201 & Πανόρμου, Αμπελόκηποι, Αθήνα",

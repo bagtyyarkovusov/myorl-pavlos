@@ -3,13 +3,14 @@ import type {
   LayoutVariant,
   RenderMode,
   FooterCategory,
+  DisclaimerOverride,
 } from "@myorl-pavlos/shared-types";
 import type { Locale, MediaDTO, PageRefDTO } from "./common";
 import type { SectionDTO, StrapiSectionRaw } from "./sections";
 import type { SeoDTO, StrapiMedia, StrapiSeo } from "./seo";
 import type { TagDTO, StrapiTag } from "./tag";
 
-export type { PageType, LayoutVariant, RenderMode, FooterCategory };
+export type { PageType, LayoutVariant, RenderMode, FooterCategory, DisclaimerOverride };
 
 export type PageDTO = {
   documentId: string;
@@ -42,6 +43,7 @@ export type PageDTO = {
   articleAuthor?: string | null;
   sources?: string | null;
   popUpClose?: string | null;
+  disclaimerOverride: DisclaimerOverride;
   alternateUrls: Partial<Record<Locale, string>>;
   sections: SectionDTO[];
 };
@@ -124,6 +126,7 @@ export type StrapiPagePayload = {
   articleAuthor?: string | null;
   sources?: string | null;
   popUpClose?: string | null;
+  disclaimerOverride?: string | null;
   pageSections?: StrapiSectionRaw[] | null;
   localizations?: StrapiLocalization[] | null;
   legacySourceResourceId?: unknown;

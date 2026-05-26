@@ -254,6 +254,7 @@ function buildFallbackSettings(locale: Locale): GlobalSettingsDTO {
     secondaryPhoneDisplay: null,
     email: null,
     hours: null,
+    disclaimerText: null,
     socialLinks: [],
   };
 }

@@ -18,6 +18,7 @@ export type GlobalSettingsDTO = {
   secondaryPhoneDisplay: string | null;
   email: string | null;
   hours: string | null;
+  disclaimerText: string | null;
   socialLinks: SocialLinkItemDTO[];
 };
 
@@ -32,6 +33,7 @@ export type StrapiGlobalPayload = {
   secondaryPhoneDisplay?: string | null;
   email?: string | null;
   hours?: string | null;
+  disclaimerText?: string | null;
   socialLinks?: StrapiSocialLink[] | null;
 };
 

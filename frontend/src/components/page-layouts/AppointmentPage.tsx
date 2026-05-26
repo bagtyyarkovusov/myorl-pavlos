@@ -40,6 +40,7 @@ export function AppointmentPage({ page, settings }: AppointmentPageProps) {
     secondaryPhoneDisplay: null,
     email: null,
     hours: null,
+    disclaimerText: null,
     socialLinks: [],
   };
 

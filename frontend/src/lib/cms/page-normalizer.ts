@@ -1,6 +1,7 @@
 import { isLocale } from "./types";
 import type {
   ContactClinicDTO,
+  DisclaimerOverride,
   LayoutVariant,
   Locale,
   MediaDTO,
@@ -159,6 +160,11 @@ export function deriveSeoTitle(page: Pick<StrapiPagePayload, "title" | "seo">): 
   return normalizeOptionalText(page.seo?.metaTitle) ?? page.title;
 }
 
+function normalizeDisclaimerOverride(value: string | null | undefined): DisclaimerOverride {
+  if (value === "force-show" || value === "force-hide") return value;
+  return "default";
+}
+
 function normalizePriority(value: number | string | null | undefined): number | null {
   if (value === null || value === undefined || value === "") return null;
   const priority = Number(value);
@@ -258,6 +264,7 @@ export function toPageDTO(page: StrapiPagePayload, config?: CmsConfig): PageDTO 
     articleAuthor: page.articleAuthor ?? null,
     sources: page.sources ?? null,
     popUpClose: page.popUpClose ?? null,
+    disclaimerOverride: normalizeDisclaimerOverride(page.disclaimerOverride),
     alternateUrls: buildAlternateUrls(page, effective.siteUrl),
     sections: _toSemanticSections(page),
   };

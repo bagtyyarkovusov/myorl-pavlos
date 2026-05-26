@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Migration Orchestrator — chain restore → verify → reindex → smoke.
+"""Migration Orchestrator — chain restore → verify → reindex → revalidate → smoke.
 
 Ensures zero drift between Postgres and the Search Index after a bulk restore
 by running each step sequentially and aborting on any failure.
@@ -135,7 +135,48 @@ def _step_reindex(target_name: str, force: bool) -> int:
 
 
 # ---------------------------------------------------------------------------
-# Step 4: Smoke test
+# Step 4: Revalidate Next.js cache
+# ---------------------------------------------------------------------------
+
+
+def _step_revalidate(target: Target) -> int:
+    """POST locale-el and locale-ru revalidation tags after bulk restore."""
+    revalidate_url = os.environ.get("NEXT_REVALIDATE_URL", "").strip()
+    revalidate_secret = os.environ.get("REVALIDATE_SECRET", "").strip()
+
+    if not revalidate_url:
+        if target.name == "production":
+            return _fail("revalidate", "NEXT_REVALIDATE_URL is not set")
+        revalidate_url = "http://localhost:3000/api/revalidate"
+        _log("revalidate", f"NEXT_REVALIDATE_URL not set; defaulting to {revalidate_url}")
+
+    if not revalidate_secret:
+        _log("revalidate", "REVALIDATE_SECRET not set; skipping revalidation step")
+        return 0
+
+    _log("revalidate", f"POSTing locale-el and locale-ru revalidation tags to {revalidate_url}")
+
+    body = json.dumps({"secret": revalidate_secret, "tags": ["locale-el", "locale-ru"]}).encode("utf-8")
+    req = urllib.request.Request(
+        revalidate_url,
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+            if resp.status == 200 and result.get("ok"):
+                _log("revalidate", "Next.js cache revalidated.")
+                return 0
+            return _fail("revalidate", f"Revalidation returned {resp.status}: {result.get('error', 'unknown')}")
+    except Exception as e:
+        return _fail("revalidate", str(e) or "Unknown error during revalidation")
+
+
+# ---------------------------------------------------------------------------
+# Step 5: Smoke test
 # ---------------------------------------------------------------------------
 
 
@@ -235,6 +276,11 @@ def main(argv: list[str] | None = None) -> int:
         return rc
 
     # Step 4
+    rc = _step_revalidate(target)
+    if rc != 0:
+        return rc
+
+    # Step 5
     rc = _step_smoke(target)
     if rc != 0:
         return rc

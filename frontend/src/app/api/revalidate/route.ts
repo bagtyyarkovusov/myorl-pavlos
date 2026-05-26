@@ -116,14 +116,16 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
   }
 
   const model = payload.model ?? payload.uid;
+  const locale = stringValue(payload.entry?.locale);
+  const documentId = stringValue(payload.entry?.documentId);
+
   if (isPageModel(model)) {
     const tags = new Set<string>(["pages", "sitemap"]);
-    const locale = stringValue(payload.entry?.locale);
     const slug = stringValue(payload.entry?.slug);
-    const documentId = stringValue(payload.entry?.documentId);
 
     if (locale) {
       tags.add(`navigation:${locale}`);
+      tags.add(`locale:${locale}`);
     }
     if (locale && slug) {
       tags.add(`page:${locale}:${slug}`);
@@ -135,11 +137,43 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
     return [...tags];
   }
 
+  if (isVideoEntryModel(model)) {
+    const tags = new Set<string>(["pages", "sitemap"]);
+    if (locale) {
+      tags.add(`locale:${locale}`);
+    }
+    if (documentId) {
+      tags.add(`video:${documentId}`);
+    }
+    return [...tags];
+  }
+
+  if (isGlobalModel(model)) {
+    const tags = new Set<string>(["pages", "sitemap"]);
+    if (locale) {
+      tags.add(`global:${locale}`);
+      tags.add(`locale:${locale}`);
+    }
+    return [...tags];
+  }
+
   if (isTagModel(model)) {
-    return ["tags", "pages", "sitemap"];
+    const tags = new Set<string>(["tags", "pages", "sitemap"]);
+    if (locale) {
+      tags.add(`locale:${locale}`);
+    }
+    return [...tags];
   }
 
   return ["pages", "sitemap"];
+}
+
+function isVideoEntryModel(model: string | undefined): boolean {
+  return model === "api::video-entry.video-entry" || model === "video-entry";
+}
+
+function isGlobalModel(model: string | undefined): boolean {
+  return model === "api::global.global" || model === "global";
 }
 
 function isPageModel(model: string | undefined): boolean {

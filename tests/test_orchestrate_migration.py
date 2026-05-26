@@ -13,6 +13,7 @@ from orchestrate_migration import (
     _resolve_target,
     _smoke_query,
     _step_restore,
+    _step_revalidate,
     Target,
 )
 
@@ -134,6 +135,64 @@ class StrapiHealthTimeout(unittest.TestCase):
     def test_returns_false_after_timeout(self, mock_urlopen):
         mock_urlopen.side_effect = Exception("Connection refused")
         self.assertFalse(_check_strapi_health("http://localhost:1337", timeout=0.1))
+
+
+class RevalidateStep(unittest.TestCase):
+    def setUp(self):
+        self.target = Target(name="dev", access="local", meili_host_port=57700)
+
+    @patch.dict("os.environ", {"REVALIDATE_SECRET": "test-secret"}, clear=True)
+    @patch("orchestrate_migration.urllib.request.urlopen")
+    def test_skips_when_no_revalidate_url_and_not_production(self, mock_urlopen):
+        """Skips gracefully for local targets when NEXT_REVALIDATE_URL is not set."""
+        # With no NEXT_REVALIDATE_URL, defaults to localhost:3000/api/revalidate
+        mock_resp = MagicMock()
+        mock_resp.__enter__.return_value = mock_resp
+        mock_resp.read.return_value = b'{"ok": true, "tags": []}'
+        mock_resp.status = 200
+        mock_urlopen.return_value = mock_resp
+
+        rc = _step_revalidate(self.target)
+        self.assertEqual(rc, 0)
+        self.assertTrue(mock_urlopen.called)
+
+    @patch.dict("os.environ", {"REVALIDATE_SECRET": "test-secret"}, clear=True)
+    @patch("orchestrate_migration.urllib.request.urlopen")
+    def test_successful_revalidation(self, mock_urlopen):
+        with patch.dict(
+            "os.environ",
+            {"NEXT_REVALIDATE_URL": "http://localhost:3000/api/revalidate"},
+        ):
+            mock_resp = MagicMock()
+            mock_resp.__enter__.return_value = mock_resp
+            mock_resp.read.return_value = b'{"ok": true, "tags": ["locale-el", "locale-ru"]}'
+            mock_resp.status = 200
+            mock_urlopen.return_value = mock_resp
+
+            rc = _step_revalidate(self.target)
+            self.assertEqual(rc, 0)
+
+    @patch.dict("os.environ", {"REVALIDATE_SECRET": "test-secret"}, clear=True)
+    @patch("orchestrate_migration.urllib.request.urlopen")
+    def test_fails_on_error_response(self, mock_urlopen):
+        with patch.dict(
+            "os.environ",
+            {"NEXT_REVALIDATE_URL": "http://localhost:3000/api/revalidate"},
+        ):
+            mock_resp = MagicMock()
+            mock_resp.__enter__.return_value = mock_resp
+            mock_resp.read.return_value = b'{"ok": false, "error": "Invalid secret"}'
+            mock_resp.status = 401
+            mock_urlopen.return_value = mock_resp
+
+            rc = _step_revalidate(self.target)
+            self.assertEqual(rc, 1)
+
+    @patch.dict("os.environ", clear=True)
+    def test_skips_when_no_secret_configured(self):
+        """Skips gracefully when REVALIDATE_SECRET is not set."""
+        rc = _step_revalidate(self.target)
+        self.assertEqual(rc, 0)
 
 
 if __name__ == "__main__":

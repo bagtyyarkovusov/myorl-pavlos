@@ -100,7 +100,11 @@ export async function getPageResult(locale: Locale, slug: string): Promise<PageR
   const gateway = getGateway();
 
   try {
-    const page = await gateway.pages.one(slug, { locale, populate: PAGE_POPULATE });
+    const page = await gateway.pages.one(slug, {
+      locale,
+      populate: PAGE_POPULATE,
+      cacheTags: ["pages", "sitemap", "locale:" + locale],
+    });
     if (!page) {
       return {
         ok: false,
@@ -141,6 +145,7 @@ export async function getPageByDocumentIdResult(
       populate: PAGE_POPULATE,
       pageSize: 1,
       maxPages: 1,
+      cacheTags: ["pages", "sitemap", "locale:" + locale],
     });
     const page = pages[0];
     if (!page) {
@@ -183,6 +188,7 @@ export async function getVideoEntryByDocumentIdResult(
       populate: VIDEO_ENTRY_POPULATE,
       pageSize: 1,
       maxPages: 1,
+      cacheTags: ["pages", "sitemap", "locale:" + locale],
     });
     const entry = entries[0];
     if (!entry) {
@@ -359,6 +365,7 @@ export async function getSitemapPages(): Promise<PageDTO[]> {
     locale: "all",
     sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
     populate: SITEMAP_POPULATE,
+    cacheTags: ["pages", "sitemap"],
   });
 
   return pages.filter((page) => !page.seo.sitemapExclude);

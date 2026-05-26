@@ -125,6 +125,33 @@ class BrokenTyposTests(unittest.TestCase):
         findings = flag_broken_typos(pages)
         self.assertEqual(len(findings), 1)
 
+    def test_flags_sibling_levenshtein_typo(self) -> None:
+        """Two slugs in the same locale separated by edit distance 1-2."""
+        pages: list[FixturePage] = [
+            _page("el", "prosopou", "d1", "Proswpou"),
+            _page("el", "prospou", "d2", "Prospou"),
+        ]
+        findings = flag_broken_typos(pages)
+        self.assertTrue(any("Levenshtein" in f.detail for f in findings))
+
+    def test_ignores_distant_sibling_slugs(self) -> None:
+        """Slugs in the same locale with edit distance > 2 are not flagged."""
+        pages: list[FixturePage] = [
+            _page("el", "rinoplastiki"),
+            _page("el", "otoplastiki"),
+        ]
+        findings = flag_broken_typos(pages)
+        self.assertFalse(any("Levenshtein" in f.detail for f in findings))
+
+    def test_levenshtein_respects_locale_boundary(self) -> None:
+        """Slugs in different locales are not compared even if they're close."""
+        pages: list[FixturePage] = [
+            _page("el", "rinoplastiki"),
+            _page("ru", "rinoplastika"),  # distance 1, but different locale
+        ]
+        findings = flag_broken_typos(pages)
+        self.assertFalse(any("Levenshtein" in f.detail for f in findings))
+
 
 class DuplicatesTests(unittest.TestCase):
     def test_flags_exact_duplicate_within_locale(self) -> None:

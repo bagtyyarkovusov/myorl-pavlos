@@ -119,6 +119,7 @@ _VALID_ENGLISH_WORDS = {
 def flag_broken_typos(pages: list[tuple[str, str, str, str]]) -> list[SlugFinding]:
     """Flag slugs with demonstrably broken segments (typos)."""
     findings: list[SlugFinding] = []
+    flagged_slugs: set[tuple[str, str]] = set()
 
     for locale, slug, doc_id, title in pages:
         if not slug:
@@ -140,6 +141,7 @@ def flag_broken_typos(pages: list[tuple[str, str, str, str]]) -> list[SlugFindin
                         detail=f'consonant-only segment "{word}" (no vowels)',
                     )
                 )
+                flagged_slugs.add((locale, slug))
                 break
             # Flag runs of 3+ repeated chars
             if _repeated_char_re.search(word):
@@ -153,7 +155,49 @@ def flag_broken_typos(pages: list[tuple[str, str, str, str]]) -> list[SlugFindin
                         detail=f'repeated character run in segment "{word}"',
                     )
                 )
+                flagged_slugs.add((locale, slug))
                 break
+
+    # Cross-slug comparison: flag sibling pairs with Levenshtein distance ≤ 2
+    by_locale: dict[str, list[tuple[str, str, str, str]]] = defaultdict(list)
+    for page in pages:
+        if page[1]:
+            by_locale[page[0]].append(page)
+
+    for locale, locale_pages in by_locale.items():
+        for i in range(len(locale_pages)):
+            for j in range(i + 1, len(locale_pages)):
+                a_loc, a_slug, a_doc, a_title = locale_pages[i]
+                b_loc, b_slug, b_doc, b_title = locale_pages[j]
+                dist = levenshtein(a_slug.lower(), b_slug.lower())
+                if dist == 0:
+                    continue  # exact duplicate — handled by criterion 2
+                if dist > 2:
+                    continue
+                if (a_loc, a_slug) not in flagged_slugs:
+                    findings.append(
+                        SlugFinding(
+                            locale=a_loc,
+                            slug=a_slug,
+                            document_id=a_doc,
+                            title=a_title,
+                            criterion="typo",
+                            detail=f"Levenshtein distance {dist} from sibling slug \"{b_slug}\"",
+                        )
+                    )
+                    flagged_slugs.add((a_loc, a_slug))
+                if (b_loc, b_slug) not in flagged_slugs:
+                    findings.append(
+                        SlugFinding(
+                            locale=b_loc,
+                            slug=b_slug,
+                            document_id=b_doc,
+                            title=b_title,
+                            criterion="typo",
+                            detail=f"Levenshtein distance {dist} from sibling slug \"{a_slug}\"",
+                        )
+                    )
+                    flagged_slugs.add((b_loc, b_slug))
 
     return findings
 
@@ -466,30 +510,24 @@ def build_report(pages: list[tuple[str, str, str, str]]) -> tuple[str, list[Slug
     for f in all_findings:
         by_criterion[f.criterion] += 1
 
+    criterion_map = {
+        "criterion-1-broken-typos": "typo",
+        "criterion-2-duplicates": "duplicate",
+        "criterion-2b-near-duplicates": "near-duplicate",
+        "criterion-3-collision-suffixes": "collision-suffix",
+        "criterion-4-locale-mismatch": "locale-mismatch",
+        "criterion-5-garbage": "garbage",
+    }
+
     summary_lines = [
         "## Summary\n",
         f"| Criterion | Flagged |",
         f"|---|---|",
     ]
     for anchor, _fn in criteria:
-        count = by_criterion.get(anchor.replace("criterion-", "").split("-", 1)[1].replace("-", " "), 0)
-        # Re-derive from findings
         label = anchor.replace("criterion-", "").replace("-", " ")
-        count2 = sum(1 for f in all_findings if anchor.startswith(f"criterion-{f.criterion}"))
-        # Simpler: match by criterion field
-    for anchor, _fn in criteria:
-        label = anchor.replace("criterion-", "").replace("-", " ")
-        # Map anchors to criterion field values
-        criterion_map = {
-            "criterion-1-broken-typos": "typo",
-            "criterion-2-duplicates": "duplicate",
-            "criterion-2b-near-duplicates": "near-duplicate",
-            "criterion-3-collision-suffixes": "collision-suffix",
-            "criterion-4-locale-mismatch": "locale-mismatch",
-            "criterion-5-garbage": "garbage",
-        }
         c_val = criterion_map.get(anchor, "")
-        count = sum(1 for f in all_findings if f.criterion == c_val)
+        count = by_criterion.get(c_val, 0)
         summary_lines.append(f"| {label} | {count} |")
 
     summary_lines.append(f"| **Total flagged** | **{len(all_findings)}** |")

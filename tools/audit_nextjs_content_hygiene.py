@@ -37,6 +37,8 @@ IGNORED_SCHEMES = {"mailto", "tel", "javascript", "data", "skype"}
 LEGACY_HTML_PATTERNS = ("<font", "</font", "style=", "class=", "[[", "&nbsp;")
 UNSAFE_HTML_PATTERNS = ("<script", "onclick=", "onerror=", "javascript:")
 HREF_RE = re.compile(r"""href\s*=\s*["']([^"'#]+)(?:#[^"']*)?["']""", re.IGNORECASE)
+ANCHOR_ID_RE = re.compile(r"""<\w+[^>]*\bid\s*=\s*["']([^"'\s>]+)["']""", re.IGNORECASE)
+ANCHOR_HREF_RE = re.compile(r"""<a\s[^>]*\bhref\s*=\s*["']#([^"'\s>]+)["']""", re.IGNORECASE)
 
 PAGE_TEXT_FIELDS = (
     "content",
@@ -90,6 +92,13 @@ class LegacyHtmlFinding:
     field: str
     markers: list[str]
     textLength: int
+
+
+@dataclass(frozen=True)
+class BrokenAnchorFinding:
+    page: str
+    href: str
+    source: str
 
 
 def load_redirect_paths(path: Path) -> tuple[set[str], set[str]]:
@@ -293,6 +302,53 @@ def audit_html_markers(sources: list[TextSource]) -> dict[str, Any]:
     }
 
 
+def _page_path(source_id: str) -> str:
+    if source_id.startswith("page:"):
+        parts = source_id.split(":", 3)
+        if len(parts) >= 3:
+            return f"/{parts[1]}/{parts[2]}"
+    return source_id
+
+
+def _extract_anchor_ids(html: str) -> set[str]:
+    return {m.group(1) for m in ANCHOR_ID_RE.finditer(html)}
+
+
+def _extract_anchor_hrefs(html: str) -> list[str]:
+    return [m.group(1) for m in ANCHOR_HREF_RE.finditer(html)]
+
+
+def find_broken_anchor_links(sources: list[TextSource]) -> list[BrokenAnchorFinding]:
+    page_ids: dict[str, set[str]] = {}
+    for src in sources:
+        if src.source.startswith("page:"):
+            doc_id = src.source.rsplit(":", 1)[-1]
+            page_ids.setdefault(doc_id, set()).update(_extract_anchor_ids(src.text))
+
+    findings: list[BrokenAnchorFinding] = []
+    for src in sources:
+        if src.source.startswith("page:"):
+            valid_ids = page_ids[src.source.rsplit(":", 1)[-1]]
+            page_path = _page_path(src.source)
+            source_label = f"page.{src.field}"
+        else:
+            valid_ids = _extract_anchor_ids(src.text)
+            page_path = _page_path(src.source)
+            source_label = src.source
+
+        for anchor in _extract_anchor_hrefs(src.text):
+            if anchor not in valid_ids:
+                findings.append(
+                    BrokenAnchorFinding(
+                        page=page_path,
+                        href=f"#{anchor}",
+                        source=source_label,
+                    )
+                )
+
+    return findings
+
+
 def fetch_empty_content_leaves(connection: sqlite3.Connection) -> list[dict[str, Any]]:
     rows = connection.execute(
         """
@@ -446,6 +502,7 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
         redirect_targets=redirect_targets,
     )
     html_data = audit_html_markers(text_sources)
+    broken_anchor_links = find_broken_anchor_links(text_sources)
     empty_content_leaves = fetch_empty_content_leaves(connection)
     navigation = check_navigation_render(skip=args.skip_strapi_navigation)
 
@@ -458,6 +515,11 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
         failures.append(
             "potential broken internal links exceeded threshold: "
             f"{len(link_data['potentialBroken'])} > {args.max_broken_internal_links}"
+        )
+    if len(broken_anchor_links) > args.max_broken_anchor_links:
+        failures.append(
+            "broken anchor links exceeded threshold: "
+            f"{len(broken_anchor_links)} > {args.max_broken_anchor_links}"
         )
     if not args.skip_strapi_navigation:
         if navigation["errors"]:
@@ -483,6 +545,7 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
             "potentialBrokenInternalLinks": len(link_data["potentialBroken"]),
             "legacyHtmlSources": len(html_data["legacy"]),
             "unsafeHtmlSources": len(html_data["unsafe"]),
+            "brokenAnchorLinks": len(broken_anchor_links),
             "emptyContentLeaves": len(empty_content_leaves),
             "redirectSourcesLoaded": len(redirect_sources),
         },
@@ -499,6 +562,7 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
             asdict(finding) for finding in html_data["legacy"][: args.max_samples]
         ],
         "unsafeHtmlFindings": [asdict(finding) for finding in html_data["unsafe"]],
+        "brokenAnchorLinks": [asdict(finding) for finding in broken_anchor_links[: args.max_samples]],
         "emptyContentLeaves": empty_content_leaves,
         "failures": failures,
     }
@@ -520,6 +584,12 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=DEFAULT_ALLOWED_BROKEN_INTERNAL_LINKS,
         help="Current accepted ceiling; the audit fails if this increases",
+    )
+    parser.add_argument(
+        "--max-broken-anchor-links",
+        type=int,
+        default=5,
+        help="Current accepted ceiling for broken anchor links; audit fails if exceeded",
     )
     parser.add_argument(
         "--skip-strapi-navigation",

@@ -21,8 +21,56 @@
 // Or add to package.json:
 //   "scripts": { "sandcastle": "npx tsx .sandcastle/main.mts" }
 
+import { existsSync, readFileSync } from "node:fs";
+
 import * as sandcastle from "@ai-hero/sandcastle";
 import { docker } from "@ai-hero/sandcastle/sandboxes/docker";
+
+// ---------------------------------------------------------------------------
+// Dev backend env — read backend/.env so the agent can reach the running
+// Strapi/Postgres/Meilisearch containers on the compose network. Without this
+// the agent's worktree has no .env (gitignored), so audits/scripts that call
+// `STRAPI_URL` fall back to `localhost:1337`, which inside the sandbox points
+// at the sandbox itself, not at `myorl-strapi-dev`.
+// ---------------------------------------------------------------------------
+
+function parseDotenv(path: string): Record<string, string> {
+  if (!existsSync(path)) return {};
+  const out: Record<string, string> = {};
+  for (const rawLine of readFileSync(path, "utf-8").split("\n")) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith("#")) continue;
+    const eq = line.indexOf("=");
+    if (eq <= 0) continue;
+    const key = line.slice(0, eq).trim();
+    const value = line.slice(eq + 1).replace(/^"(.*)"$/, "$1");
+    if (/^[A-Z_][A-Z0-9_]*$/.test(key)) out[key] = value;
+  }
+  return out;
+}
+
+const backendEnv = parseDotenv("backend/.env");
+
+const sandboxEnv: Record<string, string> = {
+  // Strapi: reachable by container name on the compose network, NOT localhost.
+  STRAPI_URL: "http://myorl-strapi-dev:1337",
+  STRAPI_TOKEN: backendEnv.STRAPI_TOKEN ?? "",
+  // Postgres: internal port 5432 on the compose network (NOT host's 55432).
+  DATABASE_HOST: "myorl-pg",
+  DATABASE_PORT: "5432",
+  DATABASE_NAME: backendEnv.DATABASE_NAME ?? "strapi",
+  DATABASE_USERNAME: backendEnv.DATABASE_USERNAME ?? "strapi",
+  DATABASE_PASSWORD: backendEnv.DATABASE_PASSWORD ?? "strapi",
+  // Postgres connection string flavor (some Python tools read PG* vars).
+  PGHOST: "myorl-pg",
+  PGPORT: "5432",
+  PGDATABASE: backendEnv.DATABASE_NAME ?? "strapi",
+  PGUSER: backendEnv.DATABASE_USERNAME ?? "strapi",
+  PGPASSWORD: backendEnv.DATABASE_PASSWORD ?? "strapi",
+  // Meilisearch (used by search reindex tools).
+  MEILI_HOST: "http://myorl-meili-dev:7700",
+  MEILI_MASTER_KEY: backendEnv.MEILI_MASTER_KEY ?? "",
+};
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -71,7 +119,14 @@ const sandboxTimeouts = { copyToWorktreeMs: 600_000 };
 // reach the running Strapi (myorl-strapi-dev:1337), Postgres (myorl-pg:5432),
 // and Meilisearch (myorl-meili-dev:7700) containers by name when running
 // integration checks or seeding scripts.
-const sandboxOptions = { network: "myorl-pavlos_default" };
+//
+// `env` injects connection strings + the Strapi API token so audit tools
+// (audit_seo_meta.py, audit_site_assets.py, etc.) and content scripts can
+// authenticate without needing a .env file shipped into the worktree.
+const sandboxOptions = {
+  network: "myorl-pavlos_default",
+  env: sandboxEnv,
+};
 
 // ---------------------------------------------------------------------------
 // Main loop

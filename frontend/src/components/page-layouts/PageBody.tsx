@@ -6,7 +6,7 @@ import { getPageStrings } from "@/lib/i18n/page";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { defaultAppointmentHref } from "@/lib/navigation/appointment-href";
 import type { PageRefDTO, PageDTO, LayoutVariant } from "@/lib/cms/types";
-import { cn } from "@/lib/utils";
+import { cn, formatIsoDate } from "@/lib/utils";
 import styles from "./_shared.module.css";
 
 const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
@@ -18,16 +18,11 @@ const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
   "specialized-article",
 ]);
 
-function formatDate(dateString?: string | null): string | null {
-  if (!dateString) return null;
-  return dateString.slice(0, 10);
-}
-
 function ArticleDateLine({ page }: { page: PageDTO }) {
   if (!MEDICAL_LAYOUT_VARIANTS.has(page.layoutVariant)) return null;
 
-  const published = formatDate(page.publishedAt);
-  const updated = formatDate(page.updatedAt);
+  const published = formatIsoDate(page.publishedAt);
+  const updated = formatIsoDate(page.updatedAt);
 
   if (!published && !updated) return null;
 

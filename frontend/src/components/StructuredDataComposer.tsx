@@ -13,6 +13,7 @@ import { buildVideoObjectLd } from "@/lib/structured-data/video-object";
 import { buildWebPageLd } from "@/lib/structured-data/webpage";
 import { buildWebSiteLd } from "@/lib/structured-data/website";
 import { buildContactRenderModel } from "@/lib/contact/contact-render-model";
+import { formatIsoDate } from "@/lib/utils";
 import { hrefForPage } from "@/lib/cms/navigation";
 import type { GlobalSettingsDTO, PageDTO, SectionDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
@@ -33,11 +34,6 @@ type StructuredDataComposerProps = {
 
 const DEFAULT_BRAND_NAME = "MyORL";
 const DEFAULT_HOME_LABEL = "Home";
-
-function formatIsoDate(value?: string | null): string | undefined {
-  if (!value) return undefined;
-  return value.slice(0, 10);
-}
 
 function firstClinicPhone(sections: SectionDTO[]): string | undefined {
   const contact = sections.find(

@@ -119,6 +119,12 @@ class BrokenTyposTests(unittest.TestCase):
         findings = flag_broken_typos(pages)
         self.assertEqual(len(findings), 0)
 
+    def test_ignores_valid_english_medical_term(self) -> None:
+        # "cyst" is an English medical term, not a typo
+        pages: list[FixturePage] = [_page("el", "preauricular-cyst")]
+        findings = flag_broken_typos(pages)
+        self.assertEqual(len(findings), 0)
+
     def test_flags_short_gibberish_segment(self) -> None:
         # "xqkz" is only consonants and short
         pages: list[FixturePage] = [_page("el", "xqkz-page")]
@@ -477,6 +483,54 @@ class IntegrationTests(unittest.TestCase):
         # With 19 fixture pages we expect 10-16 findings
         self.assertGreater(len(all_findings), 0)
         self.assertLessEqual(len(all_findings), len(self.pages))
+
+
+class Issue180RegressionTests(unittest.TestCase):
+    """Verify the 6 slug-quality findings from issue #180 are resolved."""
+
+    def test_cyst_not_flagged_as_consonant_only(self) -> None:
+        """preauricular-cyst: 'cyst' is a valid English medical term."""
+        pages: list[FixturePage] = [_page("el", "preauricular-cyst")]
+        findings = flag_broken_typos(pages)
+        self.assertEqual(len(findings), 0,
+                         "preauricular-cyst should not be flagged; 'cyst' is a valid English word")
+
+    def test_lifting_prosopou_not_flagged(self) -> None:
+        """lifting-prosopou (renamed from lftynnk-prospou-2) should be clean."""
+        pages: list[FixturePage] = [_page("el", "lifting-prosopou")]
+        findings = flag_broken_typos(pages)
+        self.assertEqual(len(findings), 0,
+                         "lifting-prosopou should not be flagged; typo was fixed")
+
+    def test_rinorragia_enilikoi_and_paidia_not_levenshtein_flagged(self) -> None:
+        """Renamed adult/paediatric slugs should not be flagged as near each other."""
+        pages: list[FixturePage] = [
+            _page("el", "rinorragia-enilikoi", "d1", "Ρινορραγία"),
+            _page("el", "rinorragia-paidia", "d2", "Ρινορραγίες στα παιδιά"),
+        ]
+        findings = flag_broken_typos(pages)
+        levenshtein_findings = [f for f in findings if "Levenshtein" in f.detail]
+        self.assertEqual(len(levenshtein_findings), 0,
+                         "rinorragia-enilikoi and rinorragia-paidia are far enough apart")
+
+    def test_rinorragia_ru_pair_not_levenshtein_flagged(self) -> None:
+        """Same fix for the Russian locale pair."""
+        pages: list[FixturePage] = [
+            _page("ru", "rinorragia-enilikoi", "d1", "Носовое кровотечение"),
+            _page("ru", "rinorragia-paidia", "d2", "Носовые кровотечения у детей"),
+        ]
+        findings = flag_broken_typos(pages)
+        levenshtein_findings = [f for f in findings if "Levenshtein" in f.detail]
+        self.assertEqual(len(levenshtein_findings), 0,
+                         "Russian rinorragia-enilikoi and rinorragia-paidia are far enough apart")
+
+    def test_original_lftynnk_still_flagged(self) -> None:
+        """Sanity check: the original typo slug is still flaggable by the tool."""
+        pages: list[FixturePage] = [_page("el", "lftynnk-prospou-2")]
+        findings = flag_broken_typos(pages)
+        consonant_findings = [f for f in findings if "consonant-only" in f.detail]
+        self.assertEqual(len(consonant_findings), 1,
+                         "Original typo lftynnk-prospou-2 should still be detectable")
 
 
 if __name__ == "__main__":

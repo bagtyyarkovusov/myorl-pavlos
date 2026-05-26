@@ -6,10 +6,10 @@ vi.mock("@/lib/db", () => ({
   logSearchQuery: mockLogSearchQuery,
 }));
 
-function makeRequest(body: unknown): Request {
+function makeRequest(body: unknown, headers?: Record<string, string>): Request {
   return new Request("http://localhost/api/search/log", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", ...headers },
     body: JSON.stringify(body),
   });
 }
@@ -177,5 +177,67 @@ describe("POST /api/search/log", () => {
     const response = await POST(makeRequest(validPayload));
 
     expect(response.status).toBe(500);
+  });
+
+  it("returns 429 after 10 requests from the same IP within the window", async () => {
+    mockLogSearchQuery.mockResolvedValue(undefined);
+
+    const { POST } = await import("./route");
+
+    for (let i = 0; i < 10; i++) {
+      const response = await POST(
+        makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }),
+      );
+      expect(response.status).toBe(204);
+    }
+
+    const rateLimited = await POST(
+      makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }),
+    );
+
+    expect(rateLimited.status).toBe(429);
+    const json = await rateLimited.json();
+    expect(json.ok).toBe(false);
+    expect(json.error).toContain("Too many requests");
+  });
+
+  it("counts different IPs independently", async () => {
+    mockLogSearchQuery.mockResolvedValue(undefined);
+
+    const { POST } = await import("./route");
+
+    // Exhaust one IP
+    for (let i = 0; i < 10; i++) {
+      await POST(makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }));
+    }
+
+    const rateLimited = await POST(
+      makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }),
+    );
+    expect(rateLimited.status).toBe(429);
+
+    // Different IP still has full quota
+    const otherIP = await POST(
+      makeRequest(validPayload, { "x-forwarded-for": "10.0.0.1" }),
+    );
+    expect(otherIP.status).toBe(204);
+  });
+
+  it("resolves x-real-ip as fallback header", async () => {
+    mockLogSearchQuery.mockResolvedValue(undefined);
+
+    const { POST } = await import("./route");
+
+    for (let i = 0; i < 10; i++) {
+      const response = await POST(
+        makeRequest(validPayload, { "x-real-ip": "10.10.10.10" }),
+      );
+      expect(response.status).toBe(204);
+    }
+
+    const rateLimited = await POST(
+      makeRequest(validPayload, { "x-real-ip": "10.10.10.10" }),
+    );
+    expect(rateLimited.status).toBe(429);
   });
 });

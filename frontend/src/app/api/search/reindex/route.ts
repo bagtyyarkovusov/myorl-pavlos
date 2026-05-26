@@ -1,6 +1,8 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 
+export const maxDuration = 30;
+
 import { getPageByDocumentIdResult, getVideoEntryByDocumentIdResult } from "@/lib/cms/cms-api";
 import { isLocale, type Locale } from "@/lib/cms/types";
 import { indexPageDocument, indexVideoDocument } from "@/lib/search/index-document";

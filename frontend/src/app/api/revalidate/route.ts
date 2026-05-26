@@ -116,14 +116,16 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
   }
 
   const model = payload.model ?? payload.uid;
-  if (isPageModel(model)) {
+  const locale = stringValue(payload.entry?.locale);
+  const documentId = stringValue(payload.entry?.documentId);
+
+  if (modelMatches(model, "page")) {
     const tags = new Set<string>(["pages", "sitemap"]);
-    const locale = stringValue(payload.entry?.locale);
     const slug = stringValue(payload.entry?.slug);
-    const documentId = stringValue(payload.entry?.documentId);
 
     if (locale) {
       tags.add(`navigation:${locale}`);
+      tags.add(`locale:${locale}`);
     }
     if (locale && slug) {
       tags.add(`page:${locale}:${slug}`);
@@ -135,8 +137,32 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
     return [...tags];
   }
 
-  if (isTagModel(model)) {
-    return ["tags", "pages", "sitemap"];
+  if (modelMatches(model, "video-entry")) {
+    const tags = new Set<string>(["pages", "sitemap"]);
+    if (locale) {
+      tags.add(`locale:${locale}`);
+    }
+    if (documentId) {
+      tags.add(`video:${documentId}`);
+    }
+    return [...tags];
+  }
+
+  if (modelMatches(model, "global")) {
+    const tags = new Set<string>(["pages", "sitemap"]);
+    if (locale) {
+      tags.add(`global:${locale}`);
+      tags.add(`locale:${locale}`);
+    }
+    return [...tags];
+  }
+
+  if (modelMatches(model, "tag")) {
+    const tags = new Set<string>(["tags", "pages", "sitemap"]);
+    if (locale) {
+      tags.add(`locale:${locale}`);
+    }
+    return [...tags];
   }
 
   if (isUrlMappingModel(model)) {
@@ -146,12 +172,8 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
   return ["pages", "sitemap"];
 }
 
-function isPageModel(model: string | undefined): boolean {
-  return model === "api::page.page" || model === "page";
-}
-
-function isTagModel(model: string | undefined): boolean {
-  return model === "api::tag.tag" || model === "tag";
+function modelMatches(model: string | undefined, shortName: string): boolean {
+  return model === `api::${shortName}.${shortName}` || model === shortName;
 }
 
 function isUrlMappingModel(model: string | undefined): boolean {

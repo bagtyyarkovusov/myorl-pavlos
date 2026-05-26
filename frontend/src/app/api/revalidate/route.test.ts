@@ -25,7 +25,7 @@ describe("revalidation tag derivation", () => {
           slug: "index",
         },
       }),
-    ).toEqual(["pages", "sitemap", "navigation:ru", "page:ru:index", "page:doc-1"]);
+    ).toEqual(["pages", "sitemap", "navigation:ru", "locale:ru", "page:ru:index", "page:doc-1"]);
   });
 
   it("maps Strapi tag payloads to taxonomy and page caches", () => {
@@ -35,7 +35,35 @@ describe("revalidation tag derivation", () => {
         model: "api::tag.tag",
         entry: { locale: "el", slug: "ear" },
       }),
-    ).toEqual(["tags", "pages", "sitemap"]);
+    ).toEqual(["tags", "pages", "sitemap", "locale:el"]);
+  });
+
+  it("maps Strapi video-entry payloads to page and locale caches", () => {
+    expect(
+      deriveTags({
+        event: "entry.publish",
+        model: "api::video-entry.video-entry",
+        entry: { locale: "ru", documentId: "vid-1" },
+      }),
+    ).toEqual(["pages", "sitemap", "locale:ru", "video:vid-1"]);
+  });
+
+  it("maps Strapi global payloads to global, page, and locale caches", () => {
+    expect(
+      deriveTags({
+        event: "entry.update",
+        model: "api::global.global",
+        entry: { locale: "el" },
+      }),
+    ).toEqual(["pages", "sitemap", "global:el", "locale:el"]);
+  });
+
+  it("passes through explicit tags arrays including documentId and locale patterns", () => {
+    expect(
+      deriveTags({
+        tags: ["page-doc123", "locale-el"],
+      }),
+    ).toEqual(["page-doc123", "locale-el"]);
   });
 
   it("maps media payloads broadly because pages may reference media", () => {

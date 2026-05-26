@@ -13,6 +13,7 @@ export type PageStrings = {
   updatedOn: string;
   updatedClinicalReview: string;
   sourcesIncluded: string;
+  medicallyReviewedBy: (reviewer: string, date: string) => string;
   sectionNavLabel: string;
   openLabel: string;
   moreLabel: (count: number) => string;
@@ -56,6 +57,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     author: "Συγγραφέας",
     updatedClinicalReview: "Ενημερωμένο",
     sourcesIncluded: "Πηγές συμπεριλαμβάνονται",
+    medicallyReviewedBy: (reviewer, date) => `Ιατρικά ελεγμένο από ${reviewer} στις ${date}`,
     sectionNavLabel: "Πλοήγηση ενότητας",
     openLabel: "Άνοιγμα",
     moreLabel: (count) => `Περισσότερα (+${count})`,
@@ -96,6 +98,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     author: "Автор",
     updatedClinicalReview: "Обновлено",
     sourcesIncluded: "Есть источники",
+    medicallyReviewedBy: (reviewer, date) => `Медицинская проверка выполнена: ${reviewer}, ${date}`,
     sectionNavLabel: "Навигация по разделу",
     openLabel: "Открыть",
     moreLabel: (count) => `Ещё (+${count})`,

@@ -10,6 +10,8 @@ export type ArticleInput = {
   locale: string;
   datePublished?: string | null;
   dateModified?: string | null;
+  reviewedBy?: string | null;
+  lastReviewed?: string | null;
 };
 
 export type ArticleLd = {
@@ -21,6 +23,8 @@ export type ArticleLd = {
   inLanguage: string;
   datePublished?: string;
   dateModified?: string;
+  reviewedBy?: { "@type": "Person"; name: string };
+  lastReviewed?: string;
 };
 
 export function buildArticleLd(input: ArticleInput): ArticleLd {
@@ -42,6 +46,11 @@ export function buildArticleLd(input: ArticleInput): ArticleLd {
 
   if (input.dateModified) {
     result.dateModified = input.dateModified;
+  }
+
+  if (input.reviewedBy && input.lastReviewed) {
+    result.reviewedBy = { "@type": "Person", name: input.reviewedBy };
+    result.lastReviewed = input.lastReviewed;
   }
 
   return result;

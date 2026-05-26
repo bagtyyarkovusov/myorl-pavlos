@@ -72,4 +72,32 @@ describe("buildMedicalConditionLd", () => {
     expect(ld).not.toHaveProperty("signOrSymptom");
     expect(ld).not.toHaveProperty("associatedAnatomy");
   });
+
+  it("includes reviewedBy and lastReviewed when both are provided", () => {
+    const ld = buildMedicalConditionLd({
+      title: "Ωτίτιδα",
+      pageUrl: "https://myorl.example.com/el/otitis",
+      locale: "el",
+      reviewedBy: "Δρ. Παύλος Τσολαρίδης",
+      lastReviewed: "2025-01-15",
+    });
+
+    expect(ld.reviewedBy).toEqual({
+      "@type": "Person",
+      name: "Δρ. Παύλος Τσολαρίδης",
+    });
+    expect(ld.lastReviewed).toBe("2025-01-15");
+  });
+
+  it("omits reviewedBy and lastReviewed when only one is provided", () => {
+    const ld = buildMedicalConditionLd({
+      title: "Ωτίτιδα",
+      pageUrl: "https://myorl.example.com/el/otitis",
+      locale: "el",
+      lastReviewed: "2025-01-15",
+    });
+
+    expect(ld).not.toHaveProperty("reviewedBy");
+    expect(ld).not.toHaveProperty("lastReviewed");
+  });
 });

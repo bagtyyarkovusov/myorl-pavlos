@@ -46,6 +46,8 @@ export type PageDTO = {
   disclaimerOverride: DisclaimerOverride;
   publishedAt?: string | null;
   updatedAt?: string | null;
+  medicallyReviewedBy?: string | null;
+  lastReviewedDate?: string | null;
   alternateUrls: Partial<Record<Locale, string>>;
   sections: SectionDTO[];
 };
@@ -129,6 +131,8 @@ export type StrapiPagePayload = {
   sources?: string | null;
   publishedAt?: string | null;
   updatedAt?: string | null;
+  medicallyReviewedBy?: string | null;
+  lastReviewedDate?: string | null;
   popUpClose?: string | null;
   disclaimerOverride?: string | null;
   pageSections?: StrapiSectionRaw[] | null;

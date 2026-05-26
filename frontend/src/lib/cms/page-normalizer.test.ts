@@ -326,6 +326,35 @@ describe("toPageDTO", () => {
     expect(dto.updatedAt).toBeNull();
   });
 
+  it("maps medicallyReviewedBy and lastReviewedDate from Strapi to PageDTO", () => {
+    const dto = toPageDTO(contentPayload);
+
+    expect(dto.medicallyReviewedBy).toBe("Δρ. Παύλος Τσολαρίδης");
+    expect(dto.lastReviewedDate).toBe("2025-01-15");
+  });
+
+  it("defaults medicallyReviewedBy and lastReviewedDate to null when absent", () => {
+    const dto = toPageDTO({
+      ...contentPayload,
+      medicallyReviewedBy: undefined,
+      lastReviewedDate: undefined,
+    });
+
+    expect(dto.medicallyReviewedBy).toBeNull();
+    expect(dto.lastReviewedDate).toBeNull();
+  });
+
+  it("defaults medicallyReviewedBy and lastReviewedDate to null when empty strings", () => {
+    const dto = toPageDTO({
+      ...contentPayload,
+      medicallyReviewedBy: "",
+      lastReviewedDate: "",
+    });
+
+    expect(dto.medicallyReviewedBy).toBeNull();
+    expect(dto.lastReviewedDate).toBeNull();
+  });
+
   it("defaults seoTitle to title when metaTitle is null", () => {
     const noSeoTitlePayload: StrapiPagePayload = {
       ...contentPayload,

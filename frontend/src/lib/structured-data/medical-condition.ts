@@ -10,6 +10,8 @@ export type MedicalConditionInput = {
   locale: string;
   datePublished?: string | null;
   dateModified?: string | null;
+  reviewedBy?: string | null;
+  lastReviewed?: string | null;
 };
 
 export type MedicalConditionLd = {
@@ -21,6 +23,8 @@ export type MedicalConditionLd = {
   inLanguage: string;
   datePublished?: string;
   dateModified?: string;
+  reviewedBy?: { "@type": "Person"; name: string };
+  lastReviewed?: string;
 };
 
 export function buildMedicalConditionLd(input: MedicalConditionInput): MedicalConditionLd {
@@ -42,6 +46,11 @@ export function buildMedicalConditionLd(input: MedicalConditionInput): MedicalCo
 
   if (input.dateModified) {
     result.dateModified = input.dateModified;
+  }
+
+  if (input.reviewedBy && input.lastReviewed) {
+    result.reviewedBy = { "@type": "Person", name: input.reviewedBy };
+    result.lastReviewed = input.lastReviewed;
   }
 
   return result;

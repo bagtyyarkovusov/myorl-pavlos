@@ -72,4 +72,32 @@ describe("buildMedicalProcedureLd", () => {
     expect(ld).not.toHaveProperty("procedureType");
     expect(ld).not.toHaveProperty("bodyLocation");
   });
+
+  it("includes reviewedBy and lastReviewed when both are provided", () => {
+    const ld = buildMedicalProcedureLd({
+      title: "Ρινοπλαστική",
+      pageUrl: "https://myorl.example.com/el/rinoplasty",
+      locale: "el",
+      reviewedBy: "Δρ. Παύλος Τσολαρίδης",
+      lastReviewed: "2025-01-15",
+    });
+
+    expect(ld.reviewedBy).toEqual({
+      "@type": "Person",
+      name: "Δρ. Παύλος Τσολαρίδης",
+    });
+    expect(ld.lastReviewed).toBe("2025-01-15");
+  });
+
+  it("omits reviewedBy and lastReviewed when only one is provided", () => {
+    const ld = buildMedicalProcedureLd({
+      title: "Ρινοπλαστική",
+      pageUrl: "https://myorl.example.com/el/rinoplasty",
+      locale: "el",
+      lastReviewed: "2025-01-15",
+    });
+
+    expect(ld).not.toHaveProperty("reviewedBy");
+    expect(ld).not.toHaveProperty("lastReviewed");
+  });
 });

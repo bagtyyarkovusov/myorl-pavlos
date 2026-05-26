@@ -267,6 +267,8 @@ export function toPageDTO(page: StrapiPagePayload, config?: CmsConfig): PageDTO 
     disclaimerOverride: normalizeDisclaimerOverride(page.disclaimerOverride),
     publishedAt: page.publishedAt ?? null,
     updatedAt: page.updatedAt ?? null,
+    medicallyReviewedBy: normalizeOptionalText(page.medicallyReviewedBy),
+    lastReviewedDate: normalizeOptionalText(page.lastReviewedDate),
     alternateUrls: buildAlternateUrls(page, effective.siteUrl),
     sections: _toSemanticSections(page),
   };

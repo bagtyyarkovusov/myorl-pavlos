@@ -82,4 +82,43 @@ describe("buildArticleLd", () => {
     expect(ld).not.toHaveProperty("name");
     expect(ld.headline).toBe("Test");
   });
+
+  it("includes reviewedBy and lastReviewed when both are provided", () => {
+    const ld = buildArticleLd({
+      title: "Test Article",
+      pageUrl: "https://myorl.example.com/el/test",
+      locale: "el",
+      reviewedBy: "Δρ. Παύλος Τσολαρίδης",
+      lastReviewed: "2025-01-15",
+    });
+
+    expect(ld.reviewedBy).toEqual({
+      "@type": "Person",
+      name: "Δρ. Παύλος Τσολαρίδης",
+    });
+    expect(ld.lastReviewed).toBe("2025-01-15");
+  });
+
+  it("omits reviewedBy and lastReviewed when both are not provided", () => {
+    const ld = buildArticleLd({
+      title: "Test Article",
+      pageUrl: "https://myorl.example.com/el/test",
+      locale: "el",
+    });
+
+    expect(ld).not.toHaveProperty("reviewedBy");
+    expect(ld).not.toHaveProperty("lastReviewed");
+  });
+
+  it("omits reviewedBy and lastReviewed when only one is provided", () => {
+    const ld = buildArticleLd({
+      title: "Test Article",
+      pageUrl: "https://myorl.example.com/el/test",
+      locale: "el",
+      reviewedBy: "Δρ. Παύλος Τσολαρίδης",
+    });
+
+    expect(ld).not.toHaveProperty("reviewedBy");
+    expect(ld).not.toHaveProperty("lastReviewed");
+  });
 });

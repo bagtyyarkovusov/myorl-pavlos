@@ -165,6 +165,8 @@ export function StructuredDataComposer({
         locale,
         datePublished: formatIsoDate(page.publishedAt),
         dateModified: formatIsoDate(page.updatedAt),
+        reviewedBy: page.medicallyReviewedBy ?? null,
+        lastReviewed: formatIsoDate(page.lastReviewedDate),
       }),
     );
   }
@@ -178,6 +180,8 @@ export function StructuredDataComposer({
         locale,
         datePublished: formatIsoDate(page.publishedAt),
         dateModified: formatIsoDate(page.updatedAt),
+        reviewedBy: page.medicallyReviewedBy ?? null,
+        lastReviewed: formatIsoDate(page.lastReviewedDate),
       }),
     );
   }
@@ -191,6 +195,8 @@ export function StructuredDataComposer({
         locale,
         datePublished: formatIsoDate(page.publishedAt),
         dateModified: formatIsoDate(page.updatedAt),
+        reviewedBy: page.medicallyReviewedBy ?? null,
+        lastReviewed: formatIsoDate(page.lastReviewedDate),
       }),
     );
   }

@@ -31,6 +31,8 @@
         },
         "publishedAt": "2024-06-15T10:30:00.000Z",
         "updatedAt": "2024-12-01T14:00:00.000Z",
+        "medicallyReviewedBy": "Δρ. Παύλος Τσολαρίδης",
+        "lastReviewedDate": "2025-01-15",
         "tags": [{ "name": "General", "slug": "general" }],
         "localizations": [
           {

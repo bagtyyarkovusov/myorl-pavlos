@@ -34,6 +34,21 @@ function ArticleDateLine({ page }: { page: PageDTO }) {
   return <div className={styles["article-dates"]}>{parts.join(" · ")}</div>;
 }
 
+function ArticleReviewerLine({ page }: { page: PageDTO }) {
+  if (!MEDICAL_LAYOUT_VARIANTS.has(page.layoutVariant)) return null;
+
+  const reviewer = page.medicallyReviewedBy;
+  const lastReviewed = formatIsoDate(page.lastReviewedDate);
+
+  if (!reviewer || !lastReviewed) return null;
+
+  const t = getPageStrings(page.locale);
+
+  return (
+    <div className={styles["article-dates"]}>{t.medicallyReviewedBy(reviewer, lastReviewed)}</div>
+  );
+}
+
 function shouldShowDisclaimer(
   page: PageDTO,
   disclaimerText?: string | null,
@@ -129,6 +144,7 @@ function DefaultPageBody({
       )}
     >
       <ArticleDateLine page={page} />
+      <ArticleReviewerLine page={page} />
       <CmsHtml html={page.content} locale={page.locale} />
       {page.sections.map((section, index) => (
         <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
@@ -223,6 +239,7 @@ function ServiceArticleBody({
       >
         <article className={styles["service-layout__content"]}>
           <ArticleDateLine page={page} />
+          <ArticleReviewerLine page={page} />
           <CmsHtml html={mainContentHtml} variant="service" locale={page.locale} />
           {page.sections.map((section, index) => (
             <SectionRenderer
@@ -370,6 +387,7 @@ function ArticleAsideBody({
       <main className={styles["reference-layout"]} {...layoutProps}>
         <article className={styles["reference-layout__content"]}>
           <ArticleDateLine page={page} />
+          <ArticleReviewerLine page={page} />
           <CmsHtml html={contentWithHeadingIds} variant={cmsVariant} locale={page.locale} />
           {bodySections.map((section, index) => (
             <SectionRenderer

@@ -24,7 +24,7 @@ import csv
 import json
 import re
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
@@ -33,7 +33,7 @@ from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 
-from cms_audit import ARTIFACTS_DIR, REPORTS_DIR, load_optional_json
+from cms_audit import REPORTS_DIR
 from cms_audit.db import DEFAULT_SQLITE_DB_PATH, connect_readonly
 
 DEFAULT_INVENTORY = Path.home() / "Projects" / "myorl-migrate" / "old_url_inventory_clean.csv"
@@ -288,34 +288,7 @@ def build_seed_entries(
     Case 1 (slug unchanged) is excluded — it's handled by the wildcard.
     Case 2 → internal-301, Case 3 → gone-410.
     """
-    entries: list[dict[str, Any]] = []
-
-    for row in rows:
-        case, dest, notes = classify_row(row, page_map)
-        legacy_path = url_decode_path(row.uri) if row.uri else f"/{row.alias}"
-
-        if case == Case.UNCHANGED:
-            continue  # handled by wildcard, not seeded
-        elif case == Case.RENAMED:
-            entries.append({
-                "_case": "case-2",
-                "legacyPath": legacy_path,
-                "destinationPath": dest,
-                "destinationKind": "internal-301",
-                "locale": row.locale,
-                "notes": notes,
-            })
-        else:
-            entries.append({
-                "_case": "case-3",
-                "legacyPath": legacy_path,
-                "destinationPath": "",
-                "destinationKind": "gone-410",
-                "locale": row.locale,
-                "notes": notes,
-            })
-
-    return entries
+    return [e for e in classify_all_rows(rows, page_map) if e["_case"] != "case-1"]
 
 
 def classify_all_rows(
@@ -363,16 +336,27 @@ def classify_all_rows(
 # ---------------------------------------------------------------------------
 
 
+def _build_uri_modx_map(rows: list[InventoryRow]) -> dict[str, int]:
+    """Build {decoded_uri: modx_id} lookup for report table rendering."""
+    result: dict[str, int] = {}
+    for r in rows:
+        if r.uri:
+            result[url_decode_path(r.uri)] = r.modx_id
+    return result
+
+
 def build_markdown_report(
     inventory_rows: list[InventoryRow],
-    seed_entries: list[dict[str, Any]],
+    classified_rows: list[dict[str, Any]],
     htaccess_entries: list[SeedEntry],
     sources: dict[str, str],
 ) -> str:
     """Render the editor-readable markdown triage report."""
-    case1 = [e for e in seed_entries if e["_case"] == "case-1"]
-    case2 = [e for e in seed_entries if e["_case"] == "case-2"]
-    case3 = [e for e in seed_entries if e["_case"] == "case-3"]
+    case1 = [e for e in classified_rows if e["_case"] == "case-1"]
+    case2 = [e for e in classified_rows if e["_case"] == "case-2"]
+    case3 = [e for e in classified_rows if e["_case"] == "case-3"]
+
+    uri_modx_map = _build_uri_modx_map(inventory_rows)
 
     lines: list[str] = []
     lines.append("# Legacy URL Triage Report")
@@ -404,9 +388,9 @@ def build_markdown_report(
         lines.append("| MODX ID | Legacy Path | Current Slug | Locale |")
         lines.append("|---------|-------------|-------------|--------|")
         for e in case1:
-            rows_match = [r for r in inventory_rows if r.uri and url_decode_path(r.uri) == e["legacyPath"]]
-            modx_id = rows_match[0].modx_id if rows_match else "?"
-            lines.append(f"| {modx_id} | `{e['legacyPath']}` | `{e['notes'].split(': ')[-1] if ': ' in e['notes'] else '?'}` | {e['locale']} |")
+            modx_id = uri_modx_map.get(e["legacyPath"], "?")
+            slug = e['notes'].split(': ')[-1] if ': ' in e['notes'] else '?'
+            lines.append(f"| {modx_id} | `{e['legacyPath']}` | `{slug}` | {e['locale']} |")
         lines.append("")
 
     if case2:
@@ -417,8 +401,7 @@ def build_markdown_report(
         lines.append("| MODX ID | Legacy Path | Destination | Locale | Notes |")
         lines.append("|---------|------------|-------------|--------|-------|")
         for e in case2:
-            rows_match = [r for r in inventory_rows if r.uri and url_decode_path(r.uri) == e["legacyPath"]]
-            modx_id = rows_match[0].modx_id if rows_match else "?"
+            modx_id = uri_modx_map.get(e["legacyPath"], "?")
             lines.append(f"| {modx_id} | `{e['legacyPath']}` | `{e['destinationPath']}` | {e['locale']} | {e['notes']} |")
         lines.append("")
 
@@ -430,8 +413,7 @@ def build_markdown_report(
         lines.append("| MODX ID | Legacy Path | Locale | Reason |")
         lines.append("|---------|------------|--------|--------|")
         for e in case3:
-            rows_match = [r for r in inventory_rows if r.uri and url_decode_path(r.uri) == e["legacyPath"]]
-            modx_id = rows_match[0].modx_id if rows_match else "?"
+            modx_id = uri_modx_map.get(e["legacyPath"], "?")
             lines.append(f"| {modx_id} | `{e['legacyPath']}` | {e['locale']} | {e['notes']} |")
         lines.append("")
 
@@ -503,7 +485,6 @@ def main() -> int:
 
     # Classify
     all_classified = classify_all_rows(rows, page_map)
-    seed_entries = build_seed_entries(rows, page_map)
     case1 = sum(1 for e in all_classified if e["_case"] == "case-1")
     case2 = sum(1 for e in all_classified if e["_case"] == "case-2")
     case3 = sum(1 for e in all_classified if e["_case"] == "case-3")
@@ -522,9 +503,11 @@ def main() -> int:
     else:
         print(f".htaccess not found at {args.htaccess} — skipping")
 
-    # Build seed JSON (case 2 + case 3 already filtered, plus htaccess)
+    # Build seed JSON (case 2 + case 3 from classified rows, plus htaccess)
     seed_output: list[dict[str, Any]] = []
-    for e in seed_entries:
+    for e in all_classified:
+        if e["_case"] == "case-1":
+            continue
         seed_output.append({
             "legacyPath": e["legacyPath"],
             "destinationPath": e["destinationPath"],

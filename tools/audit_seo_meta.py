@@ -17,9 +17,9 @@ import os
 import re
 import sys
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from collections.abc import Callable
 from urllib import parse, request
 
 from cms_audit import REPORTS_DIR
@@ -261,10 +261,7 @@ def check_brand_suffix(pages: list[PageMeta]) -> list[Finding]:
         if expected is None:
             continue  # unknown locale — skip
         et = p.effective_title
-        if not et.endswith(expected):
-            # Try case-insensitive match
-            if et.lower().endswith(expected.lower()):
-                continue
+        if not et.lower().endswith(expected.lower()):
             findings.append(
                 Finding(
                     check="brand-suffix",
@@ -279,7 +276,7 @@ def check_brand_suffix(pages: list[PageMeta]) -> list[Finding]:
     return findings
 
 
-CHECK_REGISTRY: dict[str, Any] = {
+CHECK_REGISTRY: dict[str, Callable[[list[PageMeta]], list[Finding]]] = {
     "title-length": check_title_length,
     "title-uniqueness": check_title_uniqueness,
     "title-slug-keyword": check_title_contains_slug_keyword,
@@ -321,17 +318,14 @@ def build_markdown_report(
     lines.append("")
 
     # Summary
-    block_count = sum(len(v) for v in results.values() if v and v[0].severity == "block")
-    warn_count = sum(
-        len(v) for v in results.values() if v and v[0].severity == "warn"
-    )
-    info_count = sum(
-        len(v) for v in results.values() if v and v[0].severity == "info"
-    )
-    total_findings = sum(len(v) for v in results.values())
+    all_findings = [f for findings in results.values() for f in findings]
+    block_count = sum(1 for f in all_findings if f.severity == "block")
+    warn_count = sum(1 for f in all_findings if f.severity == "warn")
+    info_count = sum(1 for f in all_findings if f.severity == "info")
+    total_findings = len(all_findings)
 
     missing_descs = len(results.get("meta-description-present", []))
-    overlong_titles = len(results.get("title-length", []))
+    out_of_range_titles = len(results.get("title-length", []))
 
     lines.append(f"**Pages audited:** {len(pages)}")
     lines.append(f"**Total findings:** {total_findings} ({block_count} block, {warn_count} warn, {info_count} info)")
@@ -347,7 +341,7 @@ def build_markdown_report(
     lines.append("")
 
     # Per-check tables
-    for check_name, check_fn in CHECK_REGISTRY.items():
+    for check_name in CHECK_REGISTRY:
         check_findings = results.get(check_name, [])
         label = CHECK_LABELS.get(check_name, check_name)
         lines.append(f"## {label}")
@@ -384,9 +378,9 @@ def build_markdown_report(
         gate_issues.append(
             f"Missing descriptions ({missing_descs}) exceeds max ({args.max_missing_descriptions})"
         )
-    if overlong_titles > args.max_overlong_titles:
+    if out_of_range_titles > args.max_overlong_titles:
         gate_issues.append(
-            f"Overlong/short titles ({overlong_titles}) exceeds max ({args.max_overlong_titles})"
+            f"Out-of-range titles ({out_of_range_titles}) exceeds max ({args.max_overlong_titles})"
         )
     if results.get("title-uniqueness") and results["title-uniqueness"][0].severity == "block":
         gate_issues.append("Duplicate title count > 5 (BLOCK)")
@@ -408,10 +402,10 @@ def build_markdown_report(
 
 
 def compute_gate_exit_code(
-    results: dict[str, list[Finding]], pages: list[PageMeta], args: argparse.Namespace
+    results: dict[str, list[Finding]], args: argparse.Namespace
 ) -> int:
     missing_descs = len(results.get("meta-description-present", []))
-    overlong_titles = len(results.get("title-length", []))
+    out_of_range_titles = len(results.get("title-length", []))
     dup_block = (
         results.get("title-uniqueness")
         and results["title-uniqueness"][0].severity == "block"
@@ -419,7 +413,7 @@ def compute_gate_exit_code(
 
     if missing_descs > args.max_missing_descriptions:
         return 1
-    if overlong_titles > args.max_overlong_titles:
+    if out_of_range_titles > args.max_overlong_titles:
         return 1
     if dup_block:
         return 1
@@ -534,7 +528,7 @@ def main() -> int:
     report_path.write_text(report, encoding="utf-8")
     print(f"Report written to {report_path}")
 
-    exit_code = compute_gate_exit_code(results, pages, args)
+    exit_code = compute_gate_exit_code(results, args)
     if exit_code != 0:
         print("Launch gate BLOCKED — see report for details.")
     else:

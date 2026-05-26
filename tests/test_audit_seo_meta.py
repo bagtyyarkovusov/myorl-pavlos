@@ -376,20 +376,20 @@ class GateExitCodeTests(unittest.TestCase):
     def test_all_clean_passes(self) -> None:
         pages = [_page("el", "a", "Title A", meta_description="A proper description")]
         results = run_all_checks(pages)
-        code = compute_gate_exit_code(results, pages, self.args)
+        code = compute_gate_exit_code(results, self.args)
         self.assertEqual(code, 0)
 
     def test_missing_description_blocks(self) -> None:
         pages = [_page("el", "a", "Title", meta_description=None)]
         results = run_all_checks(pages)
-        code = compute_gate_exit_code(results, pages, self.args)
+        code = compute_gate_exit_code(results, self.args)
         self.assertEqual(code, 1)
 
     def test_overlong_title_blocks(self) -> None:
         pages = [_page("el", "a", "A" * (TITLE_MAX + 1), meta_description="A proper description")]
         results = run_all_checks(pages)
         args = argparse.Namespace(max_missing_descriptions=0, max_overlong_titles=0)
-        code = compute_gate_exit_code(results, pages, args)
+        code = compute_gate_exit_code(results, args)
         self.assertEqual(code, 1)
 
     def test_duplicate_title_block_blocks(self) -> None:
@@ -398,7 +398,7 @@ class GateExitCodeTests(unittest.TestCase):
             for i in range(6)
         ]
         results = run_all_checks(pages)
-        code = compute_gate_exit_code(results, pages, self.args)
+        code = compute_gate_exit_code(results, self.args)
         self.assertEqual(code, 1)
 
     def test_custom_thresholds_respected(self) -> None:
@@ -408,7 +408,7 @@ class GateExitCodeTests(unittest.TestCase):
             _page("el", "b", "Title B", meta_description=None),
         ]
         results = run_all_checks(pages)
-        code = compute_gate_exit_code(results, pages, args)
+        code = compute_gate_exit_code(results, args)
         self.assertEqual(code, 0)  # threshold is 5, only 2 missing
 
 

@@ -3,3 +3,5 @@ beautifulsoup4>=4.12.0
 unidecode>=1.3.0
 # Used by tests/test_environments.py to parse compose YAML for drift detection
 PyYAML>=6.0
+# Used by tools/audit_external_links.py for async HEAD-checking of outbound links
+httpx>=0.28.0

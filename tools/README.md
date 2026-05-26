@@ -66,6 +66,22 @@ python3 tests/test_cms_html_cleanup.py
 | `repair_legacy_cms_markup.py` | Normalize legacy markup in Strapi (`content`, `excerpt`, etc.) |
 | `backfill_page_listing_media.py` | Link `featuredImage` for directory thumbnails |
 | `audit_site_assets.py` | Site-wide media/thumbnail audit |
+| `audit_external_links.py` | HEAD-check every outbound link, classify (ok/broken/flaky/allowlisted), write markdown report, enforce launch gate |
+
+### External link audit
+
+```bash
+# From a prior content hygiene JSON report:
+python3 tools/audit_external_links.py --json-report artifacts/reports/nextjs_content_readiness.json
+
+# Run content extraction internally (needs Strapi SQLite DB):
+python3 tools/audit_external_links.py --db data/strapi.db
+
+# Launch gate (non-zero exit if broken > threshold):
+python3 tools/audit_external_links.py --max-broken-external-links 20
+```
+
+Report written to `artifacts/reports/external-link-audit.md`, grouped by status × page.
 
 Plan/result artifacts land in `tools/data/manual-repairs/`.
 

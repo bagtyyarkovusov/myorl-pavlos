@@ -78,6 +78,13 @@ class LinkFinding:
 
 
 @dataclass(frozen=True)
+class ExternalLinkFinding:
+    source: str
+    field: str
+    href: str
+
+
+@dataclass(frozen=True)
 class LegacyHtmlFinding:
     source: str
     field: str
@@ -190,14 +197,20 @@ def classify_internal_links(
     ok: list[LinkFinding] = []
     broken: list[LinkFinding] = []
     redirectable: list[LinkFinding] = []
-    external_count = 0
+    external: list[ExternalLinkFinding] = []
     ignored_count = 0
     internal_count = 0
 
     for source, href in links:
         normalized_path, link_type = normalize_internal_path(href)
         if link_type == "external":
-            external_count += 1
+            external.append(
+                ExternalLinkFinding(
+                    source=source.source,
+                    field=source.field,
+                    href=href,
+                )
+            )
             continue
         if link_type == "ignored":
             ignored_count += 1
@@ -232,11 +245,12 @@ def classify_internal_links(
 
     return {
         "internalCount": internal_count,
-        "externalCount": external_count,
+        "externalCount": len(external),
         "ignoredCount": ignored_count,
         "ok": ok,
         "redirectable": redirectable,
         "potentialBroken": broken,
+        "external": external,
     }
 
 
@@ -474,6 +488,7 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
         },
         "navigation": navigation,
         "htmlMarkerSourceCounts": html_data["markerSourceCounts"],
+        "externalLinks": [asdict(finding) for finding in link_data["external"]],
         "potentialBrokenInternalLinks": [
             asdict(finding) for finding in link_data["potentialBroken"][: args.max_samples]
         ],

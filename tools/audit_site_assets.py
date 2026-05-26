@@ -42,8 +42,6 @@ WEBP_PREFIX_RE = re.compile(r"^/?webp/(?:ru|el)/(.+\.webp)$", re.IGNORECASE)
 IMG_TAG_RE = re.compile(r"""<img\b([^>]*)>""", re.IGNORECASE)
 ALT_RE = re.compile(r"""\balt\s*=\s*["']([^"']*)["']""", re.IGNORECASE)
 
-PAGE_HTML_FIELDS_FOR_ALT = ("content", "excerpt", "info_block_bottom", "sources")
-
 
 @dataclass(frozen=True)
 class AltTextEntry:
@@ -149,7 +147,7 @@ def audit_inline_image_alt_text(
 
     for page in pages:
         entries: list[AltTextEntry] = []
-        for field in PAGE_HTML_FIELDS_FOR_ALT:
+        for field in PAGE_HTML_FIELDS:
             html = page.get(field) or ""
             if not html or "<img" not in html.lower():
                 continue
@@ -246,9 +244,12 @@ def generate_alt_text_markdown_report(
         lines.append("|--------|----------|-----------|-------|")
 
         for entry in ps.entries:
-            alt_display = entry.alt_value if entry.status == "has-alt" else (
-                '(empty)' if entry.status == "empty-alt" else '(missing)'
-            )
+            if entry.status == "has-alt":
+                alt_display = entry.alt_value
+            elif entry.status == "empty-alt":
+                alt_display = "(empty)"
+            else:
+                alt_display = "(missing)"
             lines.append(
                 f"| {entry.status} | {alt_display} | {entry.src} | {entry.field} |"
             )

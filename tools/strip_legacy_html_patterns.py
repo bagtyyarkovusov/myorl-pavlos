@@ -110,13 +110,46 @@ def fetch_components() -> list[dict[str, Any]]:
 
 
 def _normalize_field(raw: str | None) -> tuple[str | None, dict[str, int]]:
-    """Normalize a single field; return (cleaned, stats)."""
     if not raw or not isinstance(raw, str):
         return raw, {}
     cleaned, stats = normalize_legacy_modx_markup(raw)
     if cleaned == raw:
         return raw, {}
     return cleaned, stats
+
+
+def _collect_manual_review_flags(
+    raw: str,
+    source_id: str,
+    field_name: str,
+    manual_review: dict[str, list[dict[str, Any]]],
+    manual_source_ids: set[str],
+) -> None:
+    field_id = f"{source_id}/{field_name}"
+
+    for finding in flag_deprecated_semantic_tags(raw):
+        if field_id not in manual_source_ids:
+            manual_review["deprecatedSemanticTags"].append({
+                "source": source_id, "field": field_name,
+                "tag": finding["tag"], "reason": finding["reason"],
+                "textPreview": finding["textPreview"],
+            })
+            manual_source_ids.add(field_id)
+
+    for finding in flag_essential_style_attrs(raw):
+        manual_review["essentialStyleAttrs"].append({
+            "source": source_id, "field": field_name,
+            "tag": finding["tag"], "style": finding["style"],
+            "textPreview": finding["textPreview"],
+        })
+
+    for finding in flag_mixed_semantic_presentational(raw):
+        manual_review["mixedSemanticPresentational"].append({
+            "source": source_id, "field": field_name,
+            "tag": finding["tag"], "reason": finding["reason"],
+            "children": finding.get("children", ""),
+            "textPreview": finding["textPreview"],
+        })
 
 
 def build_plan() -> dict[str, Any]:
@@ -136,6 +169,8 @@ def build_plan() -> dict[str, Any]:
     for page in pages:
         page_changes: dict[str, str] = {}
         page_stats: dict[str, int] = {}
+        source_id = f"page:{page['locale']}:{page['slug']}:{page['document_id']}"
+
         for db_field, api_field in PAGE_TEXT_FIELDS:
             raw = page.get(db_field)
             cleaned, stats = _normalize_field(raw)
@@ -144,33 +179,11 @@ def build_plan() -> dict[str, Any]:
                 for k, v in stats.items():
                     page_stats[k] = page_stats.get(k, 0) + v
 
-        source_id = f"page:{page['locale']}:{page['slug']}:{page['document_id']}"
-
-        # Manual review flags
-        for db_field, _api_field in PAGE_TEXT_FIELDS:
-            raw = page.get(db_field)
             if not raw or not isinstance(raw, str):
                 continue
-            field_id = f"{source_id}/{db_field}"
-            for tag_finding in flag_deprecated_semantic_tags(raw):
-                if field_id not in manual_source_ids:
-                    manual_review["deprecatedSemanticTags"].append({
-                        "source": source_id, "field": db_field, "tag": tag_finding["tag"],
-                        "reason": tag_finding["reason"], "textPreview": tag_finding["textPreview"],
-                    })
-                    manual_source_ids.add(field_id)
-            for style_finding in flag_essential_style_attrs(raw):
-                manual_review["essentialStyleAttrs"].append({
-                    "source": source_id, "field": db_field, "tag": style_finding["tag"],
-                    "style": style_finding["style"], "textPreview": style_finding["textPreview"],
-                })
-            for mix_finding in flag_mixed_semantic_presentational(raw):
-                manual_review["mixedSemanticPresentational"].append({
-                    "source": source_id, "field": db_field, "tag": mix_finding["tag"],
-                    "reason": mix_finding["reason"],
-                    "children": mix_finding.get("children", ""),
-                    "textPreview": mix_finding["textPreview"],
-                })
+            _collect_manual_review_flags(
+                raw, source_id, db_field, manual_review, manual_source_ids,
+            )
 
         if page_changes:
             planned_updates.append({
@@ -201,26 +214,9 @@ def build_plan() -> dict[str, Any]:
                 continue
             component_sources += 1
             source_id = f"component:{table}:{comp.get('id', '?')}"
-            field_id = f"{source_id}/{field}"
-            for tag_finding in flag_deprecated_semantic_tags(raw):
-                if field_id not in manual_source_ids:
-                    manual_review["deprecatedSemanticTags"].append({
-                        "source": source_id, "field": field, "tag": tag_finding["tag"],
-                        "reason": tag_finding["reason"], "textPreview": tag_finding["textPreview"],
-                    })
-                    manual_source_ids.add(field_id)
-            for style_finding in flag_essential_style_attrs(raw):
-                manual_review["essentialStyleAttrs"].append({
-                    "source": source_id, "field": field, "tag": style_finding["tag"],
-                    "style": style_finding["style"], "textPreview": style_finding["textPreview"],
-                })
-            for mix_finding in flag_mixed_semantic_presentational(raw):
-                manual_review["mixedSemanticPresentational"].append({
-                    "source": source_id, "field": field, "tag": mix_finding["tag"],
-                    "reason": mix_finding["reason"],
-                    "children": mix_finding.get("children", ""),
-                    "textPreview": mix_finding["textPreview"],
-                })
+            _collect_manual_review_flags(
+                raw, source_id, field, manual_review, manual_source_ids,
+            )
 
     total_sources = len(pages) + component_sources
 
@@ -306,21 +302,22 @@ def write_markdown_reports(plan: dict[str, Any]) -> None:
         "",
     ]
 
-    for section, title, label in (
-        ("deprecatedSemanticTags", "## Deprecated Semantic Tags", "Tag"),
-        ("essentialStyleAttrs", "## Essential Style Attributes", "Style"),
-        ("mixedSemanticPresentational", "## Mixed Semantic + Presentational Markup", "Pattern"),
+    for section, title in (
+        ("deprecatedSemanticTags", "## Deprecated Semantic Tags"),
+        ("essentialStyleAttrs", "## Essential Style Attributes"),
+        ("mixedSemanticPresentational", "## Mixed Semantic + Presentational Markup"),
     ):
         items = manual.get(section, [])
         manual_lines.append(title)
         manual_lines.append("")
         if items:
             for item in items:
-                extra = ""
-                if label == "Style":
+                if section == "essentialStyleAttrs":
                     extra = f" — `{item['style'][:120]}`"
-                elif label == "Pattern":
+                elif section == "mixedSemanticPresentational":
                     extra = f" — children: {item.get('children', '')}"
+                else:
+                    extra = ""
                 manual_lines.append(
                     f"- **{item['source']}/{item['field']}**: "
                     f"`<{item['tag']}>{extra}` — {item['textPreview'][:120]}"

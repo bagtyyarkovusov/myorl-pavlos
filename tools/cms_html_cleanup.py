@@ -14,6 +14,8 @@ _MODX_SNIPPET_RE = re.compile(r"\[\[[a-zA-Z_][a-zA-Z0-9_]*\]\]")
 
 _DEPRECATED_TAGS = frozenset({"center", "u", "font", "strike", "marquee"})
 
+_SEMANTIC_TAGS = frozenset({"strong", "em", "b", "i", "article", "section", "header", "footer"})
+
 
 _BROKEN_IMG_SRC_RE = re.compile(
     r"""
@@ -630,21 +632,18 @@ def flag_mixed_semantic_presentational(html: str | None) -> list[dict[str, str]]
     soup = _parse_soup(html)
     findings: list[dict[str, str]] = []
 
-    _SEMANTIC_TAGS = frozenset({"strong", "em", "b", "i", "article", "section", "header", "footer"})
-
     for deprecated_tag in soup.find_all(_DEPRECATED_TAGS):
-        context_tags: list[str] = []
-        has_style = False
-        for child in deprecated_tag.descendants:
-            if getattr(child, "name", None) in _SEMANTIC_TAGS:
-                context_tags.append(child.name)
-        if deprecated_tag.has_attr("style"):
-            has_style = True
-        if context_tags or has_style:
+        child_tags = sorted({
+            child.name
+            for child in deprecated_tag.descendants
+            if getattr(child, "name", None) in _SEMANTIC_TAGS
+        })
+        has_style = deprecated_tag.has_attr("style")
+        if child_tags or has_style:
             findings.append({
                 "tag": getattr(deprecated_tag, "name", "?"),
                 "reason": "mixed semantic + presentational markup",
-                "children": ", ".join(sorted(set(context_tags))) if context_tags else "(has style attr)",
+                "children": ", ".join(child_tags) if child_tags else "(has style attr)",
                 "textPreview": deprecated_tag.get_text(strip=True)[:120],
             })
     return findings

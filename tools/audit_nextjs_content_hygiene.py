@@ -24,6 +24,7 @@ DEFAULT_DB_PATH = DEFAULT_SQLITE_DB_PATH
 DEFAULT_REDIRECTS_PATH = MANIFESTS_DIR / "slug_redirects_next.json"
 
 DEFAULT_ALLOWED_BROKEN_INTERNAL_LINKS = 2
+DEFAULT_MAX_PAGES_WITH_MULTIPLE_H1 = 0
 EXPECTED_NAVIGATION_ROOTS = {"el": 7, "ru": 8}
 INTERNAL_HOSTS = {
     "localhost",
@@ -39,6 +40,7 @@ UNSAFE_HTML_PATTERNS = ("<script", "onclick=", "onerror=", "javascript:")
 HREF_RE = re.compile(r"""href\s*=\s*["']([^"'#]+)(?:#[^"']*)?["']""", re.IGNORECASE)
 ANCHOR_ID_RE = re.compile(r"""<\w+[^>]*\bid\s*=\s*["']([^"'\s>]+)["']""", re.IGNORECASE)
 ANCHOR_HREF_RE = re.compile(r"""<a\s[^>]*\bhref\s*=\s*["']#([^"'\s>]+)["']""", re.IGNORECASE)
+H1_RE = re.compile(r"<h1[\s>]", re.IGNORECASE)
 
 PAGE_TEXT_FIELDS = (
     "content",
@@ -99,7 +101,6 @@ class BrokenAnchorFinding:
     page: str
     href: str
     source: str
-
 
 def load_redirect_paths(path: Path) -> tuple[set[str], set[str]]:
     if not path.exists():
@@ -349,6 +350,54 @@ def find_broken_anchor_links(sources: list[TextSource]) -> list[BrokenAnchorFind
     return findings
 
 
+def _extract_page_key(source_id: str) -> str:
+    """Collapse the document-id suffix from a page source key for grouping.
+
+    ``page:el:some-slug:doc-id-123`` → ``page:el:some-slug``.
+    Non-page sources (components) keep their full key.
+    """
+    if not source_id.startswith("page:"):
+        return source_id
+    parts = source_id.split(":")
+    # page:locale:slug[:document_id]
+    if len(parts) >= 4:
+        return ":".join(parts[:3])
+    return source_id
+
+
+def audit_h1_hierarchy(sources: list[TextSource]) -> list[dict[str, Any]]:
+    """Count ``<h1>`` tags per page and flag violations of the "exactly one H1" rule.
+
+    Returns a list of violation dicts for pages with 0 or 2+ H1s.
+    Pages with exactly 1 H1 are clean and excluded from the result.
+    """
+    page_h1: dict[str, dict[str, Any]] = {}
+
+    for source in sources:
+        page_key = _extract_page_key(source.source)
+        if page_key not in page_h1:
+            page_h1[page_key] = {"page": page_key, "h1Count": 0, "fields": []}
+        count = len(H1_RE.findall(source.text))
+        if count > 0:
+            page_h1[page_key]["h1Count"] += count
+            page_h1[page_key]["fields"].append(
+                {"field": source.field, "source": source.source, "h1InField": count}
+            )
+
+    result: list[dict[str, Any]] = []
+    for page_key, info in sorted(page_h1.items()):
+        h1_count = info["h1Count"]
+        if h1_count == 0:
+            info["severity"] = "warn"
+            result.append(info)
+        elif h1_count >= 2:
+            info["severity"] = "flag"
+            result.append(info)
+        # h1_count == 1: clean, don't report
+
+    return result
+
+
 def fetch_empty_content_leaves(connection: sqlite3.Connection) -> list[dict[str, Any]]:
     rows = connection.execute(
         """
@@ -503,6 +552,8 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
     )
     html_data = audit_html_markers(text_sources)
     broken_anchor_links = find_broken_anchor_links(text_sources)
+    h1_violations = audit_h1_hierarchy(text_sources)
+    h1_flags = [v for v in h1_violations if v["severity"] == "flag"]
     empty_content_leaves = fetch_empty_content_leaves(connection)
     navigation = check_navigation_render(skip=args.skip_strapi_navigation)
 
@@ -520,6 +571,11 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
         failures.append(
             "broken anchor links exceeded threshold: "
             f"{len(broken_anchor_links)} > {args.max_broken_anchor_links}"
+        )
+    if len(h1_flags) > args.max_pages_with_multiple_h1:
+        failures.append(
+            "pages with multiple H1 exceeded threshold: "
+            f"{len(h1_flags)} > {args.max_pages_with_multiple_h1}"
         )
     if not args.skip_strapi_navigation:
         if navigation["errors"]:
@@ -548,6 +604,8 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
             "brokenAnchorLinks": len(broken_anchor_links),
             "emptyContentLeaves": len(empty_content_leaves),
             "redirectSourcesLoaded": len(redirect_sources),
+            "h1Violations": len(h1_violations),
+            "pagesWithMultipleH1": len(h1_flags),
         },
         "navigation": navigation,
         "htmlMarkerSourceCounts": html_data["markerSourceCounts"],
@@ -563,6 +621,7 @@ def build_report(args: argparse.Namespace) -> tuple[dict[str, Any], list[str]]:
         ],
         "unsafeHtmlFindings": [asdict(finding) for finding in html_data["unsafe"]],
         "brokenAnchorLinks": [asdict(finding) for finding in broken_anchor_links[: args.max_samples]],
+        "h1Violations": h1_violations,
         "emptyContentLeaves": empty_content_leaves,
         "failures": failures,
     }
@@ -595,6 +654,12 @@ def parse_args() -> argparse.Namespace:
         "--skip-strapi-navigation",
         action="store_true",
         help="Skip live Strapi navigation render checks for offline analysis",
+    )
+    parser.add_argument(
+        "--max-pages-with-multiple-h1",
+        type=int,
+        default=DEFAULT_MAX_PAGES_WITH_MULTIPLE_H1,
+        help="Launch gate: maximum allowed pages with 2+ H1 tags (default 0)",
     )
     return parser.parse_args()
 

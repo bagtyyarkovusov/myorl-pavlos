@@ -51,6 +51,8 @@ def build_steps(args: argparse.Namespace) -> list[GateStep]:
                 "audit_nextjs_content_hygiene.py",
                 "--max-broken-internal-links",
                 str(args.max_broken_internal_links),
+                "--max-pages-with-multiple-h1",
+                str(args.max_pages_with_multiple_h1),
                 "--max-samples",
                 str(args.max_samples),
                 *(["--skip-strapi-navigation"] if args.skip_live_strapi else []),
@@ -149,6 +151,12 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=2,
         help="Current accepted baseline; the gate fails if this count increases.",
+    )
+    parser.add_argument(
+        "--max-pages-with-multiple-h1",
+        type=int,
+        default=0,
+        help="Launch gate: maximum allowed pages with 2+ H1 tags (default 0).",
     )
     parser.add_argument("--report-json", type=Path, help="Optional path for a full gate report.")
     return parser.parse_args()

@@ -25,6 +25,23 @@ LOCALE = "el"
 _PAR_HREF_RE = re.compile(r"^#par\d+$")
 
 
+def _extract_par_ids(html: str) -> list[str]:
+    """Return ordered ``#parN`` IDs from the accordion wrapper div."""
+    soup = BeautifulSoup(html, "html.parser")
+    accordion_link = soup.find("div", class_="accordion-heading")
+    if not accordion_link:
+        return []
+    wrapper = accordion_link.parent
+    if not wrapper:
+        return []
+    par_ids: list[str] = []
+    for link in wrapper.find_all("a", href=True):
+        href = link["href"]
+        if isinstance(href, str) and _PAR_HREF_RE.match(href):
+            par_ids.append(href[1:])
+    return par_ids
+
+
 def fix_par_anchors(html: str | None) -> tuple[str, int]:
     """Add ``id="parN"`` to ``<h4>`` headings that follow the accordion div.
 
@@ -36,27 +53,11 @@ def fix_par_anchors(html: str | None) -> tuple[str, int]:
     if not html:
         return "", 0
 
-    soup = BeautifulSoup(html, "html.parser")
-
-    # Extract the ordered #parN IDs from the accordion wrapper div.
-    accordion_link = soup.find("div", class_="accordion-heading")
-    if not accordion_link:
-        return html, 0
-    wrapper = accordion_link.parent
-    if not wrapper:
-        return html, 0
-
-    par_ids: list[str] = []
-    for link in wrapper.find_all("a", href=True):
-        href = link["href"]
-        if isinstance(href, str) and _PAR_HREF_RE.match(href):
-            par_ids.append(href[1:])  # strip leading #
-
+    par_ids = _extract_par_ids(html)
     if not par_ids:
         return html, 0
 
-    # The accordion div is at the start of the content, so the first N <h4>
-    # elements are the targets, paired positionally with the accordion links.
+    soup = BeautifulSoup(html, "html.parser")
     h4_tags = soup.find_all("h4")
     added = 0
     for i, h4 in enumerate(h4_tags):
@@ -126,15 +127,7 @@ def main() -> int:
             print(msg)
         return 0
 
-    # Re-extract IDs for reporting (already extracted in fix_par_anchors)
-    soup = BeautifulSoup(page["content"], "html.parser")
-    wrapper_link = soup.find("div", class_="accordion-heading")
-    par_ids = []
-    if wrapper_link and wrapper_link.parent:
-        for link in wrapper_link.parent.find_all("a", href=True):
-            href = link["href"]
-            if isinstance(href, str) and _PAR_HREF_RE.match(href):
-                par_ids.append(href[1:])
+    par_ids = _extract_par_ids(page["content"])
     result["targetIds"] = par_ids
 
     if args.apply:

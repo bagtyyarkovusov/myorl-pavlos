@@ -9,8 +9,7 @@ export interface RevalidationDeps {
 }
 
 export function normalizeLegacyPath(path: string): string {
-  let normalized = path.trim();
-  normalized = normalized.replace(/\/+$/, "");
+  let normalized = path.trim().replace(/\/+$/, "");
   try {
     normalized = decodeURIComponent(normalized);
   } catch {
@@ -67,13 +66,11 @@ export async function triggerRevalidation(deps?: RevalidationDeps): Promise<void
 }
 
 function getStrapiLog(): RevalidationDeps["log"] {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const s = (globalThis as any).strapi;
-    return s?.log ? { warn: (m: string) => s.log.warn(m), error: (m: string, e?: unknown) => s.log.error(m, e) } : undefined;
-  } catch {
-    return undefined;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const s = (globalThis as any).strapi;
+  return s?.log
+    ? { warn: (m: string) => s.log.warn(m), error: (m: string, e?: unknown) => s.log.error(m, e) }
+    : undefined;
 }
 
 interface LifecycleEvent {

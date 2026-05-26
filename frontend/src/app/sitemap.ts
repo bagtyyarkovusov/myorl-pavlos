@@ -2,10 +2,11 @@ import type { MetadataRoute } from "next";
 
 import { getSitemapPages } from "@/lib/cms/cms-api";
 import { hrefForPage } from "@/lib/cms/dto";
+import { addXDefault } from "@/lib/cms/hreflang";
 import { getSiteUrl } from "@/lib/cms/site-url";
 import type { PageDTO } from "@/lib/cms/types";
 
-function buildAlternates(
+export function buildAlternates(
   page: PageDTO,
   siteUrl: string,
 ): MetadataRoute.Sitemap[number]["alternates"] {
@@ -15,7 +16,12 @@ function buildAlternates(
       languages[locale] = new URL(altPath, siteUrl).toString();
     }
   }
-  return Object.keys(languages).length > 0 ? { languages } : undefined;
+
+  if (Object.keys(languages).length === 0) {
+    return undefined;
+  }
+
+  return { languages: addXDefault(languages) };
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

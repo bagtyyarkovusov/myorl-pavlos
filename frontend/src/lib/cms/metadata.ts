@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { getCmsConfig } from "./env";
+import { addXDefault } from "./hreflang";
 import { hrefForPage } from "./navigation";
 import type { PageDTO } from "./types";
 
@@ -29,7 +30,7 @@ export function toPageMetadata(page: PageDTO): Metadata {
     description: page.seo.metaDescription ?? undefined,
     alternates: {
       canonical,
-      languages: page.alternateUrls,
+      languages: addXDefault({ ...page.alternateUrls }),
     },
     openGraph: {
       title: page.seoTitle,

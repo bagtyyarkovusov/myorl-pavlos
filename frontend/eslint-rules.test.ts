@@ -1,7 +1,7 @@
 import { describe } from "vitest";
 import type { Rule } from "eslint";
 import { RuleTester } from "eslint";
- 
+
 import rawRule from "./eslint-rules/no-force-dynamic-export.mjs";
 
 const rule = rawRule as unknown as Rule.RuleModule;

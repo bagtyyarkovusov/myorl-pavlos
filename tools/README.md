@@ -66,6 +66,7 @@ python3 tests/test_cms_html_cleanup.py
 | `repair_legacy_cms_markup.py` | Normalize legacy markup in Strapi (`content`, `excerpt`, etc.) |
 | `backfill_page_listing_media.py` | Link `featuredImage` for directory thumbnails |
 | `audit_site_assets.py` | Site-wide media/thumbnail audit |
+| `snapshot_gsc_baseline.py` | Pull pre-launch GSC ranking baseline snapshot |
 
 Plan/result artifacts land in `tools/data/manual-repairs/`.
 
@@ -75,3 +76,57 @@ Temporary root compatibility wrappers remain for:
 - `audit_nextjs_content_hygiene.py`
 - `strapi_importer.py`
 - `sync_navigation_from_pages.py`
+
+## GSC baseline snapshot (`snapshot_gsc_baseline.py`)
+
+Pulls a pre-launch ranking baseline from the Google Search Console API and writes
+a versioned JSON snapshot to `artifacts/seo-baseline/<date>.json`. Re-run at
+7d / 30d / 90d post-launch to track ranking continuity.
+
+### Credential setup
+
+1. Create a Google Cloud project and enable the **Google Search Console API**
+2. Create a service account with **Owner** or **Full** permission on the GSC property
+3. Download the service-account JSON key file (do NOT commit it)
+4. In GSC, add the service account email as a **Full** user on the Domain Property
+
+### Usage
+
+```bash
+# Default: last 90 days
+python3 tools/snapshot_gsc_baseline.py \
+  --credentials /secure/gsc-service-account.json \
+  --property sc-domain:myorl.gr
+
+# Custom date range and output path
+python3 tools/snapshot_gsc_baseline.py \
+  --credentials /secure/gsc-service-account.json \
+  --property sc-domain:myorl.gr \
+  --start-date 2026-01-01 \
+  --end-date 2026-05-26 \
+  --output artifacts/seo-baseline/launch-baseline.json
+```
+
+### Dependencies
+
+```bash
+pip install google-auth google-api-python-client
+```
+
+### Output schema
+
+Snapshots are written to `artifacts/seo-baseline/<end-date>.json`:
+
+- `meta` — generated_at, property, date_range, tool_version
+- `top_queries` — top 100 queries by clicks (with impressions, position, CTR)
+- `top_pages` — top 100 landing pages by clicks
+- `by_country` — query breakdown by country
+- `by_device` — query breakdown by device category (desktop, mobile, tablet)
+
+### Tests
+
+```bash
+python3 tests/test_snapshot_gsc_baseline.py
+```
+
+Tests use mocked GSC API responses — no credentials required.

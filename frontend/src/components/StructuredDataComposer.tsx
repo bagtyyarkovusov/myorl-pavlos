@@ -148,48 +148,23 @@ export function StructuredDataComposer({
   }
 
   const pageUrl = new URL(hrefForPage(page), siteUrl).toString();
+  const description = page.seo.metaDescription ?? undefined;
+  const locale = page.locale;
 
   if (schemaTypes.has("Physician")) {
-    blocks.push(
-      buildPhysicianLd({
-        pageUrl,
-        description: page.seo.metaDescription ?? undefined,
-        locale: page.locale,
-      }),
-    );
+    blocks.push(buildPhysicianLd({ pageUrl, description, locale }));
   }
 
   if (schemaTypes.has("MedicalProcedure")) {
-    blocks.push(
-      buildMedicalProcedureLd({
-        title: page.title,
-        pageUrl,
-        description: page.seo.metaDescription ?? undefined,
-        locale: page.locale,
-      }),
-    );
+    blocks.push(buildMedicalProcedureLd({ title: page.title, pageUrl, description, locale }));
   }
 
   if (schemaTypes.has("MedicalCondition")) {
-    blocks.push(
-      buildMedicalConditionLd({
-        title: page.title,
-        pageUrl,
-        description: page.seo.metaDescription ?? undefined,
-        locale: page.locale,
-      }),
-    );
+    blocks.push(buildMedicalConditionLd({ title: page.title, pageUrl, description, locale }));
   }
 
   if (schemaTypes.has("Article")) {
-    blocks.push(
-      buildArticleLd({
-        title: page.title,
-        pageUrl,
-        description: page.seo.metaDescription ?? undefined,
-        locale: page.locale,
-      }),
-    );
+    blocks.push(buildArticleLd({ title: page.title, pageUrl, description, locale }));
   }
 
   return <StructuredData data={{ "@context": "https://schema.org", "@graph": blocks }} />;

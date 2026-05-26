@@ -151,6 +151,10 @@ export function StructuredDataComposer({
   const pageUrl = new URL(hrefForPage(page), siteUrl).toString();
   const description = page.seo.metaDescription ?? undefined;
   const locale = page.locale;
+  const datePublished = formatIsoDate(page.publishedAt);
+  const dateModified = formatIsoDate(page.updatedAt);
+  const reviewedBy = page.medicallyReviewedBy ?? null;
+  const lastReviewed = formatIsoDate(page.lastReviewedDate);
 
   if (schemaTypes.has("Physician")) {
     blocks.push(buildPhysicianLd({ pageUrl, description, locale }));
@@ -163,10 +167,10 @@ export function StructuredDataComposer({
         pageUrl,
         description,
         locale,
-        datePublished: formatIsoDate(page.publishedAt),
-        dateModified: formatIsoDate(page.updatedAt),
-        reviewedBy: page.medicallyReviewedBy ?? null,
-        lastReviewed: formatIsoDate(page.lastReviewedDate),
+        datePublished,
+        dateModified,
+        reviewedBy,
+        lastReviewed,
       }),
     );
   }
@@ -178,10 +182,10 @@ export function StructuredDataComposer({
         pageUrl,
         description,
         locale,
-        datePublished: formatIsoDate(page.publishedAt),
-        dateModified: formatIsoDate(page.updatedAt),
-        reviewedBy: page.medicallyReviewedBy ?? null,
-        lastReviewed: formatIsoDate(page.lastReviewedDate),
+        datePublished,
+        dateModified,
+        reviewedBy,
+        lastReviewed,
       }),
     );
   }
@@ -193,10 +197,10 @@ export function StructuredDataComposer({
         pageUrl,
         description,
         locale,
-        datePublished: formatIsoDate(page.publishedAt),
-        dateModified: formatIsoDate(page.updatedAt),
-        reviewedBy: page.medicallyReviewedBy ?? null,
-        lastReviewed: formatIsoDate(page.lastReviewedDate),
+        datePublished,
+        dateModified,
+        reviewedBy,
+        lastReviewed,
       }),
     );
   }

@@ -1,14 +1,19 @@
 import { StructuredData } from "@/components/StructuredData";
+import { buildArticleLd } from "@/lib/structured-data/article";
 import { buildContactPointLd } from "@/lib/structured-data/contact-point";
 import { buildFaqPageLd } from "@/lib/structured-data/faq";
 import { buildImageObjectLd } from "@/lib/structured-data/image-object";
 import { buildMedicalBusinessLd } from "@/lib/structured-data/medical-business";
+import { buildMedicalConditionLd } from "@/lib/structured-data/medical-condition";
+import { buildMedicalProcedureLd } from "@/lib/structured-data/medical-procedure";
 import { buildPageBreadcrumbLd } from "@/lib/structured-data/page-breadcrumbs";
+import { buildPhysicianLd } from "@/lib/structured-data/physician";
 import { getPageSchemas } from "@/lib/structured-data/seo-schema-map";
 import { buildVideoObjectLd } from "@/lib/structured-data/video-object";
 import { buildWebPageLd } from "@/lib/structured-data/webpage";
 import { buildWebSiteLd } from "@/lib/structured-data/website";
 import { buildContactRenderModel } from "@/lib/contact/contact-render-model";
+import { hrefForPage } from "@/lib/cms/navigation";
 import type { GlobalSettingsDTO, PageDTO, SectionDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
@@ -138,6 +143,51 @@ export function StructuredDataComposer({
         address: globalSettings?.address ?? undefined,
         imageUrls: page.seo.ogImage?.url ? [page.seo.ogImage.url] : undefined,
         aggregateRating,
+      }),
+    );
+  }
+
+  const pageUrl = new URL(hrefForPage(page), siteUrl).toString();
+
+  if (schemaTypes.has("Physician")) {
+    blocks.push(
+      buildPhysicianLd({
+        pageUrl,
+        description: page.seo.metaDescription ?? undefined,
+        locale: page.locale,
+      }),
+    );
+  }
+
+  if (schemaTypes.has("MedicalProcedure")) {
+    blocks.push(
+      buildMedicalProcedureLd({
+        title: page.title,
+        pageUrl,
+        description: page.seo.metaDescription ?? undefined,
+        locale: page.locale,
+      }),
+    );
+  }
+
+  if (schemaTypes.has("MedicalCondition")) {
+    blocks.push(
+      buildMedicalConditionLd({
+        title: page.title,
+        pageUrl,
+        description: page.seo.metaDescription ?? undefined,
+        locale: page.locale,
+      }),
+    );
+  }
+
+  if (schemaTypes.has("Article")) {
+    blocks.push(
+      buildArticleLd({
+        title: page.title,
+        pageUrl,
+        description: page.seo.metaDescription ?? undefined,
+        locale: page.locale,
       }),
     );
   }

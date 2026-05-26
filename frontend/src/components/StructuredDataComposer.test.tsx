@@ -130,4 +130,85 @@ describe("StructuredDataComposer", () => {
     );
     expect(webPage).toBeDefined();
   });
+
+  it("emits Physician schema for viografiko slug", () => {
+    const page = makePage({ slug: "viografiko" });
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
+    const script = container.querySelector('script[type="application/ld+json"]')!;
+    const ld = JSON.parse(script.textContent ?? "{}");
+    const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
+    expect(types).toContain("Physician");
+  });
+
+  it("emits MedicalProcedure schema for service-article layoutVariant", () => {
+    const page = makePage({ layoutVariant: "service-article" });
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
+    const script = container.querySelector('script[type="application/ld+json"]')!;
+    const ld = JSON.parse(script.textContent ?? "{}");
+    const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
+    expect(types).toContain("MedicalProcedure");
+  });
+
+  it("emits MedicalCondition schema for encyclopedia-article layoutVariant", () => {
+    const page = makePage({ layoutVariant: "encyclopedia-article" });
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
+    const script = container.querySelector('script[type="application/ld+json"]')!;
+    const ld = JSON.parse(script.textContent ?? "{}");
+    const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
+    expect(types).toContain("MedicalCondition");
+  });
+
+  it("emits Article schema for specialized-article layoutVariant", () => {
+    const page = makePage({ layoutVariant: "specialized-article" });
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
+    const script = container.querySelector('script[type="application/ld+json"]')!;
+    const ld = JSON.parse(script.textContent ?? "{}");
+    const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
+    expect(types).toContain("Article");
+  });
+
+  it("does not emit Physician for non-viografiko slugs", () => {
+    const page = makePage({ slug: "yperesies" });
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
+    const script = container.querySelector('script[type="application/ld+json"]')!;
+    const ld = JSON.parse(script.textContent ?? "{}");
+    const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
+    expect(types).not.toContain("Physician");
+  });
+
+  it("does not emit layoutVariant schemas for standard pages", () => {
+    const page = makePage({ layoutVariant: "standard" });
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
+    const script = container.querySelector('script[type="application/ld+json"]')!;
+    const ld = JSON.parse(script.textContent ?? "{}");
+    const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
+    expect(types).not.toContain("MedicalProcedure");
+    expect(types).not.toContain("MedicalCondition");
+    expect(types).not.toContain("Article");
+  });
+
+  it("still honors schemaType override when layoutVariant schemas are emitted", () => {
+    const page = makePage({
+      layoutVariant: "encyclopedia-article",
+      seo: {
+        metaTitle: "Test",
+        metaDescription: "Test desc",
+        ogImage: null,
+        canonicalUrl: null,
+        schemaType: "MedicalWebPage",
+        robotsNoindex: false,
+        robotsNofollow: false,
+        sitemapExclude: false,
+        sitemapPriority: null,
+        sitemapChangeFrequency: null,
+      },
+    });
+
+    const { container } = render(<StructuredDataComposer page={page} siteUrl={SITE_URL} />);
+    const script = container.querySelector('script[type="application/ld+json"]')!;
+    const ld = JSON.parse(script.textContent ?? "{}");
+    const types = ld["@graph"].map((g: Record<string, unknown>) => g["@type"]);
+    expect(types).toContain("MedicalWebPage");
+    expect(types).toContain("MedicalCondition");
+  });
 });

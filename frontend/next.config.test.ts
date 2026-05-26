@@ -21,7 +21,6 @@ function match(pathname: string, source: string): boolean {
       continue;
     }
     const full = m[0];
-    const name = m[1] || m[3];
     i += full.length;
     if (m[2]) {
       pattern += `(${m[2]})`;

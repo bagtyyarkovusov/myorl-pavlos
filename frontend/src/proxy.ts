@@ -71,11 +71,8 @@ export function proxy(request: NextRequest) {
     return;
   }
 
-  // Root redirect: / → /<detected-locale>
-  // 308 Permanent per ADR-013 — Canonical Home is /el.
-  // Bare slugs (e.g. /amygdales) are handled by next.config.ts redirects()
-  // as a wildcard → /el/:slug (308). Passthrough here so the framework-level
-  // redirect rules process them.
+  // Root → /<detected-locale>, 308 permanent (ADR-013).
+  // Bare slugs pass through — handled by next.config.ts redirects().
   if (pathname === "/") {
     const detected = getLocaleFromAcceptLanguage(request);
     const url = request.nextUrl.clone();

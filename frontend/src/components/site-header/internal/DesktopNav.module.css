@@ -74,18 +74,6 @@
   z-index: 1;
 }
 
-/* Locale-specific typographic adjustments */
-[data-locale="ru"] .nav-trigger,
-[data-locale="ru"] .nav-link {
-  font-size: 0.83rem;
-  letter-spacing: -0.01em;
-  padding-inline: clamp(5px, 0.48vw, 9px);
-}
-
-[data-locale="ru"] .desktop-nav {
-  gap: clamp(0px, 0.12vw, 4px);
-}
-
 @media (min-width: 1321px) {
   .megamenu-host {
     grid-column: 2;
@@ -97,34 +85,18 @@
     padding-inline-start: clamp(4px, 0.6vw, 10px);
   }
 
-  /* RU: tighter still when CTA switches to short label */
-  @container site-header-inner (max-width: 80rem) {
-    [data-locale="ru"] .nav-trigger,
-    [data-locale="ru"] .nav-link {
-      padding-inline: clamp(4px, 0.35vw, 7px);
-    }
-
-    [data-locale="ru"] .desktop-nav {
-      gap: 0;
-    }
+  /* RU: Cyrillic nav needs tighter fit to co-exist with search button.
+     Container is always 1232px (1280px max - 48px side padding) when
+     desktop grid is active, so a single baseline is used. */
+  [data-locale="ru"] .nav-trigger,
+  [data-locale="ru"] .nav-link {
+    font-size: 0.84rem;
+    letter-spacing: -0.01em;
+    padding-inline: clamp(6px, 0.5vw, 9px);
   }
 
-  @container site-header-inner (max-width: 76rem) {
-    [data-locale="ru"] .nav-trigger,
-    [data-locale="ru"] .nav-link {
-      font-size: 0.81rem;
-      padding-inline: clamp(3px, 0.3vw, 6px);
-    }
-
-    [data-locale="ru"] .nav-chevron {
-      display: none;
-    }
-  }
-
-  @container site-header-inner (max-width: 74rem) {
-    .megamenu-host {
-      display: none;
-    }
+  [data-locale="ru"] .desktop-nav {
+    gap: clamp(0px, 0.2vw, 4px);
   }
 }
 

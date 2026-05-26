@@ -429,35 +429,6 @@
   }
 }
 
-/*
- * Header fit ladder (container queries on .site-header__inner, active at ≥1321px viewport).
- * Thresholds (inline-size of site-header__inner):
- *   ≤80rem (1280px): RU short CTA, tighter header-actions gap
- *   ≤76rem (1216px): RU tighter nav (handled in DesktopNav.module.css)
- *   ≤74rem (1184px): hamburger fallback, hide desktop nav
- */
-@media (min-width: 1321px) {
-  @container site-header-inner (max-width: 80rem) {
-    [data-locale="ru"] .cta-book__full {
-      display: none;
-    }
-
-    [data-locale="ru"] .cta-book__short {
-      display: inline-flex;
-    }
-
-    [data-locale="ru"] .header-actions {
-      gap: 7px;
-    }
-  }
-
-  @container site-header-inner (max-width: 76rem) {
-    [data-locale="ru"] .header-actions {
-      gap: 5px;
-    }
-  }
-}
-
 @media (max-width: 768px) {
   .header-actions {
     gap: 8px;
@@ -726,8 +697,6 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     column-gap: clamp(20px, 2.4vw, 36px);
-    container-type: inline-size;
-    container-name: site-header-inner;
   }
 
   .brand {
@@ -737,11 +706,5 @@
   .header-actions {
     grid-column: 3;
     justify-self: end;
-  }
-
-  @container site-header-inner (max-width: 74rem) {
-    .hamburger {
-      display: inline-flex;
-    }
   }
 }

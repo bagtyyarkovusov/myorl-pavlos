@@ -1,5 +1,6 @@
 import type { PageLayoutProps } from "./_shared";
 import { HumanSiteMapPage } from "./HumanSiteMapPage";
+import { SearchResultsHero } from "@/components/search/SearchResultsHero";
 import { StandardPage } from "./StandardPage";
 import { TestimonialsIndexPage } from "./TestimonialsIndexPage";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
@@ -20,6 +21,10 @@ export function FrontendNativePage({
 
   if (page.layoutVariant === "testimonials-index") {
     return <TestimonialsIndexPage page={page} currentPage={testimonialsPage} />;
+  }
+
+  if (page.layoutVariant === "search-results") {
+    return <SearchResultsHero locale={page.locale} />;
   }
 
   return <StandardPage page={page} />;

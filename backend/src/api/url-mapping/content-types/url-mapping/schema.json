@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "url_mappings",
+  "info": {
+    "singularName": "url-mapping",
+    "pluralName": "url-mappings",
+    "displayName": "URL Mapping",
+    "description": "Legacy → canonical URL redirect pairs"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "legacyPath": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "destinationPath": {
+      "type": "string",
+      "required": true
+    },
+    "destinationKind": {
+      "type": "enumeration",
+      "enum": ["internal-301", "external-301", "gone-410"],
+      "required": true
+    },
+    "locale": {
+      "type": "enumeration",
+      "enum": ["el", "ru"],
+      "required": false
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

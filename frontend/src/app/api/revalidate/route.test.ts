@@ -41,6 +41,16 @@ describe("revalidation tag derivation", () => {
   it("maps media payloads broadly because pages may reference media", () => {
     expect(deriveTags({ event: "media.update", media: { id: 1 } })).toEqual(["pages", "sitemap"]);
   });
+
+  it("maps Strapi url-mapping payloads to url-mappings tag", () => {
+    expect(
+      deriveTags({
+        event: "entry.create",
+        model: "api::url-mapping.url-mapping",
+        entry: { legacyPath: "/old-slug", destinationPath: "/el/new-slug", destinationKind: "internal-301" },
+      }),
+    ).toEqual(["url-mappings"]);
+  });
 });
 
 describe("revalidation auth helpers", () => {

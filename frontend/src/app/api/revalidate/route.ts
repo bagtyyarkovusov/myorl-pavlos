@@ -139,6 +139,10 @@ function deriveStrapiWebhookTags(payload: RevalidatePayload): string[] | null {
     return ["tags", "pages", "sitemap"];
   }
 
+  if (isUrlMappingModel(model)) {
+    return ["url-mappings"];
+  }
+
   return ["pages", "sitemap"];
 }
 
@@ -148,6 +152,10 @@ function isPageModel(model: string | undefined): boolean {
 
 function isTagModel(model: string | undefined): boolean {
   return model === "api::tag.tag" || model === "tag";
+}
+
+function isUrlMappingModel(model: string | undefined): boolean {
+  return model === "api::url-mapping.url-mapping" || model === "url-mapping";
 }
 
 function stringValue(value: unknown): string | undefined {

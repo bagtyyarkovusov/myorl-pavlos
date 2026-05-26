@@ -66,6 +66,8 @@ python3 tests/test_cms_html_cleanup.py
 | `repair_legacy_cms_markup.py` | Normalize legacy markup in Strapi (`content`, `excerpt`, etc.) |
 | `backfill_page_listing_media.py` | Link `featuredImage` for directory thumbnails |
 | `audit_site_assets.py` | Site-wide media/thumbnail audit |
+| `audit_slug_quality.py` | Flag broken, duplicate, and garbage slugs (5 criteria) |
+| `seed_slug_renames_to_url_mappings.py` | Convert approved rename list → URL Mapping JSON |
 
 Plan/result artifacts land in `tools/data/manual-repairs/`.
 
@@ -73,5 +75,40 @@ Temporary root compatibility wrappers remain for:
 
 - `nextjs_readiness_gate.py`
 - `audit_nextjs_content_hygiene.py`
+- `audit_slug_quality.py`
+- `seed_slug_renames_to_url_mappings.py`
 - `strapi_importer.py`
 - `sync_navigation_from_pages.py`
+
+## Slug quality audit
+
+Audit published Strapi page slugs for surgical-fix issues (PRD #152, Decision 13):
+
+```bash
+# Run the audit (reads Strapi SQLite database)
+python3 tools/audit_slug_quality.py
+
+# Print report to stdout
+python3 tools/audit_slug_quality.py --stdout
+
+# Write to a custom path
+python3 tools/audit_slug_quality.py --output artifacts/reports/slug-quality-audit.md
+```
+
+The audit flags slugs across five criteria:
+1. Demonstrably broken (typos — consonant-only segments, repeated chars)
+2. Duplicates (exact) and near-duplicates (dash-normalized collisions)
+3. Numeric collision suffixes from MODX (-2, -copy, -test, -1)
+4. Locale mismatch (Cyrillic in EL, Greek in RU)
+5. Garbage (single-char, special chars, all-numeric)
+
+Output: `artifacts/reports/slug-quality-audit.md`.
+
+To convert approved renames into URL Mapping seed rows (ADR-012):
+
+```bash
+python3 tools/seed_slug_renames_to_url_mappings.py \
+  --input artifacts/reports/approved-slug-renames.json \
+  --output data/manifests/url-mapping-seed-from-slug-renames.json
+```
+

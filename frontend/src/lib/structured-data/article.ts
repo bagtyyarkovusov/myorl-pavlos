@@ -1,6 +1,6 @@
 /**
  * Phase 2 deferred fields (editorial inputs):
- *   author (Person / Organization reference), datePublished, dateModified
+ *   author (Person / Organization reference)
  */
 
 export type ArticleInput = {
@@ -8,6 +8,8 @@ export type ArticleInput = {
   pageUrl: string;
   description?: string;
   locale: string;
+  datePublished?: string | null;
+  dateModified?: string | null;
 };
 
 export type ArticleLd = {
@@ -17,6 +19,8 @@ export type ArticleLd = {
   url: string;
   description?: string;
   inLanguage: string;
+  datePublished?: string;
+  dateModified?: string;
 };
 
 export function buildArticleLd(input: ArticleInput): ArticleLd {
@@ -30,6 +34,14 @@ export function buildArticleLd(input: ArticleInput): ArticleLd {
 
   if (input.description) {
     result.description = input.description;
+  }
+
+  if (input.datePublished) {
+    result.datePublished = input.datePublished;
+  }
+
+  if (input.dateModified) {
+    result.dateModified = input.dateModified;
   }
 
   return result;

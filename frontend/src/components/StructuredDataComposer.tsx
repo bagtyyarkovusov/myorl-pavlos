@@ -13,6 +13,7 @@ import { buildVideoObjectLd } from "@/lib/structured-data/video-object";
 import { buildWebPageLd } from "@/lib/structured-data/webpage";
 import { buildWebSiteLd } from "@/lib/structured-data/website";
 import { buildContactRenderModel } from "@/lib/contact/contact-render-model";
+import { formatIsoDate } from "@/lib/utils";
 import { hrefForPage } from "@/lib/cms/navigation";
 import type { GlobalSettingsDTO, PageDTO, SectionDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
@@ -156,15 +157,42 @@ export function StructuredDataComposer({
   }
 
   if (schemaTypes.has("MedicalProcedure")) {
-    blocks.push(buildMedicalProcedureLd({ title: page.title, pageUrl, description, locale }));
+    blocks.push(
+      buildMedicalProcedureLd({
+        title: page.title,
+        pageUrl,
+        description,
+        locale,
+        datePublished: formatIsoDate(page.publishedAt),
+        dateModified: formatIsoDate(page.updatedAt),
+      }),
+    );
   }
 
   if (schemaTypes.has("MedicalCondition")) {
-    blocks.push(buildMedicalConditionLd({ title: page.title, pageUrl, description, locale }));
+    blocks.push(
+      buildMedicalConditionLd({
+        title: page.title,
+        pageUrl,
+        description,
+        locale,
+        datePublished: formatIsoDate(page.publishedAt),
+        dateModified: formatIsoDate(page.updatedAt),
+      }),
+    );
   }
 
   if (schemaTypes.has("Article")) {
-    blocks.push(buildArticleLd({ title: page.title, pageUrl, description, locale }));
+    blocks.push(
+      buildArticleLd({
+        title: page.title,
+        pageUrl,
+        description,
+        locale,
+        datePublished: formatIsoDate(page.publishedAt),
+        dateModified: formatIsoDate(page.updatedAt),
+      }),
+    );
   }
 
   return <StructuredData data={{ "@context": "https://schema.org", "@graph": blocks }} />;

@@ -312,6 +312,20 @@ describe("toPageDTO", () => {
     expect(dto.menuIndex).toBe(0);
   });
 
+  it("maps publishedAt and updatedAt from Strapi to PageDTO", () => {
+    const dto = toPageDTO(contentPayload);
+
+    expect(dto.publishedAt).toBe("2024-06-15T10:30:00.000Z");
+    expect(dto.updatedAt).toBe("2024-12-01T14:00:00.000Z");
+  });
+
+  it("defaults publishedAt and updatedAt to null when absent", () => {
+    const dto = toPageDTO({ ...contentPayload, publishedAt: undefined, updatedAt: undefined });
+
+    expect(dto.publishedAt).toBeNull();
+    expect(dto.updatedAt).toBeNull();
+  });
+
   it("defaults seoTitle to title when metaTitle is null", () => {
     const noSeoTitlePayload: StrapiPagePayload = {
       ...contentPayload,

@@ -9,6 +9,8 @@ export type PageStrings = {
   relatedTopics: string;
   sources: string;
   author: string;
+  publishedOn: string;
+  updatedOn: string;
   updatedClinicalReview: string;
   sourcesIncluded: string;
   sectionNavLabel: string;
@@ -49,6 +51,8 @@ const STRINGS: Record<Locale, PageStrings> = {
     articleDetails: "Λεπτομέρειες άρθρου",
     relatedTopics: "Σχετικά θέματα",
     sources: "Πηγές",
+    publishedOn: "Δημοσιεύτηκε",
+    updatedOn: "Ενημερώθηκε",
     author: "Συγγραφέας",
     updatedClinicalReview: "Ενημερωμένο",
     sourcesIncluded: "Πηγές συμπεριλαμβάνονται",
@@ -87,6 +91,8 @@ const STRINGS: Record<Locale, PageStrings> = {
     articleDetails: "Детали статьи",
     relatedTopics: "Похожие темы",
     sources: "Источники",
+    publishedOn: "Опубликовано",
+    updatedOn: "Обновлено",
     author: "Автор",
     updatedClinicalReview: "Обновлено",
     sourcesIncluded: "Есть источники",

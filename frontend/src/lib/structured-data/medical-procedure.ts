@@ -8,6 +8,8 @@ export type MedicalProcedureInput = {
   pageUrl: string;
   description?: string;
   locale: string;
+  datePublished?: string | null;
+  dateModified?: string | null;
 };
 
 export type MedicalProcedureLd = {
@@ -17,6 +19,8 @@ export type MedicalProcedureLd = {
   url: string;
   description?: string;
   inLanguage: string;
+  datePublished?: string;
+  dateModified?: string;
 };
 
 export function buildMedicalProcedureLd(input: MedicalProcedureInput): MedicalProcedureLd {
@@ -30,6 +34,14 @@ export function buildMedicalProcedureLd(input: MedicalProcedureInput): MedicalPr
 
   if (input.description) {
     result.description = input.description;
+  }
+
+  if (input.datePublished) {
+    result.datePublished = input.datePublished;
+  }
+
+  if (input.dateModified) {
+    result.dateModified = input.dateModified;
   }
 
   return result;

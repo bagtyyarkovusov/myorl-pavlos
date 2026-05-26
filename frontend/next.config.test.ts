@@ -218,7 +218,7 @@ describe("next.config.ts redirects — URL Mapping materialization", () => {
     expect(entry!.destination).toBe("/el/amygdalektomi");
   });
 
-  it("passes elapsed time URL mappings through", async () => {
+  it("passes locale-prefixed URL mappings through", async () => {
     mockUrlMappings([
       {
         legacyPath: "/el/old-slug",

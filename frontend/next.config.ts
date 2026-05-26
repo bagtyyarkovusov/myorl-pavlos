@@ -107,19 +107,9 @@ async function loadUrlMappingRedirects(): Promise<NextRedirect[]> {
     return redirects;
   } catch (error) {
     console.warn(
-      "[next.config.ts] Could not fetch URL mappings — " + "proceeding without dynamic redirects:",
+      "[next.config.ts] Could not fetch URL mappings — proceeding without dynamic redirects:",
       error instanceof Error ? error.message : error,
     );
-    return [];
-  }
-}
-
-function loadGonePaths(): string[] {
-  try {
-    const gonePath = path.resolve(frontendRoot, "..", "data", "gone-paths.json");
-    const raw = readFileSync(gonePath, "utf-8");
-    return JSON.parse(raw) as string[];
-  } catch {
     return [];
   }
 }

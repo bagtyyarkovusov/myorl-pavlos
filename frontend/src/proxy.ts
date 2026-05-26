@@ -69,7 +69,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (GONE_PATHS.has(pathname)) {
-    return new NextResponse(gonePageHtml(pathname), {
+    return new NextResponse(gonePageHtml(), {
       status: 410,
       headers: { "Content-Type": "text/html; charset=utf-8" },
     });
@@ -92,7 +92,7 @@ export function proxy(request: NextRequest) {
   }
 }
 
-function gonePageHtml(pathname: string): string {
+function gonePageHtml(): string {
   return `<!DOCTYPE html>
 <html lang="el">
 <head>

@@ -146,3 +146,52 @@ python3 tests/test_snapshot_gsc_baseline.py
 ```
 
 Tests use mocked GSC API responses — no credentials required.
+
+## URL Mapping seed (`seed_url_mappings.py`)
+
+Seeds the Strapi URL Mapping collection from the audit JSON output produced by
+`tools/audit_legacy_urls.py`. The script is idempotent — re-running with
+identical input produces zero new rows.
+
+Editor-curated `gone-410` rows are protected: if a legacy path already exists
+with `destinationKind: gone-410`, the seed input is skipped for that path
+(editor curation takes priority).
+
+### Usage
+
+```bash
+# 1. Generate the seed file (see audit_legacy_urls.py docs)
+python3 tools/audit_legacy_urls.py
+
+# 2. Preview what would change (dry-run, default mode)
+python3 tools/seed_url_mappings.py
+python3 tools/seed_url_mappings.py --dry-run
+
+# 3. Apply changes to Strapi
+python3 tools/seed_url_mappings.py --apply
+
+# 4. Verify idempotency — re-running produces zero new rows
+python3 tools/seed_url_mappings.py --apply
+
+# Custom input and Strapi connection
+python3 tools/seed_url_mappings.py \
+  --input custom-seed.json \
+  --strapi-url https://cms.myorl.gr \
+  --strapi-token <API_TOKEN> \
+  --apply
+```
+
+Report written to `artifacts/reports/url-mapping-seed-result.md`.
+
+### Environment variables
+
+| Variable | Equivalent flag |
+|----------|----------------|
+| `STRAPI_URL` | `--strapi-url` |
+| `STRAPI_API_TOKEN` | `--strapi-token` |
+
+### Tests
+
+```bash
+python3 tests/test_seed_url_mappings.py
+```

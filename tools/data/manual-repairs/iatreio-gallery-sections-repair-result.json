@@ -1,0 +1,31 @@
+{
+  "okCount": 4,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "el",
+      "slug": "iatreio-alexandras",
+      "itemCount": 7
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "el",
+      "slug": "iatreio-koukaki",
+      "itemCount": 5
+    },
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "ru",
+      "slug": "iatreio-alexandras",
+      "itemCount": 7
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "ru",
+      "slug": "iatreio-koukaki",
+      "itemCount": 5
+    }
+  ],
+  "errors": []
+}

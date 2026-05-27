@@ -1,0 +1,25 @@
+{
+  "okCount": 3,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "wn2k0el3opa926ibqr0ractv",
+      "locale": "ru",
+      "slug": "iatreio",
+      "itemCount": 1
+    },
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "ru",
+      "slug": "iatreio-alexandras",
+      "itemCount": 1
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "ru",
+      "slug": "iatreio-koukaki",
+      "itemCount": 1
+    }
+  ],
+  "errors": []
+}

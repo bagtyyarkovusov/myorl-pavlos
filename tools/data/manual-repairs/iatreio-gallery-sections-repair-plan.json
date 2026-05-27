@@ -1,0 +1,184 @@
+{
+  "generatedAt": "2026-05-27T10:14:20.993779+00:00",
+  "summary": {
+    "plannedCount": 4,
+    "skippedCount": 0,
+    "errorCount": 0
+  },
+  "plannedUpdates": [
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "el",
+      "slug": "iatreio-alexandras",
+      "hasPublished": true,
+      "repairKind": "iatreio-gallery-section",
+      "itemCount": 7,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1877
+              },
+              {
+                "caption": null,
+                "image": 1878
+              },
+              {
+                "caption": null,
+                "image": 1879
+              },
+              {
+                "caption": null,
+                "image": 1880
+              },
+              {
+                "caption": null,
+                "image": 1881
+              },
+              {
+                "caption": null,
+                "image": 1882
+              },
+              {
+                "caption": null,
+                "image": 1883
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "el",
+      "slug": "iatreio-koukaki",
+      "hasPublished": true,
+      "repairKind": "iatreio-gallery-section",
+      "itemCount": 5,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1896
+              },
+              {
+                "caption": null,
+                "image": 1897
+              },
+              {
+                "caption": null,
+                "image": 1898
+              },
+              {
+                "caption": null,
+                "image": 1899
+              },
+              {
+                "caption": null,
+                "image": 1900
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "ru",
+      "slug": "iatreio-alexandras",
+      "hasPublished": true,
+      "repairKind": "iatreio-gallery-section",
+      "itemCount": 7,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1877
+              },
+              {
+                "caption": null,
+                "image": 1878
+              },
+              {
+                "caption": null,
+                "image": 1879
+              },
+              {
+                "caption": null,
+                "image": 1880
+              },
+              {
+                "caption": null,
+                "image": 1881
+              },
+              {
+                "caption": null,
+                "image": 1882
+              },
+              {
+                "caption": null,
+                "image": 1883
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "ru",
+      "slug": "iatreio-koukaki",
+      "hasPublished": true,
+      "repairKind": "iatreio-gallery-section",
+      "itemCount": 5,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1896
+              },
+              {
+                "caption": null,
+                "image": 1897
+              },
+              {
+                "caption": null,
+                "image": 1898
+              },
+              {
+                "caption": null,
+                "image": 1899
+              },
+              {
+                "caption": null,
+                "image": 1900
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "skipped": [],
+  "errors": []
+}

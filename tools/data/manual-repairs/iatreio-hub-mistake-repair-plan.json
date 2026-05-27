@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-05-27T09:38:01.609312+00:00",
+  "summary": {
+    "plannedCount": 3,
+    "skippedCount": 3,
+    "errorCount": 0
+  },
+  "plannedUpdates": [
+    {
+      "documentId": "wn2k0el3opa926ibqr0ractv",
+      "locale": "ru",
+      "slug": "iatreio",
+      "hasPublished": true,
+      "repairKind": "iatreio-parent-standard",
+      "itemCount": 1,
+      "payload": {
+        "layoutVariant": "standard",
+        "isFolder": false
+      }
+    },
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "ru",
+      "slug": "iatreio-alexandras",
+      "hasPublished": true,
+      "repairKind": "iatreio-child-hidden-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": true
+      }
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "ru",
+      "slug": "iatreio-koukaki",
+      "hasPublished": true,
+      "repairKind": "iatreio-child-hidden-nav",
+      "itemCount": 1,
+      "payload": {
+        "hideFromMenu": true
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "documentId": "wn2k0el3opa926ibqr0ractv",
+      "locale": "el",
+      "slug": "iatreio",
+      "reason": "parent already at target"
+    },
+    {
+      "documentId": "hgv09qmjpp9hxtovxhjxmc6j",
+      "locale": "el",
+      "slug": "iatreio-alexandras",
+      "reason": "child already at target"
+    },
+    {
+      "documentId": "q14iiyrst70dgf0incb0iwgm",
+      "locale": "el",
+      "slug": "iatreio-koukaki",
+      "reason": "child already at target"
+    }
+  ],
+  "errors": []
+}

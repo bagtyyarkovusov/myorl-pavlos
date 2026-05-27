@@ -15,7 +15,11 @@ watchPatterns = ["/frontend/**", "/packages/shared-types/**", "/data/manifests/*
 
 [deploy]
 startCommand = "node server.js"
-healthcheckPath = "/"
+# `/` 308-redirects to `/el` (ADR-013), which makes Railway's healthcheck
+# ambiguous depending on agent behaviour. `/api/health` returns a clean
+# 200/502 and additionally verifies the Strapi backend is reachable with a
+# 3s timeout — see frontend/src/app/api/health/route.ts.
+healthcheckPath = "/api/health"
 healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 5

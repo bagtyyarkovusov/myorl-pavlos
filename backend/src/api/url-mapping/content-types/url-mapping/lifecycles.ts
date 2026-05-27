@@ -38,11 +38,11 @@ export async function triggerRevalidation(deps?: RevalidationDeps): Promise<void
   const log = deps?.log;
   const fetcher = deps?.fetch ?? globalThis.fetch;
   const baseUrl = deps?.baseUrl ?? process.env.NEXT_REVALIDATE_URL;
-  const secret = deps?.secret ?? process.env.REVALIDATE_SECRET;
+  const secret = deps?.secret ?? process.env.STRAPI_REVALIDATE_SECRET;
 
   if (!baseUrl || !secret) {
     (log ?? console).warn(
-      "URL Mapping revalidation skipped: NEXT_REVALIDATE_URL or REVALIDATE_SECRET not set",
+      "URL Mapping revalidation skipped: NEXT_REVALIDATE_URL or STRAPI_REVALIDATE_SECRET not set",
     );
     return;
   }

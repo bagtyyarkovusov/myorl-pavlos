@@ -126,7 +126,7 @@ describe("triggerRevalidation", () => {
 
     expect(mockFetch).not.toHaveBeenCalled();
     expect(mockLog.warn).toHaveBeenCalledWith(
-      expect.stringContaining("NEXT_REVALIDATE_URL or REVALIDATE_SECRET"),
+      expect.stringContaining("NEXT_REVALIDATE_URL or STRAPI_REVALIDATE_SECRET"),
     );
   });
 

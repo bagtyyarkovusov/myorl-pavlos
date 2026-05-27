@@ -1,6 +1,7 @@
 const ALLOWED_FILES = [
   "src/app/[locale]/search-results/page.tsx",
   "src/app/admin/search-analytics/page.tsx",
+  "src/app/admin/web-vitals/page.tsx",
 ];
 
 export default {

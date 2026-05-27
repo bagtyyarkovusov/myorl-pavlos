@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -30,6 +30,28 @@ type StrapiUrlMappingResponse = {
 };
 
 const frontendRoot = path.dirname(fileURLToPath(import.meta.url));
+const gonePathsPath = path.resolve(frontendRoot, "..", "data", "gone-paths.json");
+
+function writeGonePaths(gonePaths: string[]): void {
+  try {
+    mkdirSync(path.dirname(gonePathsPath), { recursive: true });
+    writeFileSync(gonePathsPath, JSON.stringify(gonePaths, null, 2) + "\n", "utf-8");
+  } catch (err) {
+    console.warn(
+      "[next.config.ts] Failed to write gone-paths.json:",
+      err instanceof Error ? err.message : err,
+    );
+  }
+}
+
+// Static import in proxy.ts requires gone-paths.json to exist at module-load
+// time (dev mode compiles proxy.ts before redirects() runs; CI builds without
+// STRAPI_URL never enter the success path that writes the file). Seed an empty
+// array now so the import resolves; the async path below overwrites with real
+// data when Strapi is reachable.
+if (!existsSync(gonePathsPath)) {
+  writeGonePaths([]);
+}
 
 function loadSlugRedirects(): NextRedirect[] {
   const manifestPath = path.resolve(
@@ -101,8 +123,7 @@ async function loadUrlMappingRedirects(): Promise<NextRedirect[]> {
       }
     }
 
-    const gonePathsPath = path.resolve(frontendRoot, "..", "data", "gone-paths.json");
-    writeFileSync(gonePathsPath, JSON.stringify(gonePaths, null, 2) + "\n", "utf-8");
+    writeGonePaths(gonePaths);
 
     return redirects;
   } catch (error) {
@@ -110,6 +131,9 @@ async function loadUrlMappingRedirects(): Promise<NextRedirect[]> {
       "[next.config.ts] Could not fetch URL mappings — proceeding without dynamic redirects:",
       error instanceof Error ? error.message : error,
     );
+    // Still write an empty gone-paths.json so the proxy.ts import resolves
+    // even when Strapi is unreachable (e.g., CI Docker build).
+    writeGonePaths([]);
     return [];
   }
 }
@@ -117,7 +141,12 @@ async function loadUrlMappingRedirects(): Promise<NextRedirect[]> {
 const nextConfig: NextConfig = {
   output: "standalone",
   turbopack: {
-    root: frontendRoot,
+    // Set the Turbopack workspace root to the monorepo, not just frontend/.
+    // proxy.ts imports `../../data/gone-paths.json` (generated at build time
+    // by loadUrlMappingRedirects below) which lives in the sibling data/
+    // directory. With root scoped to frontend/, Turbopack refuses to resolve
+    // imports outside it and the build fails with "Module not found".
+    root: path.resolve(frontendRoot, ".."),
   },
   images: {
     formats: ["image/avif", "image/webp"],

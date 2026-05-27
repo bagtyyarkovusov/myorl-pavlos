@@ -20,6 +20,10 @@ describe("no-force-dynamic-export", () => {
         filename: "src/app/admin/search-analytics/page.tsx",
       },
       {
+        code: 'export const dynamic = "force-dynamic";',
+        filename: "src/app/admin/web-vitals/page.tsx",
+      },
+      {
         code: "export const revalidate = 600;",
         filename: "src/app/[locale]/[slug]/page.tsx",
       },

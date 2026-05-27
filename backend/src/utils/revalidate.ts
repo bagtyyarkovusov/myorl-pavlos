@@ -1,7 +1,9 @@
 /**
  * POSTs tag-based revalidation to the Next.js /api/revalidate endpoint.
  *
- * Configure via NEXT_REVALIDATE_URL and REVALIDATE_SECRET env vars.
+ * Configure via NEXT_REVALIDATE_URL and STRAPI_REVALIDATE_SECRET env vars.
+ * The secret name matches the value Next.js reads in lib/cms/env.ts so the
+ * same value can be set once in Railway and propagated to both services.
  * Failures are logged to the console but never thrown — content mutations
  * must not be blocked by a revalidation error.
  */
@@ -27,11 +29,11 @@ export function createLifecycleHandlers(
 
 export async function notifyRevalidation(tags: string[]): Promise<void> {
   const url = env("NEXT_REVALIDATE_URL");
-  const secret = env("REVALIDATE_SECRET");
+  const secret = env("STRAPI_REVALIDATE_SECRET");
 
   if (!url || !secret) {
     if (!url) console.warn("[revalidate] NEXT_REVALIDATE_URL is not set; skipping");
-    if (!secret) console.warn("[revalidate] REVALIDATE_SECRET is not set; skipping");
+    if (!secret) console.warn("[revalidate] STRAPI_REVALIDATE_SECRET is not set; skipping");
     return;
   }
 

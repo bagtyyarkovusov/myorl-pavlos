@@ -38,24 +38,6 @@ const MIN_QUERY_LENGTH = 2;
 const MAX_PER_GROUP = 3;
 const MAX_TOTAL = 10;
 
-const ATTRIBUTES_TO_RETRIEVE = [
-  "id",
-  "type",
-  "locale",
-  "title",
-  "excerpt",
-  "href",
-  "thumbnail",
-  "parentTitle",
-  "parentSlug",
-  "publishedAt",
-  "parentSection",
-  "parentSectionLabel",
-  "tags",
-  "layoutVariant",
-  "slug",
-];
-
 const GROUP_LABELS: Record<Locale, { articles: string; videos: string }> = {
   el: { articles: "Άρθρα", videos: "Βίντεο" },
   ru: { articles: "Статьи", videos: "Видео" },
@@ -146,10 +128,27 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
   const [fallbackLocale, setFallbackLocale] = useState<Locale | null>(null);
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
   const inputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clientRef = useRef<InstanceType<typeof Meilisearch> | null>(null);
+
+  // Reset state when `isOpen` transitions to true. Adjusting state during
+  // render (React's recommended pattern for prop-driven resets) avoids the
+  // cascading render that a setState-in-effect would cause.
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setQuery("");
+      setResults(null);
+      setIsLoading(false);
+      setError(false);
+      setFallbackLocale(null);
+      setTypeFilter("all");
+      setSelectedIndex(-1);
+    }
+  }
 
   useFocusTrap(overlayRef, isOpen);
 
@@ -168,16 +167,10 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
     }
   }, []);
 
-  // Reset state when overlay opens
+  // Focus the search input when the overlay opens. Kept separate from the
+  // state-reset block above because focus is a DOM side effect.
   useEffect(() => {
     if (isOpen) {
-      setQuery("");
-      setResults(null);
-      setIsLoading(false);
-      setError(false);
-      setFallbackLocale(null);
-      setTypeFilter("all");
-      setSelectedIndex(-1);
       inputRef.current?.focus();
     }
   }, [isOpen]);
@@ -221,6 +214,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       setIsLoading(true);
       setError(false);
       setFallbackLocale(null);
+      setSelectedIndex(-1);
 
       try {
         const response = await clientRef.current
@@ -300,11 +294,6 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       }
     };
   }, []);
-
-  // Reset selection when results change
-  useEffect(() => {
-    setSelectedIndex(-1);
-  }, [results, typeFilter]);
 
   const visibleResults = useMemo(() => {
     if (query.trim().length < MIN_QUERY_LENGTH || !results) return [];
@@ -431,7 +420,10 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
                 className={`${styles["filter-pill"]} ${typeFilter === filter ? styles["filter-pill--active"] : ""}`}
                 aria-label={FILTER_LABELS[locale][filter]}
                 aria-pressed={typeFilter === filter}
-                onClick={() => setTypeFilter(filter)}
+                onClick={() => {
+                  setTypeFilter(filter);
+                  setSelectedIndex(-1);
+                }}
               >
                 {FILTER_LABELS[locale][filter]}
               </button>

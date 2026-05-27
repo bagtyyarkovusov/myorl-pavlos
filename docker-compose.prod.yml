@@ -40,6 +40,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET}
+      NEXT_REVALIDATE_URL: ${NEXT_REVALIDATE_URL:-http://nextjs:3000/api/revalidate}
+      STRAPI_PUBLIC_URL: ${STRAPI_PUBLIC_URL:-}
     depends_on:
       postgres:
         condition: service_healthy

@@ -12,6 +12,8 @@ Domain terms (**Search Index**, **Search Document**, **Search Synonym Dictionary
 | DTO → Search Document transformation | `frontend/src/lib/search/index-document.ts` |
 | Locale fallback + `localizations` redirect | `frontend/src/lib/search/locale-fallback.ts` |
 | Synonym dictionaries (YAML, per-locale) | `frontend/src/lib/search/synonyms.{el,ru}.yaml` |
+| Synonym expansion from CMS content | `tools/expand_search_synonyms.py` (reads Meili export + `synonyms.*.seed.yaml`) |
+| Strapi → search webhook setup | `tools/setup_strapi_search_webhook.py` — see [search-reindex runbook](../runbooks/search-reindex.md#strapi_webhook_secret-management) |
 | Stop words (YAML, per-locale) | `frontend/src/lib/search/stopwords.{el,ru}.yaml` |
 | Webhook + bulk reindex API | `frontend/src/app/api/search/reindex/route.ts` |
 | Query log API (anonymous) | `frontend/src/app/api/search/log/route.ts` |
@@ -38,6 +40,7 @@ Domain terms (**Search Index**, **Search Document**, **Search Synonym Dictionary
 |------------|--------------------|
 | Modified `index-document.ts` (changed indexed fields, weights, or body extraction) | Full reindex of dev (`tools/seed_search_index.py --target dev --mode full`) and rehearsal. Update `index-document.test.ts`. |
 | Added or modified synonyms/stopwords YAML | Run `tools/seed_search_index.py --target dev --mode sync-synonyms`. Commit YAML change. |
+| Bulk synonym expansion from page corpus | Export Meili docs (`tools/data/search-synonym-source-{el,ru}.json`), run `python3 tools/expand_search_synonyms.py --write`, then `sync-synonyms`. |
 | Modified `meili-client.ts` or query-path code | Run integration tests against a real Meili container (Vitest + Testcontainers). |
 | Modified webhook receiver | Replay a known webhook payload against dev via curl. Confirm a known doc indexes correctly. |
 | Modified the search query log schema | Forward-only migration via `tools/migration_runner.py`. Update ADR-011 privacy section. Update privacy notice CMS page in both locales. |

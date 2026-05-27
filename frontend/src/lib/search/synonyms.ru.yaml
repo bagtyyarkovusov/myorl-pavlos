@@ -1,48 +1,766 @@
-# Procedures
-- ["ринопластика", "исправление носа", "пластика носа", "nose job", "функциональная ринопластика"]
-- ["септопластика", "исправление перегородки", "septoplasty", "выпрямление перегородки"]
-- ["блефаропластика", "коррекция век", "пластика век", "blefaroplastika", "eye lift"]
-- ["отопластика", "пластика ушей", "лопоухость", "otoplastika", "коррекция ушей"]
-- ["тиреоидэктомия", "удаление щитовидной", "щитовидка", "thyroid"]
-- ["тонзиллэктомия", "удаление миндалин", "гланды", "tonsillectomy"]
-- ["аденотомия", "аденоиды", "удаление аденоидов", "adenotomi"]
-- ["подтяжка лица", "facelift", "facelifting", "лифтинг", "necklift"]
-- ["пересадка волос", "трансплантация волос", "hair transplant"]
-- ["подтяжка бровей", "brow lift", "browlift", "frontoplasty"]
-- ["пластика шеи", "neck lift", "necklift", "neck lifting"]
-- ["реконструкция мочки уха", "ear lobe", "коррекция мочки"]
-- ["ботулинический токсин", "ботокс", "botox", "ботулинотерапия", "ботулотоксин"]
-- ["мезотерапия", "dermapen", "microneedling", "микронидлинг"]
-- ["удаление рубцов", "scar revision", "коррекция рубцов", "шрам"]
-- ["нити", "силуэт софт", "silhouette soft", "thread lift", "нитевой лифтинг"]
-- ["липосакция", "липоглиптинг", "lipo", "удаление жира"]
-- ["подтяжка груди", "мастопексия", "breast lift", "mastopexy"]
+# Auto-expanded from CMS content via tools/expand_search_synonyms.py
+# Hand-curated seed groups are preserved; page titles, tags, and medical aliases added.
+# Locale: ru — 141 groups, 566 unique terms
 
-# Conditions
-- ["гайморит", "синусит", "sinusitis", "фронтит"]
+# Procedures & anatomy
 - [
     "искривление перегородки",
     "septal deviation",
     "искривление носовой перегородки",
     "деформация перегородки",
+    "septum",
+    "nasal septum",
+    "deviated septum",
+    "iskrivlenie peregorodki",
+    "iskrivlenie nosovoy peregorodki",
+    "deformatsiya peregorodki"
   ]
-- ["гипертрофия носовых раковин", "concha bullosa", "увеличение раковин"]
-- ["отит", "otitis", "воспаление уха", "секреторный отит"]
-- ["головокружение", "dizziness", "vertigo", "кружится голова"]
-- ["шум в ушах", "звон в ушах", "tinnitus"]
-- ["храп", "апноэ", "sleep apnea", "ночное апноэ", "остановка дыхания"]
-- ["аллергический ринит", "аллергия", "rinitida", "сенная лихорадка", "насморк"]
-- ["потеря слуха", "глухота", "hearing loss", "тугоухость"]
-- ["полипы", "polyps", "носовые полипы"]
-- ["ВПЧ", "hpv", "папиллома", "papilloma", "вирус папилломы"]
-- ["рак полости рта", "oral cancer", "рак", "онкология"]
-- ["охриплость", "голосовые связки", "hoarseness", "потеря голоса"]
-- ["серная пробка", "ушная сера", "earwax", "заложенность уха"]
+- [
+    "лопоухость",
+    "отопластика",
+    "пластика ушей",
+    "коррекция ушей",
+    "Новая отопластика без разрезов",
+    "otoplasty",
+    "lopoukhost",
+    "otoplastika",
+    "ear surgery",
+    "plastika ushey"
+  ]
+- [
+    "Острая глухота",
+    "Слуховые аппараты",
+    "Лопоухость у детей",
+    "ухо",
+    "ушной",
+    "deafness",
+    "hearing loss",
+    "ostraya glukhota",
+    "slukhovye apparaty",
+    "lopoukhost u detey"
+  ]
+- [
+    "пластика век",
+    "коррекция век",
+    "блефаропластика",
+    "Блефаропластика - Пластика глаз",
+    "пластическая хирургияблефаропластика",
+    "eye lift",
+    "plastika vek",
+    "blepharoplasty",
+    "eyelid surgery",
+    "blefaroplastika"
+  ]
+- [
+    "потеря слуха",
+    "глухота",
+    "hearing loss",
+    "тугоухость",
+    "poterya slukha",
+    "deafness",
+    "glukhota",
+    "tugoukhost",
+    "Потеря слуха у детей",
+    "poterya slukha u detey"
+  ]
+- [
+    "ринопластика",
+    "пластика носа",
+    "исправление носа",
+    "функциональная ринопластика",
+    "Современная функциональная ринопластика",
+    "nose job",
+    "rhinoplasty",
+    "nose surgery",
+    "rinoplastika",
+    "plastika nosa"
+  ]
+- [
+    "септопластика",
+    "исправление перегородки",
+    "выпрямление перегородки",
+    "Эндоскопическая септопластика",
+    "endoscopy",
+    "septoplasty",
+    "nasal septum",
+    "septoplastika",
+    "septum surgery",
+    "deviated septum"
+  ]
+- [
+    "тонзиллэктомия",
+    "удаление миндалин",
+    "Тонзиллэктомия РФ",
+    "Классики тонзиллэктомия",
+    "Тонзиллэктомия с гармоническим ультразвуковым скальпелем",
+    "гланды",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonzillektomiya",
+    "udalenie mindalin"
+  ]
+- [
+    "аденотомия",
+    "аденоиды",
+    "удаление аденоидов",
+    "adenotomi",
+    "adenoidectomy",
+    "adenoids",
+    "adenotomiya",
+    "adenoidy",
+    "udalenie adenoidov"
+  ]
+- [
+    "ботулинический токсин",
+    "ботокс",
+    "botox",
+    "ботулинотерапия",
+    "ботулотоксин",
+    "botulinicheskiy toksin",
+    "botoks",
+    "botulinoterapiya",
+    "botulotoksin"
+  ]
+- [
+    "охриплость",
+    "голосовые связки",
+    "hoarseness",
+    "потеря голоса",
+    "okhriplost",
+    "golosovye svyazki",
+    "poterya golosa",
+    "Охриплость голоса",
+    "okhriplost golosa"
+  ]
+- [
+    "Удаление миндалин",
+    "udalenie mindalin",
+    "tonsils",
+    "tonsil",
+    "миндалинах удаление миндалин",
+    "mindalinakh udalenie mindalin",
+    "Лазерное удаление миндалин",
+    "lazernoe udalenie mindalin",
+    "laser"
+  ]
+- [
+    "Эндоскопические dakryoaskorinostomia Vs. Классический открытый askorinostomia",
+    "endoskopicheskie dakryoaskorinostomia vs klassicheskiy otkrytyy askorinostomia",
+    "dakryoaskorinostomia",
+    "Vs.",
+    "askorinostomia",
+    "endoscopic surgery",
+    "endoscopy",
+    "Классический открытый askorinostomia",
+    "klassicheskiy otkrytyy askorinostomia"
+  ]
+- [
+    "Эндоскопия",
+    "endoskopiya",
+    "endoscopic surgery",
+    "endoscopy",
+    "Эндоскопия носоглотки с фармацевтическим сна (храп",
+    "endoskopiya nosoglotki s farmatsevticheskim sna khrap",
+    "snoring",
+    "Эндоскопия носа, глотки, гортани",
+    "endoskopiya nosa glotki gortani"
+  ]
+- [
+    "Болезни",
+    "bolezni",
+    "Болезни миндалин",
+    "bolezni mindalin",
+    "tonsils",
+    "tonsil",
+    "Болезни голосовых связок",
+    "bolezni golosovykh svyazok"
+  ]
+- [
+    "Классическая adenotomi",
+    "klassicheskaya adenotomi",
+    "adenotomi",
+    "Эндоскопические adenotomi vs. Классическая adenotomi",
+    "endoskopicheskie adenotomi vs klassicheskaya adenotomi",
+    "vs.",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "конхопластика",
+    "conchoplasty",
+    "turbinoplasty",
+    "konkhoplastika",
+    "Эндоскопическая конхопластика",
+    "endoskopicheskaya konkhoplastika",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "липосакция",
+    "липоглиптинг",
+    "lipo",
+    "удаление жира",
+    "liposuction",
+    "liposaktsiya",
+    "lipoglipting",
+    "udalenie zhira"
+  ]
+- [
+    "подтяжка груди",
+    "мастопексия",
+    "breast lift",
+    "mastopexy",
+    "podtyazhka grudi",
+    "mastopeksiya",
+    "Подтяжка груди без шрамов, без скальпеля",
+    "podtyazhka grudi bez shramov bez skalpelya"
+  ]
+- [
+    "серная пробка",
+    "ушная сера",
+    "earwax",
+    "заложенность уха",
+    "cerumen",
+    "sernaya probka",
+    "ushnaya sera",
+    "zalozhennost ukha"
+  ]
+- [
+    "ВПЧ",
+    "hpv",
+    "папиллома",
+    "papilloma",
+    "вирус папилломы",
+    "vpch",
+    "virus papillomy"
+  ]
+- [
+    "изогнутая перегородкаэндоскопическая хирургиянос",
+    "izognutaya peregorodkaendoskopicheskaya khirurgiyanos",
+    "septum",
+    "nasal septum",
+    "deviated septum",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "мезотерапия",
+    "dermapen",
+    "microneedling",
+    "микронидлинг",
+    "mesotherapy",
+    "mezoterapiya",
+    "mikronidling"
+  ]
+- [
+    "пересадка волос",
+    "трансплантация волос",
+    "hair transplant",
+    "peresadka volos",
+    "transplantatsiya volos",
+    "Пересадка волос: брови, ресницы, борода",
+    "peresadka volos brovi resnitsy boroda"
+  ]
+- [
+    "пластика шеи",
+    "neck lift",
+    "necklift",
+    "neck lifting",
+    "plastika shei",
+    "Пластика шеи и подбородка",
+    "plastika shei i podborodka"
+  ]
+- [
+    "подтяжка лица",
+    "facelift",
+    "facelifting",
+    "лифтинг",
+    "necklift",
+    "podtyazhka litsa",
+    "lifting"
+  ]
+- [
+    "удаление рубцов",
+    "scar revision",
+    "коррекция рубцов",
+    "шрам",
+    "udalenie rubtsov",
+    "korrektsiya rubtsov",
+    "shram"
+  ]
+- [
+    "эндоскопическая хирургиякрива перегородканос",
+    "endoskopicheskaya khirurgiyakriva peregorodkanos",
+    "septum",
+    "nasal septum",
+    "deviated septum",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "восстановление слезы обструкции эндоскопическои хирургии",
+    "vosstanovlenie slezy obstruktsii endoskopicheskoi khirurgii",
+    "endoscopic surgery",
+    "endoscopy",
+    "восстановление слезы обструкции",
+    "vosstanovlenie slezy obstruktsii"
+  ]
+- [
+    "полипы",
+    "polyps",
+    "носовые полипы",
+    "nasal polyps",
+    "polipy",
+    "nosovye polipy"
+  ]
+- [
+    "Видео эндоскопической тиреоидэктомии",
+    "video endoskopicheskoy tireoidektomii",
+    "thyroidectomy",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "Изогнутые спортсмены перегородки",
+    "izognutye sportsmeny peregorodki",
+    "septum",
+    "nasal septum",
+    "deviated septum"
+  ]
+- [
+    "Носовая перегородка",
+    "nosovaya peregorodka",
+    "septum",
+    "nasal septum",
+    "deviated septum"
+  ]
+- [
+    "подтяжка бровей",
+    "brow lift",
+    "browlift",
+    "frontoplasty",
+    "podtyazhka brovey"
+  ]
+- [
+    "реконструкция мочки уха",
+    "ear lobe",
+    "коррекция мочки",
+    "rekonstruktsiya mochki ukha",
+    "korrektsiya mochki"
+  ]
+- [
+    "Тонзиллэктомии с Coblation",
+    "tonzillektomii s coblation",
+    "Coblation",
+    "tonsillectomy",
+    "tonsil removal"
+  ]
+- [
+    "Тонзиллэктомии с диатермией молекулярной syntonismou",
+    "tonzillektomii s diatermiey molekulyarnoy syntonismou",
+    "syntonismou",
+    "tonsillectomy",
+    "tonsil removal"
+  ]
+- [
+    "Эндоскопические adenotomi",
+    "endoskopicheskie adenotomi",
+    "adenotomi",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "Эндоскопические Konchotomi",
+    "endoskopicheskie konchotomi",
+    "Konchotomi",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "эндоскопическое dakryoaskorinostomia",
+    "endoskopicheskoe dakryoaskorinostomia",
+    "dakryoaskorinostomia",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "эндоскопическое diafragmatoplastiki",
+    "endoskopicheskoe diafragmatoplastiki",
+    "diafragmatoplastiki",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "эндоскопическое konchoplastiki",
+    "endoskopicheskoe konchoplastiki",
+    "konchoplastiki",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "Этапы хирургической ринопластики",
+    "etapy khirurgicheskoy rinoplastiki",
+    "rhinoplasty",
+    "nose job",
+    "nose surgery"
+  ]
+- ["миндалины", "tonsils", "mindaliny", "tonsil"]
+- ["носовые эндоскопии", "nosovye endoskopii", "endoscopic surgery", "endoscopy"]
+- ["Ответы на часто задаваемые вопросы по отопластике", "otvety na chasto zadavaemye voprosy po otoplastike", "otoplasty", "ear surgery"]
+- ["Тонзиллэктомии с биполярной диатермии", "tonzillektomii s bipolyarnoy diatermii", "tonsillectomy", "tonsil removal"]
+- ["Тонзиллэктомии с монополярный диатермией", "tonzillektomii s monopolyarnyy diatermiey", "tonsillectomy", "tonsil removal"]
+- ["Эндоскопические носовые и околоносовы", "endoskopicheskie nosovye i okolonosovy", "endoscopic surgery", "endoscopy"]
+- ["Эндоскопическое исследование глотки и гортани", "endoskopicheskoe issledovanie glotki i gortani", "endoscopic surgery", "endoscopy"]
+- ["Konchoplastiki РФ", "konchoplastiki rf", "Konchoplastiki"]
+- ["Metropolitan General", "Metropolitan", "General"]
+- ["гортань", "larynx", "gortan"]
+- ["Киста thyreoglossikou пор", "kista thyreoglossikou por", "thyreoglossikou"]
+- ["Пластика лица", "plastika litsa", "facial plastic"]
+- ["Подготовка к тиреоидэктомии", "podgotovka k tireoidektomii", "thyroidectomy"]
+- ["Показания к тиреоидэктомии", "pokazaniya k tireoidektomii", "thyroidectomy"]
+- ["Решение храп", "reshenie khrap", "snoring"]
+- ["Риски тиреоидэктомии", "riski tireoidektomii", "thyroidectomy"]
+- ["Технические тиреоидэктомии и инструкции", "tekhnicheskie tireoidektomii i instruktsii", "thyroidectomy"]
+- ["Удаление аденоидов", "udalenie adenoidov", "adenoids"]
+- ["Храп у детей", "khrap u detey", "snoring"]
+- ["surgery ru", "surgery"]
+- ["Абелокипи", "abelokipi"]
+- ["Аскью диафрагма", "askyu diafragma"]
+- ["Боль в ушах", "bol v ushakh"]
+- ["Больницы", "bolnitsy"]
+- ["Ботулинотерапия", "botulinoterapiya"]
+- ["веко", "veko"]
+- ["Веко хирургия с диатермия молекулярного резонанса", "veko khirurgiya s diatermiya molekulyarnogo rezonansa"]
+- ["Видео", "video"]
+- ["Вирус папилломы человека: симптомы и лечение", "virus papillomy cheloveka simptomy i lechenie"]
+- ["Волосы", "volosy"]
+- ["Диагностика", "diagnostika"]
+- ["Дисфункция евстахиевой трубы", "disfunktsiya evstakhievoy truby"]
+- ["Заболевания полости рта", "zabolevaniya polosti rta"]
+- ["Заложенность носа", "zalozhennost nosa"]
+- ["Измерение слуха", "izmerenie slukha"]
+- ["Исследование уха под микроскопом", "issledovanie ukha pod mikroskopom"]
+- ["Киста носоглотки Торнвальда", "kista nosoglotki tornvalda"]
+- ["Контакты", "kontakty"]
+- ["Кукаки", "kukaki"]
+- ["Меню", "menyu"]
+- ["Носовые кровотечения у детей", "nosovye krovotecheniya u detey"]
+- ["Общая анестезия для вашего ребенка", "obshchaya anesteziya dlya vashego rebenka"]
+- ["Пересадка бровей", "peresadka brovey"]
+- ["Пластиковый виноград", "plastikovyy vinograd"]
+- ["пластическая хирургия", "plasticheskaya khirurgiya"]
+- ["Припухлость на шее", "pripukhlost na shee"]
+- ["слюнные железы", "slyunnye zhelezy"]
+- ["Тимпанограмма", "timpanogramma"]
+- ["Трансплантация ресниц", "transplantatsiya resnits"]
+- ["Удаление серной пробки", "udalenie sernoy probki"]
+- ["Ушные инфекции у детей", "ushnye infektsii u detey"]
+- ["Хриплый голос", "khriplyy golos"]
 
-# Cross-locale
-- ["ЛОР", "ORL", "ENT", "отоларинголог"]
-- ["FESS", "fess", "функциональная эндоскопическая"]
-- ["дакриоцисториностомия", "DCR"]
-- ["сиалолитиаз", "sialolithiasis", "камень слюнной железы"]
-- ["конхопластика", "conchoplasty"]
-- ["роботическая", "DaVinci", "роботическая хирургия"]
+# Conditions & symptoms
+- [
+    "аллергия",
+    "сенная лихорадка",
+    "аллергический ринит",
+    "насморк",
+    "rinitida",
+    "rhinitis",
+    "hay fever",
+    "allergiya",
+    "allergic rhinitis",
+    "sennaya likhoradka"
+  ]
+- [
+    "гайморит",
+    "Гайморит (эндоскопическое изображение) у взрослых и детей.",
+    "синусит",
+    "фронтит",
+    "gaymorit",
+    "sinusitis",
+    "endoscopy",
+    "sinus infection",
+    "endoscopic surgery",
+    "gaymorit endoskopicheskoe izobrazhenie u vzroslykh i detey"
+  ]
+- [
+    "гайморит",
+    "Ринит и синусит у детей",
+    "Лечение хронического синусита",
+    "синуситэндоскопическая хирургия",
+    "эндоскопическая хирургиясинуситнос",
+    "синусит",
+    "rhinitis",
+    "sinusitis",
+    "endoscopy",
+    "sinus infection"
+  ]
+- [
+    "гипертрофия носовых раковин",
+    "concha bullosa",
+    "увеличение раковин",
+    "gipertrofiya nosovykh rakovin",
+    "uvelichenie rakovin",
+    "Изогнутая носовая перегородка и гипертрофия носовых раковины",
+    "izognutaya nosovaya peregorodka i gipertrofiya nosovykh rakoviny",
+    "septum",
+    "nasal septum",
+    "deviated septum"
+  ]
+- [
+    "ночное апноэ",
+    "остановка дыхания",
+    "храп",
+    "апноэ",
+    "sleep apnea",
+    "nochnoe apnoe",
+    "ostanovka dykhaniya",
+    "khrap",
+    "apnea",
+    "apnoe"
+  ]
+- [
+    "Перфорация носовой перегородки",
+    "Искривление носовой перегородки",
+    "Лазерное исправление носовой перегородки",
+    "Симптомы гипертрофии нижней носовой раковины",
+    "Высокая степень гипертрофии нижней носовой раковины.",
+    "гипертрофия нижнеи носовои раковиныноскриво перегородки",
+    "эндоскопическая хирургия гипертрофия уступает носовоинос",
+    "Усадка гипертрофированной нижней носовой раковины с Селон",
+    "эндоскопическая хирургия гипертрофия нижнеи носовоиносовои перегородки криво",
+    "гипертрофия нижнеи носовои раковиныносовые криво диафрагмы эндоскопическои хирургии"
+  ]
+- [
+    "щитовидка",
+    "тиреоидэктомия",
+    "удаление щитовидной",
+    "классическая тиреоидэктомия",
+    "Эндоскопическая тиреоидэктомия",
+    "Минимально инвазивная эндоскопическая тиреоидэктомия",
+    "Классическая тиреоидэктомия / Минимально инвазивная эндоскопическая тиреоидэктомия",
+    "endoscopy",
+    "shchitovidka",
+    "thyroidectomy"
+  ]
+- [
+    "Эндоскопические konchoplastiki vs. Уменьшая гипертрофические носовых раковин с лазерным",
+    "endoskopicheskie konchoplastiki vs umenshaya gipertroficheskie nosovykh rakovin s lazernym",
+    "konchoplastiki",
+    "vs.",
+    "endoscopic surgery",
+    "endoscopy",
+    "laser",
+    "Уменьшая гипертрофические носовых раковин с лазерным",
+    "umenshaya gipertroficheskie nosovykh rakovin s lazernym"
+  ]
+- [
+    "головокружение",
+    "dizziness",
+    "vertigo",
+    "кружится голова",
+    "golovokruzhenie",
+    "kruzhitsya golova",
+    "Головокружение, нарушение устойчивости",
+    "golovokruzhenie narushenie ustoychivosti"
+  ]
+- [
+    "нити",
+    "силуэт софт",
+    "silhouette soft",
+    "thread lift",
+    "нитевой лифтинг",
+    "niti",
+    "siluet soft",
+    "nitevoy lifting"
+  ]
+- [
+    "отит",
+    "otitis",
+    "воспаление уха",
+    "секреторный отит",
+    "ear infection",
+    "otit",
+    "vospalenie ukha",
+    "sekretornyy otit"
+  ]
+- [
+    "Аллергический ринит",
+    "allergicheskiy rinit",
+    "rhinitis",
+    "allergic rhinitis",
+    "hay fever",
+    "Аллергический ринит у детей",
+    "allergicheskiy rinit u detey"
+  ]
+- [
+    "рак полости рта",
+    "oral cancer",
+    "рак",
+    "онкология",
+    "rak polosti rta",
+    "rak",
+    "onkologiya"
+  ]
+- [
+    "удаление щитовиднои железыэндоскопическая хирургия",
+    "udalenie shchitovidnoi zhelezyendoskopicheskaya khirurgiya",
+    "thyroid",
+    "endoscopic surgery",
+    "endoscopy",
+    "удаление щитовиднои железы",
+    "udalenie shchitovidnoi zhelezy"
+  ]
+- [
+    "шум в ушах",
+    "звон в ушах",
+    "tinnitus",
+    "ringing ears",
+    "shum v ushakh",
+    "zvon v ushakh"
+  ]
+- [
+    "сиалолитиаз",
+    "sialolithiasis",
+    "камень слюнной железы",
+    "sialolitiaz",
+    "kamen slyunnoy zhelezy"
+  ]
+- [
+    "Храп и апноэ сна",
+    "khrap i apnoe sna",
+    "snoring",
+    "sleep apnea",
+    "apnea"
+  ]
+- [
+    "Щитовидная железа",
+    "shchitovidnaya zheleza",
+    "thyroid",
+    "щитовидная",
+    "shchitovidnaya"
+  ]
+- ["Секреторный отит", "sekretornyy otit", "otitis", "ear infection"]
+- ["Хронический ринит", "khronicheskiy rinit", "rhinitis"]
+- ["Киста щитоязычного протока", "kista shchitoyazychnogo protoka"]
+- ["Острый ларингит у взрослых", "ostryy laringit u vzroslykh"]
+- ["разъем сотового (ушная сера). Удалить с помощью микроскопа.", "razem sotovogo ushnaya sera udalit s pomoshchyu mikroskopa"]
+- ["Хирургическое лечение гипертрофии носовых раковин", "khirurgicheskoe lechenie gipertrofii nosovykh rakovin"]
+- ["Хронический тонзиллит", "khronicheskiy tonzillit"]
+
+# Cross-locale & abbreviations
+- [
+    "ent",
+    "orl",
+    "аденоиды",
+    "детская лораденоиды adenotomi",
+    "Аденоиды, гланды, храп, апноэ сна",
+    "Эндоскопические аденоиды сокращения",
+    "эндоскопическая хирургиядетская лораденоиды adenotomi",
+    "adenoids",
+    "adenoidy",
+    "adenotomi"
+  ]
+- [
+    "ent",
+    "orl",
+    "детская лор",
+    "лор осмотрносасинуситдетская лор",
+    "миндалинах удаление миндалин детская лор",
+    "детская лоргортаньмочевои пузырь thyreoglossikou пора",
+    "sinusitis",
+    "detskaya lor",
+    "pediatric ent",
+    "sinus infection"
+  ]
+- [
+    "ent",
+    "orl",
+    "глотканослор экспертиза",
+    "лор осмотрносгортаньглотка",
+    "глоткаминдалин удаление миндалин",
+    "горло",
+    "глотка",
+    "glotkanoslor ekspertiza",
+    "lor osmotrnosgortanglotka",
+    "glotkamindalin udalenie mindalin"
+  ]
+- [
+    "операции",
+    "procedures",
+    "хирургия",
+    "operatsii",
+    "Инструкции до операции",
+    "instruktsii do operatsii",
+    "ЛОР Операции",
+    "lor operatsii",
+    "ent",
+    "orl"
+  ]
+- [
+    "FESS",
+    "функциональная эндоскопическая",
+    "endoscopic surgery",
+    "endoscopy",
+    "funktsionalnaya endoskopicheskaya",
+    "эндоскопическая",
+    "endoscopic",
+    "endoskopicheskaya"
+  ]
+- [
+    "дакриоцисториностомия",
+    "DCR",
+    "dakriotsistorinostomiya",
+    "Эндоскопическая дакриоцисториностомия",
+    "endoskopicheskaya dakriotsistorinostomiya",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "ЛОР",
+    "ORL",
+    "ENT",
+    "отоларинголог",
+    "lor",
+    "otolaryngologist",
+    "otolaringolog"
+  ]
+- [
+    "роботическая",
+    "DaVinci",
+    "роботическая хирургия",
+    "robotic surgery",
+    "roboticheskaya",
+    "roboticheskaya khirurgiya"
+  ]
+- [
+    "Тонзиллэктомии с роботизированными DaVinci",
+    "tonzillektomii s robotizirovannymi davinci",
+    "DaVinci",
+    "tonsillectomy",
+    "tonsil removal",
+    "robotic surgery"
+  ]
+- [
+    "FESS",
+    "функциональная эндоскопическая",
+    "endoscopic surgery",
+    "endoscopy",
+    "funktsionalnaya endoskopicheskaya"
+  ]
+- [
+    "лор осмотрear",
+    "lor osmotrear",
+    "ear",
+    "ent",
+    "orl"
+  ]
+- ["Kentriki Kliniki Athinon", "Kentriki", "Kliniki", "Athinon"]
+- ["ORL Athens Clinic", "ORL", "Athens", "Clinic"]
+- ["горлолор осмотр", "gorlolor osmotr", "ent", "orl"]
+- ["Лор Кабинет", "lor kabinet", "ent", "orl"]
+- ["ЛОР Энциклопедия", "lor entsiklopediya", "ent", "orl"]
+- ["ЛОР-заболевания у детей", "lorzabolevaniya u detey", "ent", "orl"]
+- ["нослор осмотр", "noslor osmotr", "ent", "orl"]
+- ["Проверьте ЛОР аллергии", "proverte lor allergii", "ent", "orl"]
+- ["дакриоцисториностомия", "DCR", "dakriotsistorinostomiya"]
+- ["Политика конфиденциальности", "politika konfidentsialnosti"]

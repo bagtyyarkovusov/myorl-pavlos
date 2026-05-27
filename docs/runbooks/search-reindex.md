@@ -181,9 +181,86 @@ If the Meilisearch persistent volume is destroyed or corrupted:
 | Full reindex after `pg_restore` (production) | `python3 tools/orchestrate_migration.py --target production --backup backups/strapi_full_*.sql.gz --force` |
 | Single-doc reindex (drift repair) | `python3 tools/seed_search_index.py --target dev --mode single --slug ρινοπλαστική --locale el` |
 | Sync synonyms + stop words only | `python3 tools/seed_search_index.py --target dev --mode sync-synonyms` |
+| Register Strapi → search webhook | `python3 tools/setup_strapi_search_webhook.py` |
 | Wipe all indexes (dev only) | `python3 tools/seed_search_index.py --target dev --mode wipe` |
 
 Production-targeted operations refuse to run without `--force`. This matches the safety pattern of `migration_runner.py` and `backup_runner.py`.
+
+## `STRAPI_WEBHOOK_SECRET` management
+
+The search reindex API (`POST /api/search/reindex`) is protected by a shared secret. It is **not** the same variable as `STRAPI_REVALIDATE_SECRET` (ISR cache at `/api/revalidate`).
+
+| Consumer | How it authenticates |
+|----------|----------------------|
+| **`tools/seed_search_index.py`** | HMAC-SHA256 of the JSON body in header `x-webhook-signature` |
+| **Strapi webhooks** (via setup script) | Static `Authorization: Bearer <secret>` |
+| **Next.js** | Verifies either method; rejects if env var is unset |
+
+### Generate and set the secret
+
+```bash
+openssl rand -hex 32
+```
+
+| Environment | Where to set |
+|-------------|----------------|
+| **Local Next (`npm run dev`)** | `frontend/.env.local` → `STRAPI_WEBHOOK_SECRET=...` then restart Next |
+| **Docker Compose dev** | Root `.env` or shell export; Compose default is `dev-search-webhook-secret` when unset (`docker-compose.dev.yml`) |
+| **Production (Railway)** | Next.js service env `STRAPI_WEBHOOK_SECRET` (no default — required) |
+| **Operator shell** (seed tool) | Same value exported or in `frontend/.env.local` before running `seed_search_index.py` |
+
+**Local dev shortcut:** match the Compose default everywhere:
+
+```bash
+# frontend/.env.local
+STRAPI_WEBHOOK_SECRET=dev-search-webhook-secret
+```
+
+Restart Next.js after changing `.env.local`. Tools load `frontend/.env.local` automatically when run from the repo root.
+
+### Register the Strapi webhook
+
+After the secret is set on Next.js, point Strapi at the reindex route (Bearer header — Strapi cannot compute per-request HMAC):
+
+```bash
+# SQLite Strapi (local audit DB)
+python3 tools/setup_strapi_search_webhook.py
+
+# PostgreSQL (production / Docker Postgres)
+python3 tools/setup_strapi_search_webhook.py \
+  --database-url "postgres://strapi:<password>@localhost:5432/strapi"
+
+# Verify only
+python3 tools/setup_strapi_search_webhook.py --verify-only
+```
+
+**Docker Compose:** Strapi must reach Next on the internal network, not `localhost`:
+
+```bash
+python3 tools/setup_strapi_search_webhook.py \
+  --url http://nextjs:3000/api/search/reindex \
+  --secret dev-search-webhook-secret
+```
+
+(Use the service name from your Compose file if different.)
+
+The script registers webhook **"Next.js search reindex"** for `entry.create`, `entry.update`, `entry.delete`, `entry.publish`, and `entry.unpublish`. Filter to **Page** and **Video Entry** content types in Strapi Admin if your instance sends all models.
+
+### Verify operator tools work
+
+```bash
+export STRAPI_WEBHOOK_SECRET=dev-search-webhook-secret   # or your real secret
+python3 tools/seed_search_index.py --target=dev --mode=sync-synonyms
+# → POSTING [el]... [ok]
+# → POSTING [ru]... [ok]
+```
+
+### Rotation
+
+1. Generate a new secret.
+2. Update Next.js env and redeploy / restart.
+3. Re-run `setup_strapi_search_webhook.py` with `--secret` (or update Strapi Admin → Settings → Webhooks).
+4. Export the new secret for CI and operator laptops.
 
 ## When to reindex
 
@@ -200,7 +277,7 @@ Production-targeted operations refuse to run without `--force`. This matches the
 
 Strapi fires a webhook on every Page and Video Entry create/update/delete. The webhook posts to `/api/search/reindex` on the Next.js service. The receiver:
 
-1. Validates the HMAC signature.
+1. Validates `Authorization: Bearer` or `x-webhook-signature` (see [secret management](#strapi_webhook_secret-management) above).
 2. Fetches the full DTO via the existing CMS gateway.
 3. Transforms via `lib/search/index-document.ts`.
 4. Upserts (or deletes) the Search Document in the appropriate locale's Search Index.

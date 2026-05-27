@@ -231,3 +231,40 @@ Report written to `artifacts/reports/url-mapping-seed-result.md`.
 ```bash
 python3 tests/test_seed_url_mappings.py
 ```
+
+## Search synonym expansion
+
+Expand `frontend/src/lib/search/synonyms.{el,ru}.yaml` from indexed CMS page titles, tags,
+Greeklish / Latin transliterations, and medical English aliases.
+
+```bash
+# 1. Export current Meilisearch documents (dev; requires Meili on :57700)
+python3 - <<'PY'
+import json, urllib.request
+KEY = "dev-master-key-do-not-use-in-prod"
+HOST = "http://localhost:57700"
+for loc in ("el", "ru"):
+    req = urllib.request.Request(
+        f"{HOST}/indexes/{loc}/documents?limit=1000",
+        headers={"Authorization": f"Bearer {KEY}"},
+    )
+    docs = json.loads(urllib.request.urlopen(req).read())["results"]
+    open(f"tools/data/search-synonym-source-{loc}.json", "w", encoding="utf-8").write(
+        json.dumps(docs, ensure_ascii=False, indent=0)
+    )
+    print(loc, len(docs))
+PY
+
+# 2. Regenerate YAML (preserves hand-curated seed groups)
+python3 tools/expand_search_synonyms.py --write
+
+# 3. Push to Meilisearch (requires STRAPI_WEBHOOK_SECRET — see docs/runbooks/search-reindex.md)
+export STRAPI_WEBHOOK_SECRET=dev-search-webhook-secret
+python3 tools/seed_search_index.py --target=dev --mode=sync-synonyms
+
+# 4. Register Strapi webhook (optional — real-time index updates on publish)
+python3 tools/setup_strapi_search_webhook.py
+```
+
+Hand-curated baseline lives in `frontend/src/lib/search/synonyms.{el,ru}.seed.yaml`.
+Re-run after a full search reindex to pick up newly indexed pages (~325 published vs ~150 in a partial index).

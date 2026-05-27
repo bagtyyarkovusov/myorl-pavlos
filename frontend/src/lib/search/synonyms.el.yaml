@@ -1,57 +1,706 @@
-# Procedures
+# Auto-expanded from CMS content via tools/expand_search_synonyms.py
+# Hand-curated seed groups are preserved; page titles, tags, and medical aliases added.
+# Locale: el — 131 groups, 542 unique terms
+
+# Procedures & anatomy
+- [
+    "αδενοτομή",
+    "κρεατάκια",
+    "Κλασική αδενοτομή",
+    "αφαίρεση αδενοειδών",
+    "κρεατακια αδενοτομη",
+    "Ενδοσκοπική αδενοτομή",
+    "Ενδοσκοπική αδενοτομή vs. Κλασική αδενοτομή",
+    "adenoids",
+    "adenotomi",
+    "kreatakia"
+  ]
+- [
+    "αμυγδαλές",
+    "γλατζάκια",
+    "αμυγδαλεκτομή",
+    "αφαίρεση αμυγδαλών",
+    "αμυγδαλες αφαιρεση αμυγδαλων",
+    "amygdales",
+    "glatzakia",
+    "amygdalektomi",
+    "tonsillectomy",
+    "tonsil removal"
+  ]
+- [
+    "απώλεια ακοής",
+    "βαρηκοΐα",
+    "varikoia",
+    "kofosi",
+    "akoustika",
+    "apoleia akois",
+    "hearing loss",
+    "deafness",
+    "Απώλεια ακοής σε παιδιά",
+    "apoleia akois se paidia"
+  ]
+- [
+    "αφαίρεση ουλής",
+    "διόρθωση ουλής",
+    "Αφαίρεση ουλής προσώπου",
+    "ουλή",
+    "scar revision",
+    "afairesi oylis",
+    "diorthosi oylis",
+    "afairesi oylis prosopoy",
+    "oyli",
+    "face"
+  ]
+- [
+    "βλεφαροπλαστική",
+    "διόρθωση βλεφάρων",
+    "πλαστική βλεφάρων",
+    "Βλεφαροπλαστική με λέιζερ",
+    "Βλεφαροπλαστική χωρίς ουλές, χωρίς νυστέρι",
+    "Βλεφαροπλαστικη με διαθερμία μοριακού συντονισμού",
+    "eye lift",
+    "blepharoplasty",
+    "eyelid surgery",
+    "blefaroplastiki"
+  ]
+- [
+    "Ενδοσκοπική διαφραγματοπλαστική",
+    "endoscopy",
+    "septoplasty",
+    "nasal septum",
+    "septum surgery",
+    "deviated septum",
+    "septum operation",
+    "endoscopic surgery",
+    "nasal septum surgery",
+    "deviated septum surgery"
+  ]
+- [
+    "θυρεοειδεκτομή",
+    "αφαίρεση θυρεοειδούς",
+    "Κλασσική θυρεοειδεκτομή",
+    "Ενδοσκοπική θυρεοειδεκτομή",
+    "Ενδείξεις για θυρεοειδεκτομή",
+    "Ελάχιστα επεμβατική ενδοσκοπική θυρεοειδεκτομή",
+    "Κλασσική θυρεοειδεκτομή / Ελάχιστα επεμβατική ενδοσκοπική θυρεοειδεκτομή",
+    "endoscopy",
+    "thyroidectomy",
+    "thyreoeidektomi"
+  ]
+- [
+    "κερί αυτιού",
+    "Αφαίρεση βύσματος κυψέλης",
+    "βύσμα",
+    "κυψέλη",
+    "vismatos",
+    "keri aytioy",
+    "afairesi vysmatos kypselis",
+    "ear",
+    "vysma",
+    "earwax"
+  ]
+- [
+    "κογχοπλαστική",
+    "Ενδοσκοπική κογχοπλαστική",
+    "Κογχοπλαστική με ραδιοσυχνότητες",
+    "Ενδοσκοπική κογχοπλαστική vs. Συρρίκνωση υπερτροφικών ρινικών κογχών με Laser",
+    "endoscopy",
+    "conchoplasty",
+    "turbinoplasty",
+    "kogchoplastiki",
+    "endoscopic surgery",
+    "endoskopiki kogchoplastiki"
+  ]
+- [
+    "κρεατάκια μύτης",
+    "υπερτροφία ρινικών κογχών",
+    "Στραβό ρινικό διάφραγμα και υπερτροφία ρινικών κογχών",
+    "ypertrofia",
+    "turbinates",
+    "nasal septum",
+    "concha bullosa",
+    "septum surgery",
+    "kreatakia mytis",
+    "deviated septum"
+  ]
+- [
+    "λίφτινγκ προσώπου",
+    "ανόρθωση προσώπου",
+    "Λίφτινγκ προσώπου 2",
+    "facelift",
+    "face lift",
+    "facelifting",
+    "liftingk prosopoy",
+    "anorthosi prosopoy",
+    "liftingk prosopoy 2",
+    "face"
+  ]
+- [
+    "μεταμόσχευση μαλλιών",
+    "μεταμόσχευση",
+    "hair transplant",
+    "τριχόπτωση",
+    "metamoscheysi mallion",
+    "metamoscheysi",
+    "hair loss",
+    "trichoptosi",
+    "Μεταμόσχευση μαλλιών: φρυδιών, βλεφαρίδων, γενιών",
+    "metamoscheysi mallion frydion vlefaridon genion"
+  ]
 - [
     "ρινοπλαστική",
     "διόρθωση μύτης",
     "πλαστική μύτης",
-    "nose job",
-    "λειτουργική ρινοπλαστική",
     "αισθητική ρινοπλαστική",
+    "λειτουργική ρινοπλαστική",
+    "Σύγχρονη λειτουργική ρινοπλαστική",
+    "nose job",
+    "rhinoplasty",
+    "nose surgery",
+    "rinoplastiki"
   ]
 - [
-    "διαφραγματοπλαστική",
-    "stravo diafragma",
     "στραβό διάφραγμα",
+    "διαφραγματοπλαστική",
     "διόρθωση διαφράγματος",
     "eutheiasmos",
     "septoplasty",
+    "nasal septum",
+    "septum surgery",
+    "crooked septum",
+    "deviated septum",
+    "stravo diafragma"
   ]
-- ["βλεφαροπλαστική", "διόρθωση βλεφάρων", "πλαστική βλεφάρων", "blefaroplastiki", "eye lift"]
-- ["ωτοπλαστική", "πλαστική αυτιών", "διόρθωση αυτιών", "afestota ota", "otoplastiki"]
-- ["θυρεοειδεκτομή", "thyreoeidektomi", "αφαίρεση θυρεοειδούς", "thyroid"]
-- ["αμυγδαλεκτομή", "amygdalektomi", "αφαίρεση αμυγδαλών", "αμυγδαλές", "γλατζάκια"]
-- ["αδενοτομή", "adenotomi", "αφαίρεση αδενοειδών", "κρεατάκια"]
-- ["λίφτινγκ προσώπου", "facelift", "facelifting", "ανόρθωση προσώπου"]
-- ["μεταμόσχευση μαλλιών", "μεταμόσχευση", "hair transplant", "τριχόπτωση"]
-- ["ανύψωση φρυδιών", "brow lift", "browlift", "frontoplasty"]
-- ["ανόρθωση λαιμού", "neck lift", "necklift", "neck lifting", "πλαστική λαιμού"]
-- ["διόρθωση λοβίου", "ear lobe", "μείωση λοβίων", "meiosi lovion"]
-- ["βοτουλινική τοξίνη", "μπότοξ", "botox", "botulinotherapia", "αντιρυτιδική"]
-- ["μεσοθεραπεία", "dermapen", "microneedling", "αυτόλογη μεσοθεραπεία"]
-- ["αφαίρεση ουλής", "ουλή", "scar revision", "διόρθωση ουλής"]
-- ["νήματα", "silhouette soft", "thread lift", "silhouette"]
-- ["λιποαναρρόφηση", "λιπογλυπτική", "lipo", "αφαίρεση λίπους"]
-- ["ανόρθωση στήθους", "μαστοπηξία", "breast lift", "mastopexy"]
+- [
+    "στραβό διάφραγμα",
+    "σκολίωση ρινικού διαφράγματος",
+    "Στραβό διάφραγμα στους αθλητές",
+    "Σκολίωση ρινικού διαφράγματος (Στραβό διάφραγμα)",
+    "skoliosi",
+    "nasal septum",
+    "septum surgery",
+    "crooked septum",
+    "deviated septum",
+    "septal deviation"
+  ]
+- [
+    "Χηλοειδή αυτιών",
+    "Άράχνη στο αυτί",
+    "Λοιμώξεις αυτιών",
+    "Βύσμα κυψελίδας (κερί στο αυτί). Αφαίρεση με μικροσκόπιο.",
+    "αυτί",
+    "ωτικό",
+    "chiloeidi aytion",
+    "loimoxeis aytion",
+    "arachni sto ayti",
+    "vysma kypselidas keri sto ayti afairesi me mikroskopio"
+  ]
+- [
+    "ωτοπλαστική",
+    "πλαστική αυτιών",
+    "διόρθωση αυτιών",
+    "Ωτοπλαστική σε παιδιά",
+    "otoplasty",
+    "otoplastiki",
+    "ear surgery",
+    "ear pinning",
+    "afestota ota",
+    "plastiki aytion"
+  ]
+- [
+    "ανόρθωση λαιμού",
+    "neck lift",
+    "necklift",
+    "neck lifting",
+    "πλαστική λαιμού",
+    "anorthosi laimoy",
+    "plastiki laimoy",
+    "Ανόρθωση λαιμού και πηγουνιού",
+    "anorthosi laimoy kai pigoynioy"
+  ]
+- [
+    "βοτουλινική τοξίνη",
+    "μπότοξ",
+    "botox",
+    "botulinotherapia",
+    "αντιρυτιδική",
+    "votoyliniki toxini",
+    "botulinum toxin",
+    "mpotox",
+    "antirytidiki"
+  ]
+- [
+    "μεσοθεραπεία",
+    "dermapen",
+    "microneedling",
+    "αυτόλογη μεσοθεραπεία",
+    "mesotherapy",
+    "mesotherapeia",
+    "aytologi mesotherapeia",
+    "Μεσοθεραπεία με Dermapen",
+    "mesotherapeia me dermapen"
+  ]
+- [
+    "μύτη",
+    "ρινός",
+    "nasal",
+    "myti",
+    "nose",
+    "Ενδοσκόπηση μύτης",
+    "endoskopisi mytis",
+    "Βουλωμένη μύτη",
+    "voylomeni myti"
+  ]
+- [
+    "ρινος",
+    "rinos",
+    "Ενδοσκόπηση ρινός",
+    "endoskopisi rinos",
+    "Ενδοσκόπηση ρινός, φάρυγγα, λάρυγγα",
+    "endoskopisi rinos farygga larygga",
+    "pharynx",
+    "throat",
+    "larynx"
+  ]
+- [
+    "διόρθωση λοβίου",
+    "ear lobe",
+    "μείωση λοβίων",
+    "meiosi lovion",
+    "diorthosi lovioy",
+    "Διόρθωση λοβίου αυτιού",
+    "diorthosi lovioy aytioy",
+    "ear"
+  ]
+- [
+    "ιός HPV",
+    "hpv",
+    "papilloma",
+    "papillomavirus",
+    "human papillomavirus",
+    "ios hpv",
+    "Ιός HPV: Συμπτώματα και θεραπεία",
+    "ios hpv symptomata kai therapeia"
+  ]
+- [
+    "λιποαναρρόφηση",
+    "λιπογλυπτική",
+    "lipo",
+    "αφαίρεση λίπους",
+    "liposuction",
+    "lipoanarrofisi",
+    "lipoglyptiki",
+    "afairesi lipoys"
+  ]
+- [
+    "Σκολίωση ρινικού διαφράγματος",
+    "skoliosi rinikoy diafragmatos",
+    "septum",
+    "nasal septum",
+    "deviated septum",
+    "septum surgery",
+    "septal deviation",
+    "crooked septum"
+  ]
+- [
+    "Αμυγδαλεκτομή με Coblation",
+    "amygdalektomi me coblation",
+    "Coblation",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "Αμυγδαλεκτομή με νυστέρι υπερήχων Harmonic",
+    "amygdalektomi me nysteri yperichon harmonic",
+    "Harmonic",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "ανύψωση φρυδιών",
+    "brow lift",
+    "browlift",
+    "frontoplasty",
+    "anypsosi frydion",
+    "Ανύψωση φρυδιών και μετώπου",
+    "anypsosi frydion kai metopoy"
+  ]
+- [
+    "βράγχος φωνής",
+    "vragxos",
+    "φωνητικές χορδές",
+    "hoarseness",
+    "voice disorder",
+    "vragchos fonis",
+    "fonitikes chordes"
+  ]
+- [
+    "Διάφραγμα με Laser",
+    "diafragma me laser",
+    "Laser",
+    "septum",
+    "nasal septum",
+    "deviated septum",
+    "septum surgery"
+  ]
+- [
+    "Kλασσική αμυγδαλεκτομή",
+    "klassiki amygdalektomi",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "Αμυγδαλεκτομή με διαθερμία μοριακού συντονησμού",
+    "amygdalektomi me diathermia moriakoy syntonismoy",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "Αμυγδαλεκτομή με διπολική διαθερμία",
+    "amygdalektomi me dipoliki diathermia",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "Αμυγδαλεκτομή με λέιζερ",
+    "amygdalektomi me leizer",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "Αμυγδαλεκτομή με μονοπολική διαθερμία",
+    "amygdalektomi me monopoliki diathermia",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "Αμυγδαλεκτομή με ραδιοσυχνότητες",
+    "amygdalektomi me radiosychnotites",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "Αμυγδαλεκτομή στα παιδιά",
+    "amygdalektomi sta paidia",
+    "tonsillectomy",
+    "tonsil removal",
+    "tonsils",
+    "tonsil"
+  ]
+- [
+    "ανόρθωση στήθους",
+    "μαστοπηξία",
+    "breast lift",
+    "mastopexy",
+    "anorthosi stithoys",
+    "mastopixia"
+  ]
+- [
+    "Διάτρηση ρινικού διαφράγματος",
+    "diatrisi rinikoy diafragmatos",
+    "septum",
+    "nasal septum",
+    "deviated septum",
+    "septum surgery"
+  ]
+- [
+    "ιός HPV",
+    "hpv",
+    "papilloma",
+    "papillomavirus",
+    "human papillomavirus",
+    "ios hpv"
+  ]
+- [
+    "Παθήσεις",
+    "pathiseis",
+    "Παθήσεις στόματος",
+    "pathiseis stomatos",
+    "mouth",
+    "oral"
+  ]
+- [
+    "πολύποδες",
+    "polyps",
+    "ρινικοί πολύποδες",
+    "nasal polyps",
+    "polypodes",
+    "rinikoi polypodes"
+  ]
+- [
+    "Ρινικό διάφραγμα",
+    "riniko diafragma",
+    "septum",
+    "nasal septum",
+    "deviated septum",
+    "septum surgery"
+  ]
+- [
+    "Βραχνή φωνή – Πολύποδας λάρυγγα",
+    "vrachni foni polypodas larygga",
+    "nasal polyps",
+    "polyps",
+    "larynx"
+  ]
+- [
+    "Ενδοσκόπηση του φάρυγγα και του λάρυγγα",
+    "endoskopisi toy farygga kai toy larygga",
+    "pharynx",
+    "throat",
+    "larynx"
+  ]
+- [
+    "Ενδοσκοπική μείωση αδενοειδών εκβλαστήσεων",
+    "endoskopiki meiosi adenoeidon ekvlastiseon",
+    "adenoids",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "Θυρεοειδής αδένας",
+    "thyreoeidis adenas",
+    "thyroid",
+    "θυρεοειδής",
+    "thyreoeidis"
+  ]
+- [
+    "νήματα",
+    "silhouette soft",
+    "thread lift",
+    "silhouette",
+    "nimata"
+  ]
+- [
+    "Πλαστική προσώπου",
+    "plastiki prosopoy",
+    "face",
+    "facial",
+    "facial plastic"
+  ]
+- [
+    "σιαλολιθίαση",
+    "sialolithiasis",
+    "πέτρα σιελογόνου",
+    "sialolithiasi",
+    "petra sielogonoy"
+  ]
+- ["Video Endoscopic Thyroidectomy", "Video", "Endoscopic", "Thyroidectomy"]
+- ["αδενοειδή", "adenoids", "κρεατάκια", "adenoeidi"]
+- ["Ακουστικά βαρηκοΐας", "akoystika varikoias", "hearing loss", "deafness"]
+- ["Αφαίρεση αμυγδαλών", "afairesi amygdalon", "tonsils", "tonsil"]
+- ["Ενδοσκοπική Κογχοτομή", "endoskopiki kogchotomi", "endoscopic surgery", "endoscopy"]
+- ["Ενδοσκοπική κρυοχειρουργική", "endoskopiki kryocheiroyrgiki", "endoscopic surgery", "endoscopy"]
+- ["επεμβάσεις", "procedures", "χειρουργική", "epemvaseis"]
+- ["Κακοσμία στόματος", "kakosmia stomatos", "mouth", "oral"]
+- ["λαιμός", "φάρυγγας", "pharynx", "laimos"]
+- ["Μetropolitan General", "metropolitan general", "etropolitan", "General"]
+- ["Μεγάλου βαθμού υπερτροφία κάτω ρινικών κογχών.", "megaloy vathmoy ypertrofia kato rinikon kogchon", "υπερτροφια κατω ρινικων κογχων", "ypertrofia kato rinikon kogchon"]
+- ["ΡΕΑ", "rea", "Κρεατάκια", "kreatakia"]
+- ["φαρυγγας", "faryggas", "pharynx", "throat"]
+- ["Χρόνια αμυγδαλίτιδα", "chronia amygdalitida", "tonsils", "tonsil"]
+- ["αφαιρεση θυρεοειδους αδενας", "afairesi thyreoeidoys adenas", "thyroid"]
+- ["Κύστη θυρεογλωσσικού πόρου", "kysti thyreoglossikoy poroy", "tongue"]
+- ["λάρυγγας", "larynx", "laryggas"]
+- ["Οξεία λαρυγγίτιδα σε ενήλικες", "oxeia laryggitida se enilikes", "larynx"]
+- ["Συρρίκνωση των υπερτροφικών κάτω ρινικών κογχών με Celon", "syrriknosi ton ypertrofikon kato rinikon kogchon me celon", "Celon"]
+- ["Συρρίκνωση υπερτροφικών ρινικών κογχών με Laser", "syrriknosi ypertrofikon rinikon kogchon me laser", "Laser"]
+- ["aποκατασταση αποφραξης δακρυων", "apokatastasi apofraxis dakryon"]
+- ["Αμπελόκηποι", "ampelokipoi"]
+- ["Ανάστροφο θήλωμα", "anastrofo thiloma"]
+- ["Ατρησία ρινικής χοάνης", "atrisia rinikis choanis"]
+- ["Βιοκλινική Αθηνών", "viokliniki athinon"]
+- ["Γένια, Μουστάκι και Φαβορίτες", "genia moystaki kai favorites"]
+- ["Διάγνωση", "diagnosi"]
+- ["Δυσλειτουργία (απόφραξη) της ευσταχιανής σάλπιγγας", "dysleitoyrgia apofraxi tis eystachianis salpiggas"]
+- ["Δυσλειτουργία ευσταχιανής σάλπιγγας", "dysleitoyrgia eystachianis salpiggas"]
+- ["Εξέταση με το μικροσκόπιο", "exetasi me to mikroskopio"]
+- ["Επικοινωνία", "epikoinonia"]
+- ["Ευρωκλινική Αθηνών", "eyrokliniki athinon"]
+- ["Ευρωκλινική Παίδων", "eyrokliniki paidon"]
+- ["ευσταχιανη σαλπιγγα", "eystachiani salpigga"]
+- ["Η γενική αναισθησία για το παιδί σας", "i geniki anaisthisia gia to paidi sas"]
+- ["Η ενδοσκόπηση φαρμακευτικού ύπνου", "i endoskopisi farmakeytikoy ypnoy"]
+- ["Θεραπεία της χρόνιας παραρρινοκολπίτιδας", "therapeia tis chronias pararrinokolpitidas"]
+- ["ΙΑΣΩ Παίδων", "iaso paidon"]
+- ["Ιατρείο", "iatreio"]
+- ["Ιατρικό Φαλήρου", "iatriko faliroy"]
+- ["Κλασσική εξωτερική ασκορινοστομία", "klassiki exoteriki askorinostomia"]
+- ["Κλινικές", "klinikes"]
+- ["Κλινική Καρρά", "kliniki karra"]
+- ["Κουκάκι", "koykaki"]
+- ["Μείωση λοβίων", "meiosi lovion"]
+- ["Μεταμόσχευση βλεφαρίδων", "metamoscheysi vlefaridon"]
+- ["Μεταμόσχευση φρυδιών", "metamoscheysi frydion"]
+- ["Μέτρηση ακοής", "metrisi akois"]
+- ["Μυκήτωμα ιγμορείου", "mykitoma igmoreioy"]
+- ["Όγκοι του ωτικού πτερυγίου", "ogkoi toy otikoy pterygioy"]
+- ["Παρωτίδα και υπογνάθιος αδένας", "parotida kai ypognathios adenas"]
+- ["Πλαστική σταφυλής", "plastiki stafylis"]
+- ["πλαστικη χειρουργικη", "plastiki cheiroyrgiki"]
+- ["Πολιτική Απορρήτου", "politiki aporritoy"]
+- ["σιελογονοι αδενες", "sielogonoi adenes"]
+- ["Συχνές ερωτήσεις", "sychnes erotiseis"]
+- ["Υπηρεσίες", "ypiresies"]
+- ["Υποσμία", "yposmia"]
+- ["Φυσαλιδώδης κόγχη", "fysalidodis kogchi"]
 
-# Conditions
-- ["ιγμορίτιδα", "igmoritida", "sinusitis", "κολπίτιδα"]
-- ["σκολίωση ρινικού διαφράγματος", "στραβό διάφραγμα", "skoliosi", "stravo", "septal deviation"]
-- ["υπερτροφία ρινικών κογχών", "ypertrofia", "κρεατάκια μύτης", "concha bullosa"]
-- ["ωτίτιδα", "otitida", "otitis", "φλεγμονή αυτιού", "ekkritiki otitida"]
-- ["ίλιγγος", "ζάλη", "zali", "vertigo", "dizziness"]
-- ["εμβοές", "emvoes", "βουητό", "tinnitus", "κουδούνισμα"]
-- ["ροχαλητό", "roxalito", "υπνική άπνοια", "apnoia", "sleep apnea"]
-- ["αλλεργική ρινίτιδα", "rinitida", "allergia", "φτέρνισμα"]
-- ["απώλεια ακοής", "βαρηκοΐα", "varikoia", "kofosi", "akoustika"]
-- ["πολύποδες", "polyps", "ρινικοί πολύποδες"]
-- ["ιός HPV", "hpv", "papilloma", "papillomavirus"]
-- ["καρκίνος στόματος", "karkinos", "στοματική κοιλότητα", "oral cancer"]
-- ["βράγχος φωνής", "vragxos", "φωνητικές χορδές", "hoarseness"]
-- ["βύσμα", "κυψέλη", "κερί αυτιού", "vismatos", "earwax"]
+# Conditions & symptoms
+- [
+    "ιγμορίτιδα",
+    "igmoritida",
+    "sinusitis",
+    "κολπίτιδα",
+    "sinus infection",
+    "kolpitida",
+    "Ιγμορίτιδα (ενδοσκοπική εικόνα) στους ενήλικες και στα παιδιά.",
+    "igmoritida endoskopiki eikona stoys enilikes kai sta paidia",
+    "endoscopic surgery",
+    "endoscopy"
+  ]
+- [
+    "ροχαλητό",
+    "υπνική άπνοια",
+    "Ροχαλητό και άπνοια",
+    "Αντιμετώπιση ροχαλητού",
+    "Αντιμετώπιση ροχαλητού – υπνικής άπνοιας",
+    "Ενδοσκόπηση ρινοφάρυγγα με φαρμακευτικό ύπνο (Ροχαλητό",
+    "roxalito",
+    "rochalito",
+    "sleep apnea",
+    "ypniki apnoia"
+  ]
+- [
+    "φτέρνισμα",
+    "αλλεργική ρινίτιδα",
+    "Αλλεργική ρινίτιδα στα παιδιά",
+    "rinitida",
+    "allergia",
+    "rhinitis",
+    "hay fever",
+    "fternisma",
+    "runny nose",
+    "allergic rhinitis"
+  ]
+- [
+    "Χρόνια ωτίτιδα",
+    "φλεγμονή αυτιού",
+    "Εκκριτική ωτίτιδα",
+    "ωτίτιδα",
+    "ear infection",
+    "flegmoni aytioy",
+    "chronia otitida",
+    "ekkritiki otitida",
+    "ear",
+    "otitis"
+  ]
+- [
+    "καρκίνος στόματος",
+    "karkinos",
+    "στοματική κοιλότητα",
+    "oral cancer",
+    "mouth cancer",
+    "mouth",
+    "oral",
+    "karkinos stomatos",
+    "stomatiki koilotita"
+  ]
+- [
+    "εμβοές",
+    "emvoes",
+    "βουητό",
+    "tinnitus",
+    "κουδούνισμα",
+    "ringing ears",
+    "voyito",
+    "koydoynisma"
+  ]
+- [
+    "ίλιγγος",
+    "ζάλη",
+    "zali",
+    "vertigo",
+    "dizziness",
+    "iliggos",
+    "Ίλιγγος ή ζάλη;",
+    "iliggos i zali"
+  ]
+- ["Έλεγχος ιλίγγου", "elegchos iliggoy", "vertigo", "dizziness"]
+- ["Φαρμακευτικός ύπνος για εκτίμηση υπνικής άπνοιας.", "farmakeytikos ypnos gia ektimisi ypnikis apnoias", "sleep apnea", "apnea"]
 
-# Cross-locale
-- ["ΩΡΛ", "ORL", "ENT", "ωτορινολαρυγγολόγος"]
-- ["FESS", "fess", "ενδοσκοπική χειρουργική ρινός"]
-- ["DCR", "δακρυοασκορινοστομία"]
-- ["σιαλολιθίαση", "sialolithiasis", "πέτρα σιελογόνου"]
-- ["κογχοπλαστική", "conchoplasty"]
-- ["DaVinci", "ρομποτική", "robotiki", "ρομποτική χειρουργική"]
+# Cross-locale & abbreviations
+- [
+    "DCR",
+    "δακρυοασκορινοστομία",
+    "Ενδοσκοπική δακρυοασκορινοστομία",
+    "Ενδοσκοπική δακρυοασκορινοστομία Vs. Κλασσική εξωτερική ασκορινοστομία",
+    "endoscopy",
+    "endoscopic surgery",
+    "dakryoaskorinostomia",
+    "dacryocystorhinostomy",
+    "endoskopiki dakryoaskorinostomia",
+    "endoskopiki dakryoaskorinostomia vs klassiki exoteriki askorinostomia"
+  ]
+- [
+    "FESS",
+    "ενδοσκοπική",
+    "Ενδοσκοπική χειρουργική",
+    "ενδοσκοπική χειρουργική ρινός",
+    "Ενδοσκοπική χειρουργική ρινός και παραρρινίων",
+    "endoscopy",
+    "endoscopic",
+    "endoskopiki",
+    "endoscopic surgery",
+    "endoscopic sinus surgery"
+  ]
+- [
+    "ρομποτική",
+    "ρομποτική χειρουργική",
+    "Αμυγδαλεκτομή με ρομποτική DaVinci",
+    "robotiki",
+    "rompotiki",
+    "tonsillectomy",
+    "tonsil removal",
+    "robotic surgery",
+    "rompotiki cheiroyrgiki",
+    "amygdalektomi me rompotiki davinci"
+  ]
+- [
+    "ΩΡΛ",
+    "ORL",
+    "ENT",
+    "ωτορινολαρυγγολόγος",
+    "otolaryngologist",
+    "larynx",
+    "otorinolaryggologos"
+  ]
+- [
+    "FESS",
+    "ενδοσκοπική χειρουργική ρινός",
+    "endoscopic sinus surgery",
+    "endoscopic surgery",
+    "endoscopy",
+    "endoskopiki cheiroyrgiki rinos"
+  ]
+- ["DCR", "δακρυοασκορινοστομία", "dacryocystorhinostomy", "dakryoaskorinostomia"]
+- ["παιδο-ωρλ", "pediatric ent", "παιδί", "paidoorl"]
+- ["Έλεγχος ΩΡΛ αλλεργιών", "elegchos orl allergion"]
+- ["Κεντρική Κλινική Αθηνών", "kentriki kliniki athinon"]
+- ["παιδο ωρλ", "paido orl"]
+- ["ΩΡΛ Εγκυκλοπαίδεια", "orl egkyklopaideia"]
+- ["ωρλ εξεταση", "orl exetasi"]

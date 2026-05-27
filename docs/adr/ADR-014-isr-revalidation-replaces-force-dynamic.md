@@ -1,7 +1,7 @@
 # ADR-014: ISR + Tag-Based Revalidation Replaces `force-dynamic`
 
 ## Status
-Accepted (2026-05-26) — implemented via #159, #173
+Accepted (2026-05-26) — implemented via #159, #173. PPR opt-in deferred to v2 per [ADR-015](ADR-015-ppr-deferred-to-v2.md).
 
 ## Context
 

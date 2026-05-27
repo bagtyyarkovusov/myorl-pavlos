@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, noop: true });
   }
 
-  if (!isValidWebhookSignature(rawBody, request.headers.get("x-webhook-signature"))) {
+  if (!isAuthorizedWebhook(request, rawBody, request.headers.get("x-webhook-signature"))) {
     return NextResponse.json({ ok: false, error: "Invalid webhook signature." }, { status: 401 });
   }
 
@@ -577,11 +577,43 @@ function validateSyncSettingsPayload(
   };
 }
 
-function isValidWebhookSignature(rawBody: string, providedSignature: string | null): boolean {
+function isAuthorizedWebhook(
+  request: Request,
+  rawBody: string,
+  providedSignature: string | null,
+): boolean {
   const secret = process.env.STRAPI_WEBHOOK_SECRET;
   if (!secret) {
     return false;
   }
+
+  const bearer = resolveBearerSecret(request.headers.get("authorization"));
+  if (bearer && timingSafeEqualUtf8(bearer, secret)) {
+    return true;
+  }
+
+  return isValidWebhookHmac(rawBody, providedSignature, secret);
+}
+
+function resolveBearerSecret(authorization: string | null): string | null {
+  if (!authorization?.startsWith("Bearer ")) {
+    return null;
+  }
+  const token = authorization.slice("Bearer ".length).trim();
+  return token.length > 0 ? token : null;
+}
+
+function timingSafeEqualUtf8(a: string, b: string): boolean {
+  const aBuffer = Buffer.from(a, "utf8");
+  const bBuffer = Buffer.from(b, "utf8");
+  return aBuffer.length === bBuffer.length && timingSafeEqual(aBuffer, bBuffer);
+}
+
+function isValidWebhookHmac(
+  rawBody: string,
+  providedSignature: string | null,
+  secret: string,
+): boolean {
   if (!providedSignature) {
     return false;
   }

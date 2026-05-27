@@ -426,7 +426,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           <kbd className={styles["shortcut-hint"]} aria-hidden="true">
             /
           </kbd>
-          {isLoading && <span className={styles["spinner"]} />}
+          {isLoading && !results && <span className={styles["spinner"]} />}
           <button
             type="button"
             className={styles["close-btn"]}
@@ -466,7 +466,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
         )}
 
         <div
-          className={`${styles["results"]} ${isLoading && results ? styles["results--loading"] : ""}`}
+          className={styles["results"]}
           role={hasResults ? "listbox" : undefined}
           id={hasResults ? "search-results-listbox" : undefined}
         >

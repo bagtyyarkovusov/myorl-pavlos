@@ -47,36 +47,44 @@ export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: Pa
   return (
     <nav aria-label="pagination" className={styles.nav}>
       {currentPage <= 1 ? (
-        <span className={styles.disabled} aria-hidden="true">
+        <span className={styles.controlDisabled} aria-hidden="true">
           {prevLabel}
         </span>
       ) : (
-        <a href={buildPageUrl(currentPage - 1, searchParams, pathname)} className={styles.pageLink}>
+        <a
+          href={buildPageUrl(currentPage - 1, searchParams, pathname)}
+          className={styles.controlLink}
+        >
           {prevLabel}
         </a>
       )}
-      {pageNumbers.map((page, idx) =>
-        page === "..." ? (
-          <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
-            ...
-          </span>
-        ) : (
-          <a
-            key={page}
-            href={buildPageUrl(page, searchParams, pathname)}
-            aria-current={page === currentPage ? "page" : undefined}
-            className={styles.pageLink}
-          >
-            {page}
-          </a>
-        ),
-      )}
+      <div className={styles.pages}>
+        {pageNumbers.map((page, idx) =>
+          page === "..." ? (
+            <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
+              ...
+            </span>
+          ) : (
+            <a
+              key={page}
+              href={buildPageUrl(page, searchParams, pathname)}
+              aria-current={page === currentPage ? "page" : undefined}
+              className={styles.pageNumber}
+            >
+              {page}
+            </a>
+          ),
+        )}
+      </div>
       {currentPage >= totalPages ? (
-        <span className={styles.disabled} aria-hidden="true">
+        <span className={styles.controlDisabled} aria-hidden="true">
           {nextLabel}
         </span>
       ) : (
-        <a href={buildPageUrl(currentPage + 1, searchParams, pathname)} className={styles.pageLink}>
+        <a
+          href={buildPageUrl(currentPage + 1, searchParams, pathname)}
+          className={styles.controlLink}
+        >
           {nextLabel}
         </a>
       )}

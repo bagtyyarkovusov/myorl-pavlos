@@ -717,6 +717,19 @@ function syncSynonymsSignedRequest(payload: unknown, secret = "test-webhook-secr
   });
 }
 
+function syncSynonymsBearerRequest(payload: unknown, secret = "test-webhook-secret"): Request {
+  const body = JSON.stringify(payload);
+
+  return new Request("http://localhost/api/search/reindex", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${secret}`,
+    },
+    body,
+  });
+}
+
 describe("POST /api/search/reindex - sync-synonyms", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -825,6 +838,20 @@ describe("POST /api/search/reindex - sync-synonyms", () => {
     expect(loadSynonymsAndStopWords).not.toHaveBeenCalled();
     expect(updateSynonyms).not.toHaveBeenCalled();
     expect(updateStopWords).not.toHaveBeenCalled();
+  });
+
+  it("accepts sync-synonyms with Authorization Bearer (Strapi webhook style)", async () => {
+    const { POST } = await import("./route");
+
+    const response = await POST(
+      syncSynonymsBearerRequest({ action: "sync-synonyms", locale: "el" }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toMatchObject({ ok: true, action: "sync-synonyms", locale: "el" });
+    expect(updateSynonyms).toHaveBeenCalled();
+    expect(updateStopWords).toHaveBeenCalled();
   });
 
   it("returns no-op when search is disabled", async () => {

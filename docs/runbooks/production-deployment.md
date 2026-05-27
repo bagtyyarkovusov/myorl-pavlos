@@ -59,13 +59,20 @@ After first deploy, access `https://myorl.gr/admin` (or the server IP). Create t
 
 ## Webhook Setup
 
-The revalidation webhook must be recreated per deploy. After Strapi is running:
+After Strapi is running, register both Next.js webhook receivers (use the same secrets as in `.env.prod`):
 
 ```bash
-# From project root
+# ISR cache revalidation
 python3 tools/setup_strapi_revalidation_webhook.py \
   --database-url "postgres://strapi:<password>@localhost:5432/strapi"
+
+# Search index reindex (requires STRAPI_WEBHOOK_SECRET on Next.js)
+python3 tools/setup_strapi_search_webhook.py \
+  --database-url "postgres://strapi:<password>@localhost:5432/strapi" \
+  --url "https://myorl.gr/api/search/reindex"
 ```
+
+See [search-reindex.md](./search-reindex.md#strapi_webhook_secret-management) for `STRAPI_WEBHOOK_SECRET` generation and rotation.
 
 ## Database Backups
 

@@ -46,6 +46,7 @@
 | `STRAPI_TOKEN` | nextjs | Strapi API read token |
 | `STRAPI_URL` | nextjs | Strapi internal URL |
 | `STRAPI_REVALIDATE_SECRET` | strapi, nextjs | Revalidation webhook secret |
+| `STRAPI_WEBHOOK_SECRET` | nextjs | Search reindex API secret (Strapi Bearer + seed tool HMAC) |
 | `NEXT_PUBLIC_SITE_URL` | nextjs | Public site URL |
 | `STRAPI_CORS_ORIGINS` | strapi | CORS allowed origins |
 | `APP_KEYS` | strapi | Strapi session encryption keys |

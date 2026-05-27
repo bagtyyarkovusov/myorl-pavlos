@@ -165,12 +165,6 @@
 .results {
   flex: 1;
   overflow-y: auto;
-  transition: opacity 120ms ease;
-}
-
-.results--loading {
-  opacity: 0.5;
-  pointer-events: none;
 }
 
 .result-group {

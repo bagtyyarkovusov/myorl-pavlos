@@ -40,6 +40,7 @@
 ## Webhook and CMS
 
 - [../../tools/setup_strapi_revalidation_webhook.py](../../tools/setup_strapi_revalidation_webhook.py)
+- [../../tools/setup_strapi_search_webhook.py](../../tools/setup_strapi_search_webhook.py)
 - [../../tools/cms_audit/](../../tools/cms_audit/) — CMS audit module (`db.py`, `io.py`, `paths.py`)
 - [../../tools/migrate_article_linked_resources_to_related_pages.py](../../tools/migrate_article_linked_resources_to_related_pages.py) — article `linked-resources` → `relatedPages`
 - [../../tools/repair_service_article_blob_pages.py](../../tools/repair_service_article_blob_pages.py) — service-article blob HTML cleanup + optional ``encyclopedia-article`` layout promotion

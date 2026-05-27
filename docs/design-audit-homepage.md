@@ -184,5 +184,5 @@ The carousel auto-advances every 6.5 s and stops after user interaction. WCAG 2.
 
 ## Next Steps
 
-1. Confirm whether this audit should be followed by `impeccable polish` (fix the critical/warning items) or `impeccable harden` (add error states, i18n edge cases, loading skeletons).
+1. Confirm whether this audit should be followed by `impeccable polish` (fix the critical/warning items) or `impeccable harden` (add error states, i18n edge cases). Loading skeletons are explicitly out of scope per **Loading Chrome** policy in `CONTEXT.md`.
 2. Initialize `PRODUCT.md` and `DESIGN.md` so subsequent impeccable passes have canonical context and do not need to synthesize from `README.md`.

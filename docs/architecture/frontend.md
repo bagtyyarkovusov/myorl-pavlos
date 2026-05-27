@@ -12,7 +12,8 @@ frontend/src/app/
 │   │   ├── page.tsx             # Dynamic CMS page (CmsPage)
 │   │   └── layout.tsx           # Page-level layout
 │   ├── layout.tsx               # LocaleLayout (font loading, metadata)
-│   └── loading.tsx              # Loading skeleton
+│   └── search-results/
+│       └── page.tsx             # Dynamic search (force-dynamic; no loading.tsx)
 ├── api/
 │   ├── health/
 │   │   └── route.ts             # Health check endpoint

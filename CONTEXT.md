@@ -89,6 +89,12 @@ _Avoid_: contact page fallback clinics, Resend delivery config
 Server-side email routing for `/api/contact` submissions via Resend (`CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `RESEND_API_KEY`). Independent of the public **Primary Contact** display email; uses a test Resend sender until production mail is configured.
 _Avoid_: primary contact email, Global Settings
 
+## Frontend Experience
+
+**Loading Chrome**:
+Brief non-content UI shown while navigation or async work completes (skeleton bars, dimmed result lists, scroll-triggered section fade-in). myORL policy: CMS **Pages** ship real HTML on first paint via ISR; no route-level skeletons or section entrance animation. Loading feedback is limited to client search (header overlay stale-while-revalidate) and truly dynamic routes (`search-results`). Empty media slots use **Stripe Placeholder**, not loading chrome.
+_Avoid_: skeleton, shimmer, placeholder page, loading.tsx on CMS routes
+
 ## Search
 
 **Search Index**:

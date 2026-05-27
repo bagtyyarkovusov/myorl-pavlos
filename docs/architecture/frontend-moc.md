@@ -13,7 +13,7 @@
 
 ## App structure
 
-- [../../frontend/src/app/](../../frontend/src/app/) — App Router: layouts, `loading.tsx`, `error.tsx`, locale segments
+- [../../frontend/src/app/](../../frontend/src/app/) — App Router: layouts, `error.tsx`, locale segments (CMS routes use ISR; no locale-wide `loading.tsx`)
 - [../../frontend/src/components/](../../frontend/src/components/) — shared UI, page layouts, sections, site header, home sections
 
 ## Components

@@ -12,16 +12,43 @@ type CmsHtmlEnhancerProps = {
   playLabel: string;
 };
 
-function scheduleRootUnmount(roots: Root[]): void {
-  const snapshot = [...roots];
+const rootCache = new WeakMap<HTMLElement, Root>();
+
+function unmountRootSafely(root: Root): void {
+  try {
+    root.unmount();
+  } catch {
+    // Placeholder nodes may already be gone after innerHTML updates.
+  }
+}
+
+function getOrCreateRoot(node: HTMLElement): Root {
+  const cached = rootCache.get(node);
+  if (cached) {
+    return cached;
+  }
+
+  const root = createRoot(node);
+  rootCache.set(node, root);
+  return root;
+}
+
+/** Unmount only after React finishes the current commit and the node stays detached. */
+function scheduleReleaseRoot(node: HTMLElement): void {
+  const root = rootCache.get(node);
+  if (!root) {
+    return;
+  }
+
   queueMicrotask(() => {
-    for (const root of snapshot) {
-      try {
-        root.unmount();
-      } catch {
-        // Placeholder nodes may already be gone after innerHTML updates.
+    requestAnimationFrame(() => {
+      if (node.isConnected) {
+        return;
       }
-    }
+
+      unmountRootSafely(root);
+      rootCache.delete(node);
+    });
   });
 }
 
@@ -32,7 +59,16 @@ export function CmsHtmlEnhancer({
   playLabel,
 }: CmsHtmlEnhancerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const rootsRef = useRef<Root[]>([]);
+  const managedPlaceholdersRef = useRef<Set<HTMLElement>>(new Set());
+
+  useEffect(() => {
+    return () => {
+      for (const node of managedPlaceholdersRef.current) {
+        scheduleReleaseRoot(node);
+      }
+      managedPlaceholdersRef.current.clear();
+    };
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -40,24 +76,29 @@ export function CmsHtmlEnhancer({
       return;
     }
 
+    const activePlaceholders = new Set<HTMLElement>();
     const placeholders = container.querySelectorAll<HTMLElement>("[data-cms-youtube]");
+
     placeholders.forEach((placeholder) => {
       const videoId = placeholder.getAttribute("data-cms-youtube");
       if (!videoId) {
         return;
       }
+
+      activePlaceholders.add(placeholder);
       const title = placeholder.getAttribute("data-cms-title") ?? "Video";
-      const root = createRoot(placeholder);
-      root.render(
+      getOrCreateRoot(placeholder).render(
         <LiteYouTube videoId={videoId} title={title} playLabel={playLabel} variant="full" />,
       );
-      rootsRef.current.push(root);
     });
 
-    return () => {
-      scheduleRootUnmount(rootsRef.current);
-      rootsRef.current = [];
-    };
+    for (const node of managedPlaceholdersRef.current) {
+      if (!activePlaceholders.has(node)) {
+        scheduleReleaseRoot(node);
+      }
+    }
+
+    managedPlaceholdersRef.current = activePlaceholders;
   }, [html, playLabel]);
 
   return (

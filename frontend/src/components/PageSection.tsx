@@ -30,8 +30,6 @@ type PageSectionProps = {
   id?: string;
   ariaLabelledBy?: string;
   children: ReactNode;
-  /** Pass `instant` on dense directory pages to skip MotionSection entrance animation. */
-  entranceMotion?: "default" | "instant";
 };
 
 const BACKGROUND_CLASSES: Record<PageSectionBackground, string> = {
@@ -88,7 +86,6 @@ export function PageSection({
   label,
   id,
   ariaLabelledBy,
-  entranceMotion = "default",
   children,
 }: PageSectionProps) {
   const alternatingBackground =
@@ -114,7 +111,6 @@ export function PageSection({
       ariaLabelledBy={ariaLabelledBy}
       background={alternatingBackground ?? undefined}
       density={sectionIndex !== undefined ? density : undefined}
-      entranceMotion={entranceMotion}
     >
       <div className={containerClass} data-width={width}>
         {header !== undefined ? (

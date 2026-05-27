@@ -33,7 +33,7 @@ export function SectionIndexPage({
   const bookHref = appointmentHref ?? defaultAppointmentHref(page.locale);
 
   return (
-    <PageSection rhythm="page" entranceMotion="instant">
+    <PageSection rhythm="page">
       <div className={layoutStyles["directory-page-stack"]}>
         <PageHeader page={page} kicker={null} heroImageVariant="accent" />
         {page.content ? (

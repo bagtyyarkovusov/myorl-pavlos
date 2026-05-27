@@ -70,7 +70,8 @@ services:
         fi
         exec npm run dev
     environment:
-      STRAPI_URL: http://localhost:1337
+      # Server-side fetches use the Compose service name (not localhost).
+      STRAPI_URL: http://strapi:1337
       STRAPI_TOKEN: 991f8b99165498a27ba3fbd047413c88dbb3cbcfcbaec64d18034c4055f698a07f8d538b1e16d0c8fcd4a103b9ce907052fdb2c81784d61cef692bacd8655375018cf75a8ca487ac7565b8f7090c5b9b355808df95f4be65a781df037be02340ac98ebd953120583e52647172d74290478c3417009c91faa2c2c1f7acfacd298
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
       STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET:-dev-revalidate-secret}
@@ -82,8 +83,6 @@ services:
       NEXT_PUBLIC_MEILI_SEARCH_KEY: ${NEXT_PUBLIC_MEILI_SEARCH_KEY:-dev-master-key-do-not-use-in-prod}
       STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET:-dev-search-webhook-secret}
       DATABASE_URL: postgresql://strapi:strapi@postgres:5432/strapi
-    extra_hosts:
-      - "localhost:host-gateway"
     ports:
       - "3000:3000"
     depends_on:

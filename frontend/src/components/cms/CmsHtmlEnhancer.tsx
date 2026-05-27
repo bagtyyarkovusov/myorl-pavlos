@@ -12,6 +12,19 @@ type CmsHtmlEnhancerProps = {
   playLabel: string;
 };
 
+function scheduleRootUnmount(roots: Root[]): void {
+  const snapshot = [...roots];
+  queueMicrotask(() => {
+    for (const root of snapshot) {
+      try {
+        root.unmount();
+      } catch {
+        // Placeholder nodes may already be gone after innerHTML updates.
+      }
+    }
+  });
+}
+
 export function CmsHtmlEnhancer({
   html,
   className,
@@ -26,11 +39,6 @@ export function CmsHtmlEnhancer({
     if (!container) {
       return;
     }
-
-    rootsRef.current.forEach((root) => {
-      root.unmount();
-    });
-    rootsRef.current = [];
 
     const placeholders = container.querySelectorAll<HTMLElement>("[data-cms-youtube]");
     placeholders.forEach((placeholder) => {
@@ -47,9 +55,7 @@ export function CmsHtmlEnhancer({
     });
 
     return () => {
-      rootsRef.current.forEach((root) => {
-        root.unmount();
-      });
+      scheduleRootUnmount(rootsRef.current);
       rootsRef.current = [];
     };
   }, [html, playLabel]);

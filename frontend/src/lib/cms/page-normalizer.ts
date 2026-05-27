@@ -75,6 +75,9 @@ export function toMediaDTO(
 
 function resolveMediaUrl(url: string, strapiUrl?: string): string {
   if (/^https?:\/\//i.test(url)) return url;
+  // Keep site-relative paths (e.g. /uploads/*) so the browser uses Next rewrites,
+  // not an internal Docker hostname like http://strapi:1337.
+  if (url.startsWith("/")) return url;
   const base = strapiUrl ?? process.env.STRAPI_URL ?? "";
   if (!base) {
     return url.startsWith("/") ? url : "/" + url;

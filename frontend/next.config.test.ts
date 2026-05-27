@@ -40,7 +40,7 @@ describe("next.config.ts turbopack", () => {
 
 describe("next.config.ts redirects – bare-slug wildcard", () => {
   const SOURCE =
-    "/:slug((?!el|ru|api|admin|_next|uploads|sitemap.xml|robots.txt|favicon.ico)[^/]+)";
+    "/:slug((?!el|ru|api|admin|_next|uploads|sitemap.xml|robots.txt|favicon.ico)[^/.]+)";
 
   it("has the wildcard rule in redirects output", async () => {
     const redirects = await nextConfig.redirects!();
@@ -79,6 +79,10 @@ describe("next.config.ts redirects – bare-slug wildcard", () => {
 
   it("does NOT match root", () => {
     expect(match("/", SOURCE)).toBe(false);
+  });
+
+  it("does NOT match static files in public/", () => {
+    expect(match("/logo-myorl.png", SOURCE)).toBe(false);
   });
 });
 

@@ -38,6 +38,7 @@ export function CmsHtml({
 
   return (
     <CmsHtmlEnhancer
+      key={sanitized}
       html={sanitized}
       className={cn("cms-html prose-luxury", PROSE_VARIANT_CLASSES[variant], className)}
       data-variant={variant === "luxury" ? undefined : variant}

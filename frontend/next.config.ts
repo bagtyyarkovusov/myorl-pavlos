@@ -225,7 +225,9 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/:slug((?!el|ru|api|admin|_next|uploads|sitemap.xml|robots.txt|favicon.ico)[^/]+)",
+        // [^/.]+ — slugs only; skip static files in /public (e.g. logo-myorl.png).
+        source:
+          "/:slug((?!el|ru|api|admin|_next|uploads|sitemap.xml|robots.txt|favicon.ico)[^/.]+)",
         destination: "/el/:slug",
         permanent: true,
       },

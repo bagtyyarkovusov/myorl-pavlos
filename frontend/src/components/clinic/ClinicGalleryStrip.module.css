@@ -1,0 +1,170 @@
+.stripShell {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  margin-top: clamp(16px, 3vw, 24px);
+}
+
+.controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  display: none;
+  gap: 8px;
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--surface) 92%, transparent);
+  color: var(--color-stone);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-default),
+    color var(--motion-duration-fast) var(--motion-ease-default),
+    background-color var(--motion-duration-fast) var(--motion-ease-default);
+}
+
+.control:hover:not(:disabled),
+.control:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
+.control:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.stripViewport {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 2px;
+  scrollbar-width: thin;
+  padding-top: 0;
+}
+
+.stripViewport:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.stripGrid {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+}
+
+/* xl (≥1180): no arrows; ~4 tiles visible in the prose column */
+.stripItem {
+  position: relative;
+  flex: 0 0 196px;
+  width: 196px;
+  scroll-snap-align: start;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+}
+
+.stripItem::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' viewBox='0 0 14 14'%3E%3Ccircle cx='6' cy='6' r='4.25' stroke='%235a6b7e' stroke-width='1.2'/%3E%3Cpath stroke='%235a6b7e' stroke-width='1.2' stroke-linecap='round' d='M9.2 9.2 12 12'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+}
+
+.stripItem [data-gallery-trigger] {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.stripItem [data-gallery-trigger]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.stripItem img {
+  object-fit: cover;
+}
+
+.stripItem [data-gallery-caption] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stripViewport {
+    scroll-behavior: auto;
+  }
+}
+
+/* lg (≤1179): show arrows when overflow; slightly smaller tiles */
+@media (max-width: 1179px) {
+  .controls {
+    display: flex;
+  }
+
+  .stripShell:has(.controls) .stripViewport {
+    padding-top: 44px;
+  }
+
+  .stripItem {
+    flex-basis: 184px;
+    width: 184px;
+  }
+}
+
+/* md (≤1023) */
+@media (max-width: 1023px) {
+  .stripItem {
+    flex-basis: 172px;
+    width: 172px;
+  }
+}
+
+/* sm (≤767) */
+@media (max-width: 767px) {
+  .stripItem {
+    flex-basis: 160px;
+    width: 160px;
+  }
+}
+
+/* xs (≤479) */
+@media (max-width: 479px) {
+  .stripItem {
+    flex-basis: 148px;
+    width: 148px;
+  }
+}

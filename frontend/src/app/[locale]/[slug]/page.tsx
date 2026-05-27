@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { PageRenderer } from "@/components/PageRenderer";
 import { getPage, getSite } from "@/lib/cms/cms-api";
 import { getSitemapPages } from "@/lib/cms/cms-api";
+import { isClinicChildPage, CLINIC_HUB_SLUG } from "@/lib/cms/clinic-pages";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { withRelatedTopics } from "@/lib/cms/related-topics";
@@ -69,6 +70,13 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
   ]);
   const pageWithRelatedTopics = withRelatedTopics(page, directoryNavigation);
 
+  // Clinic location slugs are legacy URLs; the hub page holds both inline blocks.
+  if (isClinicChildPage(pageWithRelatedTopics)) {
+    permanentRedirect(
+      `${hrefForLocaleSlug(locale, CLINIC_HUB_SLUG)}#clinic-${pageWithRelatedTopics.slug}`,
+    );
+  }
+
   // Section-hub folder pages redirect to their first child.
   if (pageWithRelatedTopics.layoutVariant === "section-hub" && pageWithRelatedTopics.isFolder) {
     const self = findNodeByDocumentId(navigation, pageWithRelatedTopics.documentId);
@@ -80,22 +88,7 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
   }
 
   return (
-    <Suspense
-      fallback={
-        <PageRenderer
-          page={pageWithRelatedTopics}
-          navigation={navigation}
-          directoryNavigation={directoryNavigation}
-          appointmentHref={appointmentHref}
-          testimonialsPage={1}
-          directoryPage={1}
-          directoryHref={hrefForLocaleSlug(
-            pageWithRelatedTopics.locale,
-            pageWithRelatedTopics.slug,
-          )}
-        />
-      }
-    >
+    <Suspense fallback={null}>
       <CmsPageContent
         page={pageWithRelatedTopics}
         navigation={navigation}

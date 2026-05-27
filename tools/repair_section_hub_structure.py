@@ -47,7 +47,6 @@ HUB_TARGETS: tuple[tuple[str, str], ...] = (
     ("ru", "metamosxeusi-mallion"),
     ("ru", "pathiseis-stomatos"),
     ("ru", "ypertrofia-rinikon-kogxon"),
-    ("ru", "iatreio"),
     ("ru", "amygdales-adenoeideis-ekvlastiseis"),
 )
 
@@ -58,11 +57,6 @@ SEPTUM_CHILD_MENU_INDEX: dict[str, int] = {
     "skoliosi-rinikou-diafragmatos-stravo-diafragma-1": 1,
     "diafragma-me-laser": 2,
     "diafragma-syxnes-erwtiseis-apantiseis": 3,
-}
-
-IATREIO_RU_CHILD_MENU_INDEX: dict[str, int] = {
-    "iatreio-alexandras": 0,
-    "iatreio-koukaki": 1,
 }
 
 TARGET_CHILD_LAYOUT = "encyclopedia-article"
@@ -160,21 +154,6 @@ def child_needs_update(row: dict[str, Any], menu_index: int) -> bool:
     return False
 
 
-def iatreio_child_payload(menu_index: int) -> dict[str, Any]:
-    return {
-        "hideFromMenu": False,
-        "menuIndex": menu_index,
-    }
-
-
-def iatreio_child_needs_update(row: dict[str, Any], menu_index: int) -> bool:
-    if row["hide_from_menu"]:
-        return True
-    if row["menu_index"] != menu_index:
-        return True
-    return False
-
-
 def build_plan(pages: list[dict[str, Any]]) -> dict[str, Any]:
     by_key = {(row["locale"], row["slug"]): row for row in pages}
     planned_updates: list[dict[str, Any]] = []
@@ -235,33 +214,6 @@ def build_plan(pages: list[dict[str, Any]]) -> dict[str, Any]:
                     "payload": child_payload(menu_index),
                 }
             )
-
-    for slug, menu_index in IATREIO_RU_CHILD_MENU_INDEX.items():
-        row = by_key.get(("ru", slug))
-        if not row:
-            errors.append({"locale": "ru", "slug": slug, "error": "iatreio child not found"})
-            continue
-        if not iatreio_child_needs_update(row, menu_index):
-            skipped.append(
-                {
-                    "documentId": row["document_id"],
-                    "locale": "ru",
-                    "slug": slug,
-                    "reason": "iatreio child already at target",
-                }
-            )
-            continue
-        planned_updates.append(
-            {
-                "documentId": row["document_id"],
-                "locale": "ru",
-                "slug": slug,
-                "hasPublished": bool(row["has_published"]),
-                "repairKind": "iatreio-child-nav",
-                "itemCount": 1,
-                "payload": iatreio_child_payload(menu_index),
-            }
-        )
 
     return {
         "generatedAt": datetime.now(timezone.utc).isoformat(),

@@ -7,6 +7,10 @@ vi.mock("@/lib/cms/video-entries", () => ({
   fetchVideoEntries: vi.fn(async () => []),
 }));
 
+vi.mock("@/lib/cms/cms-api", () => ({
+  getPage: vi.fn(),
+}));
+
 import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
 import { SectionIndexPage } from "./SectionIndexPage";
@@ -15,6 +19,9 @@ import { PageBody, extractHeadings, addHeadingIds, relatedTopicHref } from "./Pa
 import { AppointmentPage } from "./AppointmentPage";
 import { ContactPage } from "./ContactPage";
 import { GalleryPage } from "./GalleryPage";
+import { ClinicHubPage } from "./ClinicHubPage";
+import { ClinicLocationBlock } from "@/components/clinic/ClinicLocationBlock";
+import { getPage } from "@/lib/cms/cms-api";
 import { QuestionListPage } from "./QuestionListPage";
 import { FrontendNativePage } from "./FrontendNativePage";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
@@ -684,6 +691,87 @@ describe("GalleryPage", () => {
     const { container } = render(<GalleryPage page={galleryPage} />);
     const clickable = container.querySelector("button[data-gallery-trigger]");
     expect(clickable).toBeTruthy();
+  });
+});
+
+const CLINIC_GALLERY_ITEMS = [
+  {
+    caption: null,
+    image: { url: "/uploads/img1.jpg", alternativeText: "Clinic", width: 800, height: 600 },
+  },
+  {
+    caption: null,
+    image: { url: "/uploads/img2.jpg", alternativeText: "Clinic 2", width: 800, height: 600 },
+  },
+];
+
+function makeClinicChildPage(slug: "iatreio-alexandras" | "iatreio-koukaki", title: string): PageDTO {
+  return {
+    ...BASE_PAGE,
+    slug,
+    title,
+    pageType: "gallery",
+    layoutVariant: "office-gallery",
+    parentPage: { documentId: "hub", slug: "iatreio", title: "ΛΟΡ Καμπίνετ", featuredImage: null },
+    sections: [{ __component: "sections.gallery", items: CLINIC_GALLERY_ITEMS }],
+    content: "<p>Clinic location copy</p>",
+  };
+}
+
+describe("ClinicLocationBlock", () => {
+  it("renders gallery triggers, prose, and booking CTA without a separate gallery page link", () => {
+    const page = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+    const { container } = render(
+      <ClinicLocationBlock page={page} appointmentHref="/el/rantevou" />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Κουκάκι" })).toBeDefined();
+    expect(screen.getByText("Clinic location copy")).toBeDefined();
+    expect(screen.getByRole("link", { name: "Κλείστε ραντεβού Online" })).toHaveAttribute(
+      "href",
+      "/el/rantevou",
+    );
+    expect(screen.queryByRole("link", { name: "Δείτε τη γκαλερί" })).toBeNull();
+    expect(container.querySelectorAll("button[data-gallery-trigger]")).toHaveLength(2);
+    expect(container.querySelector("#clinic-iatreio-koukaki")).toBeTruthy();
+  });
+});
+
+describe("ClinicHubPage", () => {
+  it("renders parent intro and both clinic location blocks", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: "<p>Doctor bio intro</p>",
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const ui = await ClinicHubPage({ page: hubPage, appointmentHref: "/el/rantevou" });
+    const { container } = render(ui);
+
+    expect(screen.getByText("Doctor bio intro")).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Αμπελόκηποι" })).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Κουκάκι" })).toBeDefined();
+    expect(screen.getAllByRole("link", { name: "Κλείστε ραντεβού Online" })).toHaveLength(2);
+    expect(screen.getByRole("link", { name: "Αμπελόκηποι" })).toHaveAttribute(
+      "href",
+      "#clinic-iatreio-alexandras",
+    );
+    expect(screen.getByRole("link", { name: "Κουκάκι" })).toHaveAttribute(
+      "href",
+      "#clinic-iatreio-koukaki",
+    );
+    expect(container.querySelectorAll("button[data-gallery-trigger]")).toHaveLength(4);
   });
 });
 

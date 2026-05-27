@@ -41,6 +41,12 @@ export type PageStrings = {
   videoPlayLabel: string;
   videoDirectoryEmpty: string;
   humanSitemapNavLabel: string;
+  clinicBookOnline: string;
+  clinicViewGallery: string;
+  clinicBackToOverview: string;
+  clinicGalleryPrevious: string;
+  clinicGalleryNext: string;
+  clinicGalleryStripLabel: string;
 };
 
 const STRINGS: Record<Locale, PageStrings> = {
@@ -84,6 +90,12 @@ const STRINGS: Record<Locale, PageStrings> = {
     videoPlayLabel: "Αναπαραγωγή βίντεο",
     videoDirectoryEmpty: "Δεν υπάρχουν διαθέσιμα βίντεο ακόμη.",
     humanSitemapNavLabel: "Χάρτης θεμάτων",
+    clinicBookOnline: "Κλείστε ραντεβού Online",
+    clinicViewGallery: "Δείτε τη γκαλερί",
+    clinicBackToOverview: "Επιστροφή στο ιατρείο",
+    clinicGalleryPrevious: "Προηγούμενες φωτογραφίες",
+    clinicGalleryNext: "Επόμενες φωτογραφίες",
+    clinicGalleryStripLabel: "Φωτογραφίες ιατρείου",
   },
   ru: {
     home: "Главная",
@@ -131,6 +143,12 @@ const STRINGS: Record<Locale, PageStrings> = {
     videoPlayLabel: "Воспроизвести видео",
     videoDirectoryEmpty: "Видео пока недоступны.",
     humanSitemapNavLabel: "Карта сайта",
+    clinicBookOnline: "Записаться на приём онлайн",
+    clinicViewGallery: "Открыть галерею",
+    clinicBackToOverview: "Вернуться к кабинету",
+    clinicGalleryPrevious: "Предыдущие фото",
+    clinicGalleryNext: "Следующие фото",
+    clinicGalleryStripLabel: "Фотографии клиники",
   },
 };
 

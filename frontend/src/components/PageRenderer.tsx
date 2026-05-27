@@ -1,8 +1,10 @@
 import dynamic from "next/dynamic";
 import { AlternateUrlsSetter } from "@/components/AlternateUrlsSetter";
 import { StructuredDataComposer } from "@/components/StructuredDataComposer";
+import { ClinicHubPage } from "@/components/page-layouts/ClinicHubPage";
 import { VideoDirectoryPage } from "@/components/page-layouts/VideoDirectoryPage";
 import { getSiteUrl } from "@/lib/cms/site-url";
+import { isClinicHubPage } from "@/lib/cms/clinic-pages";
 import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
 import { isSectionHubChild } from "@/lib/cms/tab-bar";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
@@ -158,6 +160,8 @@ export function PageRenderer({
         homeTestimonials={homeTestimonials}
       />
     );
+  } else if (isClinicHubPage(page)) {
+    layout = <ClinicHubPage page={page} appointmentHref={appointmentHref} />;
   } else if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
     layout = (
       <QuestionListPage page={page} navigation={navigation} appointmentHref={appointmentHref} />

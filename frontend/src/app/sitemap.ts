@@ -31,7 +31,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const pages = await getSitemapPages();
     return pages.map((page) => ({
       url: new URL(hrefForPage(page), siteUrl).toString(),
-      lastModified: new Date(),
+      // Use the page's actual updatedAt from Strapi when available. Falling
+      // back to `new Date()` for every entry (the previous behaviour) made
+      // every URL look "modified right now" on every sitemap fetch — Google
+      // de-trusts always-now `lastmod` signals.
+      lastModified: page.updatedAt ? new Date(page.updatedAt) : new Date(),
       changeFrequency: page.seo.sitemapChangeFrequency ?? "weekly",
       priority: page.seo.sitemapPriority ?? (page.slug === "index" ? 1 : 0.7),
       alternates: buildAlternates(page, siteUrl),

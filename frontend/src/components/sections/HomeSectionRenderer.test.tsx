@@ -163,7 +163,11 @@ describe("HomeSectionRenderer", () => {
     });
 
     expect(screen.queryByRole("heading", { name: "Topics" })).toBeNull();
-    expect(screen.queryByRole("link", { name: "First topic" })).toBeNull();
+    const firstTopicLinks = screen.getAllByRole("link", { name: "First topic" });
+    expect(firstTopicLinks).toHaveLength(2);
+    for (const link of firstTopicLinks) {
+      expect(link).toHaveAttribute("href", "/el/first-topic");
+    }
     expect(tileButtonLabels()).toEqual([
       "View slide 1: First topic",
       "View slide 2: Second topic",
@@ -179,7 +183,6 @@ describe("HomeSectionRenderer", () => {
     expect(firstTab.parentElement).toHaveAttribute("role", "tablist");
     expect(secondTab).toHaveAttribute("aria-selected", "false");
     expect(firstTile).toHaveAttribute("aria-current", "true");
-    expect(screen.queryByRole("link", { name: "First topic" })).toBeNull();
 
     fireEvent.click(secondTab);
 
@@ -189,7 +192,11 @@ describe("HomeSectionRenderer", () => {
       expect(screen.getByText("Slide description")).toBeDefined();
       expect(container.querySelector('a[href="/el/second-topic"]')).toBeTruthy();
     });
-    expect(screen.queryByRole("link", { name: "Second topic" })).toBeNull();
+    expect(
+      screen.getAllByRole("link", { name: "Second topic" }).some((link) => {
+        return link.getAttribute("href") === "/el/second-topic";
+      }),
+    ).toBe(true);
     expect(screen.getByRole("button", { name: "View slide 2: Second topic" })).toHaveAttribute(
       "aria-current",
       "true",

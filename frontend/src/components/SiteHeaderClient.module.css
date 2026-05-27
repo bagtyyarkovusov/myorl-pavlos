@@ -420,10 +420,12 @@
   background: var(--accent-soft);
 }
 
-@media (max-width: 1320px) {
+/* RU appointment CTA is long; prefer short label whenever the desktop CTA is shown. */
+@media (min-width: 1181px) {
   [data-locale="ru"] .cta-book__full {
     display: none;
   }
+
   [data-locale="ru"] .cta-book__short {
     display: inline-flex;
   }
@@ -706,5 +708,25 @@
   .header-actions {
     grid-column: 3;
     justify-self: end;
+  }
+
+  /*
+   * RU nav labels exceed the default 1280px header width. Widen header containers
+   * so every item (including Контакты) stays on one row beside the CTA.
+   */
+  .header-anchor[data-locale="ru"] .container {
+    width: min(1480px, 100%);
+  }
+
+  [data-locale="ru"] .site-header__inner {
+    column-gap: clamp(12px, 1.4vw, 22px);
+  }
+
+  [data-locale="ru"] .brand-logo {
+    height: clamp(48px, 4vw, 54px);
+  }
+
+  [data-locale="ru"] .header-actions {
+    padding-inline-start: clamp(6px, 0.8vw, 12px);
   }
 }

@@ -20,9 +20,15 @@ type GalleryWithLightboxProps = {
   items: GalleryItem[];
   className?: string;
   itemClassName?: string;
+  variant?: "grid" | "clinic";
 };
 
-export function GalleryWithLightbox({ items, className, itemClassName }: GalleryWithLightboxProps) {
+export function GalleryWithLightbox({
+  items,
+  className,
+  itemClassName,
+  variant = "grid",
+}: GalleryWithLightboxProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
 
@@ -44,27 +50,47 @@ export function GalleryWithLightbox({ items, className, itemClassName }: Gallery
       <div className={className} data-gallery-grid>
         {items.map((item, index) => {
           const hasImage = item.image?.url != null;
+          const isClinic = variant === "clinic";
           return (
-            <article className={itemClassName} key={`${item.caption ?? "image"}-${index}`}>
+            <article
+              className={itemClassName}
+              key={`${item.caption ?? "image"}-${index}`}
+              {...(isClinic ? { "data-clinic-strip-item": "" } : {})}
+            >
               {hasImage ? (
                 <button
                   type="button"
                   data-gallery-trigger
+                  data-gallery-variant={variant}
                   onClick={(event) => {
                     lastTriggerRef.current = event.currentTarget;
                     const imgIndex = images.findIndex((img) => img.url === item.image!.url);
                     setLightboxIndex(imgIndex >= 0 ? imgIndex : 0);
                   }}
-                  style={{ all: "unset", cursor: "pointer", display: "block", width: "100%" }}
+                  style={
+                    isClinic
+                      ? undefined
+                      : { all: "unset", cursor: "pointer", display: "block", width: "100%" }
+                  }
                 >
-                  <Image
-                    src={item.image!.url}
-                    alt={item.image!.alternativeText ?? item.caption ?? ""}
-                    width={item.image!.width ?? 960}
-                    height={item.image!.height ?? 640}
-                    sizes="(min-width: 960px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
+                  {isClinic ? (
+                    <Image
+                      src={item.image!.url}
+                      alt={item.image!.alternativeText ?? item.caption ?? ""}
+                      fill
+                      sizes="(min-width: 960px) 20vw, (min-width: 640px) 33vw, 50vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  ) : (
+                    <Image
+                      src={item.image!.url}
+                      alt={item.image!.alternativeText ?? item.caption ?? ""}
+                      width={item.image!.width ?? 960}
+                      height={item.image!.height ?? 640}
+                      sizes="(min-width: 960px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  )}
                 </button>
               ) : null}
               {item.caption ? <h3 data-gallery-caption>{item.caption}</h3> : null}

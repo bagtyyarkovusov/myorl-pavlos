@@ -249,7 +249,17 @@ export function HomePromoCarousel({
                     {String(currentIndex + 1).padStart(2, "0")} /{" "}
                     {String(totalSlides).padStart(2, "0")}
                   </p>
-                  {currentSlide.title ? <h3>{currentSlide.title}</h3> : null}
+                  {currentSlide.title ? (
+                    href ? (
+                      <h3>
+                        <Link href={href} className={styles["topic-feature__title-link"]}>
+                          {currentSlide.title}
+                        </Link>
+                      </h3>
+                    ) : (
+                      <h3>{currentSlide.title}</h3>
+                    )
+                  ) : null}
                   <CmsHtml className={styles["topic-description"]} html={currentDescription} />
                   {href ? (
                     <Link href={href} className={styles["text-link"]}>
@@ -269,6 +279,7 @@ export function HomePromoCarousel({
                   key={`${slide.title ?? "slide"}-${index}`}
                   index={index}
                   slide={slide}
+                  locale={locale}
                   isActive={index === currentIndex}
                   onClick={() => goTo(index)}
                 />
@@ -375,15 +386,19 @@ export function HomePromoCarousel({
 function PromoTile({
   index,
   slide,
+  locale,
   isActive,
   onClick,
 }: {
   index: number;
   slide: PromoSlideItemDTO;
+  locale: string;
   isActive: boolean;
   onClick: () => void;
 }) {
-  const label = `View slide ${index + 1}: ${slide.title ?? "Untitled topic"}`;
+  const title = slide.title ?? "Untitled topic";
+  const href = getSlideHref(slide, locale);
+  const label = `View slide ${index + 1}: ${title}`;
   const tileClassName = isActive
     ? `${styles["topic-tile"]} ${styles["topic-tile--active"]}`
     : styles["topic-tile"];
@@ -411,10 +426,20 @@ function PromoTile({
           </div>
         )}
       </button>
-      <span className={styles["topic-tile__ribbon"]}>
+      <div className={styles["topic-tile__ribbon"]}>
         <span>{String(index + 1).padStart(2, "0")}</span>
-        <strong>{slide.title ?? "Untitled topic"}</strong>
-      </span>
+        {href ? (
+          <Link
+            href={href}
+            className={styles["topic-tile__title-link"]}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <strong>{title}</strong>
+          </Link>
+        ) : (
+          <strong>{title}</strong>
+        )}
+      </div>
     </div>
   );
 }

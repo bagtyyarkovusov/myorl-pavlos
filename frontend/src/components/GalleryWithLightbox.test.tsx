@@ -91,4 +91,11 @@ describe("GalleryWithLightbox", () => {
     expect(container.querySelector("[data-gallery-grid]")).toBeTruthy();
     expect(container.querySelectorAll("[data-gallery-caption]")).toHaveLength(2);
   });
+
+  it("uses fill layout for clinic thumbnails", () => {
+    const { container } = render(<GalleryWithLightbox items={ITEMS} variant="clinic" />);
+
+    expect(container.querySelector('[data-gallery-variant="clinic"]')).toBeTruthy();
+    expect(container.querySelector('[data-gallery-trigger] img')).toBeTruthy();
+  });
 });

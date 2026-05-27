@@ -85,18 +85,22 @@
     padding-inline-start: clamp(4px, 0.6vw, 10px);
   }
 
-  /* RU: Cyrillic nav needs tighter fit to co-exist with search button.
-     Container is always 1232px (1280px max - 48px side padding) when
-     desktop grid is active, so a single baseline is used. */
+  /* RU: labels need a wider header track; always one row (never wrap). */
+  [data-locale="ru"] .megamenu-host {
+    overflow: visible;
+  }
+
   [data-locale="ru"] .nav-trigger,
   [data-locale="ru"] .nav-link {
-    font-size: 0.84rem;
-    letter-spacing: -0.01em;
-    padding-inline: clamp(6px, 0.5vw, 9px);
+    font-size: 0.85rem;
+    letter-spacing: -0.012em;
+    padding-inline: clamp(6px, 0.55vw, 10px);
+    min-height: 40px;
   }
 
   [data-locale="ru"] .desktop-nav {
-    gap: clamp(0px, 0.2vw, 4px);
+    flex-wrap: nowrap;
+    gap: clamp(0px, 0.25vw, 4px);
   }
 }
 

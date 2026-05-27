@@ -79,7 +79,7 @@ export function SiteHeaderClient({
 
   return (
     <>
-      <div className={styles["header-anchor"]}>
+      <div className={styles["header-anchor"]} data-locale={locale}>
         <UtilityBar
           address={address}
           hours={hours}
@@ -163,7 +163,7 @@ export function SiteHeaderClient({
         </header>
       </div>
 
-      <div className={styles["header-spacer"]} aria-hidden="true">
+      <div className={styles["header-spacer"]} data-locale={locale} aria-hidden="true">
         <div className={styles["header-spacer__utility"]} />
         <div className={styles["header-spacer__main"]} />
       </div>

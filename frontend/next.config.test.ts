@@ -1,3 +1,4 @@
+import path from "node:path";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
 import nextConfig from "./next.config";
@@ -30,6 +31,12 @@ function match(pathname: string, source: string): boolean {
   pattern += "$";
   return new RegExp(pattern).test(pathname);
 }
+
+describe("next.config.ts turbopack", () => {
+  it("scopes turbopack root to the frontend app directory", () => {
+    expect(nextConfig.turbopack?.root).toBe(path.resolve(process.cwd()));
+  });
+});
 
 describe("next.config.ts redirects – bare-slug wildcard", () => {
   const SOURCE =

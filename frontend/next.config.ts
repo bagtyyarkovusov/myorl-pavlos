@@ -30,7 +30,18 @@ type StrapiUrlMappingResponse = {
 };
 
 const frontendRoot = path.dirname(fileURLToPath(import.meta.url));
-const gonePathsPath = path.resolve(frontendRoot, "..", "data", "gone-paths.json");
+
+/** Generated at build/dev startup; imported statically from src/proxy.ts. */
+const gonePathsPath = path.resolve(frontendRoot, "data", "gone-paths.json");
+
+/** Repo `data/` in monorepo dev, or `frontend/data/` when only the app is mounted (Docker). */
+function resolveRepoDataFile(...segments: string[]): string {
+  const inFrontend = path.join(frontendRoot, "data", ...segments);
+  if (existsSync(inFrontend)) {
+    return inFrontend;
+  }
+  return path.join(frontendRoot, "..", "data", ...segments);
+}
 
 function writeGonePaths(gonePaths: string[]): void {
   try {
@@ -54,13 +65,7 @@ if (!existsSync(gonePathsPath)) {
 }
 
 function loadSlugRedirects(): NextRedirect[] {
-  const manifestPath = path.resolve(
-    frontendRoot,
-    "..",
-    "data",
-    "manifests",
-    "slug_redirects_next.json",
-  );
+  const manifestPath = resolveRepoDataFile("manifests", "slug_redirects_next.json");
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as RedirectManifest;
   const redirects = new Map<string, string>();
 
@@ -141,12 +146,7 @@ async function loadUrlMappingRedirects(): Promise<NextRedirect[]> {
 const nextConfig: NextConfig = {
   output: "standalone",
   turbopack: {
-    // Set the Turbopack workspace root to the monorepo, not just frontend/.
-    // proxy.ts imports `../../data/gone-paths.json` (generated at build time
-    // by loadUrlMappingRedirects below) which lives in the sibling data/
-    // directory. With root scoped to frontend/, Turbopack refuses to resolve
-    // imports outside it and the build fails with "Module not found".
-    root: path.resolve(frontendRoot, ".."),
+    root: frontendRoot,
   },
   images: {
     formats: ["image/avif", "image/webp"],

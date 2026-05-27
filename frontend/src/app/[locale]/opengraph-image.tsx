@@ -10,11 +10,7 @@ export { size, contentType, alt };
  * meta description via the shared brand-card template. Editors override by
  * setting `seo.ogImage` on the `index` page in Strapi.
  */
-export default async function OgImage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function OgImage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) {
     // Unreachable in practice — the route only matches valid locales — but

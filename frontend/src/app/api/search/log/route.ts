@@ -31,7 +31,11 @@ function validatePayload(
     return { ok: false, error: 'locale must be "el" or "ru".' };
   }
 
-  if (typeof raw.result_count !== "number" || !Number.isInteger(raw.result_count) || raw.result_count < 0) {
+  if (
+    typeof raw.result_count !== "number" ||
+    !Number.isInteger(raw.result_count) ||
+    raw.result_count < 0
+  ) {
     return { ok: false, error: "result_count must be a non-negative integer." };
   }
 

@@ -46,7 +46,7 @@ vi.mock("next/server", () => ({
   NextResponse: MockNextResponse,
 }));
 
-vi.mock("../../data/gone-paths.json", () => ({
+vi.mock("../data/gone-paths.json", () => ({
   default: ["/retired-page", "/el/gone-article"],
 }));
 

@@ -8,12 +8,14 @@ function makeSection(component: string): SectionDTO {
   return { __component: component, heading: null, intro: null } as SectionDTO;
 }
 
-function makePage(overrides: {
-  pageType?: PageType;
-  sections?: SectionDTO[];
-  slug?: string;
-  layoutVariant?: LayoutVariant;
-} = {}) {
+function makePage(
+  overrides: {
+    pageType?: PageType;
+    sections?: SectionDTO[];
+    slug?: string;
+    layoutVariant?: LayoutVariant;
+  } = {},
+) {
   return {
     pageType: "content" as PageType,
     sections: [] as SectionDTO[],
@@ -90,9 +92,7 @@ describe("getPageSchemas", () => {
   });
 
   it("returns MedicalProcedure for service-article layoutVariant", () => {
-    const schemas = getPageSchemas(
-      makePage({ layoutVariant: "service-article" }),
-    );
+    const schemas = getPageSchemas(makePage({ layoutVariant: "service-article" }));
     expect(schemas).toContain("MedicalProcedure");
   });
 
@@ -102,9 +102,7 @@ describe("getPageSchemas", () => {
   });
 
   it("returns MedicalProcedure for service-accordion layoutVariant", () => {
-    const schemas = getPageSchemas(
-      makePage({ layoutVariant: "service-accordion" }),
-    );
+    const schemas = getPageSchemas(makePage({ layoutVariant: "service-accordion" }));
     expect(schemas).toContain("MedicalProcedure");
   });
 
@@ -114,27 +112,18 @@ describe("getPageSchemas", () => {
   });
 
   it("returns MedicalCondition for encyclopedia-article layoutVariant", () => {
-    const schemas = getPageSchemas(
-      makePage({ layoutVariant: "encyclopedia-article" }),
-    );
+    const schemas = getPageSchemas(makePage({ layoutVariant: "encyclopedia-article" }));
     expect(schemas).toContain("MedicalCondition");
   });
 
   it("returns Article for specialized-article layoutVariant", () => {
-    const schemas = getPageSchemas(
-      makePage({ layoutVariant: "specialized-article" }),
-    );
+    const schemas = getPageSchemas(makePage({ layoutVariant: "specialized-article" }));
     expect(schemas).toContain("Article");
   });
 
   it("returns no layoutVariant schemas for standard layoutVariant", () => {
     const schemas = getPageSchemas(makePage({ layoutVariant: "standard" }));
-    const variantTypes = [
-      "MedicalProcedure",
-      "MedicalCondition",
-      "Article",
-      "Physician",
-    ];
+    const variantTypes = ["MedicalProcedure", "MedicalCondition", "Article", "Physician"];
     for (const t of variantTypes) {
       expect(schemas).not.toContain(t);
     }

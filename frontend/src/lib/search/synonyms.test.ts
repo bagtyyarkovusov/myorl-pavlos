@@ -152,9 +152,7 @@ describe("seed list validation", () => {
   async function readGroups(locale: string): Promise<string[][]> {
     const raw = await readYamlFile(`synonyms.${locale}.yaml`);
     if (!Array.isArray(raw)) return [];
-    return raw.filter(
-      (g): g is string[] => Array.isArray(g) && validTerms(g).length >= 2,
-    );
+    return raw.filter((g): g is string[] => Array.isArray(g) && validTerms(g).length >= 2);
   }
 
   async function readStopWords(locale: string): Promise<string[]> {

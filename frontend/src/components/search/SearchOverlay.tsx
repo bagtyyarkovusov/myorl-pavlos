@@ -82,18 +82,28 @@ function seeAllGroupLabel(locale: Locale, count: number, groupLabel: string): st
 }
 
 function resultCountAnnouncement(locale: Locale, count: number): string {
-  return locale === "el"
-    ? `${count} αποτελέσματα βρέθηκαν`
-    : `Найдено ${count} результатов`;
+  return locale === "el" ? `${count} αποτελέσματα βρέθηκαν` : `Найдено ${count} результатов`;
 }
 
 function buildSearchParams() {
   return {
     limit: MAX_TOTAL,
     attributesToRetrieve: [
-      "id", "type", "locale", "title", "excerpt", "href", "thumbnail",
-      "parentTitle", "parentSlug", "publishedAt", "parentSection",
-      "parentSectionLabel", "tags", "layoutVariant", "slug",
+      "id",
+      "type",
+      "locale",
+      "title",
+      "excerpt",
+      "href",
+      "thumbnail",
+      "parentTitle",
+      "parentSlug",
+      "publishedAt",
+      "parentSection",
+      "parentSectionLabel",
+      "tags",
+      "layoutVariant",
+      "slug",
     ],
     attributesToHighlight: ["title", "excerpt"],
     showMatchesPosition: true,
@@ -101,7 +111,10 @@ function buildSearchParams() {
   };
 }
 
-function groupHits(hits: Hit<SearchDocument>[], facetDistribution?: Record<string, Record<string, number>>): GroupedHits {
+function groupHits(
+  hits: Hit<SearchDocument>[],
+  facetDistribution?: Record<string, Record<string, number>>,
+): GroupedHits {
   const pages = hits.filter((h) => h.type === "page").slice(0, MAX_PER_GROUP);
   const videos = hits.filter((h) => h.type === "video").slice(0, MAX_PER_GROUP);
   const pageFacetCount = facetDistribution?.type?.page ?? pages.length;
@@ -109,7 +122,7 @@ function groupHits(hits: Hit<SearchDocument>[], facetDistribution?: Record<strin
   return {
     pages,
     videos,
-    totalHits: (pageFacetCount + videoFacetCount) || hits.length,
+    totalHits: pageFacetCount + videoFacetCount || hits.length,
     pageFacetCount,
     videoFacetCount,
   };
@@ -234,14 +247,26 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
 
           const fallbackHits: Hit<SearchDocument>[] = fallbackResponse.hits ?? [];
           if (fallbackHits.length > 0) {
-            setResults(groupHits(fallbackHits, fallbackResponse.facetDistribution as Record<string, Record<string, number>> | undefined));
+            setResults(
+              groupHits(
+                fallbackHits,
+                fallbackResponse.facetDistribution as
+                  | Record<string, Record<string, number>>
+                  | undefined,
+              ),
+            );
             setFallbackLocale(fallback);
             totalHits = fallbackResponse.estimatedTotalHits ?? fallbackHits.length;
           } else {
             setResults(null);
           }
         } else {
-          setResults(groupHits(hits, response.facetDistribution as Record<string, Record<string, number>> | undefined));
+          setResults(
+            groupHits(
+              hits,
+              response.facetDistribution as Record<string, Record<string, number>> | undefined,
+            ),
+          );
           totalHits = response.estimatedTotalHits ?? hits.length;
         }
 
@@ -342,7 +367,8 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
   if (!isOpen) return null;
   if (process.env.NEXT_PUBLIC_SEARCH_ENABLED === "false") return null;
 
-  const isMisconfigured = !process.env.NEXT_PUBLIC_MEILI_HOST || !process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
+  const isMisconfigured =
+    !process.env.NEXT_PUBLIC_MEILI_HOST || !process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
 
   const sessionId = getSessionId();
   const hasQuery = query.trim().length >= MIN_QUERY_LENGTH;
@@ -351,8 +377,8 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
     sessionId ? `&sid=${sessionId}` : ""
   }`;
 
-  const filteredPages = typeFilter === "video" ? [] : results?.pages ?? [];
-  const filteredVideos = typeFilter === "page" ? [] : results?.videos ?? [];
+  const filteredPages = typeFilter === "video" ? [] : (results?.pages ?? []);
+  const filteredVideos = typeFilter === "page" ? [] : (results?.videos ?? []);
   const hasFilteredResults = filteredPages.length > 0 || filteredVideos.length > 0;
 
   const resultLocale = fallbackLocale ?? locale;
@@ -397,7 +423,9 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
               selectedIndex >= 0 ? `search-result-${selectedIndex}` : undefined
             }
           />
-          <kbd className={styles["shortcut-hint"]} aria-hidden="true">/</kbd>
+          <kbd className={styles["shortcut-hint"]} aria-hidden="true">
+            /
+          </kbd>
           {isLoading && <span className={styles["spinner"]} />}
           <button
             type="button"
@@ -405,7 +433,13 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
             aria-label={CLOSE_LABELS[locale]}
             onClick={onClose}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
@@ -437,7 +471,9 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           id={hasResults ? "search-results-listbox" : undefined}
         >
           {isMisconfigured ? (
-            <p className={styles["error-state"]} role="alert">{NOT_CONFIGURED_MSGS[locale]}</p>
+            <p className={styles["error-state"]} role="alert">
+              {NOT_CONFIGURED_MSGS[locale]}
+            </p>
           ) : (
             <>
               {!hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
@@ -446,20 +482,17 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
                 <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
               )}
 
-              {error && <p className={styles["error-state"]} role="alert">{ERROR_MSGS[locale]}</p>}
+              {error && (
+                <p className={styles["error-state"]} role="alert">
+                  {ERROR_MSGS[locale]}
+                </p>
+              )}
             </>
           )}
 
           {/* aria-live result count announcer — always in DOM so SR picks up changes */}
-          <div
-            className={styles["sr-only"]}
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {hasResults && results
-              ? resultCountAnnouncement(locale, results.totalHits)
-              : ""}
+          <div className={styles["sr-only"]} role="status" aria-live="polite" aria-atomic="true">
+            {hasResults && results ? resultCountAnnouncement(locale, results.totalHits) : ""}
           </div>
 
           {hasResults && results && (
@@ -498,7 +531,11 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
                       href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=page`}
                       className={styles["group-see-all"]}
                     >
-                      {seeAllGroupLabel(locale, results.pageFacetCount, GROUP_LABELS[locale].articles)}
+                      {seeAllGroupLabel(
+                        locale,
+                        results.pageFacetCount,
+                        GROUP_LABELS[locale].articles,
+                      )}
                     </a>
                   )}
                 </div>
@@ -535,7 +572,11 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
                       href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=video`}
                       className={styles["group-see-all"]}
                     >
-                      {seeAllGroupLabel(locale, results.videoFacetCount, GROUP_LABELS[locale].videos)}
+                      {seeAllGroupLabel(
+                        locale,
+                        results.videoFacetCount,
+                        GROUP_LABELS[locale].videos,
+                      )}
                     </a>
                   )}
                 </div>
@@ -546,10 +587,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
 
         {hasFilteredResults && results && (
           <div className={styles["footer"]}>
-            <a
-              href={seeAllHref}
-              className={styles["see-all-link"]}
-            >
+            <a href={seeAllHref} className={styles["see-all-link"]}>
               {seeAllFooterLabel(locale, results.totalHits, query.trim())}
             </a>
           </div>

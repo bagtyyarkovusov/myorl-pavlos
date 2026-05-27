@@ -107,9 +107,7 @@ describe("/admin/search-analytics page", () => {
 
     await renderPage();
 
-    expect(
-      screen.getByText(/no search query data yet/i),
-    ).toBeTruthy();
+    expect(screen.getByText(/no search query data yet/i)).toBeTruthy();
   });
 
   it("shows empty state for zero-result queries specifically", async () => {
@@ -119,9 +117,7 @@ describe("/admin/search-analytics page", () => {
     await renderPage();
 
     expect(screen.getByText("ρινοπλαστική")).toBeTruthy();
-    expect(
-      screen.getByText(/no zero-result queries/i),
-    ).toBeTruthy();
+    expect(screen.getByText(/no zero-result queries/i)).toBeTruthy();
   });
 
   it("passes the correct SQL parameters for 30-day window", async () => {

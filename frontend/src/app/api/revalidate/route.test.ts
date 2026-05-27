@@ -75,7 +75,11 @@ describe("revalidation tag derivation", () => {
       deriveTags({
         event: "entry.create",
         model: "api::url-mapping.url-mapping",
-        entry: { legacyPath: "/old-slug", destinationPath: "/el/new-slug", destinationKind: "internal-301" },
+        entry: {
+          legacyPath: "/old-slug",
+          destinationPath: "/el/new-slug",
+          destinationKind: "internal-301",
+        },
       }),
     ).toEqual(["url-mappings"]);
   });

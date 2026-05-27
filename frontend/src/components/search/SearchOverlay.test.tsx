@@ -125,7 +125,13 @@ describe("SearchOverlay", () => {
     mockSearch.mockResolvedValue({
       hits: [
         makeHit({ id: "page:1", type: "page", title: "Test Page" }),
-        makeHit({ id: "video:1", type: "video", title: "Test Video", layoutVariant: "video-index", slug: "" }),
+        makeHit({
+          id: "video:1",
+          type: "video",
+          title: "Test Video",
+          layoutVariant: "video-index",
+          slug: "",
+        }),
       ],
       estimatedTotalHits: 2,
       facetDistribution: { type: { page: 1, video: 1 } },
@@ -190,9 +196,7 @@ describe("SearchOverlay", () => {
   });
 
   it("does not show per-group see-all when count equals cap", async () => {
-    const hits = [
-      makeHit({ id: "page:1", type: "page", title: "Page 1" }),
-    ];
+    const hits = [makeHit({ id: "page:1", type: "page", title: "Page 1" })];
     mockSearch.mockResolvedValue({
       hits,
       estimatedTotalHits: 1,
@@ -267,7 +271,13 @@ describe("SearchOverlay", () => {
       // Second call (ru) returns results
       .mockResolvedValueOnce({
         hits: [
-          makeHit({ id: "page:ru1", type: "page", title: "Русская статья", locale: "ru", href: "/ru/test" }),
+          makeHit({
+            id: "page:ru1",
+            type: "page",
+            title: "Русская статья",
+            locale: "ru",
+            href: "/ru/test",
+          }),
         ],
         estimatedTotalHits: 1,
         facetDistribution: { type: { page: 1, video: 0 } },
@@ -313,7 +323,13 @@ describe("SearchOverlay", () => {
     mockSearch.mockResolvedValue({
       hits: [
         makeHit({ id: "page:1", type: "page", title: "Page 1" }),
-        makeHit({ id: "video:1", type: "video", title: "Video 1", layoutVariant: "video-index", slug: "" }),
+        makeHit({
+          id: "video:1",
+          type: "video",
+          title: "Video 1",
+          layoutVariant: "video-index",
+          slug: "",
+        }),
       ],
       estimatedTotalHits: 2,
       facetDistribution: { type: { page: 1, video: 1 } },
@@ -336,7 +352,13 @@ describe("SearchOverlay", () => {
     mockSearch.mockResolvedValue({
       hits: [
         makeHit({ id: "page:1", type: "page", title: "Page 1" }),
-        makeHit({ id: "video:1", type: "video", title: "Video 1", layoutVariant: "video-index", slug: "" }),
+        makeHit({
+          id: "video:1",
+          type: "video",
+          title: "Video 1",
+          layoutVariant: "video-index",
+          slug: "",
+        }),
       ],
       estimatedTotalHits: 2,
       facetDistribution: { type: { page: 1, video: 1 } },
@@ -382,9 +404,9 @@ describe("SearchOverlay", () => {
       estimatedTotalHits: 3,
     });
 
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(null, { status: 204 }),
-    );
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response(null, { status: 204 }));
 
     render(<SearchOverlay {...baseProps} />);
     const input = screen.getByRole("combobox");
@@ -414,9 +436,9 @@ describe("SearchOverlay", () => {
   it("logs queries with zero result_count when search returns empty", async () => {
     mockSearch.mockResolvedValue({ hits: [], estimatedTotalHits: 0 });
 
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(null, { status: 204 }),
-    );
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response(null, { status: 204 }));
 
     render(<SearchOverlay {...baseProps} />);
     const input = screen.getByRole("combobox");
@@ -481,7 +503,13 @@ describe("SearchOverlay", () => {
       mockSearch.mockResolvedValue({
         hits: [
           makeHit({ id: "page:1", type: "page", title: "First" }),
-          makeHit({ id: "video:1", type: "video", title: "Second", layoutVariant: "video-index", slug: "" }),
+          makeHit({
+            id: "video:1",
+            type: "video",
+            title: "Second",
+            layoutVariant: "video-index",
+            slug: "",
+          }),
         ],
         estimatedTotalHits: 2,
         facetDistribution: { type: { page: 1, video: 1 } },
@@ -524,10 +552,7 @@ describe("SearchOverlay", () => {
 
     it("renders aria-live region that announces result count", async () => {
       mockSearch.mockResolvedValue({
-        hits: [
-          makeHit({ id: "page:1" }),
-          makeHit({ id: "page:2" }),
-        ],
+        hits: [makeHit({ id: "page:1" }), makeHit({ id: "page:2" })],
         estimatedTotalHits: 2,
         facetDistribution: { type: { page: 2, video: 0 } },
       });
@@ -779,7 +804,9 @@ describe("SearchOverlay", () => {
       delete process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
       process.env.NEXT_PUBLIC_SEARCH_ENABLED = "true";
 
-      render(<SearchOverlay {...baseProps} locale="ru" placeholder="Поиск..." searchLabel="Поиск" />);
+      render(
+        <SearchOverlay {...baseProps} locale="ru" placeholder="Поиск..." searchLabel="Поиск" />,
+      );
 
       expect(screen.getByText("Поиск не настроен")).toBeInTheDocument();
     });

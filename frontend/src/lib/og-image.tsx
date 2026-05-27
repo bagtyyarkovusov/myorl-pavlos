@@ -42,100 +42,98 @@ export function renderOgImage({ title, description, locale }: RenderOpts) {
   const titleFontSize = truncatedTitle.length > 60 ? 56 : 72;
 
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          background: COLORS.bone,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "80px",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-        }}
-      >
-        {/* Top: brand mark */}
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <div
-            style={{
-              width: "8px",
-              height: "48px",
-              background: COLORS.trust,
-            }}
-          />
-          <div
-            style={{
-              color: COLORS.ink,
-              fontSize: "32px",
-              fontWeight: 600,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            MyORL
-          </div>
-        </div>
-
-        {/* Middle: title + optional description */}
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        background: COLORS.bone,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "80px",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+      }}
+    >
+      {/* Top: brand mark */}
+      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
+            width: "8px",
+            height: "48px",
+            background: COLORS.trust,
+          }}
+        />
+        <div
+          style={{
+            color: COLORS.ink,
+            fontSize: "32px",
+            fontWeight: 600,
+            letterSpacing: "-0.01em",
           }}
         >
+          MyORL
+        </div>
+      </div>
+
+      {/* Middle: title + optional description */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: titleFontSize,
+            fontWeight: 700,
+            color: COLORS.ink,
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+            maxWidth: "1000px",
+          }}
+        >
+          {truncatedTitle}
+        </div>
+        {truncatedDescription ? (
           <div
             style={{
-              fontSize: titleFontSize,
-              fontWeight: 700,
-              color: COLORS.ink,
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
+              fontSize: "24px",
+              color: COLORS.stone,
+              lineHeight: 1.4,
               maxWidth: "1000px",
             }}
           >
-            {truncatedTitle}
+            {truncatedDescription}
           </div>
-          {truncatedDescription ? (
-            <div
-              style={{
-                fontSize: "24px",
-                color: COLORS.stone,
-                lineHeight: 1.4,
-                maxWidth: "1000px",
-              }}
-            >
-              {truncatedDescription}
-            </div>
-          ) : null}
-        </div>
+        ) : null}
+      </div>
 
-        {/* Bottom: domain + locale */}
+      {/* Bottom: domain + locale */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          color: COLORS.stone,
+          fontSize: "20px",
+          borderTop: `2px solid ${COLORS.trust}`,
+          paddingTop: "24px",
+        }}
+      >
+        <div>myorl.gr</div>
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            color: COLORS.stone,
-            fontSize: "20px",
-            borderTop: `2px solid ${COLORS.trust}`,
-            paddingTop: "24px",
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            fontWeight: 600,
+            color: COLORS.trustInk,
           }}
         >
-          <div>myorl.gr</div>
-          <div
-            style={{
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              fontWeight: 600,
-              color: COLORS.trustInk,
-            }}
-          >
-            {locale}
-          </div>
+          {locale}
         </div>
       </div>
-    ),
+    </div>,
     { ...size },
   );
 }

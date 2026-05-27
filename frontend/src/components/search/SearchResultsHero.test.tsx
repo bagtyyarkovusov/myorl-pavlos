@@ -2,12 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { SearchResultsHero } from "./SearchResultsHero";
 
-const exampleQueries = [
-  "ωτορινολαρυγγολόγος",
-  "rinoplastiki",
-  "ЛОР",
-  "septum surgery",
-];
+const exampleQueries = ["ωτορινολαρυγγολόγος", "rinoplastiki", "ЛОР", "septum surgery"];
 
 describe("SearchResultsHero", () => {
   it("renders search heading in Greek", () => {
@@ -53,6 +48,9 @@ describe("SearchResultsHero", () => {
   it("encodes special characters in example query URLs", () => {
     render(<SearchResultsHero locale="el" />);
     const link = screen.getByText("ωτορινολαρυγγολόγος");
-    expect(link).toHaveAttribute("href", "/el/search-results?q=%CF%89%CF%84%CE%BF%CF%81%CE%B9%CE%BD%CE%BF%CE%BB%CE%B1%CF%81%CF%85%CE%B3%CE%B3%CE%BF%CE%BB%CF%8C%CE%B3%CE%BF%CF%82");
+    expect(link).toHaveAttribute(
+      "href",
+      "/el/search-results?q=%CF%89%CF%84%CE%BF%CF%81%CE%B9%CE%BD%CE%BF%CE%BB%CE%B1%CF%81%CF%85%CE%B3%CE%B3%CE%BF%CE%BB%CF%8C%CE%B3%CE%BF%CF%82",
+    );
   });
 });

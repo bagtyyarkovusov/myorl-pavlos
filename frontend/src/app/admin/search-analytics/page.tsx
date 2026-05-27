@@ -29,8 +29,7 @@ function localeFilterClause(locale: string | undefined): {
 
 export default async function SearchAnalyticsPage({ searchParams }: Props) {
   const params = await searchParams;
-  const selectedLocale =
-    typeof params?.locale === "string" ? params.locale : undefined;
+  const selectedLocale = typeof params?.locale === "string" ? params.locale : undefined;
 
   const { clause, params: localeParams } = localeFilterClause(selectedLocale);
 
@@ -65,7 +64,14 @@ export default async function SearchAnalyticsPage({ searchParams }: Props) {
   const zeroQueries = zeroResult.rows as unknown as QueryRow[];
 
   return (
-    <div style={{ maxWidth: "960px", margin: "0 auto", padding: "2rem 1rem", fontFamily: "system-ui, sans-serif" }}>
+    <div
+      style={{
+        maxWidth: "960px",
+        margin: "0 auto",
+        padding: "2rem 1rem",
+        fontFamily: "system-ui, sans-serif",
+      }}
+    >
       <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>
         Search Analytics
       </h1>
@@ -76,11 +82,7 @@ export default async function SearchAnalyticsPage({ searchParams }: Props) {
         <h2 style={{ fontSize: "1.125rem", fontWeight: 600, marginBottom: "0.75rem" }}>
           Top Queries (Last 30 Days)
         </h2>
-        {topQueries.length > 0 ? (
-          <QueryTable rows={topQueries} />
-        ) : (
-          <EmptyState />
-        )}
+        {topQueries.length > 0 ? <QueryTable rows={topQueries} /> : <EmptyState />}
       </section>
 
       <section style={{ marginTop: "2.5rem" }}>
@@ -144,13 +146,16 @@ function QueryTable({ rows }: { rows: QueryRow[] }) {
       </thead>
       <tbody>
         {rows.map((row) => (
-          <tr
-            key={`${row.query}-${row.locale}`}
-            style={{ borderBottom: "1px solid #edf2f7" }}
-          >
+          <tr key={`${row.query}-${row.locale}`} style={{ borderBottom: "1px solid #edf2f7" }}>
             <td style={{ padding: "0.5rem 0.75rem" }}>{row.query}</td>
             <td style={{ padding: "0.5rem 0.75rem" }}>{row.locale}</td>
-            <td style={{ padding: "0.5rem 0.75rem", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+            <td
+              style={{
+                padding: "0.5rem 0.75rem",
+                textAlign: "right",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
               {row.count}
             </td>
           </tr>

@@ -1,7 +1,16 @@
 export function SearchResultsSkeleton() {
   return (
-    <div aria-label="Loading results" aria-busy="true" style={{ display: "flex", flexDirection: "column", gap: "24px", padding: "16px 0" }}>
-      {[["75%", "55%"], ["60%", "45%"], ["70%", "50%"], ["65%", "40%"]].map(([titleW, subtitleW], i) => (
+    <div
+      aria-label="Loading results"
+      aria-busy="true"
+      style={{ display: "flex", flexDirection: "column", gap: "24px", padding: "16px 0" }}
+    >
+      {[
+        ["75%", "55%"],
+        ["60%", "45%"],
+        ["70%", "50%"],
+        ["65%", "40%"],
+      ].map(([titleW, subtitleW], i) => (
         <div key={i} role="status" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           <div
             style={{

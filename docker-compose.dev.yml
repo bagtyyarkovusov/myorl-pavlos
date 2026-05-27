@@ -91,7 +91,7 @@ services:
     volumes:
       - ./frontend:/app
       - nextjs_node_modules:/app/node_modules
-      - ./data/manifests:/data/manifests:ro
+      - ./data/manifests:/app/data/manifests:ro
 
   meilisearch:
     image: getmeili/meilisearch:v1.11

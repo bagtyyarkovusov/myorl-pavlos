@@ -41,7 +41,9 @@ describe("SearchResultsError", () => {
     });
 
     it("renders a Retry link that points back to the same page", () => {
-      render(<SearchResultsError type="network" locale="el" retryPath="/el/search-results?q=test" />);
+      render(
+        <SearchResultsError type="network" locale="el" retryPath="/el/search-results?q=test" />,
+      );
       const retry = screen.getByRole("link", { name: /επανάληψη/i });
       expect(retry).toHaveAttribute("href", "/el/search-results?q=test");
     });

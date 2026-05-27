@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import gonePaths from "../../data/gone-paths.json";
+import gonePaths from "../data/gone-paths.json";
 
 const LOCALES = ["el", "ru"] as const;
 const DEFAULT_LOCALE = "el";

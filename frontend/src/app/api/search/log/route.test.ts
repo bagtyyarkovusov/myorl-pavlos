@@ -122,9 +122,7 @@ describe("POST /api/search/log", () => {
 
   it("rejects invalid session_id format with 400", async () => {
     const { POST } = await import("./route");
-    const response = await POST(
-      makeRequest({ ...validPayload, session_id: "not-a-uuid" }),
-    );
+    const response = await POST(makeRequest({ ...validPayload, session_id: "not-a-uuid" }));
 
     expect(response.status).toBe(400);
     const json = await response.json();
@@ -134,9 +132,7 @@ describe("POST /api/search/log", () => {
 
   it("rejects missing session_id with 400", async () => {
     const { POST } = await import("./route");
-    const response = await POST(
-      makeRequest({ ...validPayload, session_id: undefined }),
-    );
+    const response = await POST(makeRequest({ ...validPayload, session_id: undefined }));
 
     expect(response.status).toBe(400);
     expect(mockLogSearchQuery).not.toHaveBeenCalled();
@@ -185,15 +181,11 @@ describe("POST /api/search/log", () => {
     const { POST } = await import("./route");
 
     for (let i = 0; i < 10; i++) {
-      const response = await POST(
-        makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }),
-      );
+      const response = await POST(makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }));
       expect(response.status).toBe(204);
     }
 
-    const rateLimited = await POST(
-      makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }),
-    );
+    const rateLimited = await POST(makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }));
 
     expect(rateLimited.status).toBe(429);
     const json = await rateLimited.json();
@@ -211,15 +203,11 @@ describe("POST /api/search/log", () => {
       await POST(makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }));
     }
 
-    const rateLimited = await POST(
-      makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }),
-    );
+    const rateLimited = await POST(makeRequest(validPayload, { "x-forwarded-for": "192.168.1.1" }));
     expect(rateLimited.status).toBe(429);
 
     // Different IP still has full quota
-    const otherIP = await POST(
-      makeRequest(validPayload, { "x-forwarded-for": "10.0.0.1" }),
-    );
+    const otherIP = await POST(makeRequest(validPayload, { "x-forwarded-for": "10.0.0.1" }));
     expect(otherIP.status).toBe(204);
   });
 
@@ -229,15 +217,11 @@ describe("POST /api/search/log", () => {
     const { POST } = await import("./route");
 
     for (let i = 0; i < 10; i++) {
-      const response = await POST(
-        makeRequest(validPayload, { "x-real-ip": "10.10.10.10" }),
-      );
+      const response = await POST(makeRequest(validPayload, { "x-real-ip": "10.10.10.10" }));
       expect(response.status).toBe(204);
     }
 
-    const rateLimited = await POST(
-      makeRequest(validPayload, { "x-real-ip": "10.10.10.10" }),
-    );
+    const rateLimited = await POST(makeRequest(validPayload, { "x-real-ip": "10.10.10.10" }));
     expect(rateLimited.status).toBe(429);
   });
 });

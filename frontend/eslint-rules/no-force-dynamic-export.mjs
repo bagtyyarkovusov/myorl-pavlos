@@ -8,12 +8,11 @@ export default {
   meta: {
     type: "problem",
     docs: {
-      description:
-        'Disallow `export const dynamic = "force-dynamic"` outside approved files',
+      description: 'Disallow `export const dynamic = "force-dynamic"` outside approved files',
     },
     messages: {
       noForceDynamic:
-        "`export const dynamic = \"force-dynamic\"` is not allowed here. " +
+        '`export const dynamic = "force-dynamic"` is not allowed here. ' +
         "Use ISR + tag-based revalidation instead (export const revalidate = <seconds>). " +
         "Only [locale]/search-results and admin/search-analytics may use force-dynamic. " +
         "See ADR-014: docs/adr/ADR-014-isr-revalidation-replaces-force-dynamic.md",

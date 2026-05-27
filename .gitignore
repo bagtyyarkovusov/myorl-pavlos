@@ -41,6 +41,11 @@ artifacts/reports/*_report.json
 artifacts/reports/*_report.apply-results.json
 artifacts/reports/*_audit.json
 artifacts/reports/sync_navigation_report.json
+# Legacy URL audit + URL Mapping seed are re-runnable from source data
+# (the inventory CSV and the .htaccess); each run regenerates these.
+artifacts/reports/legacy-url-triage.md
+artifacts/reports/url-mapping-seed.json
+artifacts/reports/url-mapping-seed-result.md
 artifacts/exports/
 artifacts/*.tar.gz
 !artifacts/reports/.gitkeep

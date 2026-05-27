@@ -104,7 +104,14 @@ def _parse_bool(val: str) -> bool:
 
 
 def load_inventory_csv(path: Path) -> list[InventoryRow]:
-    """Parse the Legacy URL Inventory CSV into InventoryRow objects."""
+    """Parse the Legacy URL Inventory CSV into InventoryRow objects.
+
+    Accepts two CSV shapes — the historical fixture-style shape used in unit
+    tests (``context_key``, ``parent``, populated ``document_id``) and the
+    real production shape from ``~/Projects/myorl-migrate/old_url_inventory_clean.csv``
+    (``locale``, ``parent_id``, no ``document_id`` column). The classifier
+    handles both via a slug-fallback when ``document_id`` is empty.
+    """
     rows: list[InventoryRow] = []
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
@@ -112,17 +119,28 @@ def load_inventory_csv(path: Path) -> list[InventoryRow]:
             modx_id_str = (line.get("id") or "").strip()
             if not modx_id_str or not modx_id_str.isdigit():
                 continue
-            context_key = (line.get("context_key") or "web").strip()
+            # Locale: prefer explicit `locale` column (production CSV) over
+            # the legacy `context_key` → locale mapping (fixture CSV).
+            locale = (line.get("locale") or "").strip()
+            if not locale:
+                context_key = (line.get("context_key") or "web").strip()
+                locale = CONTEXT_KEY_TO_LOCALE.get(context_key, "el")
+            # Parent: production CSV uses `parent_id`; fixtures use `parent`.
+            parent_raw = (line.get("parent_id") or line.get("parent") or "0").strip() or "0"
+            try:
+                parent = int(parent_raw)
+            except ValueError:
+                parent = 0
             rows.append(InventoryRow(
                 modx_id=int(modx_id_str),
                 pagetitle=(line.get("pagetitle") or "").strip(),
                 alias=(line.get("alias") or "").strip(),
                 uri=(line.get("uri") or "").strip(),
-                parent=int((line.get("parent") or "0").strip() or "0"),
+                parent=parent,
                 published=_parse_bool(line.get("published") or "1"),
                 deleted=_parse_bool(line.get("deleted") or "0"),
                 hidemenu=_parse_bool(line.get("hidemenu") or "0"),
-                locale=CONTEXT_KEY_TO_LOCALE.get(context_key, "el"),
+                locale=locale,
                 document_id=(line.get("document_id") or "").strip(),
                 status_guess=(line.get("status_guess") or "").strip(),
             ))
@@ -152,6 +170,33 @@ def load_strapi_page_map(conn: Any) -> dict[tuple[str, str], StrapiPage]:
     return page_map
 
 
+def load_strapi_page_map_by_slug(conn: Any) -> dict[tuple[str, str], StrapiPage]:
+    """Return (locale, slug) → StrapiPage for all published pages.
+
+    Used by the classifier as a fallback path when the inventory CSV has no
+    ``document_id`` column (the production CSV shape). Matching on
+    ``(locale, slug)`` lets us detect Case 1 (slug-unchanged) directly from
+    the MODX alias without needing a MODX→Strapi document_id bridge.
+    """
+    page_map: dict[tuple[str, str], StrapiPage] = {}
+    rows = conn.execute(
+        "SELECT document_id, locale, slug, title "
+        "FROM pages WHERE published_at IS NOT NULL"
+    ).fetchall()
+    for row in rows:
+        locale = str(row["locale"] or "")
+        slug = (row["slug"] or "").strip()
+        if not locale or not slug:
+            continue
+        page_map[(locale, slug)] = StrapiPage(
+            document_id=str(row["document_id"] or ""),
+            locale=locale,
+            slug=slug,
+            title=(row["title"] or "").strip(),
+        )
+    return page_map
+
+
 # ---------------------------------------------------------------------------
 # Classification
 # ---------------------------------------------------------------------------
@@ -160,10 +205,27 @@ def load_strapi_page_map(conn: Any) -> dict[tuple[str, str], StrapiPage]:
 def classify_row(
     row: InventoryRow,
     page_map: dict[tuple[str, str], StrapiPage],
+    page_map_by_slug: Optional[dict[tuple[str, str], StrapiPage]] = None,
 ) -> tuple[Case, str, str]:
     """Classify a single inventory row.
 
     Returns (case, destination_path, rationale_notes).
+
+    Two matching paths are supported:
+
+    1. If ``row.document_id`` is populated (fixture CSV shape), match by
+       ``(document_id, locale)`` against ``page_map``. This preserves the
+       original behaviour and gives the strongest cross-CMS identity.
+    2. If ``document_id`` is empty (production CSV shape — the inventory at
+       ``~/Projects/myorl-migrate/old_url_inventory_clean.csv`` has no
+       ``document_id`` column) and ``page_map_by_slug`` is provided, fall
+       back to ``(locale, alias)`` → ``(locale, slug)`` matching. This
+       correctly classifies Case 1 (slug unchanged) when the legacy slug
+       still exists in Strapi. Case 2 detection (renames) requires a
+       stable cross-CMS identifier and is skipped in this fallback path —
+       renamed slugs default to Case 3 (gone-410) and must be curated
+       manually as ``internal-301`` rows in Strapi (the existing 5 such
+       rows are the canonical example).
     """
     # Case 3 checks first
     if row.deleted:
@@ -172,23 +234,34 @@ def classify_row(
     if not row.published:
         return (Case.RETIRED, "", "MODX row unpublished (published=0)")
 
-    if not row.document_id:
+    if row.document_id:
+        page = page_map.get((row.document_id, row.locale))
+        if page is None:
+            return (Case.RETIRED, "", "No Strapi page for document_id + locale")
+
+        # Compare MODX alias with Strapi slug
+        if row.alias == page.slug:
+            return (Case.UNCHANGED, "", f"slug unchanged: {row.alias}")
+
+        dest = f"/{row.locale}/{page.slug}"
+        return (
+            Case.RENAMED,
+            dest,
+            f"slug renamed: {row.alias} → {page.slug}",
+        )
+
+    # No document_id: fall back to (locale, alias) → (locale, slug) match.
+    if page_map_by_slug is None:
         return (Case.RETIRED, "", "No document_id in inventory row")
 
-    page = page_map.get((row.document_id, row.locale))
+    if not row.alias:
+        return (Case.RETIRED, "", "No alias to match against Strapi slug")
+
+    page = page_map_by_slug.get((row.locale, row.alias))
     if page is None:
-        return (Case.RETIRED, "", "No Strapi page for document_id + locale")
+        return (Case.RETIRED, "", f"No Strapi page with (locale={row.locale}, slug={row.alias})")
 
-    # Compare MODX alias with Strapi slug
-    if row.alias == page.slug:
-        return (Case.UNCHANGED, "", f"slug unchanged: {row.alias}")
-
-    dest = f"/{row.locale}/{page.slug}"
-    return (
-        Case.RENAMED,
-        dest,
-        f"slug renamed: {row.alias} → {page.slug}",
-    )
+    return (Case.UNCHANGED, "", f"slug unchanged (alias match): {row.alias}")
 
 
 # ---------------------------------------------------------------------------
@@ -282,23 +355,27 @@ def flatten_htaccess_rules(rules: list[HtaccessRule]) -> list[SeedEntry]:
 def build_seed_entries(
     rows: list[InventoryRow],
     page_map: dict[tuple[str, str], StrapiPage],
+    page_map_by_slug: Optional[dict[tuple[str, str], StrapiPage]] = None,
 ) -> list[dict[str, Any]]:
     """Build seed JSON entries for case 2 + case 3 inventory rows only.
 
     Case 1 (slug unchanged) is excluded — it's handled by the wildcard.
     Case 2 → internal-301, Case 3 → gone-410.
     """
-    return [e for e in classify_all_rows(rows, page_map) if e["_case"] != "case-1"]
+    return [
+        e for e in classify_all_rows(rows, page_map, page_map_by_slug) if e["_case"] != "case-1"
+    ]
 
 
 def classify_all_rows(
     rows: list[InventoryRow],
     page_map: dict[tuple[str, str], StrapiPage],
+    page_map_by_slug: Optional[dict[tuple[str, str], StrapiPage]] = None,
 ) -> list[dict[str, Any]]:
     """Classify all inventory rows (including case 1) for reporting."""
     entries: list[dict[str, Any]] = []
     for row in rows:
-        case, dest, notes = classify_row(row, page_map)
+        case, dest, notes = classify_row(row, page_map, page_map_by_slug)
         legacy_path = url_decode_path(row.uri) if row.uri else f"/{row.alias}"
 
         if case == Case.UNCHANGED:
@@ -479,12 +556,13 @@ def main() -> int:
     conn = connect_readonly(args.db)
     try:
         page_map = load_strapi_page_map(conn)
+        page_map_by_slug = load_strapi_page_map_by_slug(conn)
     finally:
         conn.close()
-    print(f"  {len(page_map)} published pages")
+    print(f"  {len(page_map)} published pages ({len(page_map_by_slug)} unique locale+slug pairs)")
 
     # Classify
-    all_classified = classify_all_rows(rows, page_map)
+    all_classified = classify_all_rows(rows, page_map, page_map_by_slug)
     case1 = sum(1 for e in all_classified if e["_case"] == "case-1")
     case2 = sum(1 for e in all_classified if e["_case"] == "case-2")
     case3 = sum(1 for e in all_classified if e["_case"] == "case-3")
@@ -503,26 +581,44 @@ def main() -> int:
     else:
         print(f".htaccess not found at {args.htaccess} — skipping")
 
-    # Build seed JSON (case 2 + case 3 from classified rows, plus htaccess)
-    seed_output: list[dict[str, Any]] = []
+    # Build seed JSON (case 2 + case 3 from classified rows, plus htaccess).
+    #
+    # When the inventory and .htaccess both have an entry for the same
+    # legacyPath, the .htaccess wins. The .htaccess has a concrete
+    # destination (the editor's redirect intent at MODX cutover time),
+    # while the inventory case-3 is a "no Strapi page matches" inference —
+    # and a real redirect is always more useful than a gone-410.
+    seed_by_path: dict[str, dict[str, Any]] = {}
+    # 1. Seed inventory case-2 / case-3 first (low priority).
     for e in all_classified:
         if e["_case"] == "case-1":
             continue
-        seed_output.append({
+        seed_by_path[e["legacyPath"]] = {
             "legacyPath": e["legacyPath"],
             "destinationPath": e["destinationPath"],
             "destinationKind": e["destinationKind"],
             "locale": e["locale"],
             "notes": e["notes"],
-        })
+        }
+    # 2. Overlay .htaccess entries (high priority — they override).
+    htaccess_collisions: list[str] = []
     for e in htaccess_entries:
-        seed_output.append({
+        if e.legacyPath in seed_by_path:
+            htaccess_collisions.append(e.legacyPath)
+        seed_by_path[e.legacyPath] = {
             "legacyPath": e.legacyPath,
             "destinationPath": e.destinationPath,
             "destinationKind": e.destinationKind,
             "locale": e.locale,
             "notes": e.notes,
-        })
+        }
+    seed_output: list[dict[str, Any]] = list(seed_by_path.values())
+    if htaccess_collisions:
+        print(
+            f"  {len(htaccess_collisions)} .htaccess entries overrode inventory case-3 "
+            f"(.htaccess wins): {', '.join(htaccess_collisions[:5])}"
+            + ("..." if len(htaccess_collisions) > 5 else "")
+        )
 
     # Write outputs
     sources = {

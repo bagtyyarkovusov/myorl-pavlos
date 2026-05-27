@@ -24,6 +24,7 @@ from audit_legacy_urls import (
     flatten_htaccess_rules,
     load_inventory_csv,
     load_strapi_page_map,
+    load_strapi_page_map_by_slug,
     parse_htaccess_rules,
     url_decode_path,
 )
@@ -484,6 +485,155 @@ class InventoryRowTests(unittest.TestCase):
         self.assertTrue(row.published)
         self.assertFalse(row.deleted)
         self.assertFalse(row.hidemenu)
+
+
+# ---------------------------------------------------------------------------
+# Production CSV shape — no document_id, explicit locale, parent_id naming
+# ---------------------------------------------------------------------------
+
+
+PRODUCTION_CSV_HEADER = [
+    "id", "locale", "old_url", "uri", "pagetitle", "alias", "parent_id",
+    "published", "deleted", "hidemenu", "isfolder", "template",
+    "uri_override", "status_guess",
+]
+
+
+def _make_production_csv(rows: list[list[str]]) -> str:
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(PRODUCTION_CSV_HEADER)
+    for row in rows:
+        w.writerow(row)
+    return buf.getvalue()
+
+
+class ProductionCsvShapeTests(unittest.TestCase):
+    """The real inventory CSV shape (no document_id column, explicit locale)."""
+
+    def test_locale_read_directly_from_column(self) -> None:
+        csv_text = _make_production_csv([
+            ["42", "ru", "/test", "/test", "Test", "test", "0", "1", "0", "0", "0", "8", "0", "ok"],
+        ])
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write(csv_text)
+            f.flush()
+            rows = load_inventory_csv(Path(f.name))
+        Path(f.name).unlink()
+        self.assertEqual(rows[0].locale, "ru")
+
+    def test_parent_id_read_when_parent_absent(self) -> None:
+        csv_text = _make_production_csv([
+            ["42", "el", "/test", "/test", "Test", "test", "7", "1", "0", "0", "0", "8", "0", "ok"],
+        ])
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write(csv_text)
+            f.flush()
+            rows = load_inventory_csv(Path(f.name))
+        Path(f.name).unlink()
+        self.assertEqual(rows[0].parent, 7)
+
+    def test_missing_document_id_column_yields_empty_string(self) -> None:
+        csv_text = _make_production_csv([
+            ["42", "el", "/test", "/test", "Test", "test", "0", "1", "0", "0", "0", "8", "0", "ok"],
+        ])
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            f.write(csv_text)
+            f.flush()
+            rows = load_inventory_csv(Path(f.name))
+        Path(f.name).unlink()
+        self.assertEqual(rows[0].document_id, "")
+
+
+# ---------------------------------------------------------------------------
+# Slug-fallback classifier (when document_id is empty)
+# ---------------------------------------------------------------------------
+
+
+class SlugFallbackClassifierTests(unittest.TestCase):
+    """When inventory rows have no document_id, classify_row falls back to
+    (locale, alias) → (locale, slug) matching against the Strapi pages."""
+
+    def setUp(self) -> None:
+        # Both maps build from the same backing data.
+        self.page_map_by_doc: dict[tuple[str, str], StrapiPage] = {
+            ("doc-rhino-el", "el"): StrapiPage("doc-rhino-el", "el", "rinoplastiki", "Rinoplastiki"),
+        }
+        self.page_map_by_slug: dict[tuple[str, str], StrapiPage] = {
+            ("el", "rinoplastiki"): StrapiPage("doc-rhino-el", "el", "rinoplastiki", "Rinoplastiki"),
+            ("ru", "plastika-litsa"): StrapiPage("doc-cyrillic-ru", "ru", "plastika-litsa", "Plastika"),
+        }
+
+    def _row(self, **overrides) -> InventoryRow:
+        defaults = {
+            "modx_id": 1, "pagetitle": "Test", "alias": "test",
+            "uri": "/test", "parent": 0, "published": 1,
+            "deleted": 0, "hidemenu": 0, "locale": "el",
+            "document_id": "", "status_guess": "ok",
+        }
+        defaults.update(overrides)
+        return InventoryRow(**defaults)
+
+    def test_alias_matches_slug_classifies_as_unchanged(self) -> None:
+        row = self._row(locale="el", alias="rinoplastiki")
+        case, dest, notes = classify_row(row, self.page_map_by_doc, self.page_map_by_slug)
+        self.assertEqual(case, Case.UNCHANGED)
+        self.assertEqual(dest, "")
+        self.assertIn("alias match", notes.lower())
+
+    def test_alias_misses_strapi_slug_classifies_as_retired(self) -> None:
+        row = self._row(locale="el", alias="page-that-was-removed")
+        case, dest, notes = classify_row(row, self.page_map_by_doc, self.page_map_by_slug)
+        self.assertEqual(case, Case.RETIRED)
+        self.assertIn("no strapi page", notes.lower())
+
+    def test_locale_must_match_for_alias_lookup(self) -> None:
+        # Russian inventory row asking for an EL slug → no match → retired
+        row = self._row(locale="ru", alias="rinoplastiki")
+        case, dest, notes = classify_row(row, self.page_map_by_doc, self.page_map_by_slug)
+        self.assertEqual(case, Case.RETIRED)
+
+    def test_empty_alias_in_fallback_is_retired(self) -> None:
+        row = self._row(locale="el", alias="")
+        case, dest, notes = classify_row(row, self.page_map_by_doc, self.page_map_by_slug)
+        self.assertEqual(case, Case.RETIRED)
+        self.assertIn("no alias", notes.lower())
+
+    def test_no_slug_map_keeps_legacy_behaviour(self) -> None:
+        # When page_map_by_slug is None, behaviour matches the historical path:
+        # empty document_id → retired with "No document_id" rationale.
+        row = self._row(locale="el", alias="rinoplastiki")
+        case, dest, notes = classify_row(row, self.page_map_by_doc, None)
+        self.assertEqual(case, Case.RETIRED)
+        self.assertIn("document_id", notes.lower())
+
+
+# ---------------------------------------------------------------------------
+# load_strapi_page_map_by_slug
+# ---------------------------------------------------------------------------
+
+
+class LoadStrapiPageMapBySlugTests(unittest.TestCase):
+    def test_indexes_by_locale_and_slug(self) -> None:
+        conn = _make_db([
+            {"document_id": "abc", "locale": "el", "slug": "rinoplastiki", "title": "T", "published_at": "2025-01-01T00:00:00Z"},
+            {"document_id": "abc", "locale": "ru", "slug": "rinoplastika", "title": "T", "published_at": "2025-01-01T00:00:00Z"},
+        ])
+        page_map = load_strapi_page_map_by_slug(conn)
+        self.assertIn(("el", "rinoplastiki"), page_map)
+        self.assertIn(("ru", "rinoplastika"), page_map)
+
+    def test_skips_unpublished_pages(self) -> None:
+        conn = _make_db([
+            {"document_id": "abc", "locale": "el", "slug": "draft-page", "title": "T", "published_at": None},
+        ])
+        self.assertEqual(len(load_strapi_page_map_by_slug(conn)), 0)
+
+    def test_skips_pages_without_slug(self) -> None:
+        conn = _make_db([
+            {"document_id": "abc", "locale": "el", "slug": "", "title": "T", "published_at": "2025-01-01T00:00:00Z"},
+        ])
+        self.assertEqual(len(load_strapi_page_map_by_slug(conn)), 0)
 
 
 if __name__ == "__main__":

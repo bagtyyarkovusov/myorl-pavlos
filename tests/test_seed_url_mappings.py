@@ -213,18 +213,71 @@ class ClassifyActionUpdateTests(unittest.TestCase):
         )
         self.assertEqual(action, "update")
 
-    def test_destination_kind_changed_to_gone_410(self) -> None:
-        existing = {"/old": _existing(legacyPath="/old", destinationKind="internal-301", destinationPath="/el/foo")}
-        action, ex = classify_action(
-            _entry(legacyPath="/old", destinationKind="gone-410", destinationPath=""),
-            existing,
-        )
-        self.assertEqual(action, "update")
-
     def test_external_301_updated_to_internal_301(self) -> None:
         existing = {"/x": _existing(legacyPath="/x", destinationKind="external-301", destinationPath="https://ex.com")}
         action, ex = classify_action(
             _entry(legacyPath="/x", destinationKind="internal-301", destinationPath="/el/x"),
+            existing,
+        )
+        self.assertEqual(action, "update")
+
+
+class ClassifyActionCuratedThreeOhOneTests(unittest.TestCase):
+    """Editor-curated internal-301/external-301 rows are protected from a
+    seed-driven downgrade to gone-410. This catches the case where the
+    legacy URL audit thinks a slug is retired, but the editor has already
+    mapped it to a real destination (e.g. rename pairs like
+    /el/rinorragia → /el/rinorragia-enilikoi). The audit cannot detect
+    Case 2 renames without a stable cross-CMS identifier, so this
+    protection keeps editor curation authoritative."""
+
+    def test_internal_301_protected_from_gone_410_downgrade(self) -> None:
+        existing = {
+            "/el/rinorragia": _existing(
+                legacyPath="/el/rinorragia",
+                destinationKind="internal-301",
+                destinationPath="/el/rinorragia-enilikoi",
+            )
+        }
+        action, ex = classify_action(
+            _entry(legacyPath="/el/rinorragia", destinationKind="gone-410", destinationPath=""),
+            existing,
+        )
+        self.assertEqual(action, "skip-301-curated")
+        self.assertIsNotNone(ex)
+        self.assertEqual(ex["destinationPath"], "/el/rinorragia-enilikoi")
+
+    def test_external_301_protected_from_gone_410_downgrade(self) -> None:
+        existing = {
+            "/old-vendor": _existing(
+                legacyPath="/old-vendor",
+                destinationKind="external-301",
+                destinationPath="https://partner.example.com/new",
+            )
+        }
+        action, ex = classify_action(
+            _entry(legacyPath="/old-vendor", destinationKind="gone-410", destinationPath=""),
+            existing,
+        )
+        self.assertEqual(action, "skip-301-curated")
+
+    def test_seed_internal_301_still_updates_existing_internal_301(self) -> None:
+        # When the seed itself has a 301 (e.g. .htaccess flattened), updating
+        # an existing 301 to a different destination is still allowed —
+        # protection only applies to gone-410 downgrades.
+        existing = {
+            "/legacy-vendor": _existing(
+                legacyPath="/legacy-vendor",
+                destinationKind="internal-301",
+                destinationPath="/el/old-target",
+            )
+        }
+        action, ex = classify_action(
+            _entry(
+                legacyPath="/legacy-vendor",
+                destinationKind="internal-301",
+                destinationPath="/el/new-target",
+            ),
             existing,
         )
         self.assertEqual(action, "update")

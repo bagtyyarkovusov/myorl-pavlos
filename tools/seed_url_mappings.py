@@ -63,9 +63,13 @@ def classify_action(
 
     Returns (action, existing_row) where action is one of:
       - ``"create"`` — no existing row with this legacyPath
-      - ``"update"`` — different destination, not blocked by gone-410
+      - ``"update"`` — different destination, not blocked by curation rules
       - ``"skip-identical"`` — destination and kind already match (idempotency)
       - ``"skip-gone-410"`` — existing row is gone-410 (editor curation wins)
+      - ``"skip-301-curated"`` — existing row is a 301 redirect; seed wants
+        to downgrade to gone-410. Editor-curated 301s win over auto-generated
+        deletions (the audit can't distinguish "page was renamed but we
+        haven't recorded the new target yet" from "page was retired").
     """
     legacy_path = entry["legacyPath"]
     existing = existing_map.get(legacy_path)
@@ -73,14 +77,23 @@ def classify_action(
     if existing is None:
         return ("create", None)
 
+    existing_kind = existing.get("destinationKind")
+
     # Editor-curated gone-410 rows are protected from overwrite.
-    if existing.get("destinationKind") == "gone-410":
+    if existing_kind == "gone-410":
         return ("skip-gone-410", existing)
+
+    # Editor-curated 301 rows are protected from being downgraded to gone-410.
+    # When the seed says "this path is gone" but Strapi already has a real
+    # redirect destination for it, trust the curated destination.
+    entry_kind = entry.get("destinationKind")
+    if entry_kind == "gone-410" and existing_kind in {"internal-301", "external-301"}:
+        return ("skip-301-curated", existing)
 
     # Check idempotency: same destination path + same kind → skip.
     if (
         existing.get("destinationPath") == entry.get("destinationPath")
-        and existing.get("destinationKind") == entry.get("destinationKind")
+        and existing.get("destinationKind") == entry_kind
     ):
         return ("skip-identical", existing)
 
@@ -252,6 +265,8 @@ def build_markdown_summary(
                 reason = "gone-410 protection (editor-curated)"
             elif reason == "skip-identical":
                 reason = "already identical (idempotent)"
+            elif reason == "skip-301-curated":
+                reason = "existing 301 protected from gone-410 downgrade"
             lines.append(f"| `{e['legacyPath']}` | {reason} |")
         lines.append("")
 

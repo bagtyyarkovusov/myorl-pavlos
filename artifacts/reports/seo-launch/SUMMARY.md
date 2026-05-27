@@ -38,6 +38,19 @@
 - Force-dynamic regression guard (ESLint)
 - Core Web Vitals telemetry endpoint
 - DNS cutover tools + rollback runbook
+- **2026-05-27 — URL Mapping seed completed** (issue #183). Strapi now holds
+  106 URL Mapping entries (35 internal-301, 71 gone-410) vs the 5 manually-
+  curated rows that were the entire pre-fix state. Spot-check of 20 random
+  legacy URLs (10 from inventory + 10 from .htaccess) confirms zero 404s:
+  12 paths route via URL Mapping, 7 via the locale-prefix wildcard, 1 via
+  wildcard + explicit redirect chain. Two `audit_legacy_urls.py` bugs were
+  fixed in the same pass: (a) the loader now accepts the production CSV
+  shape (explicit `locale` column, `parent_id`, no `document_id` column),
+  and (b) the classifier falls back to `(locale, alias) → (locale, slug)`
+  matching when `document_id` is empty. `seed_url_mappings.py` gained a
+  third skip rule (`skip-301-curated`) so editor-curated internal-301
+  rows cannot be silently downgraded to `gone-410` by a future audit
+  pass.
 
 ## Recommended next steps
 

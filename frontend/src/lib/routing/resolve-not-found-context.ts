@@ -1,15 +1,15 @@
-import { headers } from "next/headers";
-
-import { isLocale } from "@/lib/cms/types";
-
 type NotFoundParams = Promise<{
   locale?: string;
   slug?: string;
 }>;
 
 /**
- * Resolves locale and slug for localized 404 pages.
- * Params may be missing during some client navigations; falls back to x-pathname.
+ * Resolves locale and slug for localized 404 pages from route params.
+ *
+ * Falls back to the default locale when params are missing — `not-found.tsx`
+ * must stay statically renderable (calling `headers()` here would force the
+ * containing page to render dynamically; Next.js 16 then errors with
+ * `Page changed from static to dynamic at runtime, reason: headers`).
  */
 export async function resolveNotFoundContext(
   params?: NotFoundParams,
@@ -24,16 +24,9 @@ export async function resolveNotFoundContext(
         };
       }
     } catch {
-      // Fall through to pathname parsing.
+      // Fall through to defaults below.
     }
   }
 
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") ?? "";
-  const segments = pathname.split("/").filter(Boolean);
-  const localeCandidate = segments[0] ?? "el";
-  const locale = isLocale(localeCandidate) ? localeCandidate : "el";
-  const slug = segments[1] ?? "";
-
-  return { locale, slug };
+  return { locale: "el", slug: "" };
 }

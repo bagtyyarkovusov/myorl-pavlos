@@ -2,14 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 const mockGetPageResult = vi.fn();
-const mockHeaders = vi.fn();
 
 vi.mock("@/lib/cms/cms-api", () => ({
   getPageResult: mockGetPageResult,
-}));
-
-vi.mock("next/headers", () => ({
-  headers: mockHeaders,
 }));
 
 function makePage(locale: string, slug: string, title = "Test Page") {
@@ -66,7 +61,6 @@ describe("LocaleNotFound", () => {
   beforeEach(() => {
     vi.resetModules();
     mockGetPageResult.mockReset();
-    mockHeaders.mockReset();
   });
 
   afterEach(() => {
@@ -85,14 +79,11 @@ describe("LocaleNotFound", () => {
     render(element);
   }
 
-  it("resolves locale and slug from pathname when params are omitted", async () => {
-    mockHeaders.mockResolvedValue(new Headers({ "x-pathname": "/ru/missing-from-path" }));
-    mockGetPageResult.mockResolvedValueOnce(makeNotFound("el", "missing-from-path"));
-
+  it("renders the default el locale 404 when params are omitted", async () => {
     await renderNotFound("unused", "unused", { omitParams: true });
 
-    expect(screen.getByText("Страница не найдена")).toBeTruthy();
-    expect(mockGetPageResult).toHaveBeenCalledWith("el", "missing-from-path");
+    expect(screen.getByText("Η σελίδα δεν βρέθηκε")).toBeTruthy();
+    expect(mockGetPageResult).not.toHaveBeenCalled();
   });
 
   describe("cross-locale 404", () => {

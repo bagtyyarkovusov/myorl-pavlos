@@ -22,7 +22,7 @@ const STRINGS: Record<Locale, FooterStrings> = {
     patientsLabel: "Ασθενείς",
     companyLabel: "Εταιρεία",
     contactLabel: "Επικοινωνία",
-    bookOnlineLabel: "Online ραντεβού",
+    bookOnlineLabel: "Κλείστε ραντεβού ηλεκτρονικά",
     sitemapLabel: "Χάρτης ιστότοπου",
     privacyLabel: "Απόρρητο",
     termsLabel: "Όροι",

@@ -36,12 +36,21 @@ beforeEach(() => {
   process.env.NEXT_PUBLIC_SEARCH_ENABLED = "true";
   process.env.NEXT_PUBLIC_MEILI_HOST = "http://localhost:57700";
   process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY = "test-key";
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn().mockImplementation(() => ({
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })),
+  );
 });
 
 afterEach(() => {
   delete process.env.NEXT_PUBLIC_SEARCH_ENABLED;
   delete process.env.NEXT_PUBLIC_MEILI_HOST;
   delete process.env.NEXT_PUBLIC_MEILI_SEARCH_KEY;
+  vi.unstubAllGlobals();
 });
 
 const baseProps = {

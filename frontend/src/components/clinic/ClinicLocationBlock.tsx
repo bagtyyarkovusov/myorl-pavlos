@@ -45,9 +45,7 @@ export function ClinicLocationBlock({
         <ClinicGalleryStrip items={gallery.items} locale={page.locale} />
       ) : null}
 
-      {page.content ? (
-        <CmsHtml className={`cms-html ${styles.prose}`} html={page.content} />
-      ) : null}
+      {page.content ? <CmsHtml className={`cms-html ${styles.prose}`} html={page.content} /> : null}
 
       <div className={styles.actions}>
         <ButtonLink href={bookHref}>{t.clinicBookOnline}</ButtonLink>

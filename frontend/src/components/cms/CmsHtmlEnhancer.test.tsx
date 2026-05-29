@@ -8,13 +8,15 @@ const YOUTUBE_HTML =
   '<figure class="cms-html__video"><div data-cms-youtube="testid" data-cms-title="Demo"></div></figure>';
 
 function expectNoReactRootErrors(consoleError: ReturnType<typeof vi.spyOn>): void {
-  const messages = consoleError.mock.calls.map((call) => String(call[0]));
-  expect(messages.some((message) => message.includes("already been passed to createRoot"))).toBe(
-    false,
-  );
+  const messages = consoleError.mock.calls.map((call: unknown[]) => String(call[0]));
   expect(
-    messages.some((message) =>
-      message.includes("Attempted to synchronously unmount a root while React was already rendering"),
+    messages.some((message: string) => message.includes("already been passed to createRoot")),
+  ).toBe(false);
+  expect(
+    messages.some((message: string) =>
+      message.includes(
+        "Attempted to synchronously unmount a root while React was already rendering",
+      ),
     ),
   ).toBe(false);
 }
@@ -68,9 +70,7 @@ describe("CmsHtmlEnhancer", () => {
   it("unmounts deferred roots after the placeholder leaves the document", async () => {
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    const { unmount } = render(
-      <CmsHtmlEnhancer html={YOUTUBE_HTML} playLabel="Play video" />,
-    );
+    const { unmount } = render(<CmsHtmlEnhancer html={YOUTUBE_HTML} playLabel="Play video" />);
 
     expect(screen.getByRole("button", { name: "Play video" })).toBeTruthy();
 

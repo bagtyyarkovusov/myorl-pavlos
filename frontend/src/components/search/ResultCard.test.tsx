@@ -31,8 +31,15 @@ describe("ResultCard", () => {
     const { container } = render(
       <ResultCard {...baseProps} title="Ρινοπλαστική <em>επεμβαση</em>" />,
     );
-    const link = container.querySelector("a");
+    const link = container.querySelector("a.titleLink, a[class*='titleLink']");
     expect(link?.innerHTML).toContain("<em>επεμβαση</em>");
+  });
+
+  it("uses a stretched primary link so the full row navigates to the article", () => {
+    render(<ResultCard {...baseProps} title="Test article" />);
+    const articleLink = screen.getByRole("link", { name: "Test article" });
+    expect(articleLink).toHaveAttribute("href", "/el/rinoplastiki");
+    expect(articleLink.className).toMatch(/titleLink/);
   });
 
   it("renders breadcrumb when parentTitle + parentSlug present", () => {
@@ -47,6 +54,7 @@ describe("ResultCard", () => {
     expect(screen.getByRole("navigation")).toBeInTheDocument();
     const link = screen.getByRole("link", { name: "Χειρουργική" });
     expect(link).toHaveAttribute("href", "/el/cheirourgiki");
+    expect(link.className).toMatch(/breadcrumbLink/);
   });
 
   it("omits breadcrumb when parentTitle is null", () => {

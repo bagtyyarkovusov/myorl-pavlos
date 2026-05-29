@@ -33,25 +33,42 @@ export function ResultCard({
   localePill,
 }: ResultCardProps) {
   const safeTitle = DOMPurify.sanitize(title, { ALLOWED_TAGS: ["em"] });
+  const titleId = `result-${href.replace(/[^a-z0-9]+/gi, "-")}`;
 
   return (
-    <article className={styles.card}>
+    <article className={styles.card} aria-labelledby={titleId}>
       {thumbnail && (
-        <Image src={thumbnail} alt="" width={120} height={90} className={styles.thumbnail} />
+        <Image
+          src={thumbnail}
+          alt=""
+          width={120}
+          height={90}
+          className={styles.thumbnail}
+          aria-hidden="true"
+        />
       )}
       <div className={styles.body}>
         {parentTitle && parentSlug && (
           <nav className={styles.breadcrumb} aria-label="breadcrumb">
-            <Link href={`/${locale}/${parentSlug}`}>{parentTitle}</Link>
+            <Link href={`/${locale}/${parentSlug}`} className={styles.breadcrumbLink}>
+              {parentTitle}
+            </Link>
             <span className={styles.breadcrumbSeparator} aria-hidden="true">
               {">"}
             </span>
           </nav>
         )}
         <h2 className={styles.title}>
-          <Link href={href} dangerouslySetInnerHTML={{ __html: safeTitle }} />
+          <Link
+            id={titleId}
+            href={href}
+            className={styles.titleLink}
+            dangerouslySetInnerHTML={{ __html: safeTitle }}
+          />
         </h2>
-        {excerpt && <p className={styles.excerpt}>{DOMPurify.sanitize(excerpt)}</p>}
+        {excerpt && (
+          <p className={styles.excerpt}>{DOMPurify.sanitize(excerpt, { ALLOWED_TAGS: ["em"] })}</p>
+        )}
         <div className={styles.meta}>
           <span className={styles.typeChip}>{typeLabel[locale][type]}</span>
           {localePill && <span className={styles.localePill}>[{localePill}]</span>}

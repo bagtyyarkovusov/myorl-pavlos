@@ -2,6 +2,8 @@
 
 import { useSearchParams, usePathname } from "next/navigation";
 import type { Locale } from "@/lib/cms/types";
+import { useViewTransitionNavigate } from "@/lib/motion/useViewTransitionNavigate";
+import { useSearchResultsListRef } from "./SearchResultsMotion";
 import styles from "./SearchFilters.module.css";
 
 export type SearchFiltersProps = {
@@ -51,6 +53,10 @@ function buildFilterUrl(
 export function SearchFilters({ sections, locale }: SearchFiltersProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const listRef = useSearchResultsListRef();
+  const navigate = useViewTransitionNavigate({
+    getMinHeightElement: () => listRef?.current ?? null,
+  });
   const currentSection = searchParams.get("sectionLabel") ?? "";
   const currentType = searchParams.get("type") ?? "";
   const currentSort = searchParams.get("sort") ?? "";
@@ -66,6 +72,9 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             href={buildFilterUrl("sectionLabel", section, searchParams, pathname)}
             aria-current={currentSection === section ? "page" : undefined}
             className={styles.filterLink}
+            onClick={(event) =>
+              navigate(buildFilterUrl("sectionLabel", section, searchParams, pathname), event)
+            }
           >
             {section}
           </a>
@@ -85,6 +94,9 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             href={buildFilterUrl("type", option.value, searchParams, pathname)}
             aria-current={currentType === option.value ? "page" : undefined}
             className={styles.filterLink}
+            onClick={(event) =>
+              navigate(buildFilterUrl("type", option.value, searchParams, pathname), event)
+            }
           >
             {option.label}
           </a>
@@ -103,6 +115,9 @@ export function SearchFilters({ sections, locale }: SearchFiltersProps) {
             href={buildFilterUrl("sort", option.value, searchParams, pathname)}
             aria-current={currentSort === option.value ? "page" : undefined}
             className={styles.filterLink}
+            onClick={(event) =>
+              navigate(buildFilterUrl("sort", option.value, searchParams, pathname), event)
+            }
           >
             {option.label}
           </a>

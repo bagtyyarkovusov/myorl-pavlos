@@ -6,6 +6,12 @@
   align-items: center;
   justify-content: center;
   background: rgb(9 21 36 / 95%);
+  opacity: 0;
+  transition: opacity var(--motion-duration-default) var(--motion-ease-out);
+}
+
+.overlay[data-state="open"] {
+  opacity: 1;
 }
 
 .content {
@@ -18,13 +24,28 @@
   max-width: 90vw;
   max-height: 90vh;
   margin: 0;
-  animation: lightbox-crossfade 200ms ease;
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity var(--motion-duration-default) var(--motion-ease-out),
+    transform var(--motion-duration-default) var(--motion-ease-out);
+}
+
+.overlay[data-state="open"] .content {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .content img {
   max-width: 90vw;
   max-height: 85vh;
   object-fit: contain;
+  opacity: 1;
+  transition: opacity var(--motion-duration-default) var(--motion-ease-out);
+}
+
+.content[data-image-changing="true"] img {
+  opacity: 0.7;
 }
 
 .caption {
@@ -51,7 +72,7 @@
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
-  transition: background var(--motion-duration-fast) var(--motion-ease-default);
+  transition: background var(--motion-duration-fast) var(--motion-ease-out);
 }
 
 .close:hover {
@@ -79,7 +100,7 @@
   color: white;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: background var(--motion-duration-fast) var(--motion-ease-default);
+  transition: background var(--motion-duration-fast) var(--motion-ease-out);
 }
 
 .nav:hover {
@@ -98,20 +119,4 @@
 
 .nav--next {
   right: 16px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .content {
-    animation: none;
-  }
-}
-
-@keyframes lightbox-crossfade {
-  from {
-    opacity: 0.7;
-  }
-
-  to {
-    opacity: 1;
-  }
 }

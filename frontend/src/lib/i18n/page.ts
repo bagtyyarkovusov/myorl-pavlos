@@ -90,7 +90,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     videoPlayLabel: "Αναπαραγωγή βίντεο",
     videoDirectoryEmpty: "Δεν υπάρχουν διαθέσιμα βίντεο ακόμη.",
     humanSitemapNavLabel: "Χάρτης θεμάτων",
-    clinicBookOnline: "Κλείστε ραντεβού Online",
+    clinicBookOnline: "Κλείστε ραντεβού ηλεκτρονικά",
     clinicViewGallery: "Δείτε τη γκαλερί",
     clinicBackToOverview: "Επιστροφή στο ιατρείο",
     clinicGalleryPrevious: "Προηγούμενες φωτογραφίες",

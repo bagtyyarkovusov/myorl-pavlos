@@ -9,6 +9,15 @@ const GONE_PATHS = new Set(gonePaths as string[]);
 
 const PUBLIC_FILE = /\.(.*)$/;
 
+/** Lets locale not-found resolve slug when route params are missing on client navigations. */
+function continueWithPathname(request: NextRequest): NextResponse {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+}
+
 function getLocaleFromAcceptLanguage(request: NextRequest): string {
   const header = request.headers.get("accept-language");
   if (!header) return DEFAULT_LOCALE;
@@ -79,7 +88,7 @@ export function proxy(request: NextRequest) {
   const locale: string | undefined = segments[0];
 
   if (locale && (LOCALES as readonly string[]).includes(locale)) {
-    return;
+    return continueWithPathname(request);
   }
 
   // Root → /<detected-locale>, 308 permanent (ADR-013).

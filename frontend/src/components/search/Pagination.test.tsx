@@ -5,6 +5,7 @@ import { Pagination } from "./Pagination";
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams("q=test&type=page"),
   usePathname: () => "/el/search-results",
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 describe("Pagination", () => {

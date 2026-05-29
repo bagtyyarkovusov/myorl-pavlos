@@ -3,6 +3,12 @@
   inset: 0;
   z-index: 30;
   background: var(--overlay-backdrop);
+  opacity: 0;
+  transition: opacity var(--motion-duration-default) var(--motion-ease-out);
+}
+
+.backdrop[data-state="open"] {
+  opacity: 1;
 }
 
 .overlay {
@@ -19,6 +25,16 @@
   display: flex;
   flex-direction: column;
   max-height: min(600px, calc(100vh - 160px));
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity var(--motion-duration-default) var(--motion-ease-out),
+    transform var(--motion-duration-default) var(--motion-ease-out);
+}
+
+.overlay[data-state="open"] {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .overlay-header {
@@ -146,9 +162,9 @@
   cursor: pointer;
   white-space: nowrap;
   transition:
-    background 100ms ease,
-    color 100ms ease,
-    border-color 100ms ease;
+    background var(--motion-duration-fast) var(--motion-ease-out),
+    color var(--motion-duration-fast) var(--motion-ease-out),
+    border-color var(--motion-duration-fast) var(--motion-ease-out);
 }
 
 .filter-pill:hover {
@@ -165,6 +181,20 @@
 .results {
   flex: 1;
   overflow-y: auto;
+}
+
+.results-inner {
+  opacity: 1;
+  transition: opacity var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.results-inner[data-phase="out"] {
+  opacity: 0;
+}
+
+.results-inner[data-phase="in"] {
+  opacity: 1;
+  transition-duration: var(--motion-duration-default);
 }
 
 .result-group {
@@ -189,7 +219,7 @@
   display: flex;
   gap: 12px;
   padding: 8px 16px;
-  transition: background 100ms ease;
+  transition: background var(--motion-duration-fast) var(--motion-ease-out);
 }
 
 .result-group :global(article):hover,
@@ -317,6 +347,13 @@
     z-index: 51;
     display: flex;
     flex-direction: column;
+    opacity: 0;
+    transition: opacity var(--motion-duration-default) var(--motion-ease-out);
+  }
+
+  .overlay[data-state="open"] {
+    opacity: 1;
+    transform: none;
   }
 
   .overlay-header {

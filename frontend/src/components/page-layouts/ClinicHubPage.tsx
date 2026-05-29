@@ -16,6 +16,10 @@ export async function ClinicHubPage({ page, appointmentHref }: PageLayoutProps) 
     CLINIC_CHILD_SLUGS.map((slug) => getPage(page.locale, slug)),
   );
 
+  if (!alexandras || !koukaki) {
+    throw new Error("ClinicHubPage: required child clinic pages missing from CMS");
+  }
+
   return (
     <PageSection rhythm="page">
       <PageHeader page={page} kicker={null} showExcerpt={false} />
@@ -31,7 +35,11 @@ export async function ClinicHubPage({ page, appointmentHref }: PageLayoutProps) 
           const child = slug === "iatreio-alexandras" ? alexandras : koukaki;
           return (
             <span key={slug}>
-              {index > 0 ? <span className={styles.separator} aria-hidden="true">·</span> : null}
+              {index > 0 ? (
+                <span className={styles.separator} aria-hidden="true">
+                  ·
+                </span>
+              ) : null}
               <Link href={`#clinic-${slug}`}>{child.title}</Link>
             </span>
           );

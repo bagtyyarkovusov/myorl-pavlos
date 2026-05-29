@@ -5,6 +5,7 @@ import type { Hit } from "meilisearch";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
+import { useOverlayLifecycle } from "@/lib/motion/useOverlayLifecycle";
 
 import type { SearchDocument } from "@/lib/search/index-document";
 import { getSessionId } from "@/lib/search/session";
@@ -134,6 +135,13 @@ const ERROR_MSGS: Record<Locale, string> = {
 };
 
 export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClose }: Props) {
+  const {
+    shouldRender,
+    dataState,
+    overlayRef: backdropRef,
+    requestClose,
+    lifecycle,
+  } = useOverlayLifecycle({ isOpen, onClosed: onClose });
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<GroupedHits | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -141,18 +149,59 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
   const [fallbackLocale, setFallbackLocale] = useState<Locale | null>(null);
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [resultsPhase, setResultsPhase] = useState<"idle" | "out" | "in">("idle");
+  const prevIsOpenRef = useRef(isOpen);
   const inputRef = useRef<HTMLInputElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const resultsInnerRef = useRef<HTMLDivElement>(null);
+  const resultsSwapKeyRef = useRef("");
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clientRef = useRef<InstanceType<typeof Meilisearch> | null>(null);
 
-  // Reset state when `isOpen` transitions to true. Adjusting state during
-  // render (React's recommended pattern for prop-driven resets) avoids the
-  // cascading render that a setState-in-effect would cause.
-  if (isOpen !== prevIsOpen) {
-    setPrevIsOpen(isOpen);
-    if (isOpen) {
+  const setBackdropRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      backdropRef.current = node;
+    },
+    [backdropRef],
+  );
+
+  const resultsSwapKey = useMemo(
+    () =>
+      `${typeFilter}-${query.trim()}-${results?.totalHits ?? 0}-${results?.pages.length ?? 0}-${results?.videos.length ?? 0}`,
+    [typeFilter, query, results],
+  );
+
+  useEffect(() => {
+    if (resultsSwapKey === resultsSwapKeyRef.current) {
+      return;
+    }
+    if (resultsSwapKeyRef.current === "") {
+      resultsSwapKeyRef.current = resultsSwapKey;
+      return;
+    }
+
+    const inner = resultsInnerRef.current;
+    if (inner) {
+      inner.style.minHeight = `${inner.offsetHeight}px`;
+    }
+    setResultsPhase("out");
+
+    const outTimer = window.setTimeout(() => {
+      resultsSwapKeyRef.current = resultsSwapKey;
+      setResultsPhase("in");
+      window.setTimeout(() => {
+        if (inner) {
+          inner.style.minHeight = "";
+        }
+        setResultsPhase("idle");
+      }, 150);
+    }, 100);
+
+    return () => window.clearTimeout(outTimer);
+  }, [resultsSwapKey]);
+
+  useEffect(() => {
+    if (isOpen && !prevIsOpenRef.current) {
       setQuery("");
       setResults(null);
       setIsLoading(false);
@@ -160,10 +209,13 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       setFallbackLocale(null);
       setTypeFilter("all");
       setSelectedIndex(-1);
+      setResultsPhase("idle");
+      resultsSwapKeyRef.current = "";
     }
-  }
+    prevIsOpenRef.current = isOpen;
+  }, [isOpen]);
 
-  useFocusTrap(overlayRef, isOpen);
+  useFocusTrap(panelRef, lifecycle === "open" && dataState === "open");
 
   // Create Meilisearch client once (lazy)
   useEffect(() => {
@@ -183,27 +235,27 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
   // Focus the search input when the overlay opens. Kept separate from the
   // state-reset block above because focus is a DOM side effect.
   useEffect(() => {
-    if (isOpen) {
+    if (lifecycle === "open" && dataState === "open") {
       inputRef.current?.focus();
     }
-  }, [isOpen]);
+  }, [lifecycle, dataState]);
 
   // Close on Escape
   useEffect(() => {
-    if (!isOpen) return;
+    if (lifecycle !== "open") return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") requestClose();
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [isOpen, onClose]);
+  }, [lifecycle, requestClose]);
 
   // Close on backdrop click
   useEffect(() => {
-    if (!isOpen) return;
+    if (lifecycle !== "open") return;
     const handler = (e: MouseEvent) => {
-      if (overlayRef.current && !overlayRef.current.contains(e.target as Node)) {
-        onClose();
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        requestClose();
       }
     };
     const timer = setTimeout(() => {
@@ -213,7 +265,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
       clearTimeout(timer);
       document.removeEventListener("mousedown", handler);
     };
-  }, [isOpen, onClose]);
+  }, [lifecycle, requestClose]);
 
   const performSearch = useCallback(
     async (term: string) => {
@@ -364,7 +416,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
     [visibleResults, selectedIndex],
   );
 
-  if (!isOpen) return null;
+  if (!shouldRender) return null;
   if (process.env.NEXT_PUBLIC_SEARCH_ENABLED === "false") return null;
 
   const isMisconfigured =
@@ -384,10 +436,11 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
   const resultLocale = fallbackLocale ?? locale;
 
   return (
-    <div className={styles["backdrop"]}>
+    <div ref={setBackdropRef} className={styles["backdrop"]} data-state={dataState}>
       <div
-        ref={overlayRef}
+        ref={panelRef}
         className={styles["overlay"]}
+        data-state={dataState}
         id="search-overlay"
         role="dialog"
         aria-modal="true"
@@ -431,7 +484,7 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
             type="button"
             className={styles["close-btn"]}
             aria-label={CLOSE_LABELS[locale]}
-            onClick={onClose}
+            onClick={requestClose}
           >
             <svg
               viewBox="0 0 24 24"
@@ -470,119 +523,123 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           role={hasResults ? "listbox" : undefined}
           id={hasResults ? "search-results-listbox" : undefined}
         >
-          {isMisconfigured ? (
-            <p className={styles["error-state"]} role="alert">
-              {NOT_CONFIGURED_MSGS[locale]}
-            </p>
-          ) : (
-            <>
-              {!hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
+          <div ref={resultsInnerRef} className={styles["results-inner"]} data-phase={resultsPhase}>
+            {isMisconfigured ? (
+              <p className={styles["error-state"]} role="alert">
+                {NOT_CONFIGURED_MSGS[locale]}
+              </p>
+            ) : (
+              <>
+                {!hasQuery && <p className={styles["empty-state"]}>{PLACEHOLDER_MSGS[locale]}</p>}
 
-              {hasQuery && !hasResults && !isLoading && !error && (
-                <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
-              )}
+                {hasQuery && !hasResults && !isLoading && !error && (
+                  <p className={styles["empty-state"]}>{noResultsMsg(locale, query.trim())}</p>
+                )}
 
-              {error && (
-                <p className={styles["error-state"]} role="alert">
-                  {ERROR_MSGS[locale]}
-                </p>
-              )}
-            </>
-          )}
+                {error && (
+                  <p className={styles["error-state"]} role="alert">
+                    {ERROR_MSGS[locale]}
+                  </p>
+                )}
+              </>
+            )}
 
-          {/* aria-live result count announcer — always in DOM so SR picks up changes */}
-          <div className={styles["sr-only"]} role="status" aria-live="polite" aria-atomic="true">
-            {hasResults && results ? resultCountAnnouncement(locale, results.totalHits) : ""}
-          </div>
+            {/* aria-live result count announcer — always in DOM so SR picks up changes */}
+            <div className={styles["sr-only"]} role="status" aria-live="polite" aria-atomic="true">
+              {hasResults && results ? resultCountAnnouncement(locale, results.totalHits) : ""}
+            </div>
 
-          {hasResults && results && (
-            <>
-              {fallbackLocale && (
-                <div className={styles["fallback-banner"]}>
-                  <SearchLocaleFallbackBanner locale={locale} />
-                </div>
-              )}
+            {hasResults && results && (
+              <>
+                {fallbackLocale && (
+                  <div className={styles["fallback-banner"]}>
+                    <SearchLocaleFallbackBanner locale={locale} />
+                  </div>
+                )}
 
-              {filteredPages.length > 0 && (
-                <div className={styles["result-group"]}>
-                  <h4 className={styles["result-group-title"]}>{GROUP_LABELS[locale].articles}</h4>
-                  {filteredPages.map((hit, i) => (
-                    <div
-                      key={hit.id}
-                      id={`search-result-${i}`}
-                      role="option"
-                      aria-selected={selectedIndex === i}
-                    >
-                      <ResultCard
-                        title={hit._formatted?.title ?? hit.title}
-                        excerpt={hit._formatted?.excerpt ?? hit.excerpt}
-                        href={hit.href}
-                        type={hit.type}
-                        thumbnail={null}
-                        parentTitle={hit.parentTitle}
-                        parentSlug={hit.parentSlug}
-                        locale={resultLocale}
-                        localePill={fallbackLocale ? hit.locale : undefined}
-                      />
-                    </div>
-                  ))}
-                  {results.pageFacetCount > MAX_PER_GROUP && typeFilter !== "video" && (
-                    <a
-                      href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=page`}
-                      className={styles["group-see-all"]}
-                    >
-                      {seeAllGroupLabel(
-                        locale,
-                        results.pageFacetCount,
-                        GROUP_LABELS[locale].articles,
-                      )}
-                    </a>
-                  )}
-                </div>
-              )}
-
-              {filteredVideos.length > 0 && (
-                <div className={styles["result-group"]}>
-                  <h4 className={styles["result-group-title"]}>{GROUP_LABELS[locale].videos}</h4>
-                  {filteredVideos.map((hit, i) => {
-                    const globalIndex = filteredPages.length + i;
-                    return (
+                {filteredPages.length > 0 && (
+                  <div className={styles["result-group"]}>
+                    <h4 className={styles["result-group-title"]}>
+                      {GROUP_LABELS[locale].articles}
+                    </h4>
+                    {filteredPages.map((hit, i) => (
                       <div
                         key={hit.id}
-                        id={`search-result-${globalIndex}`}
+                        id={`search-result-${i}`}
                         role="option"
-                        aria-selected={selectedIndex === globalIndex}
+                        aria-selected={selectedIndex === i}
                       >
                         <ResultCard
                           title={hit._formatted?.title ?? hit.title}
                           excerpt={hit._formatted?.excerpt ?? hit.excerpt}
                           href={hit.href}
                           type={hit.type}
-                          thumbnail={hit.thumbnail}
+                          thumbnail={null}
                           parentTitle={hit.parentTitle}
                           parentSlug={hit.parentSlug}
                           locale={resultLocale}
                           localePill={fallbackLocale ? hit.locale : undefined}
                         />
                       </div>
-                    );
-                  })}
-                  {results.videoFacetCount > MAX_PER_GROUP && typeFilter !== "page" && (
-                    <a
-                      href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=video`}
-                      className={styles["group-see-all"]}
-                    >
-                      {seeAllGroupLabel(
-                        locale,
-                        results.videoFacetCount,
-                        GROUP_LABELS[locale].videos,
-                      )}
-                    </a>
-                  )}
-                </div>
-              )}
-            </>
-          )}
+                    ))}
+                    {results.pageFacetCount > MAX_PER_GROUP && typeFilter !== "video" && (
+                      <a
+                        href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=page`}
+                        className={styles["group-see-all"]}
+                      >
+                        {seeAllGroupLabel(
+                          locale,
+                          results.pageFacetCount,
+                          GROUP_LABELS[locale].articles,
+                        )}
+                      </a>
+                    )}
+                  </div>
+                )}
+
+                {filteredVideos.length > 0 && (
+                  <div className={styles["result-group"]}>
+                    <h4 className={styles["result-group-title"]}>{GROUP_LABELS[locale].videos}</h4>
+                    {filteredVideos.map((hit, i) => {
+                      const globalIndex = filteredPages.length + i;
+                      return (
+                        <div
+                          key={hit.id}
+                          id={`search-result-${globalIndex}`}
+                          role="option"
+                          aria-selected={selectedIndex === globalIndex}
+                        >
+                          <ResultCard
+                            title={hit._formatted?.title ?? hit.title}
+                            excerpt={hit._formatted?.excerpt ?? hit.excerpt}
+                            href={hit.href}
+                            type={hit.type}
+                            thumbnail={hit.thumbnail}
+                            parentTitle={hit.parentTitle}
+                            parentSlug={hit.parentSlug}
+                            locale={resultLocale}
+                            localePill={fallbackLocale ? hit.locale : undefined}
+                          />
+                        </div>
+                      );
+                    })}
+                    {results.videoFacetCount > MAX_PER_GROUP && typeFilter !== "page" && (
+                      <a
+                        href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=video`}
+                        className={styles["group-see-all"]}
+                      >
+                        {seeAllGroupLabel(
+                          locale,
+                          results.videoFacetCount,
+                          GROUP_LABELS[locale].videos,
+                        )}
+                      </a>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
         {hasFilteredResults && results && (

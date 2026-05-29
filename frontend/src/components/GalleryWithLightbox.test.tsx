@@ -17,10 +17,19 @@ const ITEMS = [
 beforeEach(() => {
   vi.stubEnv("STRAPI_URL", "http://localhost:1337");
   vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://myorl.example.com");
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn().mockImplementation(() => ({
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })),
+  );
 });
 
 afterEach(() => {
   vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
 });
 
 describe("GalleryWithLightbox", () => {
@@ -96,6 +105,6 @@ describe("GalleryWithLightbox", () => {
     const { container } = render(<GalleryWithLightbox items={ITEMS} variant="clinic" />);
 
     expect(container.querySelector('[data-gallery-variant="clinic"]')).toBeTruthy();
-    expect(container.querySelector('[data-gallery-trigger] img')).toBeTruthy();
+    expect(container.querySelector("[data-gallery-trigger] img")).toBeTruthy();
   });
 });

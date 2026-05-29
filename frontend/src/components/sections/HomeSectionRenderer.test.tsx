@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { SectionDTO } from "@/lib/cms/types";
 
@@ -52,12 +52,28 @@ function makePromoSection(slideCount = 3): SectionDTO {
 
 function tileButtonLabels() {
   return screen
-    .getAllByRole("button", { name: /^View slide/ })
+    .getAllByRole("button", { name: /^Show slide/ })
     .map((button) => button.getAttribute("aria-label"));
 }
 
+beforeEach(() => {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn((query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
+});
+
 afterEach(() => {
   vi.useRealTimers();
+  vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
 
@@ -163,20 +179,19 @@ describe("HomeSectionRenderer", () => {
     });
 
     expect(screen.queryByRole("heading", { name: "Topics" })).toBeNull();
-    const firstTopicLinks = screen.getAllByRole("link", { name: "First topic" });
-    expect(firstTopicLinks).toHaveLength(2);
-    for (const link of firstTopicLinks) {
-      expect(link).toHaveAttribute("href", "/el/first-topic");
-    }
+    expect(screen.getByRole("link", { name: "First topic" })).toHaveAttribute(
+      "href",
+      "/el/first-topic",
+    );
     expect(tileButtonLabels()).toEqual([
-      "View slide 1: First topic",
-      "View slide 2: Second topic",
-      "View slide 3: Third topic",
+      "Show slide 1: First topic",
+      "Show slide 2: Second topic",
+      "Show slide 3: Third topic",
     ]);
 
     const firstTab = screen.getByRole("tab", { name: "Slide 1: First topic" });
     const secondTab = screen.getByRole("tab", { name: "Slide 2: Second topic" });
-    const firstTile = screen.getByRole("button", { name: "View slide 1: First topic" });
+    const firstTile = screen.getByRole("button", { name: "Show slide 1: First topic" });
 
     expect(firstTab).toHaveAttribute("aria-selected", "true");
     expect(firstTab.tagName).toBe("BUTTON");
@@ -192,19 +207,18 @@ describe("HomeSectionRenderer", () => {
       expect(screen.getByText("Slide description")).toBeDefined();
       expect(container.querySelector('a[href="/el/second-topic"]')).toBeTruthy();
     });
-    expect(
-      screen.getAllByRole("link", { name: "Second topic" }).some((link) => {
-        return link.getAttribute("href") === "/el/second-topic";
-      }),
-    ).toBe(true);
-    expect(screen.getByRole("button", { name: "View slide 2: Second topic" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Second topic" })).toHaveAttribute(
+      "href",
+      "/el/second-topic",
+    );
+    expect(screen.getByRole("button", { name: "Show slide 2: Second topic" })).toHaveAttribute(
       "aria-current",
       "true",
     );
     expect(tileButtonLabels()).toEqual([
-      "View slide 1: First topic",
-      "View slide 2: Second topic",
-      "View slide 3: Third topic",
+      "Show slide 1: First topic",
+      "Show slide 2: Second topic",
+      "Show slide 3: Third topic",
     ]);
   });
 

@@ -14,6 +14,7 @@ import { SearchResultsError } from "@/components/search/SearchResultsError";
 import { MobileFilterSheet } from "@/components/search/MobileFilterSheet";
 import { logSearchQuery } from "@/lib/db";
 import { UUID_RE } from "@/lib/search/session";
+import { SearchResultsList } from "@/components/search/SearchResultsMotion";
 import styles from "@/components/search/SearchResultsPage.module.css";
 
 type Props = {
@@ -373,7 +374,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
           </p>
         )}
 
-        <div className={styles.resultsList}>
+        <SearchResultsList>
           {hits.map((doc) => (
             <ResultCard
               key={doc.id}
@@ -388,7 +389,7 @@ export default async function SearchResultsPage({ params, searchParams }: Props)
               localePill={isFallback || allLangs ? doc.locale : undefined}
             />
           ))}
-        </div>
+        </SearchResultsList>
 
         {totalPages > 1 && (
           <Pagination

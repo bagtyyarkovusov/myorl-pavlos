@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { CmsHtml } from "@/components/CmsHtml";
 import { MediaFrame } from "@/components/design-system";
 import { PageSection } from "@/components/PageSection";
@@ -20,26 +19,17 @@ type HomePromoCarouselProps = {
 
 const AUTOPLAY_INTERVAL_MS = 6500;
 
-const slideTransition = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 40 : -40,
-    opacity: 0,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction: number) => ({
-    x: direction < 0 ? 40 : -40,
-    opacity: 0,
-  }),
-};
-
-const reducedSlideTransition = {
-  enter: { opacity: 0 },
-  center: { opacity: 1 },
-  exit: { opacity: 0 },
-};
+function usePrefersReducedMotion(): boolean {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+      media.addEventListener("change", onStoreChange);
+      return () => media.removeEventListener("change", onStoreChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
+}
 
 export function HomePromoCarousel({
   title,
@@ -48,23 +38,12 @@ export function HomePromoCarousel({
   learnMoreLabel,
 }: HomePromoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
   /** After any explicit user control, interval autoplay pauses until manually resumed. */
   const [autoplayEnabled, setAutoplayEnabled] = useState(true);
   const dragStartRef = useRef<{ x: number; y: number } | null>(null);
   const isPausedRef = useRef(false);
   const tabRefs = useRef<Array<HTMLElement | null>>([]);
-  const systemPrefersReducedMotion = useReducedMotion();
-
-  /** false during SSR + hydration, then true — avoids branching on `useReducedMotion()` before commit. */
-  const hasMounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-
-  /** Avoid hydration mismatch: `useReducedMotion()` is null on the server but boolean on the client. */
-  const shouldReduceMotion = Boolean(hasMounted && systemPrefersReducedMotion);
+  const shouldReduceMotion = usePrefersReducedMotion();
 
   const totalSlides = slides.length;
 
@@ -75,7 +54,6 @@ export function HomePromoCarousel({
     (index: number) => {
       pauseAutoplay();
       if (index === currentIndex || totalSlides === 0) return;
-      setDirection(index > currentIndex ? 1 : -1);
       setCurrentIndex(index);
     },
     [currentIndex, pauseAutoplay, totalSlides],
@@ -84,14 +62,12 @@ export function HomePromoCarousel({
   const goNext = useCallback(() => {
     if (totalSlides <= 1) return;
     pauseAutoplay();
-    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
   }, [pauseAutoplay, totalSlides]);
 
   const goPrev = useCallback(() => {
     if (totalSlides <= 1) return;
     pauseAutoplay();
-    setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
   }, [pauseAutoplay, totalSlides]);
 
@@ -101,7 +77,6 @@ export function HomePromoCarousel({
     const intervalId = window.setInterval(() => {
       if (isPausedRef.current) return;
 
-      setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % totalSlides);
     }, AUTOPLAY_INTERVAL_MS);
 
@@ -181,6 +156,7 @@ export function HomePromoCarousel({
       ? styles["topic-mosaic"]
       : `${styles["topic-mosaic"]} ${styles["topic-mosaic--solo"]}`;
   const href = getSlideHref(currentSlide, locale);
+  const featureTitleId = `home-topic-title-${currentIndex}`;
 
   return (
     <PageSection rhythm="compact" className={styles["topic-section"]} header={null}>
@@ -208,68 +184,56 @@ export function HomePromoCarousel({
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
           >
-            <AnimatePresence custom={direction} mode="wait">
-              <motion.article
-                id="home-topic-panel"
-                key={currentIndex}
-                custom={direction}
-                variants={shouldReduceMotion ? reducedSlideTransition : slideTransition}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  duration: shouldReduceMotion ? 0.16 : 0.35,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className={styles["topic-feature__inner"]}
-                role="tabpanel"
-                aria-labelledby={totalSlides > 1 ? `home-topic-tab-${currentIndex}` : undefined}
-                aria-live="polite"
-              >
-                <div className={styles["topic-feature__media"]}>
-                  {currentSlide.image ? (
-                    <MediaFrame
-                      media={currentSlide.image}
-                      alt={currentSlide.title || "Procedure"}
-                      variant="wide"
-                      className={styles["topic-feature__frame"]}
-                    />
-                  ) : (
-                    <div className={styles["media-placeholder"]}>
-                      <span>Topic image</span>
-                    </div>
-                  )}
-                  <div className={styles["index-badge"]}>
-                    {String(currentIndex + 1).padStart(2, "0")}
+            <article
+              id="home-topic-panel"
+              key={currentIndex}
+              className={styles["topic-feature__inner"]}
+              role="tabpanel"
+              aria-labelledby={totalSlides > 1 ? `home-topic-tab-${currentIndex}` : undefined}
+              aria-live="polite"
+            >
+              <div className={styles["topic-feature__media"]}>
+                {currentSlide.image ? (
+                  <MediaFrame
+                    media={currentSlide.image}
+                    alt={currentSlide.title || "Procedure"}
+                    variant="wide"
+                    className={styles["topic-feature__frame"]}
+                  />
+                ) : (
+                  <div className={styles["media-placeholder"]}>
+                    <span>Topic image</span>
                   </div>
+                )}
+                <div className={styles["index-badge"]}>
+                  {String(currentIndex + 1).padStart(2, "0")}
                 </div>
+              </div>
 
-                <div className={styles["topic-feature__copy"]}>
-                  <p className={styles["topic-count"]}>
-                    {String(currentIndex + 1).padStart(2, "0")} /{" "}
-                    {String(totalSlides).padStart(2, "0")}
-                  </p>
-                  {currentSlide.title ? (
-                    href ? (
-                      <h3>
-                        <Link href={href} className={styles["topic-feature__title-link"]}>
-                          {currentSlide.title}
-                        </Link>
-                      </h3>
-                    ) : (
-                      <h3>{currentSlide.title}</h3>
-                    )
-                  ) : null}
-                  <CmsHtml className={styles["topic-description"]} html={currentDescription} />
-                  {href ? (
-                    <Link href={href} className={styles["text-link"]}>
-                      {learnMoreLabel}
-                      <span aria-hidden="true">→</span>
-                    </Link>
-                  ) : null}
-                </div>
-              </motion.article>
-            </AnimatePresence>
+              <div className={styles["topic-feature__copy"]}>
+                <p className={styles["topic-count"]}>
+                  {String(currentIndex + 1).padStart(2, "0")} /{" "}
+                  {String(totalSlides).padStart(2, "0")}
+                </p>
+                {currentSlide.title ? <h3 id={featureTitleId}>{currentSlide.title}</h3> : null}
+                <CmsHtml className={styles["topic-description"]} html={currentDescription} />
+                {href ? (
+                  <span className={styles["text-link"]}>
+                    {learnMoreLabel}
+                    <span aria-hidden="true">→</span>
+                  </span>
+                ) : null}
+              </div>
+            </article>
+            {href ? (
+              <Link
+                href={href}
+                className={styles["topic-feature__primary-link"]}
+                aria-labelledby={currentSlide.title ? featureTitleId : undefined}
+              >
+                <span className="sr-only">{learnMoreLabel}</span>
+              </Link>
+            ) : null}
           </div>
 
           {visibleMosaicSlides.length > 0 ? (
@@ -279,7 +243,6 @@ export function HomePromoCarousel({
                   key={`${slide.title ?? "slide"}-${index}`}
                   index={index}
                   slide={slide}
-                  locale={locale}
                   isActive={index === currentIndex}
                   onClick={() => goTo(index)}
                 />
@@ -386,19 +349,16 @@ export function HomePromoCarousel({
 function PromoTile({
   index,
   slide,
-  locale,
   isActive,
   onClick,
 }: {
   index: number;
   slide: PromoSlideItemDTO;
-  locale: string;
   isActive: boolean;
   onClick: () => void;
 }) {
   const title = slide.title ?? "Untitled topic";
-  const href = getSlideHref(slide, locale);
-  const label = `View slide ${index + 1}: ${title}`;
+  const label = `Show slide ${index + 1}: ${title}`;
   const tileClassName = isActive
     ? `${styles["topic-tile"]} ${styles["topic-tile--active"]}`
     : styles["topic-tile"];
@@ -425,21 +385,11 @@ function PromoTile({
             <span>Topic image</span>
           </div>
         )}
-      </button>
-      <div className={styles["topic-tile__ribbon"]}>
-        <span>{String(index + 1).padStart(2, "0")}</span>
-        {href ? (
-          <Link
-            href={href}
-            className={styles["topic-tile__title-link"]}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <strong>{title}</strong>
-          </Link>
-        ) : (
+        <span className={styles["topic-tile__ribbon"]}>
+          <span>{String(index + 1).padStart(2, "0")}</span>
           <strong>{title}</strong>
-        )}
-      </div>
+        </span>
+      </button>
     </div>
   );
 }

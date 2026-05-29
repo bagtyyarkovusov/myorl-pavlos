@@ -1,4 +1,6 @@
-import type { FooterCategory, NavigationNodeDTO } from "@/lib/cms/types";
+import type { FooterCategory, Locale, NavigationNodeDTO } from "@/lib/cms/types";
+
+import { resolveFooterNavLabel } from "./footer-nav-labels";
 
 export type FooterLink = {
   label: string;
@@ -18,6 +20,7 @@ function flatten(nodes: NavigationNodeDTO[]): NavigationNodeDTO[] {
 function linksFor(
   flat: NavigationNodeDTO[],
   category: Exclude<FooterCategory, "none">,
+  locale: Locale,
 ): FooterLink[] {
   return flat
     .filter((node) => node.footerCategory === category)
@@ -27,16 +30,19 @@ function linksFor(
       return a.slug.localeCompare(b.slug);
     })
     .map((node) => ({
-      label: node.navLabel || node.title,
+      label: resolveFooterNavLabel(locale, node.slug, node.navLabel || node.title),
       href: node.href,
     }));
 }
 
-export function buildFooterLinks(navigation: NavigationNodeDTO[]): FooterLinkGroups {
+export function buildFooterLinks(
+  navigation: NavigationNodeDTO[],
+  locale: Locale,
+): FooterLinkGroups {
   const flat = flatten(navigation);
   return {
-    services: linksFor(flat, "services"),
-    patients: linksFor(flat, "patients"),
-    company: linksFor(flat, "company"),
+    services: linksFor(flat, "services", locale),
+    patients: linksFor(flat, "patients", locale),
+    company: linksFor(flat, "company", locale),
   };
 }

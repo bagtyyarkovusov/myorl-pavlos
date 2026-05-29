@@ -41,6 +41,7 @@ function MockNextResponse(
   };
 }
 MockNextResponse.redirect = mockRedirect;
+MockNextResponse.next = vi.fn(() => ({ type: "next" as const }));
 
 vi.mock("next/server", () => ({
   NextResponse: MockNextResponse,
@@ -60,14 +61,14 @@ describe("proxy", () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/el/about");
     const response = proxy(request);
-    expect(response).toBeUndefined();
+    expect(response).toEqual({ type: "next" });
   });
 
   it("does not redirect when locale is already ru", async () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/ru/contact");
     const response = proxy(request);
-    expect(response).toBeUndefined();
+    expect(response).toEqual({ type: "next" });
   });
 
   it("passes through bare slugs — handled by next.config.ts redirects()", async () => {
@@ -200,7 +201,7 @@ describe("proxy", () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/el/about");
     const response = proxy(request);
-    expect(response).toBeUndefined();
+    expect(response).toEqual({ type: "next" });
   });
 
   it("skips gone-paths check for root /", async () => {

@@ -5,6 +5,7 @@ import { SearchFilters } from "./SearchFilters";
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams("q=test"),
   usePathname: () => "/el/search-results",
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 const sampleSections = ["Ωτορινολαρυγγολογία", "Πλαστική Χειρουργική"];

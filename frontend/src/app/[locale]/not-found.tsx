@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { getPageResult } from "@/lib/cms/cms-api";
+import { resolveNotFoundContext } from "@/lib/routing/resolve-not-found-context";
 import { isLocale, type Locale } from "@/lib/cms/types";
 
 type NotFoundProps = {
-  params: Promise<{
-    locale: string;
-    slug: string;
+  params?: Promise<{
+    locale?: string;
+    slug?: string;
   }>;
 };
 
@@ -35,12 +36,12 @@ const t = {
   },
 } as const;
 
-export default async function LocaleSlugNotFound({ params }: NotFoundProps) {
-  const { locale, slug } = await params;
+export default async function LocaleNotFound({ params }: NotFoundProps) {
+  const { locale, slug } = await resolveNotFoundContext(params);
 
   let crossLocaleLink: { label: string; href: string } | null = null;
 
-  if (isLocale(locale)) {
+  if (isLocale(locale) && slug) {
     const otherLocale: Locale = locale === "el" ? "ru" : "el";
     const otherResult = await getPageResult(otherLocale, slug);
     if (otherResult.ok) {

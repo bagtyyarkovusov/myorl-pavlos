@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
+import type { OverlayDataState } from "@/lib/motion/useOverlayLifecycle";
 import type { MediaDTO } from "@/lib/cms/types";
 
 import styles from "./Lightbox.module.css";
@@ -16,21 +17,42 @@ type LightboxProps = {
   images: LightboxImage[];
   initialIndex: number;
   onClose: () => void;
+  dataState: OverlayDataState;
+  overlayRef: React.RefObject<HTMLElement | null>;
 };
 
-export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
+export function Lightbox({ images, initialIndex, onClose, dataState, overlayRef }: LightboxProps) {
   const [index, setIndex] = useState(initialIndex);
+  const [imageChanging, setImageChanging] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
-  useFocusTrap(dialogRef, true);
+  useFocusTrap(dialogRef, dataState === "open");
+
+  const setDialogRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      dialogRef.current = node;
+      overlayRef.current = node;
+    },
+    [overlayRef],
+  );
 
   const goNext = useCallback(() => {
+    setImageChanging(true);
     setIndex((i) => (i + 1) % images.length);
   }, [images.length]);
 
   const goPrev = useCallback(() => {
+    setImageChanging(true);
     setIndex((i) => (i - 1 + images.length) % images.length);
   }, [images.length]);
+
+  useEffect(() => {
+    if (!imageChanging) {
+      return;
+    }
+    const timer = window.setTimeout(() => setImageChanging(false), 200);
+    return () => window.clearTimeout(timer);
+  }, [index, imageChanging]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -90,11 +112,12 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
 
   return (
     <div
-      ref={dialogRef}
+      ref={setDialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Image lightbox"
       className={styles.overlay}
+      data-state={dataState}
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
       onTouchStart={handleTouchStart}
@@ -119,6 +142,7 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
       <figure
         className={styles.content}
         data-current-index={index}
+        data-image-changing={imageChanging ? "true" : undefined}
         onClick={(e) => e.stopPropagation()}
       >
         <Image

@@ -1,8 +1,16 @@
 import { describe, expect, it, vi } from "vitest";
+import { createRef } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 
 import { Lightbox } from "./Lightbox";
 import type { MediaDTO } from "@/lib/cms/types";
+
+function renderLightbox(
+  props: Omit<React.ComponentProps<typeof Lightbox>, "dataState" | "overlayRef">,
+) {
+  const overlayRef = createRef<HTMLElement>();
+  return render(<Lightbox {...props} dataState="open" overlayRef={overlayRef} />);
+}
 
 const IMAGES: MediaDTO[] = [
   { url: "/img/photo-1.jpg", alternativeText: "Photo 1", width: 800, height: 600 },
@@ -19,7 +27,7 @@ const CAPTIONED_IMAGES = [
 describe("Lightbox", () => {
   it("renders an overlay with the current image", () => {
     const onClose = vi.fn();
-    render(<Lightbox images={IMAGES} initialIndex={0} onClose={onClose} />);
+    renderLightbox({ images: IMAGES, initialIndex: 0, onClose: onClose });
 
     expect(screen.getByRole("dialog")).toBeTruthy();
     expect(screen.getByAltText("Photo 1")).toBeTruthy();
@@ -27,7 +35,7 @@ describe("Lightbox", () => {
 
   it("closes when Escape is pressed", () => {
     const onClose = vi.fn();
-    render(<Lightbox images={IMAGES} initialIndex={0} onClose={onClose} />);
+    renderLightbox({ images: IMAGES, initialIndex: 0, onClose: onClose });
 
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(onClose).toHaveBeenCalledTimes(1);
@@ -35,14 +43,14 @@ describe("Lightbox", () => {
 
   it("navigates to next image with right arrow", () => {
     const onClose = vi.fn();
-    render(<Lightbox images={IMAGES} initialIndex={0} onClose={onClose} />);
+    renderLightbox({ images: IMAGES, initialIndex: 0, onClose: onClose });
 
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "ArrowRight" });
     expect(screen.getByAltText("Photo 2")).toBeTruthy();
   });
 
   it("shows the caption for the current image", () => {
-    render(<Lightbox images={CAPTIONED_IMAGES} initialIndex={0} onClose={vi.fn()} />);
+    renderLightbox({ images: CAPTIONED_IMAGES, initialIndex: 0, onClose: vi.fn() });
 
     expect(screen.getByText("Reception area")).toBeTruthy();
 
@@ -52,7 +60,7 @@ describe("Lightbox", () => {
   });
 
   it("navigates by horizontal swipe", () => {
-    render(<Lightbox images={IMAGES} initialIndex={1} onClose={vi.fn()} />);
+    renderLightbox({ images: IMAGES, initialIndex: 1, onClose: vi.fn() });
 
     const dialog = screen.getByRole("dialog");
     fireEvent.touchStart(dialog, { touches: [{ clientX: 220, clientY: 40 }] });
@@ -66,7 +74,7 @@ describe("Lightbox", () => {
 
   it("navigates to previous image with left arrow", () => {
     const onClose = vi.fn();
-    render(<Lightbox images={IMAGES} initialIndex={1} onClose={onClose} />);
+    renderLightbox({ images: IMAGES, initialIndex: 1, onClose: onClose });
 
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "ArrowLeft" });
     expect(screen.getByAltText("Photo 1")).toBeTruthy();
@@ -74,7 +82,7 @@ describe("Lightbox", () => {
 
   it("wraps around at the end", () => {
     const onClose = vi.fn();
-    render(<Lightbox images={IMAGES} initialIndex={2} onClose={onClose} />);
+    renderLightbox({ images: IMAGES, initialIndex: 2, onClose: onClose });
 
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "ArrowRight" });
     expect(screen.getByAltText("Photo 1")).toBeTruthy();
@@ -82,7 +90,7 @@ describe("Lightbox", () => {
 
   it("closes when clicking the backdrop", () => {
     const onClose = vi.fn();
-    render(<Lightbox images={IMAGES} initialIndex={0} onClose={onClose} />);
+    renderLightbox({ images: IMAGES, initialIndex: 0, onClose: onClose });
 
     const backdrop = screen.getByRole("dialog");
     fireEvent.click(backdrop);
@@ -91,7 +99,7 @@ describe("Lightbox", () => {
 
   it("does not close when clicking the image itself", () => {
     const onClose = vi.fn();
-    render(<Lightbox images={IMAGES} initialIndex={0} onClose={onClose} />);
+    renderLightbox({ images: IMAGES, initialIndex: 0, onClose: onClose });
 
     const img = screen.getByAltText("Photo 1");
     fireEvent.click(img);
@@ -100,7 +108,7 @@ describe("Lightbox", () => {
 
   it("renders close button", () => {
     const onClose = vi.fn();
-    render(<Lightbox images={IMAGES} initialIndex={0} onClose={onClose} />);
+    renderLightbox({ images: IMAGES, initialIndex: 0, onClose: onClose });
 
     const closeBtn = screen.getByRole("button", { name: /close/i });
     expect(closeBtn).toBeTruthy();
@@ -109,7 +117,7 @@ describe("Lightbox", () => {
   });
 
   it("traps focus: Tab from last button cycles to first", () => {
-    render(<Lightbox images={IMAGES} initialIndex={0} onClose={vi.fn()} />);
+    renderLightbox({ images: IMAGES, initialIndex: 0, onClose: vi.fn() });
 
     const dialog = screen.getByRole("dialog");
     const buttons = screen.getAllByRole("button");

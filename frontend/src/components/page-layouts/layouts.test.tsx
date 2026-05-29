@@ -705,7 +705,10 @@ const CLINIC_GALLERY_ITEMS = [
   },
 ];
 
-function makeClinicChildPage(slug: "iatreio-alexandras" | "iatreio-koukaki", title: string): PageDTO {
+function makeClinicChildPage(
+  slug: "iatreio-alexandras" | "iatreio-koukaki",
+  title: string,
+): PageDTO {
   return {
     ...BASE_PAGE,
     slug,
@@ -727,7 +730,7 @@ describe("ClinicLocationBlock", () => {
 
     expect(screen.getByRole("heading", { name: "Κουκάκι" })).toBeDefined();
     expect(screen.getByText("Clinic location copy")).toBeDefined();
-    expect(screen.getByRole("link", { name: "Κλείστε ραντεβού Online" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Κλείστε ραντεβού ηλεκτρονικά" })).toHaveAttribute(
       "href",
       "/el/rantevou",
     );
@@ -762,7 +765,7 @@ describe("ClinicHubPage", () => {
     expect(screen.getByText("Doctor bio intro")).toBeDefined();
     expect(screen.getByRole("heading", { name: "Αμπελόκηποι" })).toBeDefined();
     expect(screen.getByRole("heading", { name: "Κουκάκι" })).toBeDefined();
-    expect(screen.getAllByRole("link", { name: "Κλείστε ραντεβού Online" })).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: "Κλείστε ραντεβού ηλεκτρονικά" })).toHaveLength(2);
     expect(screen.getByRole("link", { name: "Αμπελόκηποι" })).toHaveAttribute(
       "href",
       "#clinic-iatreio-alexandras",

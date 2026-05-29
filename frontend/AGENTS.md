@@ -41,7 +41,7 @@ npm run e2e -- --project=desktop  # Run only desktop viewport
 1. Create `e2e/pages/<name>.spec.ts`
 2. Use `@desktop` and `@mobile` tags to match viewport projects
 3. Use `toHaveScreenshot()` with `fullPage: true` for full-page captures
-4. Use `waitForTimeout(2000)` to let framer-motion animations settle
+4. Wait for overlay `data-state="open"` or use `expect(locator).toBeVisible()` before screenshots — motion uses CSS transitions (150–200ms), not framer-motion
 
 ### Prerequisites
 

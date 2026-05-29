@@ -35,7 +35,7 @@ describe("buildFooterLinks", () => {
       makeNode({ slug: "about", footerCategory: "company", menuIndex: 3 }),
     ];
 
-    const result = buildFooterLinks(nav);
+    const result = buildFooterLinks(nav, "el");
 
     expect(result.services).toHaveLength(1);
     expect(result.services[0]!.href).toBe("/el/yperesies");
@@ -51,7 +51,7 @@ describe("buildFooterLinks", () => {
       makeNode({ slug: "no-cat" }),
     ];
 
-    const result = buildFooterLinks(nav);
+    const result = buildFooterLinks(nav, "el");
     expect(result.services).toHaveLength(0);
     expect(result.patients).toHaveLength(0);
     expect(result.company).toHaveLength(0);
@@ -64,7 +64,7 @@ describe("buildFooterLinks", () => {
       makeNode({ slug: "m", footerCategory: "services", menuIndex: 20 }),
     ];
 
-    const result = buildFooterLinks(nav);
+    const result = buildFooterLinks(nav, "el");
     expect(result.services.map((l) => l.href)).toEqual(["/el/a", "/el/m", "/el/z"]);
   });
 
@@ -75,12 +75,12 @@ describe("buildFooterLinks", () => {
       makeNode({ slug: "gamma", footerCategory: "services", menuIndex: 10 }),
     ];
 
-    const result = buildFooterLinks(nav);
+    const result = buildFooterLinks(nav, "el");
     expect(result.services.map((l) => l.href)).toEqual(["/el/alpha", "/el/beta", "/el/gamma"]);
   });
 
   it("returns empty groups when no pages match", () => {
-    const result = buildFooterLinks([]);
+    const result = buildFooterLinks([], "el");
     expect(result.services).toEqual([]);
     expect(result.patients).toEqual([]);
     expect(result.company).toEqual([]);
@@ -98,7 +98,7 @@ describe("buildFooterLinks", () => {
       }),
     ];
 
-    const result = buildFooterLinks(nav);
+    const result = buildFooterLinks(nav, "el");
     expect(result.services.map((l) => l.href)).toEqual(["/el/child-a"]);
     expect(result.company.map((l) => l.href)).toEqual(["/el/child-b"]);
   });
@@ -120,8 +120,21 @@ describe("buildFooterLinks", () => {
       }),
     ];
 
-    const result = buildFooterLinks(nav);
+    const result = buildFooterLinks(nav, "el");
     expect(result.services[0]!.label).toBe("Custom Label");
     expect(result.services[1]!.label).toBe("Fallback Title");
+  });
+
+  it("localizes Greek footer labels from CMS English loanwords", () => {
+    const nav: NavigationNodeDTO[] = [
+      makeNode({
+        slug: "video",
+        footerCategory: "company",
+        navLabel: "Video",
+      }),
+    ];
+
+    const result = buildFooterLinks(nav, "el");
+    expect(result.company[0]!.label).toBe("Βίντεο");
   });
 });

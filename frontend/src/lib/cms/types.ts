@@ -34,6 +34,7 @@ export type {
 export type { SectionDTO } from "./types/sections";
 
 export type {
+  GalleryItemDTO,
   LinkedResourceItemDTO,
   PromoSlideItemDTO,
   SocialLinkItemDTO,

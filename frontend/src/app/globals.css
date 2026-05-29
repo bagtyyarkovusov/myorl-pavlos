@@ -444,6 +444,34 @@ main[data-hub-child="true"] .cms-html h3[id] {
   }
 }
 
+::view-transition-old(search-results-list) {
+  animation: search-results-fade-out 100ms ease-out forwards;
+}
+
+::view-transition-new(search-results-list) {
+  animation: search-results-fade-in 150ms ease-out forwards;
+}
+
+@keyframes search-results-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes search-results-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 1180px) {
   .desktop-only {
     display: none;

@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "framer-motion": "^12.38.0",
     "isomorphic-dompurify": "^3.10.0",
     "js-yaml": "^4.1.1",
     "meilisearch": "^0.58.0",

@@ -20,13 +20,11 @@ function AccordionParent({
   overviewMobile,
   topicsLabel,
   onNavigate,
-  staggerIndex,
 }: {
   item: NavigationNodeDTO;
   overviewMobile: string;
   topicsLabel: (count: number) => string;
   onNavigate: () => void;
-  staggerIndex: number;
 }) {
   const [open, setOpen] = useState(false);
   const entryCount = sectionEntryCount(item);
@@ -34,11 +32,7 @@ function AccordionParent({
   const showOverviewLink = showsSectionOverviewLink(item);
 
   return (
-    <div
-      className={`${styles["mobile-nav-parent"]} ${styles["mobile-stagger-item"]}`}
-      data-open={open}
-      style={{ "--stagger-index": staggerIndex } as React.CSSProperties}
-    >
+    <div className={styles["mobile-nav-parent"]} data-open={open}>
       <button
         className={styles["mobile-nav-parent__trigger"]}
         type="button"
@@ -88,14 +82,13 @@ function AccordionParent({
 export function MobileMenu({ items, overviewMobile, topicsLabel, onNavigate }: MobileMenuProps) {
   return (
     <>
-      {items.map((item, idx) =>
+      {items.map((item) =>
         item.children.length === 0 ? (
           <NavigationAnchor
             key={item.documentId}
             item={item}
-            className={`${styles["mobile-nav-link"]} ${styles["mobile-stagger-item"]}`}
+            className={styles["mobile-nav-link"]}
             onClick={onNavigate}
-            style={{ "--stagger-index": idx } as React.CSSProperties}
           >
             {item.navLabel}
           </NavigationAnchor>
@@ -106,7 +99,6 @@ export function MobileMenu({ items, overviewMobile, topicsLabel, onNavigate }: M
             overviewMobile={overviewMobile}
             topicsLabel={topicsLabel}
             onNavigate={onNavigate}
-            staggerIndex={idx}
           />
         ),
       )}

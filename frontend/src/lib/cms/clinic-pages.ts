@@ -16,7 +16,9 @@ export function isClinicChildPage(page: Pick<PageDTO, "parentPage">): boolean {
 
 export function getGallerySection(page: PageDTO) {
   return page.sections.find(
-    (section): section is Extract<PageDTO["sections"][number], { __component: "sections.gallery" }> =>
+    (
+      section,
+    ): section is Extract<PageDTO["sections"][number], { __component: "sections.gallery" }> =>
       section.__component === "sections.gallery",
   );
 }

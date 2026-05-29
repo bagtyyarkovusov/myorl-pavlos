@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
 import type { LightboxImage } from "@/components/Lightbox";
+import { useOverlayLifecycle } from "@/lib/motion/useOverlayLifecycle";
 import type { MediaDTO } from "@/lib/cms/types";
 
 const Lightbox = dynamic(() => import("@/components/Lightbox").then((m) => m.Lightbox), {
@@ -32,18 +33,23 @@ export function GalleryWithLightbox({
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
 
+  const restoreFocus = useCallback(() => {
+    setLightboxIndex(null);
+    window.setTimeout(() => {
+      lastTriggerRef.current?.focus();
+    }, 0);
+  }, []);
+
+  const { shouldRender, dataState, overlayRef, requestClose } = useOverlayLifecycle({
+    isOpen: lightboxIndex !== null,
+    onClosed: restoreFocus,
+  });
+
   const images = items
     .map((item): LightboxImage | null =>
       item.image?.url ? { ...item.image, caption: item.caption } : null,
     )
     .filter((img): img is LightboxImage => img !== null);
-
-  const closeLightbox = () => {
-    setLightboxIndex(null);
-    setTimeout(() => {
-      lastTriggerRef.current?.focus();
-    }, 0);
-  };
 
   return (
     <>
@@ -99,8 +105,14 @@ export function GalleryWithLightbox({
         })}
       </div>
 
-      {lightboxIndex !== null ? (
-        <Lightbox images={images} initialIndex={lightboxIndex} onClose={closeLightbox} />
+      {shouldRender && lightboxIndex !== null ? (
+        <Lightbox
+          images={images}
+          initialIndex={lightboxIndex}
+          onClose={requestClose}
+          dataState={dataState}
+          overlayRef={overlayRef}
+        />
       ) : null}
     </>
   );

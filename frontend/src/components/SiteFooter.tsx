@@ -50,10 +50,11 @@ export function SiteFooter({
   socialLinks,
 }: SiteFooterProps) {
   const t = getFooterStrings(locale);
-  const groups = buildFooterLinks(navigation);
+  const groups = buildFooterLinks(navigation, locale);
 
   const practiceLinks = groups.services;
-  const patientsLinks = [{ label: t.bookOnlineLabel, href: appointmentHref }, ...groups.patients];
+  const patientsFromCms = groups.patients.filter((link) => link.href !== appointmentHref);
+  const patientsLinks = [{ label: t.bookOnlineLabel, href: appointmentHref }, ...patientsFromCms];
   const companyLinks = groups.company;
 
   const year = new Date().getFullYear();

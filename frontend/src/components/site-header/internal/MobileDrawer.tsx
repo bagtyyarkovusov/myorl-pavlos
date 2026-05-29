@@ -57,11 +57,11 @@ export function MobileDrawer({
 }: MobileDrawerProps) {
   const panelRef = useRef<HTMLElement>(null);
   useFocusTrap(panelRef, isOpen, { restoreFocus: false });
-  const staggerBase = items.length + 1;
 
   return (
     <div
       className={`${styles["mobile-drawer"]} ${isOpen ? styles["is-open"] : ""}`}
+      data-state={isOpen ? "open" : "closed"}
       data-locale={locale}
       aria-hidden={!isOpen}
     >
@@ -116,10 +116,7 @@ export function MobileDrawer({
           />
         </nav>
 
-        <div
-          className={`${styles["mobile-drawer__info"]} ${styles["mobile-stagger-item"]}`}
-          style={{ "--stagger-index": staggerBase } as React.CSSProperties}
-        >
+        <div className={styles["mobile-drawer__info"]}>
           {address ? (
             <div className={styles["mobile-drawer__info-item"]}>
               <span className={styles["status-dot"]} aria-hidden="true" />
@@ -140,10 +137,7 @@ export function MobileDrawer({
           </div>
         </div>
 
-        <div
-          className={`${styles["mobile-drawer__foot"]} ${styles["mobile-stagger-item"]}`}
-          style={{ "--stagger-index": staggerBase + 1 } as React.CSSProperties}
-        >
+        <div className={styles["mobile-drawer__foot"]}>
           <Link href={appointmentHref} onClick={onClose}>
             <span className={styles["cta-book__label"]}>{bookAppointmentLabel}</span>
             <span className={styles["cta-book__arrow"]} aria-hidden="true">

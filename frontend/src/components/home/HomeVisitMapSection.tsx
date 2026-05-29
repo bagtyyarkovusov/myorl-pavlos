@@ -46,13 +46,14 @@ export function HomeVisitMapSection({ locale, settings }: HomeVisitMapSectionPro
                 <PrimaryContactPhones
                   locale={locale}
                   settings={settings}
+                  className={styles["phones"]}
                   linkClassName={styles["tel"]}
+                  separatorClassName={styles["phone-separator"]}
                 />
                 {email ? (
-                  <>
-                    {"\n"}
-                    <a href={`mailto:${email}`}>{email}</a>
-                  </>
+                  <a className={styles["email"]} href={`mailto:${email}`}>
+                    {email}
+                  </a>
                 ) : null}
               </p>
             </div>

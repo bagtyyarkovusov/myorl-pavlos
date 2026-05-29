@@ -6,6 +6,7 @@ import { MobileFilterSheet } from "./MobileFilterSheet";
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams("q=test"),
   usePathname: () => "/el/search-results",
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 describe("MobileFilterSheet", () => {

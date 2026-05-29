@@ -97,10 +97,47 @@ describe("SiteFooter", () => {
     );
     expect(screen.getByRole("link", { name: "About" })).toHaveAttribute("href", "/el/about");
     expect(screen.queryByRole("link", { name: "Hidden Footer" })).toBeNull();
-    expect(screen.getByRole("link", { name: "Online ραντεβού" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Κλείστε ραντεβού ηλεκτρονικά" })).toHaveAttribute(
       "href",
       "/el/rantevou",
     );
+  });
+
+  it("omits duplicate appointment page from CMS patients group", () => {
+    const navigation = buildNavigationTree(
+      [
+        makePage({
+          documentId: "rantevou",
+          slug: "rantevou",
+          title: "Κλείστε ραντεβού Online",
+          navLabel: "Κλείστε ραντεβού Online",
+          menuIndex: 1,
+          footerCategory: "patients",
+        }),
+        makePage({
+          documentId: "clinics",
+          slug: "klinikes",
+          title: "Κλινικές",
+          navLabel: "Κλινικές",
+          menuIndex: 2,
+          footerCategory: "patients",
+        }),
+      ],
+      "el",
+    );
+
+    render(
+      <SiteFooter
+        locale="el"
+        navigation={navigation}
+        settings={SETTINGS}
+        appointmentHref="/el/rantevou"
+        socialLinks={[]}
+      />,
+    );
+
+    expect(screen.getAllByRole("link", { name: "Κλείστε ραντεβού ηλεκτρονικά" })).toHaveLength(1);
+    expect(screen.getByRole("link", { name: "Κλινικές" })).toBeInTheDocument();
   });
 
   it("keeps CMS contact details when footer groups are empty", () => {
@@ -124,7 +161,7 @@ describe("SiteFooter", () => {
       "href",
       "mailto:test@example.com",
     );
-    expect(screen.getByRole("link", { name: "Online ραντεβού" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Κλείστε ραντεβού ηλεκτρονικά" })).toHaveAttribute(
       "href",
       "/el/rantevou",
     );

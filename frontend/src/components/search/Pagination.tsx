@@ -1,6 +1,8 @@
 "use client";
 
 import { useSearchParams, usePathname } from "next/navigation";
+import { useViewTransitionNavigate } from "@/lib/motion/useViewTransitionNavigate";
+import { useSearchResultsListRef } from "./SearchResultsMotion";
 import styles from "./Pagination.module.css";
 
 export type PaginationProps = {
@@ -37,6 +39,10 @@ function buildPageUrl(page: number, currentParams: URLSearchParams, pathname: st
 export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: PaginationProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const listRef = useSearchResultsListRef();
+  const navigate = useViewTransitionNavigate({
+    getMinHeightElement: () => listRef?.current ?? null,
+  });
 
   if (totalPages <= 1) {
     return null;
@@ -54,6 +60,9 @@ export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: Pa
         <a
           href={buildPageUrl(currentPage - 1, searchParams, pathname)}
           className={styles.controlLink}
+          onClick={(event) =>
+            navigate(buildPageUrl(currentPage - 1, searchParams, pathname), event)
+          }
         >
           {prevLabel}
         </a>
@@ -70,6 +79,7 @@ export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: Pa
               href={buildPageUrl(page, searchParams, pathname)}
               aria-current={page === currentPage ? "page" : undefined}
               className={styles.pageNumber}
+              onClick={(event) => navigate(buildPageUrl(page, searchParams, pathname), event)}
             >
               {page}
             </a>
@@ -84,6 +94,9 @@ export function Pagination({ currentPage, totalPages, prevLabel, nextLabel }: Pa
         <a
           href={buildPageUrl(currentPage + 1, searchParams, pathname)}
           className={styles.controlLink}
+          onClick={(event) =>
+            navigate(buildPageUrl(currentPage + 1, searchParams, pathname), event)
+          }
         >
           {nextLabel}
         </a>

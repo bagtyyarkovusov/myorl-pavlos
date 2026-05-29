@@ -2,9 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 const mockGetPageResult = vi.fn();
+const mockHeaders = vi.fn();
 
 vi.mock("@/lib/cms/cms-api", () => ({
   getPageResult: mockGetPageResult,
+}));
+
+vi.mock("next/headers", () => ({
+  headers: mockHeaders,
 }));
 
 function makePage(locale: string, slug: string, title = "Test Page") {
@@ -57,56 +62,61 @@ function makeNotFound(locale: string, slug: string) {
   };
 }
 
-describe("LocaleSlugNotFound", () => {
+describe("LocaleNotFound", () => {
   beforeEach(() => {
     vi.resetModules();
     mockGetPageResult.mockReset();
+    mockHeaders.mockReset();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  async function renderNotFound(locale: string, slug: string): Promise<void> {
+  async function renderNotFound(
+    locale: string,
+    slug: string,
+    options?: { omitParams?: boolean },
+  ): Promise<void> {
     const { default: Component } = await import("./not-found");
-    const element = await Component({
-      params: Promise.resolve({ locale, slug }),
-    });
+    const element = await Component(
+      options?.omitParams ? {} : { params: Promise.resolve({ locale, slug }) },
+    );
     render(element);
   }
 
+  it("resolves locale and slug from pathname when params are omitted", async () => {
+    mockHeaders.mockResolvedValue(new Headers({ "x-pathname": "/ru/missing-from-path" }));
+    mockGetPageResult.mockResolvedValueOnce(makeNotFound("el", "missing-from-path"));
+
+    await renderNotFound("unused", "unused", { omitParams: true });
+
+    expect(screen.getByText("Страница не найдена")).toBeTruthy();
+    expect(mockGetPageResult).toHaveBeenCalledWith("el", "missing-from-path");
+  });
+
   describe("cross-locale 404", () => {
     it("renders link to EL page when browsing RU and page exists only in Greek", async () => {
-      // Page NOT found in RU, but EXISTS in EL
       mockGetPageResult.mockResolvedValueOnce(makePage("el", "test-page", "Δοκιμαστική Σελίδα"));
 
       await renderNotFound("ru", "test-page");
 
-      // Should render the 404 heading in Russian
       expect(screen.getByText("Страница не найдена")).toBeTruthy();
-
-      // Should show the cross-locale message
       expect(screen.getByText(/недоступна на русском/i)).toBeTruthy();
 
-      // Should have a link to the Greek page
       const link = screen.getByText("Ελληνικά");
       expect(link.tagName).toBe("A");
       expect(link).toHaveAttribute("href", "/el/test-page");
     });
 
     it("renders link to RU page when browsing EL and page exists only in Russian", async () => {
-      // Page NOT found in EL, but EXISTS in RU
       mockGetPageResult.mockResolvedValueOnce(makePage("ru", "test-page", "Тестовая Страница"));
 
       await renderNotFound("el", "test-page");
 
-      // Should render the 404 heading in Greek
       expect(screen.getByText("Η σελίδα δεν βρέθηκε")).toBeTruthy();
-
-      // Should show the cross-locale message
       expect(screen.getByText(/δεν είναι διαθέσιμη στα Ελληνικά/i)).toBeTruthy();
 
-      // Should have a link to the Russian page
       const link = screen.getByText("Русский");
       expect(link.tagName).toBe("A");
       expect(link).toHaveAttribute("href", "/ru/test-page");
@@ -138,7 +148,6 @@ describe("LocaleSlugNotFound", () => {
     });
 
     it("preserves the other locale's actual slug in the link", async () => {
-      // The other locale might have a different slug
       mockGetPageResult.mockResolvedValueOnce(makePage("el", "diaforetiko-slug", "Different"));
 
       await renderNotFound("ru", "original-slug");
@@ -150,19 +159,14 @@ describe("LocaleSlugNotFound", () => {
 
   describe("pure 404", () => {
     it("renders pure 404 when page exists in neither locale (EL request)", async () => {
-      // Page NOT found in EL, and NOT in RU either
       mockGetPageResult.mockResolvedValueOnce(makeNotFound("ru", "missing-page"));
 
       await renderNotFound("el", "missing-page");
 
       expect(screen.getByText("Η σελίδα δεν βρέθηκε")).toBeTruthy();
       expect(screen.getByText(/δεν υπάρχει/i)).toBeTruthy();
-
-      // Should NOT have a cross-locale link
       expect(screen.queryByText("Ελληνικά")).toBeNull();
       expect(screen.queryByText("Русский")).toBeNull();
-
-      // Should have a search form
       expect(screen.getByRole("search")).toBeTruthy();
     });
 
@@ -173,14 +177,11 @@ describe("LocaleSlugNotFound", () => {
 
       expect(screen.getByText("Страница не найдена")).toBeTruthy();
       expect(screen.getByText(/не существует/i)).toBeTruthy();
-
-      // Should NOT have a cross-locale link
       expect(screen.queryByText("Ελληνικά")).toBeNull();
       expect(screen.queryByText("Русский")).toBeNull();
     });
 
     it("renders pure 404 when getPageResult returns a network error", async () => {
-      // Simulate a network error when checking the other locale
       mockGetPageResult.mockResolvedValueOnce({
         ok: false as const,
         error: {

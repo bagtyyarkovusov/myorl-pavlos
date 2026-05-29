@@ -35,7 +35,7 @@ from environments import ENVIRONMENTS, get
 
 CONTENT_TYPES = ("page", "video")
 LOCALES = ("el", "ru")
-STRAPI_PAGE_SIZE = 500
+STRAPI_PAGE_SIZE = 100
 
 # Path to the frontend YAML synonym/stopword files
 YAML_DIR = Path(__file__).resolve().parents[1] / "frontend" / "src" / "lib" / "search"

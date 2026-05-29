@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { CmsHtml } from "@/components/CmsHtml";
 import { PageSection } from "@/components/PageSection";
 import { SectionIndexGrid } from "@/components/SectionIndexGrid";
@@ -35,19 +36,27 @@ export function SectionIndexPage({
         {page.content ? (
           <CmsHtml html={page.content} className={layoutStyles["directory-intro"]} />
         ) : null}
-        <SectionIndexGrid
-          items={children}
-          locale={page.locale}
-          variant={page.layoutVariant}
-          tags={tags}
-          tagMap={tagMap}
-          indexHref={indexHref}
-          backHref={
-            page.parentPage?.slug
-              ? hrefForLocaleSlug(page.locale, page.parentPage.slug)
-              : `/${page.locale}`
-          }
-        />
+        {/*
+          SectionIndexGrid is a Client Component that calls useSearchParams().
+          Next.js requires it to be inside a <Suspense> boundary when the
+          surrounding page is statically rendered (ISR per ADR-014); without
+          it the build fails with BAILOUT_TO_CLIENT_SIDE_RENDERING.
+        */}
+        <Suspense fallback={null}>
+          <SectionIndexGrid
+            items={children}
+            locale={page.locale}
+            variant={page.layoutVariant}
+            tags={tags}
+            tagMap={tagMap}
+            indexHref={indexHref}
+            backHref={
+              page.parentPage?.slug
+                ? hrefForLocaleSlug(page.locale, page.parentPage.slug)
+                : `/${page.locale}`
+            }
+          />
+        </Suspense>
         <aside className={layoutStyles["directory-closure"]} aria-label={t.directoryClosureCta}>
           <p>{t.directoryClosureCopy}</p>
           <Link href={bookHref} className={layoutStyles["service-cta"]}>

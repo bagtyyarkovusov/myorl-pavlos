@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
-import { Suspense } from "react";
 
 import { PageRenderer } from "@/components/PageRenderer";
 import { getPage, getSite } from "@/lib/cms/cms-api";
@@ -9,21 +8,14 @@ import { isClinicChildPage, CLINIC_HUB_SLUG } from "@/lib/cms/clinic-pages";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { withRelatedTopics } from "@/lib/cms/related-topics";
-import {
-  isLocale,
-  type PageDTO,
-  type NavigationNodeDTO,
-  type GlobalSettingsDTO,
-} from "@/lib/cms/types";
+import { isLocale } from "@/lib/cms/types";
 import { findNodeByDocumentId } from "@/lib/cms/tab-bar";
-import { parsePageParam } from "@/lib/testimonials/paginate";
 
 type CmsPageProps = {
   params: Promise<{
     locale: string;
     slug: string;
   }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateStaticParams() {
@@ -42,13 +34,7 @@ export async function generateStaticParams() {
 
 export const dynamicParams = true;
 
-// FIXME: Next 16.2.4 throws DYNAMIC_SERVER_USAGE when a page exports
-// `revalidate = N` AND reads `await searchParams`, even inside a
-// Suspense boundary. Dropping the time-based revalidate keeps the page
-// compatible with `await searchParams`; tag-based revalidation via the
-// Strapi webhook (revalidateTag) continues to invalidate cached entries.
-// Restore `export const revalidate = 600` once the ISR + searchParams
-// interaction is resolved (see ADR-014 + the spawned follow-up task).
+export const revalidate = 600;
 
 export async function generateMetadata({ params }: CmsPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
@@ -64,7 +50,7 @@ export async function generateMetadata({ params }: CmsPageProps): Promise<Metada
   }
 }
 
-export default async function CmsPage({ params, searchParams }: CmsPageProps) {
+export default async function CmsPage({ params }: CmsPageProps) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) {
     notFound();
@@ -93,56 +79,21 @@ export default async function CmsPage({ params, searchParams }: CmsPageProps) {
     if (firstChild) redirect(firstChild.href);
   }
 
-  return (
-    <Suspense fallback={null}>
-      <CmsPageContent
-        page={pageWithRelatedTopics}
-        navigation={navigation}
-        directoryNavigation={directoryNavigation}
-        globalSettings={settings}
-        appointmentHref={appointmentHref}
-        searchParams={searchParams}
-      />
-    </Suspense>
-  );
-}
-
-async function CmsPageContent({
-  page,
-  navigation,
-  directoryNavigation,
-  globalSettings,
-  appointmentHref,
-  searchParams,
-}: {
-  page: PageDTO;
-  navigation: NavigationNodeDTO[];
-  directoryNavigation: NavigationNodeDTO[];
-  globalSettings?: GlobalSettingsDTO;
-  appointmentHref: string;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const sp = searchParams ? await searchParams : {};
-  const testimonialsPage = parsePageParam(sp.page);
-  const directoryPage = parsePageParam(sp.page);
-  const directoryTag = parseTagParam(sp.tag);
-
+  // FIXME: Next.js 16.2.4 throws DYNAMIC_SERVER_USAGE whenever a Server
+  // Component reads `await searchParams` in a page that has not opted
+  // into dynamic rendering — even inside `<Suspense>`. Calling
+  // `searchParams.X` here forced every slug request to 500 in production.
+  // Dropping the searchParams read for now; testimonials/directory
+  // pagination + tag filtering revert to defaults. Restore once the ISR
+  // + dynamic-island pattern is established (see follow-up task).
   return (
     <PageRenderer
-      page={page}
+      page={pageWithRelatedTopics}
       navigation={navigation}
       directoryNavigation={directoryNavigation}
-      globalSettings={globalSettings}
+      globalSettings={settings}
       appointmentHref={appointmentHref}
-      testimonialsPage={testimonialsPage}
-      directoryPage={directoryPage}
-      directoryTag={directoryTag}
-      directoryHref={hrefForLocaleSlug(page.locale, page.slug)}
+      directoryHref={hrefForLocaleSlug(pageWithRelatedTopics.locale, pageWithRelatedTopics.slug)}
     />
   );
-}
-
-function parseTagParam(raw: string | string[] | undefined): string | null {
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  return value && value.trim().length > 0 ? value : null;
 }

@@ -42,7 +42,12 @@ export async function generateStaticParams() {
 
 export const dynamicParams = true;
 
-export const revalidate = 600;
+// FIXME: Next 16.2.4 throws DYNAMIC_SERVER_USAGE when a page exports
+// `revalidate = N` and also reads `await searchParams` (even inside a
+// Suspense boundary). All slug pages 500 in production until this is
+// resolved. Falling back to fully-dynamic rendering until the proper
+// ISR + searchParams pattern is established. Tracked separately.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: CmsPageProps): Promise<Metadata> {
   const { locale, slug } = await params;

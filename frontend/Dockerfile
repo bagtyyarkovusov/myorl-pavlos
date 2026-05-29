@@ -26,6 +26,11 @@ ENV STRAPI_TOKEN=$STRAPI_TOKEN
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
+# TEMP DEBUG: confirm whether Railway passes build args (revert after one deploy)
+RUN echo "BUILD_DEBUG STRAPI_URL=[${STRAPI_URL}]" && \
+    echo "BUILD_DEBUG NEXT_PUBLIC_SITE_URL=[${NEXT_PUBLIC_SITE_URL}]" && \
+    echo "BUILD_DEBUG STRAPI_TOKEN_LEN=[${#STRAPI_TOKEN}]"
+
 RUN npm run build
 
 FROM node:24-slim AS runner

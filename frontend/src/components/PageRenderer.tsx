@@ -55,12 +55,6 @@ type PageRendererProps = {
   globalSettings?: GlobalSettingsDTO;
   /** Google / curated quotes for the home testimonials band (after the video section). */
   homeTestimonials?: HomeTestimonialsPayload | null;
-  /** 1-based page index for `layoutVariant: testimonials-index` (query `?page=`). */
-  testimonialsPage?: number;
-  /** 1-based page index for URL-backed encyclopedia directory pagination. */
-  directoryPage?: number;
-  /** Active directory tag slug from the URL query. */
-  directoryTag?: string | null;
   /** Canonical href for the current directory page, without query params. */
   directoryHref?: string;
 };
@@ -72,9 +66,6 @@ export function PageRenderer({
   directoryNavigation,
   globalSettings,
   homeTestimonials = null,
-  testimonialsPage = 1,
-  directoryPage = 1,
-  directoryTag = null,
   directoryHref,
 }: PageRendererProps) {
   const jsonLd = (
@@ -90,11 +81,7 @@ export function PageRenderer({
 
   if (page.renderMode === "frontend-native") {
     layout = (
-      <FrontendNativePage
-        page={page}
-        testimonialsPage={testimonialsPage}
-        directoryNavigation={directoryNavigation ?? navigation}
-      />
+      <FrontendNativePage page={page} directoryNavigation={directoryNavigation ?? navigation} />
     );
   } else if (page.layoutVariant === "appointment-form") {
     layout = (
@@ -130,8 +117,6 @@ export function PageRenderer({
         page={page}
         navigation={directoryNavigation ?? navigation}
         appointmentHref={appointmentHref}
-        currentPage={directoryPage}
-        activeTagSlug={directoryTag}
         indexHref={directoryHref}
       />
     );

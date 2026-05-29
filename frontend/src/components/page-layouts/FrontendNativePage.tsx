@@ -6,21 +6,20 @@ import { TestimonialsIndexPage } from "./TestimonialsIndexPage";
 import type { NavigationNodeDTO } from "@/lib/cms/types";
 
 type FrontendNativePageProps = PageLayoutProps & {
-  testimonialsPage?: number;
   directoryNavigation?: NavigationNodeDTO[];
 };
 
-export function FrontendNativePage({
-  page,
-  testimonialsPage = 1,
-  directoryNavigation = [],
-}: FrontendNativePageProps) {
+export function FrontendNativePage({ page, directoryNavigation = [] }: FrontendNativePageProps) {
   if (page.layoutVariant === "sitemap") {
     return <HumanSiteMapPage page={page} directoryNavigation={directoryNavigation} />;
   }
 
   if (page.layoutVariant === "testimonials-index") {
-    return <TestimonialsIndexPage page={page} currentPage={testimonialsPage} />;
+    // No CMS pages currently use this layout. If/when one is created, the
+    // ?page= query param needs to be plumbed via useSearchParams in a client
+    // wrapper around TestimonialsIndexPage — matching the pattern used in
+    // SectionIndexGrid.
+    return <TestimonialsIndexPage page={page} currentPage={1} />;
   }
 
   if (page.layoutVariant === "search-results") {

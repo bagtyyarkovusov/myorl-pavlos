@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 
 import { SectionIndexGrid } from "./SectionIndexGrid";
@@ -6,6 +6,16 @@ import type { NavigationNodeDTO } from "@/lib/cms/types";
 import type { LayoutVariant } from "@/lib/cms/types";
 import type { TagDTO } from "@/lib/cms/types/tag";
 import type { SeoDTO } from "@/lib/cms/types/seo";
+
+const mockSearchParams = vi.fn(() => new URLSearchParams());
+
+vi.mock("next/navigation", () => ({
+  useSearchParams: () => mockSearchParams(),
+}));
+
+beforeEach(() => {
+  mockSearchParams.mockReturnValue(new URLSearchParams());
+});
 
 function makeSeo(overrides: Partial<SeoDTO> = {}): SeoDTO {
   return {
@@ -250,13 +260,14 @@ describe("SectionIndexGrid variants", () => {
       makeChild(`item-${index + 1}`, `Item ${index + 1}`, { menuIndex: index + 1 }),
     );
 
+    mockSearchParams.mockReturnValue(new URLSearchParams("page=2"));
+
     render(
       <SectionIndexGrid
         items={children}
         locale="el"
         variant="encyclopedia-index"
         indexHref="/el/orl-egkyklopaidia"
-        currentPage={2}
       />,
     );
 
@@ -285,6 +296,8 @@ describe("SectionIndexGrid variants", () => {
       "doc-otitis": ["ear"],
     };
 
+    mockSearchParams.mockReturnValue(new URLSearchParams("tag=nose"));
+
     render(
       <SectionIndexGrid
         items={children}
@@ -293,8 +306,6 @@ describe("SectionIndexGrid variants", () => {
         indexHref="/el/orl-egkyklopaidia"
         tags={tags}
         tagMap={tagMap}
-        activeTagSlug="nose"
-        currentPage={1}
       />,
     );
 

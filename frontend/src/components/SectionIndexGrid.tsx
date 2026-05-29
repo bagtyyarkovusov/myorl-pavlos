@@ -3,6 +3,7 @@
 import { useState, type AnchorHTMLAttributes, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { isExternalHref } from "@/components/design-system";
 import { SECTION_INDEX_FEATURED_COUNT, partitionDirectoryTags } from "@/lib/cms/directory-tags";
@@ -27,8 +28,6 @@ type SectionIndexGridProps = {
   tags?: TagDTO[];
   tagMap?: Record<string, string[]>;
   indexHref?: string;
-  currentPage?: number;
-  activeTagSlug?: string | null;
 };
 
 type DirectoryVariant =
@@ -46,16 +45,23 @@ export function SectionIndexGrid({
   tags,
   tagMap,
   indexHref,
-  currentPage = 1,
-  activeTagSlug = null,
 }: SectionIndexGridProps) {
   const t = getPageStrings(locale);
   const [localActiveTag, setLocalActiveTag] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const directoryVariant = getDirectoryVariant(variant);
   const usesUrlControls = directoryVariant === "encyclopedia-list" && Boolean(indexHref);
+  // URL-driven controls live entirely in this client component (the slug page is
+  // a pure Server Component without searchParams — see ADR-014 / ADR-015 + the
+  // /el/<slug> trade-off note). useSearchParams reads from the URL after
+  // hydration, so the first paint shows the unfiltered list; the filtered list
+  // appears within a few ms of mount.
+  const searchParams = useSearchParams();
+  const urlTagParam = usesUrlControls ? searchParams.get("tag") : null;
+  const urlPageParam = usesUrlControls ? searchParams.get("page") : null;
   const urlActiveTag =
-    activeTagSlug && tags?.some((tag) => tag.slug === activeTagSlug) ? activeTagSlug : null;
+    urlTagParam && tags?.some((tag) => tag.slug === urlTagParam) ? urlTagParam : null;
+  const currentPage = parsePageParam(urlPageParam);
   const activeTag = usesUrlControls ? urlActiveTag : localActiveTag;
   const tagContext = variant === "section-index" ? "section-index" : "default";
   const { primary: primaryTags, secondary: secondaryTags } = partitionDirectoryTags(
@@ -538,4 +544,10 @@ function buildDirectoryHref(indexHref: string, page: number, tag: string | null)
 function clampPage(page: number, pageCount: number): number {
   if (!Number.isFinite(page)) return 1;
   return Math.min(Math.max(1, Math.floor(page)), pageCount);
+}
+
+function parsePageParam(raw: string | null): number {
+  if (!raw) return 1;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
 }

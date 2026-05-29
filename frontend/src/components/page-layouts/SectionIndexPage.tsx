@@ -11,8 +11,6 @@ import { PageHeader, type PageLayoutProps } from "./_shared";
 import layoutStyles from "./_shared.module.css";
 
 type SectionIndexPageProps = PageLayoutProps & {
-  currentPage?: number;
-  activeTagSlug?: string | null;
   indexHref?: string;
 };
 
@@ -20,8 +18,6 @@ export function SectionIndexPage({
   page,
   navigation = [],
   appointmentHref,
-  currentPage = 1,
-  activeTagSlug = null,
   indexHref,
 }: SectionIndexPageProps) {
   const children =
@@ -45,8 +41,6 @@ export function SectionIndexPage({
           variant={page.layoutVariant}
           tags={tags}
           tagMap={tagMap}
-          currentPage={currentPage}
-          activeTagSlug={activeTagSlug}
           indexHref={indexHref}
           backHref={
             page.parentPage?.slug

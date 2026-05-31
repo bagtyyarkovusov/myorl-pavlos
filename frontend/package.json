@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "article:responsive": "node scripts/check-article-responsive.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "e2e": "playwright test",

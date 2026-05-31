@@ -42,6 +42,7 @@ export function CmsHtml({
       html={sanitized}
       className={cn("cms-html prose-luxury", PROSE_VARIANT_CLASSES[variant], className)}
       data-variant={variant === "luxury" ? undefined : variant}
+      lang={locale}
       playLabel={resolvedPlayLabel}
     />
   );

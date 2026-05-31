@@ -232,35 +232,15 @@
   }
 
   .tab-bar {
-    gap: 8px;
-    padding-inline: 2px 86px;
-    scroll-padding-inline: 2px 86px;
+    gap: clamp(18px, 5vw, 28px);
+    padding-inline: 2px 64px;
+    scroll-padding-inline: 2px 64px;
     scrollbar-width: auto;
-    border-bottom: 0;
-  }
-
-  .tab {
-    min-height: 44px;
-    margin-bottom: 6px;
-    padding: 9px 12px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-full);
-    background: var(--surface);
-  }
-
-  .tab--active {
-    border-color: var(--accent);
-    background: var(--accent-soft);
-    color: var(--accent-ink);
-  }
-
-  .more-button {
-    border: 1px solid var(--line);
   }
 
   .tab-bar-wrapper::after {
     top: 42px;
-    width: 78px;
+    width: 58px;
     background: linear-gradient(to right, rgba(246, 248, 251, 0), var(--background, #f6f8fb) 50%);
   }
 }

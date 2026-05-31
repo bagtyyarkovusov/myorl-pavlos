@@ -9,6 +9,7 @@ type CmsHtmlEnhancerProps = {
   html: string;
   className?: string;
   "data-variant"?: string;
+  lang?: string;
   playLabel: string;
 };
 
@@ -56,6 +57,7 @@ export function CmsHtmlEnhancer({
   html,
   className,
   "data-variant": dataVariant,
+  lang,
   playLabel,
 }: CmsHtmlEnhancerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -106,6 +108,7 @@ export function CmsHtmlEnhancer({
       ref={containerRef}
       className={className}
       data-variant={dataVariant}
+      lang={lang}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

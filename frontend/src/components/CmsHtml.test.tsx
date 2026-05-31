@@ -29,6 +29,12 @@ describe("CmsHtml", () => {
     expect(prose?.className).toContain("prose-service");
   });
 
+  it("marks the prose root with the active locale for language-aware wrapping", () => {
+    render(<CmsHtml html="<p>Русский текст</p>" locale="ru" />);
+
+    expect(screen.getByText("Русский текст").closest("div")).toHaveAttribute("lang", "ru");
+  });
+
   it("adds public classes for encyclopedia and specialized prose variants", () => {
     render(<CmsHtml html="<p>Clinical copy</p>" variant="encyclopedia" />);
     expect(screen.getByText("Clinical copy").closest("div")?.className).toContain(

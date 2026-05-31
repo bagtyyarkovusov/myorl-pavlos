@@ -37,9 +37,7 @@ describe("SectionIndexGrid filter-pill styles", () => {
   });
 
   it("gates the shared inline-pill hover behind a real pointer", () => {
-    expect(sharedCss).toMatch(
-      /@media\s*\(hover:\s*hover\)\s*\{[\s\S]*?\.inline-pill:hover/,
-    );
+    expect(sharedCss).toMatch(/@media\s*\(hover:\s*hover\)\s*\{[\s\S]*?\.inline-pill:hover/);
     // No ungated `.inline-pill:hover` may survive: every occurrence is inside the
     // hover media query, so the only match for the selector is the gated one.
     const hoverMatches = sharedCss.match(/\.inline-pill:hover/g) ?? [];

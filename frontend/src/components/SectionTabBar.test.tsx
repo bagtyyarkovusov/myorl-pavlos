@@ -224,6 +224,27 @@ describe("SectionTabBar", () => {
     expect(options.length).toBe(4);
   });
 
+  it("renders mobile scroll controls when the visible tab strip overflows", async () => {
+    const children = Array.from({ length: 4 }, (_, i) =>
+      makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
+    );
+    const parent = makeNode("services", "Services", { isFolder: true, children });
+    const tree = [parent];
+    const page = makePage("services", { isFolder: true });
+
+    const { container } = render(<SectionTabBar navigation={tree} currentPage={page} />);
+    const nav = container.querySelector("nav") as HTMLElement;
+
+    Object.defineProperty(nav, "scrollLeft", { value: 0, writable: true, configurable: true });
+    Object.defineProperty(nav, "clientWidth", { value: 280, configurable: true });
+    Object.defineProperty(nav, "scrollWidth", { value: 760, configurable: true });
+
+    nav.dispatchEvent(new Event("scroll"));
+
+    expect(await screen.findByRole("button", { name: "Επόμενα θέματα" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Προηγούμενα θέματα" })).toBeDisabled();
+  });
+
   it("closes dropdown on outside click", async () => {
     const children = Array.from({ length: 10 }, (_, i) =>
       makeNode(`child-${i}`, `Child ${i}`, { parentDocId: "doc-services" }),
@@ -233,7 +254,7 @@ describe("SectionTabBar", () => {
     const page = makePage("child-0", { parentDocId: "doc-services" });
 
     const user = userEvent.setup();
-    const { container } = render(
+    render(
       <div>
         <SectionTabBar navigation={tree} currentPage={page} />
         <button data-outside>outside</button>

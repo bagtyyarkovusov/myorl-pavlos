@@ -15,6 +15,8 @@ export type PageStrings = {
   sourcesIncluded: string;
   medicallyReviewedBy: (reviewer: string, date: string) => string;
   sectionNavLabel: string;
+  sectionNavPrevious: string;
+  sectionNavNext: string;
   openLabel: string;
   moreLabel: (count: number) => string;
   backToSection: (parentTitle: string) => string;
@@ -65,6 +67,8 @@ const STRINGS: Record<Locale, PageStrings> = {
     sourcesIncluded: "Πηγές συμπεριλαμβάνονται",
     medicallyReviewedBy: (reviewer, date) => `Ιατρικά ελεγμένο από ${reviewer} στις ${date}`,
     sectionNavLabel: "Πλοήγηση ενότητας",
+    sectionNavPrevious: "Προηγούμενα θέματα",
+    sectionNavNext: "Επόμενα θέματα",
     openLabel: "Άνοιγμα",
     moreLabel: (count) => `Περισσότερα (+${count})`,
     backToSection: (title) => `← ${title}`,
@@ -112,6 +116,8 @@ const STRINGS: Record<Locale, PageStrings> = {
     sourcesIncluded: "Есть источники",
     medicallyReviewedBy: (reviewer, date) => `Медицинская проверка выполнена: ${reviewer}, ${date}`,
     sectionNavLabel: "Навигация по разделу",
+    sectionNavPrevious: "Предыдущие темы",
+    sectionNavNext: "Следующие темы",
     openLabel: "Открыть",
     moreLabel: (count) => `Ещё (+${count})`,
     backToSection: (title) => `← ${title}`,

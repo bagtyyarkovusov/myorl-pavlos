@@ -14,6 +14,7 @@ export type ResultCardProps = {
   parentSlug: string | null;
   locale: Locale;
   localePill?: Locale;
+  onNavigate?: () => void;
 };
 
 const typeLabel: Record<Locale, Record<string, string>> = {
@@ -31,6 +32,7 @@ export function ResultCard({
   parentSlug,
   locale,
   localePill,
+  onNavigate,
 }: ResultCardProps) {
   const safeTitle = DOMPurify.sanitize(title, { ALLOWED_TAGS: ["em"] });
   const titleId = `result-${href.replace(/[^a-z0-9]+/gi, "-")}`;
@@ -50,7 +52,11 @@ export function ResultCard({
       <div className={styles.body}>
         {parentTitle && parentSlug && (
           <nav className={styles.breadcrumb} aria-label="breadcrumb">
-            <Link href={`/${locale}/${parentSlug}`} className={styles.breadcrumbLink}>
+            <Link
+              href={`/${locale}/${parentSlug}`}
+              className={styles.breadcrumbLink}
+              onNavigate={onNavigate}
+            >
               {parentTitle}
             </Link>
             <span className={styles.breadcrumbSeparator} aria-hidden="true">
@@ -63,6 +69,7 @@ export function ResultCard({
             id={titleId}
             href={href}
             className={styles.titleLink}
+            onNavigate={onNavigate}
             dangerouslySetInnerHTML={{ __html: safeTitle }}
           />
         </h2>

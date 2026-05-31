@@ -39,6 +39,50 @@
   scroll-padding-inline: 4px clamp(16px, 3vw, 28px);
 }
 
+.tab-scroll-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: none;
+  gap: 6px;
+}
+
+.tab-scroll-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--surface) 94%, transparent);
+  color: var(--color-stone);
+  cursor: pointer;
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-default),
+    color var(--motion-duration-fast) var(--motion-ease-default),
+    background-color var(--motion-duration-fast) var(--motion-ease-default),
+    opacity var(--motion-duration-fast) var(--motion-ease-default);
+}
+
+.tab-scroll-control:hover:not(:disabled),
+.tab-scroll-control:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
+.tab-scroll-control:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.tab-scroll-control svg {
+  width: 16px;
+  height: 16px;
+}
+
 .tab-bar::-webkit-scrollbar {
   height: 4px;
 }
@@ -172,4 +216,51 @@
   width: clamp(28px, 8vw, 48px);
   pointer-events: none;
   background: linear-gradient(to right, rgba(246, 248, 251, 0), var(--background, #f6f8fb) 55%);
+}
+
+@media (max-width: 767px) {
+  .tab-bar-wrapper[data-scrollable="true"] {
+    padding-top: 42px;
+  }
+
+  .tab-bar-wrapper[data-scrollable="false"]::after {
+    display: none;
+  }
+
+  .tab-scroll-controls {
+    display: flex;
+  }
+
+  .tab-bar {
+    gap: 8px;
+    padding-inline: 2px 86px;
+    scroll-padding-inline: 2px 86px;
+    scrollbar-width: auto;
+    border-bottom: 0;
+  }
+
+  .tab {
+    min-height: 44px;
+    margin-bottom: 6px;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-full);
+    background: var(--surface);
+  }
+
+  .tab--active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+  }
+
+  .more-button {
+    border: 1px solid var(--line);
+  }
+
+  .tab-bar-wrapper::after {
+    top: 42px;
+    width: 78px;
+    background: linear-gradient(to right, rgba(246, 248, 251, 0), var(--background, #f6f8fb) 50%);
+  }
 }

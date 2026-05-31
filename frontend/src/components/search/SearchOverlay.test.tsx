@@ -23,8 +23,29 @@ vi.mock("next/image", () => ({
 }));
 
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: { children: React.ReactNode; href: string }) => (
-    <a href={href} {...props}>
+  default: ({
+    children,
+    href,
+    onClick,
+    onNavigate,
+    ...props
+  }: {
+    children: React.ReactNode;
+    href: string;
+    onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+    onNavigate?: () => void;
+  }) => (
+    <a
+      href={href}
+      {...props}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented && onNavigate) {
+          event.preventDefault();
+          onNavigate();
+        }
+      }}
+    >
       {children}
     </a>
   ),
@@ -266,6 +287,42 @@ describe("SearchOverlay", () => {
     const closeBtn = screen.getByRole("button", { name: "Κλείσιμο" });
     expect(closeBtn).toBeInTheDocument();
     await userEvent.click(closeBtn);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("closes when a result link starts navigation", async () => {
+    const onClose = vi.fn();
+    mockSearch.mockResolvedValue({
+      hits: [makeHit({ title: "Navigable result", href: "/el/navigable-result" })],
+      estimatedTotalHits: 1,
+      facetDistribution: { type: { page: 1, video: 0 } },
+    });
+
+    render(<SearchOverlay {...baseProps} onClose={onClose} />);
+    const input = screen.getByRole("combobox");
+    await userEvent.type(input, "test", { delay: 50 });
+
+    const resultLink = await screen.findByRole("link", { name: "Navigable result" });
+    await userEvent.click(resultLink);
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("closes when the sticky see-all link starts navigation", async () => {
+    const onClose = vi.fn();
+    mockSearch.mockResolvedValue({
+      hits: [makeHit()],
+      estimatedTotalHits: 1,
+      facetDistribution: { type: { page: 1, video: 0 } },
+    });
+
+    render(<SearchOverlay {...baseProps} onClose={onClose} />);
+    const input = screen.getByRole("combobox");
+    await userEvent.type(input, "test", { delay: 50 });
+
+    const seeAllLink = await screen.findByText(/Δείτε όλα τα.*αποτελέσματα για "test"/);
+    await userEvent.click(seeAllLink);
+
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 

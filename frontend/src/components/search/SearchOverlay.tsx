@@ -2,6 +2,7 @@
 
 import { Meilisearch } from "meilisearch";
 import type { Hit } from "meilisearch";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
@@ -385,6 +386,10 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
     return items;
   }, [query, results, typeFilter]);
 
+  const handleNavigate = useCallback(() => {
+    requestClose();
+  }, [requestClose]);
+
   const handleOverlayKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (visibleResults.length === 0) return;
@@ -408,12 +413,15 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
           if (selectedIndex >= 0 && selectedIndex < visibleResults.length) {
             e.preventDefault();
             const href = visibleResults[selectedIndex]?.href;
-            if (href) window.location.assign(href);
+            if (href) {
+              requestClose();
+              window.location.assign(href);
+            }
           }
           break;
       }
     },
-    [visibleResults, selectedIndex],
+    [requestClose, visibleResults, selectedIndex],
   );
 
   if (!shouldRender) return null;
@@ -579,20 +587,22 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
                           parentSlug={hit.parentSlug}
                           locale={resultLocale}
                           localePill={fallbackLocale ? hit.locale : undefined}
+                          onNavigate={handleNavigate}
                         />
                       </div>
                     ))}
                     {results.pageFacetCount > MAX_PER_GROUP && typeFilter !== "video" && (
-                      <a
+                      <Link
                         href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=page`}
                         className={styles["group-see-all"]}
+                        onNavigate={handleNavigate}
                       >
                         {seeAllGroupLabel(
                           locale,
                           results.pageFacetCount,
                           GROUP_LABELS[locale].articles,
                         )}
-                      </a>
+                      </Link>
                     )}
                   </div>
                 )}
@@ -619,21 +629,23 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
                             parentSlug={hit.parentSlug}
                             locale={resultLocale}
                             localePill={fallbackLocale ? hit.locale : undefined}
+                            onNavigate={handleNavigate}
                           />
                         </div>
                       );
                     })}
                     {results.videoFacetCount > MAX_PER_GROUP && typeFilter !== "page" && (
-                      <a
+                      <Link
                         href={`/${locale}/search-results?q=${encodeURIComponent(query.trim())}&type=video`}
                         className={styles["group-see-all"]}
+                        onNavigate={handleNavigate}
                       >
                         {seeAllGroupLabel(
                           locale,
                           results.videoFacetCount,
                           GROUP_LABELS[locale].videos,
                         )}
-                      </a>
+                      </Link>
                     )}
                   </div>
                 )}
@@ -644,9 +656,9 @@ export function SearchOverlay({ locale, placeholder, searchLabel, isOpen, onClos
 
         {hasFilteredResults && results && (
           <div className={styles["footer"]}>
-            <a href={seeAllHref} className={styles["see-all-link"]}>
+            <Link href={seeAllHref} className={styles["see-all-link"]} onNavigate={handleNavigate}>
               {seeAllFooterLabel(locale, results.totalHits, query.trim())}
-            </a>
+            </Link>
           </div>
         )}
       </div>

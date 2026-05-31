@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { PageRenderer } from "@/components/PageRenderer";
 import { getPage, getSite } from "@/lib/cms/cms-api";
 import { toPageMetadata } from "@/lib/cms/metadata";
-import { isLocale } from "@/lib/cms/types";
+import { isLocale, LOCALES } from "@/lib/cms/types";
 import { getHomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 
 type LocaleHomeProps = {
@@ -12,6 +12,16 @@ type LocaleHomeProps = {
     locale: string;
   }>;
 };
+
+// Prerender both locale home pages at build time and keep them fresh via ISR,
+// matching the slug route ([locale]/[slug]). Without these the home route
+// rendered fully dynamically (no cache, ~3-4s per request). All data fetches
+// it uses are already cached (CMS gateway + Google Places), so ISR is safe.
+export async function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }));
+}
+
+export const revalidate = 600;
 
 export async function generateMetadata({ params }: LocaleHomeProps): Promise<Metadata> {
   const { locale } = await params;

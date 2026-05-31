@@ -16,6 +16,7 @@ import { buildNavigationTree } from "./navigation";
 import { resolveAppointmentHref } from "@/lib/navigation/appointment-href";
 import { resolveContactHref } from "@/lib/navigation/contact-href";
 import type { GlobalSettingsDTO, Locale, NavigationNodeDTO, PageDTO, VideoEntryDTO } from "./types";
+import { LOCALES } from "./types";
 import { CmsError } from "./errors";
 
 let _gateway: CmsGateway | null = null;
@@ -362,12 +363,20 @@ export const getSite = cache(loadSite);
 export async function getSitemapPages(): Promise<PageDTO[]> {
   const gateway = getGateway();
 
-  const pages = await gateway.pages.all({
-    locale: "all",
-    sort: ["locale:asc", "menuIndex:asc", "slug:asc"],
-    populate: SITEMAP_POPULATE,
-    cacheTags: ["pages", "sitemap"],
-  });
+  // Strapi 5 REST returns an empty result set for `locale=all` on collection
+  // types, so fetch each locale explicitly and merge. Using `locale: "all"`
+  // here previously yielded an empty sitemap *and* an empty
+  // `generateStaticParams` (no slug pages prerendered at build time).
+  const perLocale = await Promise.all(
+    LOCALES.map((locale) =>
+      gateway.pages.all({
+        locale,
+        sort: ["menuIndex:asc", "slug:asc"],
+        populate: SITEMAP_POPULATE,
+        cacheTags: ["pages", "sitemap", "locale:" + locale],
+      }),
+    ),
+  );
 
-  return pages.filter((page) => !page.seo.sitemapExclude);
+  return perLocale.flat().filter((page) => !page.seo.sitemapExclude);
 }

@@ -273,7 +273,18 @@ describe("getSitemapPages", () => {
     const { getSitemapPages, injectCmsGatewayForTesting: inject } = await import("../cms-api");
     const fixture = loadFixture("sitemap-pages.json");
 
-    const mockFetch = vi.fn().mockResolvedValue(mockStrapiResponse(fixture));
+    // getSitemapPages now fetches each locale separately (Strapi 5 has no
+    // `locale=all`), so return the fixture for the EL request and an empty
+    // result for RU. The fixture already contains both EL and RU entries.
+    const emptyResponse = mockStrapiResponse({
+      data: [],
+      meta: { pagination: { page: 1, pageSize: 100, pageCount: 1, total: 0 } },
+    });
+    const mockFetch = vi.fn((url: string) =>
+      Promise.resolve(
+        String(url).includes("locale=el") ? mockStrapiResponse(fixture) : emptyResponse,
+      ),
+    );
     const gateway = createTestGateway(mockFetch as unknown as typeof globalThis.fetch);
     inject(gateway);
 

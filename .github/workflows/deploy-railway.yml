@@ -48,7 +48,6 @@ jobs:
             --project "$RAILWAY_PROJECT_ID" \
             --service "$RAILWAY_BACKEND_SERVICE" \
             --environment "$RAILWAY_ENVIRONMENT" \
-            --detach \
             --message "Deploy backend from GitHub Actions ${GITHUB_SHA}"
 
       - name: Wait for Backend Health
@@ -91,7 +90,6 @@ jobs:
             --project "$RAILWAY_PROJECT_ID" \
             --service "$RAILWAY_FRONTEND_SERVICE" \
             --environment "$RAILWAY_ENVIRONMENT" \
-            --detach \
             --message "Deploy frontend from GitHub Actions ${GITHUB_SHA}"
 
   smoke-test:

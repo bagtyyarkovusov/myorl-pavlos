@@ -61,9 +61,14 @@
     color var(--motion-duration-fast) var(--motion-ease-default);
 }
 
-.inline-pill:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+/* Hover affordance only where a real pointer exists. On touch, `:hover` sticks
+   after a tap and would otherwise repaint a freshly-selected chip with this pale
+   fill (see SectionIndexGrid `.filter-pill--active`). */
+@media (hover: hover) {
+  .inline-pill:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
 }
 
 .gallery-grid {

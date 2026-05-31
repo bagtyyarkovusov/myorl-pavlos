@@ -316,6 +316,12 @@
   composes: inline-pill from "./shared-layout.module.css";
   cursor: pointer;
   background: transparent;
+  color: var(--foreground);
+}
+
+.filter-pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .filter-pill--active {
@@ -324,11 +330,20 @@
   color: var(--color-bone-50);
 }
 
-.filter-pill--active:hover,
+/* Keyboard focus must stay visible against the solid fill. */
 .filter-pill--active:focus-visible {
-  background: var(--accent-ink);
-  border-color: var(--accent-ink);
-  color: var(--color-bone-50);
+  outline-color: var(--accent-ink);
+}
+
+/* Deepen only where a real pointer exists; the doubled class outranks the
+   composed `.inline-pill:hover` regardless of CSS bundle order, so a selected
+   chip on touch never falls back to the pale `--accent-soft` fill. */
+@media (hover: hover) {
+  .filter-pill.filter-pill--active:hover {
+    background: var(--accent-ink);
+    border-color: var(--accent-ink);
+    color: var(--color-bone-50);
+  }
 }
 
 .index-list {

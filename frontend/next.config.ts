@@ -242,6 +242,51 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async headers() {
+    // Browser-side search talks to Meilisearch directly (NEXT_PUBLIC_MEILI_HOST),
+    // so it must be allow-listed in connect-src or the search overlay breaks.
+    const meiliHost = process.env.NEXT_PUBLIC_MEILI_HOST?.replace(/\/+$/, "") ?? "";
+    const connectSrc = ["'self'", meiliHost].filter(Boolean).join(" ");
+
+    const csp = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'self'",
+      "form-action 'self'",
+      // Next.js injects inline bootstrap/RSC scripts. A nonce-based policy would
+      // force every page into dynamic rendering and defeat ISR (ADR-014), so
+      // 'unsafe-inline' is required for scripts here.
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' data:",
+      "media-src 'self' blob: https:",
+      `connect-src ${connectSrc}`,
+      // YouTube (lite embed), Google Maps, and Vimeo are embedded as iframes.
+      "frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com https://www.google.com https://maps.google.com https://player.vimeo.com",
+    ].join("; ");
+
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: csp },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

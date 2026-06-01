@@ -501,9 +501,13 @@
   -webkit-line-clamp: 2;
 }
 
+/* On mobile the copy panel sits on a light bone surface. `--accent-ink` (#17406f)
+   keeps the focused/hovered heading readable (~11:1 contrast, WCAG AAA) while
+   signalling the card's interactivity. Desktop (≥860px) overrides this to
+   `--color-teal-soft` via the dark-overlay media block below. */
 .topic-feature:has(.topic-feature__primary-link:hover) .topic-feature__copy h3,
 .topic-feature:has(.topic-feature__primary-link:focus-visible) .topic-feature__copy h3 {
-  color: var(--accent-soft, #b8d4f0);
+  color: var(--accent-ink);
 }
 
 .topic-progress {

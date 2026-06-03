@@ -1790,6 +1790,66 @@ describe("PageBody", () => {
     expect(screen.getByText("Dr Expert, MD")).toBeDefined();
     expect(screen.getByText("Journal source")).toBeDefined();
   });
+
+  it("hides medically reviewed dates on encyclopedia-article when fields are set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      content: "<h2>Diagnosis</h2><p>Reference body</p>",
+      medicallyReviewedBy: "Dr Expert",
+      lastReviewedDate: "2025-01-15T00:00:00.000Z",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[class*='article-dates']")).toBeNull();
+    expect(screen.queryByText(/Ιατρικά ελεγμένο/)).toBeNull();
+  });
+
+  it("hides medically reviewed dates on service-article when fields are set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "service-article",
+      content: "<p>Service content</p>",
+      medicallyReviewedBy: "Dr Expert",
+      lastReviewedDate: "2025-01-15T00:00:00.000Z",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[class*='article-dates']")).toBeNull();
+    expect(screen.queryByText(/Ιατρικά ελεγμένο/)).toBeNull();
+  });
+
+  it("hides medically reviewed dates on specialized-article when fields are set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "specialized-article",
+      content: "<h2>Evidence</h2><p>Research body</p>",
+      medicallyReviewedBy: "Dr Expert",
+      lastReviewedDate: "2025-01-15T00:00:00.000Z",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[class*='article-dates']")).toBeNull();
+    expect(screen.queryByText(/Ιατρικά ελεγμένο/)).toBeNull();
+  });
+
+  it("hides medically reviewed dates on standard layout when fields are set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "standard",
+      content: "<p>General content</p>",
+      medicallyReviewedBy: "Dr Expert",
+      lastReviewedDate: "2025-01-15T00:00:00.000Z",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[class*='article-dates']")).toBeNull();
+    expect(screen.queryByText(/Ιατρικά ελεγμένο/)).toBeNull();
+  });
 });
 
 describe("ArticleDisclaimer", () => {

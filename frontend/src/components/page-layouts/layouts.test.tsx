@@ -11,6 +11,7 @@ vi.mock("@/lib/cms/cms-api", () => ({
 
 import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
+import { SystemPage } from "./SystemPage";
 import { SectionIndexPage } from "./SectionIndexPage";
 import { SectionHubPage } from "./SectionHubPage";
 import { PageBody, extractHeadings, addHeadingIds, relatedTopicHref } from "./PageBody";
@@ -415,6 +416,72 @@ describe("Biography page", () => {
 
     const prose = screen.getByText("Regular page text").closest("div");
     expect(prose?.getAttribute("data-variant")).toBeNull();
+  });
+});
+
+describe("SystemPage", () => {
+  const systemPage: PageDTO = {
+    ...BASE_PAGE,
+    pageType: "system",
+    layoutVariant: "standard",
+    title: "Privacy Policy",
+    content: "<p>Privacy policy text</p>",
+  };
+
+  it("renders title and content without kicker text", () => {
+    render(<SystemPage page={systemPage} />);
+
+    expect(screen.getByRole("heading", { name: "Privacy Policy" })).toBeDefined();
+    expect(screen.getByText("Privacy policy text")).toBeDefined();
+    expect(screen.queryByText("standard")).toBeNull();
+  });
+
+  it("does not render hero image when page has no featuredImage or imageCenter", () => {
+    const { container } = render(<SystemPage page={systemPage} />);
+    expect(container.querySelector("img")).toBeNull();
+  });
+
+  it("renders hero image when editor explicitly attached page-specific imagery", () => {
+    const pageWithImage: PageDTO = {
+      ...systemPage,
+      featuredImage: {
+        url: "/legal-icon.jpg",
+        alternativeText: "Legal icon",
+        width: 200,
+        height: 200,
+      },
+    };
+
+    render(<SystemPage page={pageWithImage} />);
+    expect(screen.getByRole("img", { name: "Legal icon" })).toBeDefined();
+  });
+
+  it("uses compact prose shell without two-column aside layout", () => {
+    const pageWithHeadings: PageDTO = {
+      ...systemPage,
+      content: "<h2>Our Policy</h2><p>Details</p>",
+    };
+
+    render(<SystemPage page={pageWithHeadings} />);
+
+    expect(document.querySelector("[data-prose-layout='standard']")).toBeNull();
+    expect(document.querySelector("[data-article-layout]")).toBeNull();
+    expect(document.querySelector("h2")).toBeDefined();
+  });
+
+  it("does not render related topics", () => {
+    const pageWithTopics: PageDTO = {
+      ...systemPage,
+      relatedTopics: [{ documentId: "r1", slug: "peer", title: "Peer article" }],
+    };
+
+    render(<SystemPage page={pageWithTopics} />);
+    expect(screen.queryByRole("region", { name: "Σχετικά θέματα" })).toBeNull();
+  });
+
+  it("does not render medical disclaimer", () => {
+    render(<SystemPage page={systemPage} />);
+    expect(screen.queryByRole("note")).toBeNull();
   });
 });
 

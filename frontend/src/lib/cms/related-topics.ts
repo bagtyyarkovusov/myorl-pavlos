@@ -110,7 +110,7 @@ export function resolveRelatedTopics(
   page: PageDTO,
   directoryNavigation: NavigationNodeDTO[],
 ): PageRefDTO[] {
-  if (!isArticleLayout(page.layoutVariant)) {
+  if (!isArticleLayout(page.layoutVariant) || page.pageType === "system") {
     return [];
   }
 

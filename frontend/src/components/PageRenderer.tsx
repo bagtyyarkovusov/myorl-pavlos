@@ -44,6 +44,9 @@ const SectionIndexPage = dynamic(() =>
 const StandardPage = dynamic(() =>
   import("@/components/page-layouts/StandardPage").then((m) => m.StandardPage),
 );
+const SystemPage = dynamic(() =>
+  import("@/components/page-layouts/SystemPage").then((m) => m.SystemPage),
+);
 
 type PageRendererProps = {
   page: PageDTO;
@@ -146,6 +149,8 @@ export function PageRenderer({
     layout = <GalleryPage page={page} />;
   } else if (page.pageType === "contact") {
     layout = <ContactPage page={page} />;
+  } else if (page.pageType === "system") {
+    layout = <SystemPage page={page} />;
   } else {
     layout = (
       <StandardPage

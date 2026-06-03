@@ -243,6 +243,20 @@ describe("resolveRelatedTopics", () => {
     expect(resolveRelatedTopics(page, tree)).toEqual([]);
   });
 
+  it("returns empty for system pageType even with article layout", () => {
+    const page = makeArticlePage({ pageType: "system", layoutVariant: "standard" });
+    const tree: NavigationNodeDTO[] = [
+      makeNavNode({
+        documentId: "peer",
+        slug: "peer",
+        title: "Peer",
+        layoutVariant: "standard",
+        tags: [{ name: "Pediatric", slug: "pediatric" }],
+      }),
+    ];
+    expect(resolveRelatedTopics(page, tree)).toEqual([]);
+  });
+
   it("excludes encyclopedia-index layout from auto-suggest", () => {
     const tree: NavigationNodeDTO[] = [
       makeNavNode({

@@ -288,6 +288,218 @@ describe("SiteHeaderClient", () => {
     expect(mapsLink?.getAttribute("target")).toBe("_blank");
   });
 
+  it("renders long Russian doctor name and specialty in the brand area", () => {
+    const ruSettings = {
+      ...defaultSettings,
+      locale: "ru" as const,
+      doctorName: "Д-р Павлос Цоларидис, M.D., Ph.D.",
+      doctorSpecialty: "Оториноларинголог (ЛОР) · Хирург головы и шеи · Детский оториноларинголог",
+    };
+    render(
+      <SiteHeaderClient
+        locale="ru"
+        navigation={mockNavigation}
+        appointmentHref="/ru/zapis"
+        settings={ruSettings}
+      />,
+    );
+
+    expect(screen.getByText("Д-р Павлос Цоларидис, M.D., Ph.D.")).toBeDefined();
+    expect(
+      screen.getByText("Оториноларинголог (ЛОР) · Хирург головы и шеи · Детский оториноларинголог"),
+    ).toBeDefined();
+  });
+
+  it("renders long Greek doctor name and specialty in the brand area", () => {
+    const elSettings = {
+      ...defaultSettings,
+      doctorName: "Δρ. Παύλος Τσολαρίδης, M.D., Ph.D., Διδάκτωρ Ιατρικής Σχολής",
+      doctorSpecialty: "Ωτορινολαρυγγολόγος (ΩΡΛ) · Χειρουργός κεφαλής & τραχήλου · Παιδο-ΩΡΛ",
+    };
+    render(
+      <SiteHeaderClient
+        locale="el"
+        navigation={mockNavigation}
+        appointmentHref="/el/rantevou"
+        settings={elSettings}
+      />,
+    );
+
+    expect(
+      screen.getByText("Δρ. Παύλος Τσολαρίδης, M.D., Ph.D., Διδάκτωρ Ιατρικής Σχολής"),
+    ).toBeDefined();
+    expect(
+      screen.getByText("Ωτορινολαρυγγολόγος (ΩΡΛ) · Χειρουργός κεφαλής & τραχήλου · Παιδο-ΩΡΛ"),
+    ).toBeDefined();
+  });
+
+  it("renders mobile drawer with long Russian navigation labels", () => {
+    const longRuNav: NavigationNodeDTO[] = [
+      {
+        documentId: "ru-home",
+        locale: "ru" as const,
+        slug: "",
+        title: "Главная",
+        navLabel: "Главная",
+        menuTitle: null,
+        excerpt: null,
+        href: "/ru",
+        menuIndex: 0,
+        hideFromMenu: false,
+        isFolder: false,
+        layoutVariant: "standard",
+        parentPage: null,
+        externalUrl: null,
+        tags: [],
+        children: [],
+      },
+      {
+        documentId: "ru-diseases",
+        locale: "ru" as const,
+        slug: "bolezni",
+        title: "Заболевания",
+        navLabel: "Заболевания уха, горла и носа",
+        menuTitle: null,
+        excerpt: "Полный справочник ЛОР-заболеваний",
+        href: "/ru/bolezni",
+        menuIndex: 1,
+        hideFromMenu: false,
+        isFolder: true,
+        layoutVariant: "standard",
+        parentPage: null,
+        externalUrl: null,
+        tags: [],
+        children: [
+          {
+            documentId: "ru-otitis",
+            locale: "ru" as const,
+            slug: "otit",
+            title: "Отит",
+            navLabel: "Острый и хронический средний отит",
+            menuTitle: null,
+            excerpt: null,
+            href: "/ru/bolezni/otit",
+            menuIndex: 0,
+            hideFromMenu: false,
+            isFolder: false,
+            layoutVariant: "standard",
+            parentPage: null,
+            externalUrl: null,
+            tags: [],
+            children: [],
+          },
+        ],
+      },
+    ];
+
+    render(
+      <SiteHeaderClient
+        locale="ru"
+        navigation={longRuNav}
+        appointmentHref="/ru/zapis"
+        settings={{ ...defaultSettings, locale: "ru" }}
+      />,
+    );
+
+    const mobileNav = document.getElementById("mobile-navigation");
+    expect(mobileNav).toBeTruthy();
+    expect(mobileNav?.getAttribute("aria-label")).toBe("Мобильное меню");
+
+    // Long parent label renders in accordion (desktop + mobile)
+    const parentLabels = screen.getAllByText("Заболевания уха, горла и носа");
+    expect(parentLabels.length).toBeGreaterThanOrEqual(1);
+    // Long child label renders
+    const childLabels = screen.getAllByText("Острый и хронический средний отит");
+    expect(childLabels.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders desktop nav with long parent section labels without truncation", () => {
+    const longNav: NavigationNodeDTO[] = [
+      {
+        documentId: "diseases",
+        locale: "el" as const,
+        slug: "diseases",
+        title: "Diseases",
+        navLabel: "Παθήσεις & Θεραπείες Ωτορινολαρυγγολογίας",
+        menuTitle: null,
+        excerpt: "Some excerpt",
+        href: "/el/diseases",
+        menuIndex: 0,
+        hideFromMenu: false,
+        isFolder: true,
+        layoutVariant: "standard",
+        parentPage: null,
+        externalUrl: null,
+        tags: [],
+        children: [],
+      },
+      {
+        documentId: "services",
+        locale: "el" as const,
+        slug: "services",
+        title: "Services",
+        navLabel: "Ιατρικές Υπηρεσίες & Επεμβάσεις",
+        menuTitle: null,
+        excerpt: "Services excerpt",
+        href: "/el/services",
+        menuIndex: 1,
+        hideFromMenu: false,
+        isFolder: true,
+        layoutVariant: "standard",
+        parentPage: null,
+        externalUrl: null,
+        tags: [],
+        children: [],
+      },
+    ];
+
+    render(
+      <SiteHeaderClient
+        locale="el"
+        navigation={longNav}
+        appointmentHref="/el/rantevou"
+        settings={defaultSettings}
+      />,
+    );
+
+    // Both long labels appear in the desktop nav (may also appear in mobile drawer)
+    const desktopNav = screen.getByLabelText("Κύρια πλοήγηση");
+    expect(desktopNav).toBeDefined();
+    const labelsA = screen.getAllByText("Παθήσεις & Θεραπείες Ωτορινολαρυγγολογίας");
+    const labelsB = screen.getAllByText("Ιατρικές Υπηρεσίες & Επεμβάσεις");
+    expect(labelsA.length).toBeGreaterThanOrEqual(1);
+    expect(labelsB.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders brand identity visually separate from navigation in desktop layout", () => {
+    render(
+      <SiteHeaderClient
+        locale="el"
+        navigation={mockNavigation}
+        appointmentHref="/el/rantevou"
+        settings={defaultSettings}
+      />,
+    );
+
+    // Brand identity is inside the brand link, separate from the nav
+    // Brand link appears in both header and mobile drawer; pick the one in the header
+    const brandLinks = screen.getAllByLabelText("MyORL — ΩΡΛ Χειρουργική Κλινική Αθηνών");
+    expect(brandLinks.length).toBeGreaterThanOrEqual(1);
+    const headerBrandLink = brandLinks.find(
+      (el) => el.closest('[class*="site-header"]') && !el.closest('[class*="mobile-drawer"]'),
+    );
+    expect(headerBrandLink).toBeTruthy();
+
+    // Doctor name is inside the brand link, not inside the nav
+    const doctorName = screen.getByText("Δρ. Παύλος Τσολαρίδης, M.D.");
+    expect(headerBrandLink!.contains(doctorName)).toBe(true);
+
+    // Navigation has its own aria-label
+    const desktopNav = screen.getByLabelText("Κύρια πλοήγηση");
+    expect(desktopNav).toBeDefined();
+    expect(desktopNav.contains(doctorName)).toBe(false);
+  });
+
   it("renders Russian CTA with full and short label spans for container-query switching", () => {
     render(
       <SiteHeaderClient

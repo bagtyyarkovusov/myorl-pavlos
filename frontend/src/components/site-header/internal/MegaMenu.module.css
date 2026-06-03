@@ -44,7 +44,7 @@
   margin-top: 6px;
   color: var(--color-stone-soft);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: var(--type-nav-label);
   font-weight: 500;
   letter-spacing: 0.04em;
   line-height: 1.2;
@@ -55,8 +55,8 @@
 .nav-panel__feature p {
   margin-top: 12px;
   color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.55;
+  font-size: var(--type-nav-compact);
+  line-height: var(--type-leading-normal);
   display: -webkit-box;
   -webkit-line-clamp: 4;
   line-clamp: 4;
@@ -78,7 +78,7 @@
 .nav-panel__cta-more {
   margin: 8px 0 0;
   color: var(--color-stone-soft);
-  font-size: 0.78rem;
+  font-size: var(--type-nav-label);
   line-height: 1.35;
 }
 
@@ -87,7 +87,7 @@
   align-items: center;
   gap: 4px;
   color: var(--accent-ink);
-  font-size: 0.86rem;
+  font-size: var(--type-nav-compact);
   font-weight: 500;
   white-space: nowrap;
   border-bottom: 1px solid currentColor;
@@ -117,7 +117,7 @@
 .nav-panel__cta-count {
   color: var(--color-stone-soft);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: var(--type-nav-label);
   font-weight: 500;
   letter-spacing: 0.04em;
   line-height: 1.2;
@@ -149,7 +149,7 @@
 
 .nav-panel__links .title {
   color: var(--color-ink-soft);
-  font-size: 0.94rem;
+  font-size: var(--type-nav);
   font-weight: 500;
   line-height: 1.25;
 }
@@ -157,7 +157,7 @@
 .nav-panel__links .meta {
   margin-top: 4px;
   color: var(--color-stone-soft);
-  font-size: 0.78rem;
+  font-size: var(--type-nav-label);
   line-height: 1.35;
   font-feature-settings: "tnum";
   display: -webkit-box;

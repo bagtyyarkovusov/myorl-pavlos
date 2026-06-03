@@ -249,4 +249,104 @@ describe("Typography Token Contract", () => {
     // The measure token must reference a ch value in the 65–75 range.
     expect(body).toMatch(/max-width:.*7[0-5]ch/);
   });
+
+  /* ── Header CSS modules: typography tokens, no fragile font-size ── */
+
+  const desktopNavCss = readFileSync(
+    join(process.cwd(), "src/components/site-header/internal/DesktopNav.module.css"),
+    "utf8",
+  );
+  const megaMenuCss = readFileSync(
+    join(process.cwd(), "src/components/site-header/internal/MegaMenu.module.css"),
+    "utf8",
+  );
+  const mobileDrawerCss = readFileSync(
+    join(process.cwd(), "src/components/site-header/internal/MobileDrawer.module.css"),
+    "utf8",
+  );
+  const siteHeaderCss = readFileSync(
+    join(process.cwd(), "src/components/SiteHeaderClient.module.css"),
+    "utf8",
+  );
+
+  it("uses token for .brand-doctor font-size in SiteHeaderClient", () => {
+    const rule = siteHeaderCss.match(/\.brand-doctor\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav\)/);
+  });
+
+  it("uses token for .brand-doctor-specialty font-size in SiteHeaderClient", () => {
+    const rule = siteHeaderCss.match(/\.brand-doctor-specialty\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav-label\)/);
+  });
+
+  it("uses tokens for desktop nav trigger/link font-size", () => {
+    // DesktopNav uses a combined rule .nav-trigger,.nav-link for font-size
+    const rule = desktopNavCss.match(/\.nav-trigger,\s*\.nav-link\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav-compact\)/);
+  });
+
+  it("uses token for .nav-panel__feature p font-size in MegaMenu", () => {
+    const rule = megaMenuCss.match(/\.nav-panel__feature\s+p\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav-compact\)/);
+  });
+
+  it("uses token for .nav-panel__links .title font-size in MegaMenu", () => {
+    const rule = megaMenuCss.match(/\.nav-panel__links\s+\.title\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav\)/);
+  });
+
+  it("uses token for count and meta labels in MegaMenu", () => {
+    for (const sel of [
+      ".nav-panel__count",
+      ".nav-panel__cta-count",
+      ".nav-panel__cta-more",
+      ".nav-panel__links .meta",
+    ]) {
+      // In multi-line rules, class selectors may appear in combined rules.
+      // Search for the declaration block that contains font-size for this class.
+      const re = new RegExp(
+        sel.replace(/\./g, "\\.").replace(/\s+/g, "\\s+") + "\\s*\\{([^}]*)\\}",
+      );
+      const m = megaMenuCss.match(re);
+      expect(m, `${sel} must have a rule block`).toBeTruthy();
+      expect(m![1]!, `${sel} must use a type token`).toMatch(
+        /font-size:\s*var\(--type-nav-label\)/,
+      );
+    }
+  });
+
+  it("uses token for .mobile-nav-parent__count font-size in MobileDrawer", () => {
+    const rule = mobileDrawerCss.match(/\.mobile-nav-parent__count\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav-label\)/);
+  });
+
+  it("uses token for .mobile-drawer__info font-size in MobileDrawer", () => {
+    const rule = mobileDrawerCss.match(/\.mobile-drawer__info\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav-compact\)/);
+  });
+
+  it("uses tokens for .mobile-nav-child-item font-size in MobileDrawer", () => {
+    const rule = mobileDrawerCss.match(/\.mobile-nav-child-item\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav\)/);
+  });
+
+  it("uses token for cta-book font-size in SiteHeaderClient", () => {
+    const rule = siteHeaderCss.match(/\.cta-book\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav-compact\)/);
+  });
+
+  it("uses token for mobile drawer foot CTA font-size", () => {
+    const rule = mobileDrawerCss.match(/\.mobile-drawer__foot\s+a\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-nav\)/);
+  });
 });

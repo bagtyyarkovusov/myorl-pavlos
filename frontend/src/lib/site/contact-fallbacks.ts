@@ -74,6 +74,18 @@ export function resolveContactEmail(settings: GlobalSettingsDTO): string | null 
   return settings.email?.trim() || null;
 }
 
+export function resolveDoctorName(settings: GlobalSettingsDTO): string | null {
+  return settings.doctorName?.trim() || null;
+}
+
+export function resolveDoctorSpecialty(settings: GlobalSettingsDTO): string | null {
+  return settings.doctorSpecialty?.trim() || null;
+}
+
+export function resolveTransitNote(settings: GlobalSettingsDTO): string | null {
+  return settings.transitNote?.trim() || null;
+}
+
 export function resolvePhoneSeparator(locale: Locale): string {
   return locale === "ru" ? "или" : "ή";
 }
@@ -103,4 +115,14 @@ export function resolvePrimaryPhoneLinks(settings: GlobalSettingsDTO): ResolvedP
 export function mapEmbedSrcFromAddress(addressBlock: string): string {
   const q = encodeURIComponent(compactAddressFromCms(addressBlock));
   return `https://maps.google.com/maps?q=${q}&z=16&output=embed&hl=el`;
+}
+
+/**
+ * User-facing Google Maps link for the clinic address. Opens Maps on click in a
+ * new tab — unlike the embedded map, this needs no consent gating because the
+ * user initiates it.
+ */
+export function mapsSearchUrl(addressBlock: string): string {
+  const q = encodeURIComponent(compactAddressFromCms(addressBlock));
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
 }

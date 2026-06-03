@@ -1,14 +1,6 @@
 import type { Locale } from "@/lib/cms/types";
 
 export type HomeStrings = {
-  heroKicker: string;
-  heroTitle: string;
-  heroLead: string;
-  heroCtaLabel: string;
-  heroTrustItems: string[];
-  /** Shown after CMS page title: italic word + rest of line */
-  heroHighlightWord: string;
-  heroTagline: string;
   statYears: string;
   statYearsValue: string;
   statLangs: string;
@@ -59,6 +51,7 @@ export type HomeStrings = {
   visitMapLabelHours: string;
   visitMapLabelDirect: string;
   visitMapMapTitle: string;
+  visitMapShowLabel: string;
   testimonialsEyebrow: string;
   testimonialsTitle: string;
   testimonialsIntro: string;
@@ -76,14 +69,6 @@ export type HomeStrings = {
 
 const STRINGS: Record<Locale, HomeStrings> = {
   el: {
-    heroKicker: "Δρ. Παύλος Τσολαρίδης, M.D. · Αθήνα",
-    heroTitle: "Σαφής ΩΡΛ διάγνωση και θεραπεία στην Αθήνα",
-    heroLead:
-      "Συνεδρίες για ενήλικες και παιδιά με καθαρή εξήγηση, ήρεμη καθοδήγηση και προσωπική φροντίδα από τον δρ. Παύλο Τσολαρίδη, M.D.",
-    heroCtaLabel: "Κλείστε ραντεβού",
-    heroTrustItems: ["ΩΡΛ εξέταση", "Διάγνωση", "Πλάνο θεραπείας", "Αθήνα"],
-    heroHighlightWord: "Κλινική εμπειρία",
-    heroTagline: "που εξελίσσεται επί 25+ χρόνια.",
     statYears: "Χρόνια πρακτικής",
     statYearsValue: "25+",
     statLangs: "Γλώσσες συνεδρίας",
@@ -143,6 +128,7 @@ const STRINGS: Record<Locale, HomeStrings> = {
     visitMapLabelHours: "Ώρες",
     visitMapLabelDirect: "Απευθείας",
     visitMapMapTitle: "Τοποθεσία ιατρείου στο χάρτη",
+    visitMapShowLabel: "Εμφάνιση χάρτη",
     testimonialsEyebrow: "Κριτικές ασθενών",
     testimonialsTitle: "Τι γράφουν στο Google Maps",
     testimonialsIntro: "Σύντομα αποσπάσματα από δημόσιες κριτικές· πηγή: Google Maps.",
@@ -156,14 +142,6 @@ const STRINGS: Record<Locale, HomeStrings> = {
     testimonialsPaginationSummary: "{{current}} · {{total}}",
   },
   ru: {
-    heroKicker: "д-р Павлос Цоларидис, M.D. · Афины",
-    heroTitle: "Понятная ЛОР-диагностика и лечение в Афинах",
-    heroLead:
-      "Консультации для взрослых и детей с понятным объяснением, спокойной навигацией и внимательным приёмом у д-ра Павлоса Цоларидиса, M.D.",
-    heroCtaLabel: "Записаться на приём",
-    heroTrustItems: ["ЛОР-осмотр", "Диагностика", "План лечения", "Афины"],
-    heroHighlightWord: "клиническая работа",
-    heroTagline: "более 25 лет.",
     statYears: "лет практики",
     statYearsValue: "25+",
     statLangs: "языка консультаций",
@@ -222,6 +200,7 @@ const STRINGS: Record<Locale, HomeStrings> = {
     visitMapLabelHours: "Часы",
     visitMapLabelDirect: "Контакты",
     visitMapMapTitle: "Кабинет на карте",
+    visitMapShowLabel: "Показать карту",
     testimonialsEyebrow: "Отзывы пациентов",
     testimonialsTitle: "Отзывы в Google Maps",
     testimonialsIntro: "Короткие цитаты из публичных отзывов; источник: Google Maps.",

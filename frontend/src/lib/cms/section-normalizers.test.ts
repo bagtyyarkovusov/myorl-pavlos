@@ -223,6 +223,54 @@ describe("toSemanticSections", () => {
     }
   });
 
+  it("normalizes home hero section", () => {
+    const section = makeSectionRaw("sections.home-hero", {
+      kicker: "Clinic",
+      heading: "CMS Hero",
+      intro: "CMS intro",
+      media: { url: "/uploads/home.jpg", width: 1200, height: 800 },
+      ctaLabel: "Book",
+      ctaUrl: "/el/rantevou",
+      ctaTargetPage: {
+        documentId: "appointment",
+        slug: "rantevou",
+        title: "Appointment",
+      },
+    } as never);
+    const page = makePage({ pageType: "home", pageSections: [section] });
+
+    const result = mod.toSemanticSections(page);
+    const sec = result[0]!;
+    expect(sec.__component).toBe("sections.home-hero");
+    if (sec.__component === "sections.home-hero") {
+      expect(sec.heading).toBe("CMS Hero");
+      expect(sec.media?.url).toContain("/uploads/home.jpg");
+      expect(sec.ctaTargetPage?.slug).toBe("rantevou");
+    }
+  });
+
+  it("normalizes home testimonials teaser and notice sections", () => {
+    const page = makePage({
+      pageType: "home",
+      pageSections: [
+        makeSectionRaw("sections.home-testimonials-teaser", {
+          heading: "CMS testimonials",
+          intro: "CMS testimonials intro",
+        }),
+        makeSectionRaw("sections.home-notice", {
+          heading: "CMS notice",
+          intro: "<p>Legacy notice</p>",
+        }),
+      ],
+    });
+
+    const result = mod.toSemanticSections(page);
+    expect(result.map((section) => section.__component)).toEqual([
+      "sections.home-testimonials-teaser",
+      "sections.home-notice",
+    ]);
+  });
+
   it("normalizes linked-resources section", () => {
     const section = makeSectionRaw("sections.linked-resources", {
       items: [

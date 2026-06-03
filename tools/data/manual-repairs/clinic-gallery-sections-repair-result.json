@@ -1,0 +1,109 @@
+{
+  "okCount": 17,
+  "errorCount": 0,
+  "ok": [
+    {
+      "documentId": "af75v2k760st40nppinvq139",
+      "locale": "el",
+      "slug": "bioclinic-athinwn",
+      "itemCount": 4
+    },
+    {
+      "documentId": "vthbigu9gvy5xrxput4nin37",
+      "locale": "el",
+      "slug": "euroclinc",
+      "itemCount": 5
+    },
+    {
+      "documentId": "trytbm1fw6hdhyc5vekg89em",
+      "locale": "el",
+      "slug": "euroclinic-paidon",
+      "itemCount": 4
+    },
+    {
+      "documentId": "dy4bhu8b4yq6pzda10vgw3td",
+      "locale": "el",
+      "slug": "iaso-general",
+      "itemCount": 6
+    },
+    {
+      "documentId": "j962t4mtm9632xvs7x1m0c54",
+      "locale": "el",
+      "slug": "iaso-paidwn",
+      "itemCount": 4
+    },
+    {
+      "documentId": "jnkudfxwg4zxgrtat45rhrbt",
+      "locale": "el",
+      "slug": "iatriko-falirou",
+      "itemCount": 3
+    },
+    {
+      "documentId": "flpm6kfhzgwk0fes4y3iee4o",
+      "locale": "el",
+      "slug": "kentriki-kliniki-athinon",
+      "itemCount": 3
+    },
+    {
+      "documentId": "qsyitd5m4vz7cbgsvpiuqkjl",
+      "locale": "el",
+      "slug": "mediterraneo",
+      "itemCount": 6
+    },
+    {
+      "documentId": "q6xj2tn5nwfs45gvst77neg3",
+      "locale": "el",
+      "slug": "orl-athens-clinic",
+      "itemCount": 6
+    },
+    {
+      "documentId": "n1h2yld3ulfyk2g2iwgaabob",
+      "locale": "el",
+      "slug": "rea",
+      "itemCount": 6
+    },
+    {
+      "documentId": "inlmdr6up716tq1l11aybqec",
+      "locale": "el",
+      "slug": "typet",
+      "itemCount": 5
+    },
+    {
+      "documentId": "dy4bhu8b4yq6pzda10vgw3td",
+      "locale": "ru",
+      "slug": "iaso-general",
+      "itemCount": 6
+    },
+    {
+      "documentId": "jnkudfxwg4zxgrtat45rhrbt",
+      "locale": "ru",
+      "slug": "iatriko-falirou",
+      "itemCount": 3
+    },
+    {
+      "documentId": "flpm6kfhzgwk0fes4y3iee4o",
+      "locale": "ru",
+      "slug": "kentriki-kliniki-athinon",
+      "itemCount": 3
+    },
+    {
+      "documentId": "qsyitd5m4vz7cbgsvpiuqkjl",
+      "locale": "ru",
+      "slug": "mediterraneo",
+      "itemCount": 6
+    },
+    {
+      "documentId": "q6xj2tn5nwfs45gvst77neg3",
+      "locale": "ru",
+      "slug": "orl-athens-clinic",
+      "itemCount": 6
+    },
+    {
+      "documentId": "n1h2yld3ulfyk2g2iwgaabob",
+      "locale": "ru",
+      "slug": "rea",
+      "itemCount": 6
+    }
+  ],
+  "errors": []
+}

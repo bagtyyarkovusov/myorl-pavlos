@@ -1,0 +1,663 @@
+{
+  "generatedAt": "2026-06-02T15:45:22.030968+00:00",
+  "summary": {
+    "plannedCount": 17,
+    "skippedCount": 0,
+    "errorCount": 0
+  },
+  "plannedUpdates": [
+    {
+      "documentId": "af75v2k760st40nppinvq139",
+      "locale": "el",
+      "slug": "bioclinic-athinwn",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 4,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1253
+              },
+              {
+                "caption": null,
+                "image": 1254
+              },
+              {
+                "caption": null,
+                "image": 1255
+              },
+              {
+                "caption": null,
+                "image": 1256
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "vthbigu9gvy5xrxput4nin37",
+      "locale": "el",
+      "slug": "euroclinc",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 5,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1263
+              },
+              {
+                "caption": null,
+                "image": 1267
+              },
+              {
+                "caption": null,
+                "image": 1264
+              },
+              {
+                "caption": null,
+                "image": 1265
+              },
+              {
+                "caption": null,
+                "image": 1266
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "trytbm1fw6hdhyc5vekg89em",
+      "locale": "el",
+      "slug": "euroclinic-paidon",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 4,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1258
+              },
+              {
+                "caption": null,
+                "image": 1259
+              },
+              {
+                "caption": null,
+                "image": 1260
+              },
+              {
+                "caption": null,
+                "image": 1261
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "dy4bhu8b4yq6pzda10vgw3td",
+      "locale": "el",
+      "slug": "iaso-general",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 6,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1282
+              },
+              {
+                "caption": null,
+                "image": 1276
+              },
+              {
+                "caption": null,
+                "image": 1277
+              },
+              {
+                "caption": null,
+                "image": 1278
+              },
+              {
+                "caption": null,
+                "image": 1279
+              },
+              {
+                "caption": null,
+                "image": 1280
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "j962t4mtm9632xvs7x1m0c54",
+      "locale": "el",
+      "slug": "iaso-paidwn",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 4,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1272
+              },
+              {
+                "caption": null,
+                "image": 1269
+              },
+              {
+                "caption": null,
+                "image": 1270
+              },
+              {
+                "caption": null,
+                "image": 1271
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "jnkudfxwg4zxgrtat45rhrbt",
+      "locale": "el",
+      "slug": "iatriko-falirou",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 3,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1287
+              },
+              {
+                "caption": null,
+                "image": 1285
+              },
+              {
+                "caption": null,
+                "image": 1286
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "flpm6kfhzgwk0fes4y3iee4o",
+      "locale": "el",
+      "slug": "kentriki-kliniki-athinon",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 3,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1289
+              },
+              {
+                "caption": null,
+                "image": 1290
+              },
+              {
+                "caption": null,
+                "image": 1291
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "qsyitd5m4vz7cbgsvpiuqkjl",
+      "locale": "el",
+      "slug": "mediterraneo",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 6,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1301
+              },
+              {
+                "caption": null,
+                "image": 1302
+              },
+              {
+                "caption": null,
+                "image": 1303
+              },
+              {
+                "caption": null,
+                "image": 1304
+              },
+              {
+                "caption": null,
+                "image": 1305
+              },
+              {
+                "caption": null,
+                "image": 1306
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "q6xj2tn5nwfs45gvst77neg3",
+      "locale": "el",
+      "slug": "orl-athens-clinic",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 6,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1308
+              },
+              {
+                "caption": null,
+                "image": 1309
+              },
+              {
+                "caption": null,
+                "image": 1310
+              },
+              {
+                "caption": null,
+                "image": 1311
+              },
+              {
+                "caption": null,
+                "image": 1312
+              },
+              {
+                "caption": null,
+                "image": 1313
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "n1h2yld3ulfyk2g2iwgaabob",
+      "locale": "el",
+      "slug": "rea",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 6,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1316
+              },
+              {
+                "caption": null,
+                "image": 1317
+              },
+              {
+                "caption": null,
+                "image": 1318
+              },
+              {
+                "caption": null,
+                "image": 1319
+              },
+              {
+                "caption": null,
+                "image": 1320
+              },
+              {
+                "caption": null,
+                "image": 1321
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "inlmdr6up716tq1l11aybqec",
+      "locale": "el",
+      "slug": "typet",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 5,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1323
+              },
+              {
+                "caption": null,
+                "image": 1324
+              },
+              {
+                "caption": null,
+                "image": 1325
+              },
+              {
+                "caption": null,
+                "image": 1326
+              },
+              {
+                "caption": null,
+                "image": 1327
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "dy4bhu8b4yq6pzda10vgw3td",
+      "locale": "ru",
+      "slug": "iaso-general",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 6,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1282
+              },
+              {
+                "caption": null,
+                "image": 1276
+              },
+              {
+                "caption": null,
+                "image": 1277
+              },
+              {
+                "caption": null,
+                "image": 1278
+              },
+              {
+                "caption": null,
+                "image": 1279
+              },
+              {
+                "caption": null,
+                "image": 1280
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "jnkudfxwg4zxgrtat45rhrbt",
+      "locale": "ru",
+      "slug": "iatriko-falirou",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 3,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1287
+              },
+              {
+                "caption": null,
+                "image": 1285
+              },
+              {
+                "caption": null,
+                "image": 1286
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "flpm6kfhzgwk0fes4y3iee4o",
+      "locale": "ru",
+      "slug": "kentriki-kliniki-athinon",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 3,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1289
+              },
+              {
+                "caption": null,
+                "image": 1290
+              },
+              {
+                "caption": null,
+                "image": 1291
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "qsyitd5m4vz7cbgsvpiuqkjl",
+      "locale": "ru",
+      "slug": "mediterraneo",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 6,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1301
+              },
+              {
+                "caption": null,
+                "image": 1302
+              },
+              {
+                "caption": null,
+                "image": 1303
+              },
+              {
+                "caption": null,
+                "image": 1304
+              },
+              {
+                "caption": null,
+                "image": 1305
+              },
+              {
+                "caption": null,
+                "image": 1306
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "q6xj2tn5nwfs45gvst77neg3",
+      "locale": "ru",
+      "slug": "orl-athens-clinic",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 6,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1308
+              },
+              {
+                "caption": null,
+                "image": 1309
+              },
+              {
+                "caption": null,
+                "image": 1310
+              },
+              {
+                "caption": null,
+                "image": 1311
+              },
+              {
+                "caption": null,
+                "image": 1312
+              },
+              {
+                "caption": null,
+                "image": 1313
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "documentId": "n1h2yld3ulfyk2g2iwgaabob",
+      "locale": "ru",
+      "slug": "rea",
+      "hasPublished": true,
+      "repairKind": "clinic-gallery-section",
+      "itemCount": 6,
+      "payload": {
+        "pageSections": [
+          {
+            "__component": "sections.gallery",
+            "heading": null,
+            "intro": null,
+            "items": [
+              {
+                "caption": null,
+                "image": 1316
+              },
+              {
+                "caption": null,
+                "image": 1317
+              },
+              {
+                "caption": null,
+                "image": 1318
+              },
+              {
+                "caption": null,
+                "image": 1319
+              },
+              {
+                "caption": null,
+                "image": 1320
+              },
+              {
+                "caption": null,
+                "image": 1321
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "skipped": [],
+  "errors": []
+}

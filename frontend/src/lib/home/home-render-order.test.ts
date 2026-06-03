@@ -32,8 +32,8 @@ function labelsFor(sections: SectionDTO[]) {
 describe("orderHomeRenderItems", () => {
   it("returns the agreed homepage composition regardless of CMS section order", () => {
     const result = labelsFor([
-      makeSection("sections.contact", "Contact"),
       makeSection("sections.video", "Video"),
+      makeSection("sections.home-testimonials-teaser", "Testimonials"),
       makeSection("sections.linked-resources", "Links"),
       makeSection("sections.advantages", "Advantages"),
       makeSection("sections.promo-slider", "Promo"),
@@ -46,7 +46,6 @@ describe("orderHomeRenderItems", () => {
       "section:sections.linked-resources:Links",
       "home-testimonials",
       "section:sections.video:Video",
-      "section:sections.contact:Contact",
       "home-visit-map",
     ]);
   });
@@ -67,7 +66,7 @@ describe("orderHomeRenderItems", () => {
       makeSection("sections.promo-slider", "Promo A"),
       makeSection("sections.linked-resources", "Links B"),
       makeSection("sections.promo-slider", "Promo B"),
-      makeSection("sections.contact", "Contact"),
+      makeSection("sections.home-testimonials-teaser", "Testimonials"),
     ]);
 
     expect(result).toEqual([
@@ -77,7 +76,6 @@ describe("orderHomeRenderItems", () => {
       "section:sections.linked-resources:Links A",
       "section:sections.linked-resources:Links B",
       "home-testimonials",
-      "section:sections.contact:Contact",
       "home-visit-map",
     ]);
   });
@@ -96,6 +94,24 @@ describe("orderHomeRenderItems", () => {
       "section:sections.unknown:Unknown A",
       "section:sections.faq:FAQ",
       "section:sections.unknown:Unknown B",
+      "home-visit-map",
+    ]);
+  });
+
+  it("places home-resource-group sections after advantages and before linked-resources", () => {
+    const result = labelsFor([
+      makeSection("sections.linked-resources", "Links"),
+      makeSection("sections.home-resource-group", "Operations"),
+      makeSection("sections.advantages", "Advantages"),
+      makeSection("sections.promo-slider", "Promo"),
+    ]);
+
+    expect(result).toEqual([
+      "section:sections.promo-slider:Promo",
+      "menu-access-grid",
+      "home-advantages:Advantages",
+      "section:sections.home-resource-group:Operations",
+      "section:sections.linked-resources:Links",
       "home-visit-map",
     ]);
   });

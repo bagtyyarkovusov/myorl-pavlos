@@ -287,11 +287,15 @@
     "pageSections": {
       "type": "dynamiczone",
       "components": [
+        "sections.home-hero",
         "sections.promo-slider",
         "sections.linked-resources",
         "sections.social-links",
         "sections.video",
         "sections.advantages",
+        "sections.home-testimonials-teaser",
+        "sections.home-notice",
+        "sections.home-resource-group",
         "sections.accordion",
         "sections.faq",
         "sections.tabs",

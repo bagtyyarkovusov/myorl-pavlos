@@ -43,6 +43,17 @@ vi.mock("@/components/page-layouts/VideoDirectoryPage", async () => {
   };
 });
 
+// Mock ClinicHubPage as a sync component — the real component is an async
+// server component that can't render in jsdom.
+vi.mock("@/components/page-layouts/ClinicHubPage", () => ({
+  ClinicHubPage: ({ page }: { page: PageDTO }) => (
+    <section>
+      <h1>{page.title}</h1>
+      <p data-testid="office-page-content">{page.content}</p>
+    </section>
+  ),
+}));
+
 beforeEach(() => {
   vi.stubEnv("STRAPI_URL", "http://localhost:1337");
   vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://myorl.example.com");
@@ -104,6 +115,7 @@ const MOCK_GLOBAL_SETTINGS: GlobalSettingsDTO = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  footerTagline: null,
   disclaimerText: null,
   socialLinks: [],
 };
@@ -342,6 +354,27 @@ describe("PageRenderer", () => {
     render(<PageRenderer page={contactPage} />);
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: "Contact" })).toBeDefined();
+    });
+  });
+
+  it("renders ClinicHubPage for the iatreio office page slug", async () => {
+    const officePage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: "<p>Office intro</p>",
+    };
+    render(
+      <PageRenderer
+        page={officePage}
+        appointmentHref="/el/rantevou"
+        globalSettings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+    await waitFor(() => {
+      // Office pages render through ClinicHubPage, not StandardPage
+      expect(screen.getByRole("heading", { name: "ΛΟΡ Ιατρείο" })).toBeDefined();
     });
   });
 

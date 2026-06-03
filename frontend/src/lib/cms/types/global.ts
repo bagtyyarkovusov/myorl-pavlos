@@ -18,7 +18,14 @@ export type GlobalSettingsDTO = {
   secondaryPhoneDisplay: string | null;
   email: string | null;
   hours: string | null;
+  footerTagline: string | null;
   disclaimerText: string | null;
+  /** Doctor display name for the header brand area (localized). */
+  doctorName?: string | null;
+  /** Doctor specialty line shown under the name in the header (localized). */
+  doctorSpecialty?: string | null;
+  /** Nearest transit note, e.g. "Μετρό Αμπελόκηποι" — shown beside the header address (localized). */
+  transitNote?: string | null;
   socialLinks: SocialLinkItemDTO[];
 };
 
@@ -33,7 +40,11 @@ export type StrapiGlobalPayload = {
   secondaryPhoneDisplay?: string | null;
   email?: string | null;
   hours?: string | null;
+  footerTagline?: string | null;
   disclaimerText?: string | null;
+  doctorName?: string | null;
+  doctorSpecialty?: string | null;
+  transitNote?: string | null;
   socialLinks?: StrapiSocialLink[] | null;
 };
 

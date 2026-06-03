@@ -52,7 +52,7 @@
   width: 100%;
   max-width: 100%;
   overflow-wrap: break-word;
-  hyphens: auto;
+  hyphens: manual;
   color: var(--foreground);
   font-family: var(--font-display);
   font-size: 2.62rem;
@@ -66,7 +66,7 @@
   max-width: 100%;
   margin-top: 20px;
   overflow-wrap: break-word;
-  hyphens: auto;
+  hyphens: manual;
   color: var(--muted);
   font-size: 1.04rem;
   line-height: 1.65;

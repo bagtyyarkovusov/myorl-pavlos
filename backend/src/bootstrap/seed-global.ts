@@ -7,7 +7,7 @@ import {
   type SeedLocale,
 } from "./seed-global-data";
 
-const SEED_VERSION = "v6";
+const SEED_VERSION = "v8";
 const MARKER_KEY = "seed_global_version";
 
 const LOCALES: SeedLocale[] = ["el", "ru"];

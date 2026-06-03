@@ -5,7 +5,6 @@ import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getHomeRenderItemKey, orderHomeRenderItems } from "@/lib/home/home-render-order";
-import { getHomeStrings } from "@/lib/i18n/home";
 import type { GlobalSettingsDTO, NavigationNodeDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 import type { PageLayoutProps } from "./_shared";
@@ -24,20 +23,31 @@ export function HomePage({
   settings,
   homeTestimonials = null,
 }: HomePageProps) {
-  const t = getHomeStrings(page.locale);
-  const heroMedia = page.imageCenter ?? page.featuredImage ?? null;
-  const orderedItems = orderHomeRenderItems(page.sections);
+  const heroSection = page.sections.find((s) => s.__component === "sections.home-hero");
+  const homeHero = heroSection?.__component === "sections.home-hero" ? heroSection : undefined;
+
+  const heroMedia = homeHero?.media ?? page.imageCenter ?? page.featuredImage ?? null;
+  const heroCtaHref = homeHero
+    ? (homeHero.ctaUrl ??
+      (homeHero.ctaTargetPage?.slug
+        ? `/${page.locale}/${homeHero.ctaTargetPage.slug}`
+        : appointmentHref))
+    : appointmentHref;
+  const heroCtaLabel = homeHero?.ctaLabel ?? "";
+  const orderedItems = orderHomeRenderItems(
+    page.sections.filter((s) => s.__component !== "sections.home-hero"),
+  );
 
   return (
     <>
       <div data-locale={page.locale}>
         <HomeHero
-          kicker={t.heroKicker}
-          title={t.heroTitle}
-          excerpt={t.heroLead}
+          kicker={homeHero?.kicker ?? ""}
+          title={homeHero?.heading ?? page.title}
+          excerpt={homeHero?.intro ?? page.excerpt}
           media={heroMedia}
-          ctaHref={appointmentHref}
-          ctaLabel={t.heroCtaLabel}
+          ctaHref={heroCtaHref}
+          ctaLabel={heroCtaLabel}
         />
 
         {orderedItems.map((item, index) => {
@@ -70,6 +80,8 @@ export function HomePage({
                   key={getHomeRenderItemKey(item)}
                   locale={page.locale}
                   payload={homeTestimonials}
+                  heading={item.section.heading}
+                  intro={item.section.intro}
                 />
               ) : null;
             case "home-visit-map":

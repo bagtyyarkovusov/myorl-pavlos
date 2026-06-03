@@ -1,13 +1,12 @@
 import type { GlobalSettingsDTO, Locale } from "@/lib/cms/types";
 import { PrimaryContactPhones } from "@/components/PrimaryContactPhones";
-import { formatUtilityBarHours } from "@/lib/site/contact-fallbacks";
+import { mapsSearchUrl, resolveTransitNote } from "@/lib/site/contact-fallbacks";
 
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import styles from "../../SiteHeaderClient.module.css";
 
 type UtilityBarProps = {
   address: string | null;
-  hours: string | null;
   settings: GlobalSettingsDTO;
   locale: Locale;
   languageLabel: string;
@@ -16,14 +15,13 @@ type UtilityBarProps = {
 
 export function UtilityBar({
   address,
-  hours,
   settings,
   locale,
   languageLabel,
   localeUnavailableLabel,
 }: UtilityBarProps) {
-  const hasContactChrome = Boolean(address || hours || resolveHasPhones(settings));
-  const utilityBarHours = formatUtilityBarHours(hours);
+  const transitNote = resolveTransitNote(settings);
+  const hasContactChrome = Boolean(address || transitNote || resolveHasPhones(settings));
 
   if (!hasContactChrome) {
     return (
@@ -48,12 +46,32 @@ export function UtilityBar({
           {address ? (
             <span className={styles["site-utility__address-line"]}>
               <span className={styles["status-dot"]} aria-hidden="true" />
-              <span className={styles["site-utility__address"]}>{address}</span>
+              <a
+                className={`${styles["u-link"]} ${styles["site-utility__address"]}`}
+                href={mapsSearchUrl(address)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {address}
+              </a>
             </span>
           ) : null}
-          {utilityBarHours ? (
-            <span className={`desktop-only ${styles["site-utility__hours"]}`}>
-              {utilityBarHours}
+          {transitNote ? (
+            <span className={`desktop-only ${styles["site-utility__transit"]}`}>
+              <svg
+                className={styles["site-utility__transit-icon"]}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="6" y="3" width="12" height="13" rx="3" />
+                <path d="M6 11h12M8.5 20 7 22M15.5 20 17 22" />
+              </svg>
+              {transitNote}
             </span>
           ) : null}
         </div>

@@ -1,0 +1,39 @@
+{
+  "collectionName": "components_sections_home_resource_groups",
+  "info": {
+    "displayName": "Home Resource Group",
+    "description": "Editor-owned resource group for the homepage (operations or services) with heading, items, and view-all target."
+  },
+  "options": {},
+  "attributes": {
+    "group": {
+      "type": "enumeration",
+      "enum": [
+        "operations",
+        "services"
+      ],
+      "default": "services",
+      "required": false
+    },
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "intro": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "items.linked-resource"
+    },
+    "viewAllTarget": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::page.page"
+    },
+    "viewAllLabel": {
+      "type": "string"
+    }
+  }
+}

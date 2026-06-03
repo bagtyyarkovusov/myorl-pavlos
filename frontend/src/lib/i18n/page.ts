@@ -45,10 +45,23 @@ export type PageStrings = {
   humanSitemapNavLabel: string;
   clinicBookOnline: string;
   clinicViewGallery: string;
+  clinicOfficialSite: string;
   clinicBackToOverview: string;
   clinicGalleryPrevious: string;
   clinicGalleryNext: string;
   clinicGalleryStripLabel: string;
+  /** Office page: visit/map section heading */
+  officeVisitMapSectionLabel: string;
+  /** Office page: address label */
+  officeLabelAddress: string;
+  /** Office page: phone label */
+  officeLabelPhone: string;
+  /** Office page: email label */
+  officeLabelEmail: string;
+  /** Office page: map title (accessibility) */
+  officeMapTitle: string;
+  /** Office page: show map CTA label */
+  officeMapShowLabel: string;
 };
 
 const STRINGS: Record<Locale, PageStrings> = {
@@ -96,10 +109,17 @@ const STRINGS: Record<Locale, PageStrings> = {
     humanSitemapNavLabel: "Χάρτης θεμάτων",
     clinicBookOnline: "Κλείστε ραντεβού ηλεκτρονικά",
     clinicViewGallery: "Δείτε τη γκαλερί",
+    clinicOfficialSite: "Επίσημος ιστότοπος",
     clinicBackToOverview: "Επιστροφή στο ιατρείο",
     clinicGalleryPrevious: "Προηγούμενες φωτογραφίες",
     clinicGalleryNext: "Επόμενες φωτογραφίες",
     clinicGalleryStripLabel: "Φωτογραφίες ιατρείου",
+    officeVisitMapSectionLabel: "Διεύθυνση και επικοινωνία",
+    officeLabelAddress: "Διεύθυνση",
+    officeLabelPhone: "Τηλέφωνο",
+    officeLabelEmail: "Email",
+    officeMapTitle: "Τοποθεσία ιατρείου στο χάρτη",
+    officeMapShowLabel: "Εμφάνιση χάρτη",
   },
   ru: {
     home: "Главная",
@@ -151,10 +171,17 @@ const STRINGS: Record<Locale, PageStrings> = {
     humanSitemapNavLabel: "Карта сайта",
     clinicBookOnline: "Записаться на приём онлайн",
     clinicViewGallery: "Открыть галерею",
+    clinicOfficialSite: "Официальный сайт",
     clinicBackToOverview: "Вернуться к кабинету",
     clinicGalleryPrevious: "Предыдущие фото",
     clinicGalleryNext: "Следующие фото",
     clinicGalleryStripLabel: "Фотографии клиники",
+    officeVisitMapSectionLabel: "Адрес и контакты",
+    officeLabelAddress: "Адрес",
+    officeLabelPhone: "Телефон",
+    officeLabelEmail: "Email",
+    officeMapTitle: "Кабинет на карте",
+    officeMapShowLabel: "Показать карту",
   },
 };
 

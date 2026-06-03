@@ -18,7 +18,7 @@
   background: transparent;
   color: var(--color-ink-soft);
   cursor: pointer;
-  font-size: 0.88rem;
+  font-size: var(--type-nav-compact);
   padding-inline: clamp(8px, 0.9vw, 14px);
   white-space: nowrap;
   font-feature-settings: "ss01", "tnum";
@@ -36,7 +36,7 @@
 }
 
 .nav-chevron {
-  font-size: 0.75rem;
+  font-size: var(--type-nav-label);
   transform: translateY(-1px);
   transition: transform var(--motion-duration-fast) var(--motion-ease-default);
 }
@@ -63,6 +63,7 @@
 .desktop-nav {
   position: relative;
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: clamp(0px, 0.4vw, 8px);
   min-width: 0;
@@ -93,7 +94,7 @@
   [data-locale="ru"] .nav-trigger,
   [data-locale="ru"] .nav-link {
     font-size: 0.85rem;
-    letter-spacing: -0.012em;
+    letter-spacing: 0;
     padding-inline: clamp(6px, 0.55vw, 10px);
     min-height: 40px;
   }

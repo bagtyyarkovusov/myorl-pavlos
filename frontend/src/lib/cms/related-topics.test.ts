@@ -185,6 +185,91 @@ describe("resolveRelatedTopics", () => {
     const page = makeArticlePage();
     expect(resolveRelatedTopics(page, tree)).toEqual([]);
   });
+
+  it("excludes parent hub/index pages from auto-suggest", () => {
+    const tree: NavigationNodeDTO[] = [
+      makeNavNode({
+        documentId: "hub",
+        slug: "hub",
+        title: "Hub Parent",
+        layoutVariant: "section-hub",
+        parentPage: null,
+        tags: [{ name: "Pediatric", slug: "pediatric" }],
+        children: [],
+      }),
+      makeNavNode({
+        documentId: "peer",
+        slug: "peer",
+        title: "Peer Article",
+        layoutVariant: "encyclopedia-article",
+        parentPage: { documentId: "hub", slug: "hub", title: "Hub Parent" },
+        tags: [{ name: "Pediatric", slug: "pediatric" }],
+      }),
+    ];
+    const page = makeArticlePage({
+      parentPage: { documentId: "hub", slug: "hub", title: "Hub Parent" },
+    });
+    const result = resolveRelatedTopics(page, tree);
+    // The hub should be excluded; only the peer should appear
+    expect(result).toHaveLength(1);
+    expect(result[0]?.documentId).toBe("peer");
+  });
+
+  it("excludes section-index layout from auto-suggest", () => {
+    const tree: NavigationNodeDTO[] = [
+      makeNavNode({
+        documentId: "index",
+        slug: "index",
+        title: "Section Index",
+        layoutVariant: "section-index",
+        tags: [{ name: "Pediatric", slug: "pediatric" }],
+      }),
+    ];
+    const page = makeArticlePage();
+    expect(resolveRelatedTopics(page, tree)).toEqual([]);
+  });
+
+  it("excludes clinic-index layout from auto-suggest", () => {
+    const tree: NavigationNodeDTO[] = [
+      makeNavNode({
+        documentId: "clinic-idx",
+        slug: "clinics",
+        title: "Clinic Index",
+        layoutVariant: "clinic-index",
+        tags: [{ name: "Pediatric", slug: "pediatric" }],
+      }),
+    ];
+    const page = makeArticlePage();
+    expect(resolveRelatedTopics(page, tree)).toEqual([]);
+  });
+
+  it("returns empty for system pageType even with article layout", () => {
+    const page = makeArticlePage({ pageType: "system", layoutVariant: "standard" });
+    const tree: NavigationNodeDTO[] = [
+      makeNavNode({
+        documentId: "peer",
+        slug: "peer",
+        title: "Peer",
+        layoutVariant: "standard",
+        tags: [{ name: "Pediatric", slug: "pediatric" }],
+      }),
+    ];
+    expect(resolveRelatedTopics(page, tree)).toEqual([]);
+  });
+
+  it("excludes encyclopedia-index layout from auto-suggest", () => {
+    const tree: NavigationNodeDTO[] = [
+      makeNavNode({
+        documentId: "enc-idx",
+        slug: "encyclopedia",
+        title: "Encyclopedia Index",
+        layoutVariant: "encyclopedia-index",
+        tags: [{ name: "Pediatric", slug: "pediatric" }],
+      }),
+    ];
+    const page = makeArticlePage();
+    expect(resolveRelatedTopics(page, tree)).toEqual([]);
+  });
 });
 
 describe("withRelatedTopics", () => {

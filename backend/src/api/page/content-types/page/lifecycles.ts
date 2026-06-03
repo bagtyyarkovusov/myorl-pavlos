@@ -1,4 +1,5 @@
 import { createLifecycleHandlers } from "../../../../utils/revalidate";
+import { validatePageSectionsForLayout } from "./home-section-policy";
 
 function tagsForPage(event: any): string[] {
   const result = event?.result;
@@ -18,4 +19,28 @@ function tagsForPage(event: any): string[] {
   return tags;
 }
 
-export default createLifecycleHandlers(tagsForPage);
+const revalidationHandlers = createLifecycleHandlers(tagsForPage);
+
+type LifecycleEvent = {
+  params: {
+    data?: Record<string, unknown>;
+  };
+};
+
+function validatePageSections(event: LifecycleEvent): void {
+  if (event.params.data) {
+    validatePageSectionsForLayout(event.params.data);
+  }
+}
+
+export default {
+  beforeCreate(event: LifecycleEvent): void {
+    validatePageSections(event);
+  },
+
+  beforeUpdate(event: LifecycleEvent): void {
+    validatePageSections(event);
+  },
+
+  ...revalidationHandlers,
+};

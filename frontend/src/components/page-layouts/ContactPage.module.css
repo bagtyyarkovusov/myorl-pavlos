@@ -53,19 +53,16 @@
   margin: 0 0 0.5rem;
 }
 
+/* Sized, positioned box that the click-to-load LiteMap fills absolutely. */
 .mapColumn {
+  position: relative;
   margin: 0;
-}
-
-.mapFrame {
   width: 100%;
   height: 320px;
-  border: 0;
-  display: block;
 }
 
 @media (min-width: 1024px) {
-  .mapFrame {
+  .mapColumn {
     height: calc(100vh - 160px);
     min-height: 480px;
   }

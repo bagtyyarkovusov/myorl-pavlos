@@ -1,23 +1,14 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, JetBrains_Mono, Source_Sans_3 } from "next/font/google";
+import { Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
 import { getSiteUrl } from "@/lib/cms/site-url";
 
-const display = Instrument_Serif({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-instrument-serif",
-});
-
-const sans = Source_Sans_3({
+const robotoCondensed = Roboto_Condensed({
   subsets: ["latin", "greek", "cyrillic"],
-  variable: "--font-source-sans",
-});
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
+  weight: "variable",
+  display: "swap",
+  variable: "--font-roboto-condensed",
 });
 
 export const metadata: Metadata = {
@@ -36,11 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="el"
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="el" className={robotoCondensed.variable} suppressHydrationWarning>
       <body>
         {children}
         <WebVitalsReporter />

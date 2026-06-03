@@ -13,14 +13,15 @@ const mockSettings: GlobalSettingsDTO = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Mon-Fri 09:00-21:00",
+  footerTagline: null,
   disclaimerText: null,
+  transitNote: "Metro Ampelokipi",
   socialLinks: [],
 };
 
 describe("UtilityBar", () => {
   const baseProps = {
     address: "123 Main St, Athens",
-    hours: "Mon-Fri 09:00-21:00",
     settings: mockSettings,
     locale: "el" as const,
     languageLabel: "Language",
@@ -35,6 +36,26 @@ describe("UtilityBar", () => {
     expect(dot?.getAttribute("aria-hidden")).toBe("true");
   });
 
+  it("renders the address as a Google Maps link opening in a new tab", () => {
+    render(<UtilityBar {...baseProps} />);
+    const link = screen.getByText(/123 Main St/).closest("a");
+    expect(link).toBeTruthy();
+    expect(link?.getAttribute("href")).toContain("google.com/maps/search/");
+    expect(link?.getAttribute("href")).toContain(encodeURIComponent("123 Main St"));
+    expect(link?.getAttribute("target")).toBe("_blank");
+    expect(link?.getAttribute("rel")).toContain("noopener");
+  });
+
+  it("does not render clinic hours in the header", () => {
+    render(<UtilityBar {...baseProps} />);
+    expect(screen.queryByText(/09:00/)).toBeNull();
+  });
+
+  it("renders the metro transit note from settings", () => {
+    render(<UtilityBar {...baseProps} />);
+    expect(screen.getByText("Metro Ampelokipi")).toBeDefined();
+  });
+
   it("renders primary and secondary phone links", () => {
     render(<UtilityBar {...baseProps} />);
     expect(screen.getByText("211-01 94 618").closest("a")?.getAttribute("href")).toBe(
@@ -43,15 +64,6 @@ describe("UtilityBar", () => {
     expect(screen.getByText("6945 77 30 77").closest("a")?.getAttribute("href")).toBe(
       "tel:+306945773077",
     );
-  });
-
-  it("renders formatted hours on desktop in the start zone", () => {
-    render(<UtilityBar {...baseProps} hours={"Mon-Fri 09:00-21:00\nSat 10:00-14:00"} />);
-    const hoursEl = screen.getByText("Mon-Fri 09:00-21:00 · Sat 10:00-14:00");
-    expect(hoursEl).toBeDefined();
-    expect(hoursEl.closest('[class*="site-utility__zone--start"]')).toBeTruthy();
-    expect(hoursEl.closest(".desktop-only")).toBeTruthy();
-    expect(hoursEl.textContent).not.toContain("\n");
   });
 
   it("does not apply u-link to the phone wrapper", () => {

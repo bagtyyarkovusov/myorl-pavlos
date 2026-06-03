@@ -1,0 +1,74 @@
+.frame,
+.facade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.facade {
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  cursor: pointer;
+  background: var(--color-bone-200, #eaeef5);
+  color: var(--color-ink-soft, #3a4252);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Faint map-like grid so the placeholder reads as a dimmed map without
+   loading any Google resource. */
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line, rgba(20, 30, 50, 0.06)) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line, rgba(20, 30, 50, 0.06)) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.8;
+}
+
+.badge {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md, 12px);
+  background: color-mix(in oklch, var(--surface, #ffffff) 92%, transparent);
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.1);
+  transition:
+    border-color var(--motion-duration-default, 200ms) var(--motion-ease-out, ease),
+    box-shadow var(--motion-duration-default, 200ms) var(--motion-ease-out, ease);
+}
+
+.pin {
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+}
+
+.label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: var(--color-stone-soft);
+  max-width: 30ch;
+}
+
+.facade:hover .badge {
+  border-color: var(--accent);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16);
+}
+
+.facade:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}

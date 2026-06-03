@@ -9,6 +9,14 @@ export const RELATED_TOPICS_ARTICLE_LAYOUTS = new Set<LayoutVariant>([
   "standard",
 ]);
 
+/** Layout variants that should never appear as Related Topic suggestions. */
+const RELATED_TOPICS_EXCLUDED_LAYOUTS = new Set<LayoutVariant>([
+  "section-hub",
+  "section-index",
+  "clinic-index",
+  "encyclopedia-index",
+]);
+
 export const RELATED_TOPICS_MAX = 6;
 
 type RelatedTopicsCandidate = Pick<
@@ -47,7 +55,10 @@ function isEligibleCandidate(candidate: RelatedTopicsCandidate, page: PageDTO): 
   if (candidate.locale !== page.locale) return false;
   if (candidate.hideFromMenu) return false;
   if (!isArticleLayout(candidate.layoutVariant)) return false;
+  if (RELATED_TOPICS_EXCLUDED_LAYOUTS.has(candidate.layoutVariant)) return false;
   if (!candidate.slug) return false;
+  if (page.parentPage?.documentId && candidate.documentId === page.parentPage.documentId)
+    return false;
   return true;
 }
 
@@ -99,7 +110,7 @@ export function resolveRelatedTopics(
   page: PageDTO,
   directoryNavigation: NavigationNodeDTO[],
 ): PageRefDTO[] {
-  if (!isArticleLayout(page.layoutVariant)) {
+  if (!isArticleLayout(page.layoutVariant) || page.pageType === "system") {
     return [];
   }
 

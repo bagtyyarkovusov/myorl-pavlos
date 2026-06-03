@@ -12,9 +12,13 @@ import styles from "./HomeTestimonialsTeaser.module.css";
 export function HomeTestimonialsTeaser({
   locale,
   payload,
+  heading,
+  intro,
 }: {
   locale: Locale;
   payload: HomeTestimonialsPayload;
+  heading?: string | null;
+  intro?: string | null;
 }) {
   const t = getHomeStrings(locale);
 
@@ -27,7 +31,7 @@ export function HomeTestimonialsTeaser({
         /* Tighter bottom than compact py so the action links sit nearer HomeVisitMapSection */
         "pb-5 md:pb-6",
       )}
-      heading={{ title: t.testimonialsTitle }}
+      heading={heading || intro ? { title: heading ?? "", intro: intro ?? undefined } : undefined}
     >
       <div className={styles.ratingSlot}>
         <TestimonialsRatingBar

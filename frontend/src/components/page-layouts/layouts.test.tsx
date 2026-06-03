@@ -1,8 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 
-import { fetchVideoEntries } from "@/lib/cms/video-entries";
-
 vi.mock("@/lib/cms/video-entries", () => ({
   fetchVideoEntries: vi.fn(async () => []),
 }));
@@ -13,6 +11,7 @@ vi.mock("@/lib/cms/cms-api", () => ({
 
 import { HomePage } from "./HomePage";
 import { StandardPage } from "./StandardPage";
+import { SystemPage } from "./SystemPage";
 import { SectionIndexPage } from "./SectionIndexPage";
 import { SectionHubPage } from "./SectionHubPage";
 import { PageBody, extractHeadings, addHeadingIds, relatedTopicHref } from "./PageBody";
@@ -24,11 +23,28 @@ import { ClinicLocationBlock } from "@/components/clinic/ClinicLocationBlock";
 import { getPage } from "@/lib/cms/cms-api";
 import { QuestionListPage } from "./QuestionListPage";
 import { FrontendNativePage } from "./FrontendNativePage";
-import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
+import type {
+  HomeResourceGroupSectionDTO,
+  NavigationNodeDTO,
+  PageDTO,
+  GlobalSettingsDTO,
+} from "@/lib/cms/types";
 
 beforeEach(() => {
   vi.stubEnv("STRAPI_URL", "http://localhost:1337");
   vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://myorl.example.com");
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn((query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
 });
 
 afterEach(() => {
@@ -44,6 +60,7 @@ const MOCK_GLOBAL_SETTINGS: GlobalSettingsDTO = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  footerTagline: null,
   disclaimerText: null,
   socialLinks: [],
 };
@@ -310,6 +327,164 @@ describe("StandardPage", () => {
   });
 });
 
+describe("Biography page", () => {
+  it("renders biography page with data-variant='dense'", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          slug: "viografiko",
+          title: "Βιογραφικό",
+          content: "<p>Curriculum vitae text</p>",
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByText("Curriculum vitae text").closest("div")?.getAttribute("data-variant"),
+    ).toBe("dense");
+  });
+
+  it("renders biography page tables with compact prose-dense styling", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          slug: "viografiko",
+          title: "Βιογραφικό",
+          content:
+            "<table><thead><tr><th>Year</th><th>Position</th></tr></thead><tbody><tr><td>2020</td><td>Chief</td></tr></tbody></table>",
+        }}
+      />,
+    );
+
+    const prose = screen.getByText("Chief").closest("div");
+    expect(prose?.className).toContain("prose-dense");
+    expect(prose?.getAttribute("data-variant")).toBe("dense");
+  });
+
+  it("renders Russian biography page (/ru/viografiko) with dense prose", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          locale: "ru",
+          slug: "viografiko",
+          title: "Биография",
+          content: "<p>Текст биографии</p>",
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Текст биографии").closest("div")?.getAttribute("data-variant")).toBe(
+      "dense",
+    );
+  });
+
+  it("renders biography page with headings in two-column aside with data-prose-layout='dense'", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          slug: "viografiko",
+          title: "Βιογραφικό",
+          content: "<h2>Εκπαίδευση</h2><p>Πανεπιστήμιο Αθηνών</p><h3>Ειδικότητα</h3><p>ΩΡΛ</p>",
+        }}
+      />,
+    );
+
+    const main = document.querySelector("main[data-prose-layout='dense']");
+    expect(main).toBeTruthy();
+    const contentsNavs = screen.getAllByRole("navigation", { name: "Περιεχόμενα" });
+    expect(contentsNavs.length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByText("Πανεπιστήμιο Αθηνών").closest("div")?.getAttribute("data-variant"),
+    ).toBe("dense");
+  });
+
+  it("does not apply dense variant to non-biography pages", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          slug: "ypiresies",
+          title: "Υπηρεσίες",
+          content: "<p>Regular page text</p>",
+        }}
+      />,
+    );
+
+    const prose = screen.getByText("Regular page text").closest("div");
+    expect(prose?.getAttribute("data-variant")).toBeNull();
+  });
+});
+
+describe("SystemPage", () => {
+  const systemPage: PageDTO = {
+    ...BASE_PAGE,
+    pageType: "system",
+    layoutVariant: "standard",
+    title: "Privacy Policy",
+    content: "<p>Privacy policy text</p>",
+  };
+
+  it("renders title and content without kicker text", () => {
+    render(<SystemPage page={systemPage} />);
+
+    expect(screen.getByRole("heading", { name: "Privacy Policy" })).toBeDefined();
+    expect(screen.getByText("Privacy policy text")).toBeDefined();
+    expect(screen.queryByText("standard")).toBeNull();
+  });
+
+  it("does not render hero image when page has no featuredImage or imageCenter", () => {
+    const { container } = render(<SystemPage page={systemPage} />);
+    expect(container.querySelector("img")).toBeNull();
+  });
+
+  it("renders hero image when editor explicitly attached page-specific imagery", () => {
+    const pageWithImage: PageDTO = {
+      ...systemPage,
+      featuredImage: {
+        url: "/legal-icon.jpg",
+        alternativeText: "Legal icon",
+        width: 200,
+        height: 200,
+      },
+    };
+
+    render(<SystemPage page={pageWithImage} />);
+    expect(screen.getByRole("img", { name: "Legal icon" })).toBeDefined();
+  });
+
+  it("uses compact prose shell without two-column aside layout", () => {
+    const pageWithHeadings: PageDTO = {
+      ...systemPage,
+      content: "<h2>Our Policy</h2><p>Details</p>",
+    };
+
+    render(<SystemPage page={pageWithHeadings} />);
+
+    expect(document.querySelector("[data-prose-layout='standard']")).toBeNull();
+    expect(document.querySelector("[data-article-layout]")).toBeNull();
+    expect(document.querySelector("h2")).toBeDefined();
+  });
+
+  it("does not render related topics", () => {
+    const pageWithTopics: PageDTO = {
+      ...systemPage,
+      relatedTopics: [{ documentId: "r1", slug: "peer", title: "Peer article" }],
+    };
+
+    render(<SystemPage page={pageWithTopics} />);
+    expect(screen.queryByRole("region", { name: "Σχετικά θέματα" })).toBeNull();
+  });
+
+  it("does not render medical disclaimer", () => {
+    render(<SystemPage page={systemPage} />);
+    expect(screen.queryByRole("note")).toBeNull();
+  });
+});
+
 describe("HomePage", () => {
   it("renders hero title", () => {
     const homePage: PageDTO = {
@@ -480,6 +655,179 @@ describe("HomePage", () => {
     expect(screen.getByRole("link", { name: /Services/ })).toHaveAttribute("href", "/el/yperesies");
     expect(screen.getByRole("link", { name: /Video/ })).toHaveAttribute("href", "/el/video");
   });
+
+  it("renders home hero, testimonials heading, and notice from Strapi sections", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.home-hero",
+          kicker: "CMS kicker",
+          heading: "CMS hero heading",
+          intro: "CMS hero intro",
+          media: null,
+          ctaLabel: "CMS CTA",
+          ctaUrl: "/el/rantevou",
+          ctaTargetPage: null,
+        },
+        {
+          __component: "sections.home-testimonials-teaser",
+          heading: "CMS testimonials heading",
+          intro: "CMS testimonials intro",
+        },
+        {
+          __component: "sections.home-notice",
+          heading: "CMS notice heading",
+          intro: "<p>CMS notice body</p>",
+        },
+      ],
+    };
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/fallback"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+        homeTestimonials={{
+          aggregateRating: 5,
+          userRatingCount: 12,
+          googleMapsUrl: "https://example.com/maps",
+          googleMapsReviewsUrl: "https://example.com/reviews",
+          source: "curated",
+          quotes: [],
+        }}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "CMS hero heading" })).toBeDefined();
+    expect(screen.getByText("CMS testimonials heading")).toBeDefined();
+    expect(screen.getByText("CMS notice body")).toBeDefined();
+    expect(screen.queryByText("Τι γράφουν στο Google Maps")).toBeNull();
+  });
+
+  it("does not use hard-coded quick access descriptions when excerpts are missing", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.promo-slider",
+          heading: "Topics",
+          slides: [
+            {
+              title: "Slide",
+              description: null,
+              targetPageExcerpt: null,
+              image: null,
+              targetPage: null,
+              targetUrl: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/rantevou"
+        navigation={[makeNav("yperesies", "Services", 1)]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+
+    expect(screen.getByRole("link", { name: "Services" })).toBeDefined();
+    expect(screen.queryByText("Βρείτε γρήγορα τις βασικές υπηρεσίες του ιατρείου.")).toBeNull();
+  });
+
+  it("renders home resource groups from CMS sections", async () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.promo-slider",
+          heading: "Topics",
+          slides: [
+            {
+              title: "Slide",
+              description: null,
+              targetPageExcerpt: null,
+              image: null,
+              targetPage: null,
+              targetUrl: null,
+            },
+          ],
+        },
+        {
+          __component: "sections.home-resource-group",
+          group: "operations",
+          heading: "Επεμβάσεις",
+          intro: null,
+          items: [
+            {
+              title: "Operation A",
+              description: "<p>Op desc</p>",
+              image: null,
+              targetPage: { documentId: "1", slug: "op-a", title: "Op A" },
+              targetUrl: null,
+            },
+          ],
+          viewAllTarget: { documentId: "3", slug: "epemvaseis", title: "Operations" },
+          viewAllLabel: "Όλες οι επεμβάσεις",
+        } as HomeResourceGroupSectionDTO,
+        {
+          __component: "sections.home-resource-group",
+          group: "services",
+          heading: "Υπηρεσίες",
+          intro: null,
+          items: [
+            {
+              title: "Service A",
+              description: "<p>Svc desc</p>",
+              image: null,
+              targetPage: { documentId: "2", slug: "svc-a", title: "Svc A" },
+              targetUrl: null,
+            },
+          ],
+          viewAllTarget: null,
+          viewAllLabel: null,
+        } as HomeResourceGroupSectionDTO,
+      ],
+    };
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/rantevou"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+
+    // Wait for dynamic imports to resolve
+    await vi.waitFor(() => {
+      expect(screen.getByRole("heading", { name: "Επεμβάσεις" })).toBeDefined();
+    });
+
+    expect(screen.getByRole("heading", { name: "Υπηρεσίες" })).toBeDefined();
+    expect(screen.getByText("Operation A")).toBeDefined();
+    expect(screen.getByText("Service A")).toBeDefined();
+    expect(screen.getByRole("link", { name: /Operation A/ })).toHaveAttribute("href", "/el/op-a");
+    expect(screen.getByRole("link", { name: /Service A/ })).toHaveAttribute("href", "/el/svc-a");
+    expect(screen.getByRole("link", { name: /Όλες οι επεμβάσεις/ })).toHaveAttribute(
+      "href",
+      "/el/epemvaseis",
+    );
+  });
 });
 
 describe("ContactPage", () => {
@@ -547,9 +895,11 @@ describe("ContactPage", () => {
     );
   });
 
-  it("expands a clinic panel on click without changing the map iframe src", () => {
+  it("keeps the loaded map stable when expanding clinic panels", () => {
     const { container } = render(<ContactPage page={CONTACT_PAGE} />);
-    const map = container.querySelector("iframe[data-contact-map]");
+    // Map is click-to-load: activate it before asserting on the iframe.
+    fireEvent.click(screen.getByRole("button", { name: "Εμφάνιση χάρτη" }));
+    const map = container.querySelector("iframe");
     expect(map).toBeTruthy();
     const initialSrc = map!.getAttribute("src");
 
@@ -560,7 +910,15 @@ describe("ContactPage", () => {
     const thessToggle = screen.getByRole("button", { name: /Thessaloniki/ });
     fireEvent.click(thessToggle);
 
-    expect(map!.getAttribute("src")).toBe(initialSrc);
+    expect(container.querySelector("iframe")!.getAttribute("src")).toBe(initialSrc);
+  });
+
+  it("loads the contact map only after the visitor activates the facade", () => {
+    const { container } = render(<ContactPage page={CONTACT_PAGE} />);
+    // No Google iframe on first paint — only the click-to-load facade.
+    expect(container.querySelector("iframe")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Εμφάνιση χάρτη" }));
+    expect(container.querySelector("iframe")).toBeTruthy();
   });
 
   it("renders phone/email links with tel: and mailto: schemes inside the expanded panel", () => {
@@ -577,7 +935,8 @@ describe("ContactPage", () => {
 
   it("renders the map from clinic coordinates per ADR-009", () => {
     const { container } = render(<ContactPage page={CONTACT_PAGE} />);
-    const map = container.querySelector("iframe[data-contact-map]");
+    fireEvent.click(screen.getByRole("button", { name: "Εμφάνιση χάρτη" }));
+    const map = container.querySelector("iframe");
     expect(map?.getAttribute("src")).toContain("37.9838");
   });
 
@@ -595,7 +954,8 @@ describe("ContactPage", () => {
       ],
     };
     const { container } = render(<ContactPage page={page} />);
-    expect(container.querySelector("iframe[data-contact-map]")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Εμφάνιση χάρτη" })).toBeNull();
+    expect(container.querySelector("iframe")).toBeNull();
   });
 
   it("renders only the contact form when CMS contact section is missing", () => {
@@ -636,13 +996,18 @@ describe("GalleryPage", () => {
       sections: [
         {
           __component: "sections.gallery",
-          items: [{ caption: "Photo 1", image: null }],
+          items: [
+            {
+              caption: "Photo 1",
+              image: { url: "/img/1.jpg", alternativeText: "Pic 1", width: 800, height: 600 },
+            },
+          ],
         },
       ],
     };
 
     render(<GalleryPage page={galleryPage} />);
-    expect(screen.getByText("Photo 1")).toBeDefined();
+    expect(screen.getByRole("button", { name: "Pic 1" })).toBeDefined();
   });
 
   it("renders multiple gallery items through SectionRenderer", () => {
@@ -656,16 +1021,22 @@ describe("GalleryPage", () => {
           __component: "sections.gallery",
           heading: "Our Work",
           items: [
-            { caption: "Photo A", image: null },
-            { caption: "Photo B", image: null },
+            {
+              caption: "Photo A",
+              image: { url: "/img/a.jpg", alternativeText: "Image A", width: 800, height: 600 },
+            },
+            {
+              caption: "Photo B",
+              image: { url: "/img/b.jpg", alternativeText: "Image B", width: 800, height: 600 },
+            },
           ],
         },
       ],
     };
 
     render(<GalleryPage page={galleryPage} />);
-    expect(screen.getByText("Photo A")).toBeDefined();
-    expect(screen.getByText("Photo B")).toBeDefined();
+    expect(screen.getByRole("button", { name: "Image A" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Image B" })).toBeDefined();
     expect(screen.getByText("Our Work")).toBeDefined();
   });
 
@@ -691,6 +1062,77 @@ describe("GalleryPage", () => {
     const { container } = render(<GalleryPage page={galleryPage} />);
     const clickable = container.querySelector("button[data-gallery-trigger]");
     expect(clickable).toBeTruthy();
+  });
+
+  it("skips gallery sections that have no items with images", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Clinic Gallery",
+      sections: [
+        {
+          __component: "sections.gallery",
+          heading: "Empty Gallery",
+          items: [{ caption: "No Image", image: null }],
+        },
+      ],
+    };
+
+    const { container } = render(<GalleryPage page={galleryPage} />);
+    expect(screen.queryByText("Empty Gallery")).toBeNull();
+    expect(container.querySelector("[data-gallery-grid]")).toBeNull();
+  });
+
+  it("renders non-gallery sections even when gallery sections are empty", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Clinic Gallery",
+      content: "<p>Clinic intro text</p>",
+      sections: [
+        {
+          __component: "sections.gallery",
+          heading: "Empty Gallery",
+          items: [],
+        },
+      ],
+    };
+
+    render(<GalleryPage page={galleryPage} />);
+    expect(screen.getByText("Clinic intro text")).toBeDefined();
+  });
+
+  it("renders the official site button when externalUrl is set", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Hospital Gallery",
+      externalUrl: "https://www.mediterraneohospital.gr",
+      sections: [],
+    };
+
+    render(<GalleryPage page={galleryPage} />);
+    expect(screen.getByRole("link", { name: "Επίσημος ιστότοπος" })).toHaveAttribute(
+      "href",
+      "https://www.mediterraneohospital.gr",
+    );
+  });
+
+  it("does not render the official site button when externalUrl is absent", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Hospital Gallery",
+      externalUrl: null,
+      sections: [],
+    };
+
+    render(<GalleryPage page={galleryPage} />);
+    expect(screen.queryByRole("link", { name: "Επίσημος ιστότοπος" })).toBeNull();
   });
 });
 
@@ -759,7 +1201,11 @@ describe("ClinicHubPage", () => {
       throw new Error(`Unexpected slug ${slug}`);
     });
 
-    const ui = await ClinicHubPage({ page: hubPage, appointmentHref: "/el/rantevou" });
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: MOCK_GLOBAL_SETTINGS,
+    });
     const { container } = render(ui);
 
     expect(screen.getByText("Doctor bio intro")).toBeDefined();
@@ -775,6 +1221,184 @@ describe("ClinicHubPage", () => {
       "#clinic-iatreio-koukaki",
     );
     expect(container.querySelectorAll("button[data-gallery-trigger]")).toHaveLength(4);
+  });
+
+  it("renders visit/contact section with address, phone, and email", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: "<p>Doctor bio intro</p>",
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: MOCK_GLOBAL_SETTINGS,
+    });
+    render(ui);
+
+    const addressNodes = screen.getAllByText(
+      "Λεωφόρος Αλεξάνδρας 201 & Πανόρμου, Αμπελόκηποι, Αθήνα",
+    );
+    expect(addressNodes.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByRole("link", { name: "211-01 94 618" })).toHaveAttribute(
+      "href",
+      "tel:+302110194618",
+    );
+    expect(screen.getByRole("link", { name: "pavlos.tsolaridis@gmail.com" })).toHaveAttribute(
+      "href",
+      "mailto:pavlos.tsolaridis@gmail.com",
+    );
+  });
+
+  it("renders doctor identity when globalSettings has doctor fields", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: null,
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const settingsWithDoctor: GlobalSettingsDTO = {
+      ...MOCK_GLOBAL_SETTINGS,
+      doctorName: "Παύλος Τσολαρίδης",
+      doctorSpecialty: "Ωτορινολαρυγγολόγος",
+    };
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: settingsWithDoctor,
+    });
+    render(ui);
+
+    expect(screen.getByText("Παύλος Τσολαρίδης")).toBeDefined();
+    expect(screen.getByText("Ωτορινολαρυγγολόγος")).toBeDefined();
+  });
+
+  it("renders map facade button with show-map label", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: null,
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: MOCK_GLOBAL_SETTINGS,
+    });
+    render(ui);
+
+    expect(screen.getByRole("button", { name: "Εμφάνιση χάρτη" })).toBeDefined();
+  });
+
+  it("uses accent hero image variant for controlled office image sizing", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: null,
+      sections: [],
+      imageCenter: {
+        url: "/uploads/office.jpg",
+        alternativeText: "Office photo",
+        width: 1200,
+        height: 800,
+      },
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: MOCK_GLOBAL_SETTINGS,
+    });
+    const { container } = render(ui);
+
+    // Accent image uses band variant - constrained width with accent modifier class
+    const heroImage = container.querySelector("[class*='page-hero__image--accent']");
+    expect(heroImage).toBeTruthy();
+  });
+
+  it("hides visit section when globalSettings has no address", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "LOR Kabinet",
+      locale: "ru",
+      layoutVariant: "standard",
+      content: null,
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Ampelokipi");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Koukaki");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const emptySettings: GlobalSettingsDTO = {
+      ...MOCK_GLOBAL_SETTINGS,
+      locale: "ru",
+      address: null,
+      phoneTel: null,
+      phoneDisplay: null,
+      secondaryPhoneTel: null,
+      secondaryPhoneDisplay: null,
+      email: null,
+    };
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/ru/zapis",
+      globalSettings: emptySettings,
+    });
+    render(ui);
+
+    expect(screen.queryByRole("button", { name: "Показать карту" })).toBeNull();
   });
 });
 
@@ -1607,6 +2231,66 @@ describe("PageBody", () => {
     expect(screen.getByText("Dr Expert, MD")).toBeDefined();
     expect(screen.getByText("Journal source")).toBeDefined();
   });
+
+  it("hides medically reviewed dates on encyclopedia-article when fields are set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "encyclopedia-article",
+      content: "<h2>Diagnosis</h2><p>Reference body</p>",
+      medicallyReviewedBy: "Dr Expert",
+      lastReviewedDate: "2025-01-15T00:00:00.000Z",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[class*='article-dates']")).toBeNull();
+    expect(screen.queryByText(/Ιατρικά ελεγμένο/)).toBeNull();
+  });
+
+  it("hides medically reviewed dates on service-article when fields are set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "service-article",
+      content: "<p>Service content</p>",
+      medicallyReviewedBy: "Dr Expert",
+      lastReviewedDate: "2025-01-15T00:00:00.000Z",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[class*='article-dates']")).toBeNull();
+    expect(screen.queryByText(/Ιατρικά ελεγμένο/)).toBeNull();
+  });
+
+  it("hides medically reviewed dates on specialized-article when fields are set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "specialized-article",
+      content: "<h2>Evidence</h2><p>Research body</p>",
+      medicallyReviewedBy: "Dr Expert",
+      lastReviewedDate: "2025-01-15T00:00:00.000Z",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[class*='article-dates']")).toBeNull();
+    expect(screen.queryByText(/Ιατρικά ελεγμένο/)).toBeNull();
+  });
+
+  it("hides medically reviewed dates on standard layout when fields are set", () => {
+    const page: PageDTO = {
+      ...BASE_PAGE,
+      layoutVariant: "standard",
+      content: "<p>General content</p>",
+      medicallyReviewedBy: "Dr Expert",
+      lastReviewedDate: "2025-01-15T00:00:00.000Z",
+    };
+
+    render(<PageBody page={page} />);
+
+    expect(document.querySelector("[class*='article-dates']")).toBeNull();
+    expect(screen.queryByText(/Ιατρικά ελεγμένο/)).toBeNull();
+  });
 });
 
 describe("ArticleDisclaimer", () => {
@@ -1862,10 +2546,11 @@ describe("AppointmentPage", () => {
     expect(screen.getByRole("heading", { name: "Ραντεβού" })).toBeDefined();
     expect(screen.queryByRole("heading", { name: "Αίτημα ραντεβού" })).toBeNull();
     expect(screen.queryByText("appointment")).toBeNull();
-    expect(screen.getByLabelText(/Προτιμώμενη ημέρα/i)).toBeDefined();
-    expect(
-      screen.getByLabelText(/Λόγος επίσκεψης και προτιμώμενη ώρα \(προαιρετικά\)/i),
-    ).toBeDefined();
+    expect(screen.getByLabelText(/ημέρα επίσκεψης/i)).toBeDefined();
+    expect(screen.queryByRole("radio", { name: "09:00" })).toBeNull();
+    expect(screen.queryByLabelText(/Email/i)).toBeNull();
+    expect(screen.getByLabelText(/Μήνυμα/i)).toBeDefined();
+    expect(screen.queryByLabelText(/Επισύναψη αρχείου/i)).toBeNull();
     expect(screen.queryByText("Same text as body")).toBeNull();
     expect(screen.getByRole("link", { name: "Κλήση τώρα" })).toHaveAttribute(
       "href",
@@ -1875,6 +2560,61 @@ describe("AppointmentPage", () => {
       "href",
       "mailto:pavlos.tsolaridis@gmail.com",
     );
+  });
+
+  it("uses a MODX-style date-time picker with day, hour, then minute steps", () => {
+    const apptPage: PageDTO = {
+      ...BASE_PAGE,
+      locale: "ru",
+      layoutVariant: "appointment-form",
+      title: "Запись",
+    };
+
+    render(<AppointmentPage page={apptPage} />);
+
+    const dateInput = screen.getByLabelText(/день посещения/i);
+    expect(dateInput).toHaveAttribute("readonly");
+    expect(dateInput).toHaveValue("");
+    expect(screen.getByLabelText(/Сообщение/i)).toBeDefined();
+    expect(screen.queryByRole("radio", { name: "09:00" })).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: /календар/i }));
+    fireEvent.click(screen.getByRole("button", { name: "19" }));
+
+    expect(screen.getByRole("button", { name: "9:00" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "13:00" })).toBeDefined();
+
+    fireEvent.click(screen.getByRole("button", { name: "10:00" }));
+
+    expect(screen.getByRole("button", { name: "10:00" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "10:30" })).toBeDefined();
+
+    fireEvent.click(screen.getByRole("button", { name: "10:30" }));
+
+    expect(dateInput).toHaveValue("19/06/2026 10:30");
+  });
+
+  it("enables Mon/Fri 09-14 and Tue/Thu 14-20, disables Wed/Sat/Sun", () => {
+    const apptPage: PageDTO = {
+      ...BASE_PAGE,
+      locale: "ru",
+      layoutVariant: "appointment-form",
+      title: "Запись",
+    };
+
+    render(<AppointmentPage page={apptPage} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /календар/i }));
+
+    // June 2026: 4=Thu (enabled 14-20), 6=Sat (disabled), 14=Sun (disabled)
+    expect(screen.getByRole("button", { name: "4" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "6" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "14" })).toBeDisabled();
+
+    // 8=Mon (enabled 09-14), 9=Tue (enabled 14-20), 10=Wed (disabled)
+    expect(screen.getByRole("button", { name: "8" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "9" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "10" })).toBeDisabled();
   });
 
   it("renders sections through SectionRenderer", () => {

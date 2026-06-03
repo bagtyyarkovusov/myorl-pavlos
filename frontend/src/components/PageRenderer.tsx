@@ -1,7 +1,6 @@
 import dynamic from "next/dynamic";
 import { AlternateUrlsSetter } from "@/components/AlternateUrlsSetter";
 import { StructuredDataComposer } from "@/components/StructuredDataComposer";
-import { ClinicHubPage } from "@/components/page-layouts/ClinicHubPage";
 import { VideoDirectoryPage } from "@/components/page-layouts/VideoDirectoryPage";
 import { getSiteUrl } from "@/lib/cms/site-url";
 import { isClinicHubPage } from "@/lib/cms/clinic-pages";
@@ -17,6 +16,9 @@ const DIRECTORY_LAYOUT_VARIANTS = new Set<PageDTO["layoutVariant"]>([
 
 const AppointmentPage = dynamic(() =>
   import("@/components/page-layouts/AppointmentPage").then((m) => m.AppointmentPage),
+);
+const ClinicHubPage = dynamic(() =>
+  import("@/components/page-layouts/ClinicHubPage").then((m) => m.ClinicHubPage),
 );
 const ContactPage = dynamic(() =>
   import("@/components/page-layouts/ContactPage").then((m) => m.ContactPage),
@@ -41,6 +43,9 @@ const SectionIndexPage = dynamic(() =>
 );
 const StandardPage = dynamic(() =>
   import("@/components/page-layouts/StandardPage").then((m) => m.StandardPage),
+);
+const SystemPage = dynamic(() =>
+  import("@/components/page-layouts/SystemPage").then((m) => m.SystemPage),
 );
 
 type PageRendererProps = {
@@ -77,6 +82,20 @@ export function PageRenderer({
     />
   );
 
+  const fallbackSettings: GlobalSettingsDTO = {
+    locale: page.locale,
+    address: null,
+    phoneTel: null,
+    phoneDisplay: null,
+    secondaryPhoneTel: null,
+    secondaryPhoneDisplay: null,
+    email: null,
+    hours: null,
+    footerTagline: null,
+    disclaimerText: null,
+    socialLinks: [],
+  };
+
   let layout: React.ReactNode;
 
   if (page.renderMode === "frontend-native") {
@@ -84,25 +103,7 @@ export function PageRenderer({
       <FrontendNativePage page={page} directoryNavigation={directoryNavigation ?? navigation} />
     );
   } else if (page.layoutVariant === "appointment-form") {
-    layout = (
-      <AppointmentPage
-        page={page}
-        settings={
-          globalSettings ?? {
-            locale: page.locale,
-            address: null,
-            phoneTel: null,
-            phoneDisplay: null,
-            secondaryPhoneTel: null,
-            secondaryPhoneDisplay: null,
-            email: null,
-            hours: null,
-            disclaimerText: null,
-            socialLinks: [],
-          }
-        }
-      />
-    );
+    layout = <AppointmentPage page={page} settings={globalSettings ?? fallbackSettings} />;
   } else if (page.layoutVariant === "video-index") {
     layout = (
       <VideoDirectoryPage
@@ -128,25 +129,18 @@ export function PageRenderer({
         page={page}
         appointmentHref={appointmentHref ?? `/${page.locale}`}
         navigation={navigation}
-        settings={
-          globalSettings ?? {
-            locale: page.locale,
-            address: null,
-            phoneTel: null,
-            phoneDisplay: null,
-            secondaryPhoneTel: null,
-            secondaryPhoneDisplay: null,
-            email: null,
-            hours: null,
-            disclaimerText: null,
-            socialLinks: [],
-          }
-        }
+        settings={globalSettings ?? fallbackSettings}
         homeTestimonials={homeTestimonials}
       />
     );
   } else if (isClinicHubPage(page)) {
-    layout = <ClinicHubPage page={page} appointmentHref={appointmentHref} />;
+    layout = (
+      <ClinicHubPage
+        page={page}
+        appointmentHref={appointmentHref}
+        globalSettings={globalSettings ?? fallbackSettings}
+      />
+    );
   } else if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
     layout = (
       <QuestionListPage page={page} navigation={navigation} appointmentHref={appointmentHref} />
@@ -155,6 +149,8 @@ export function PageRenderer({
     layout = <GalleryPage page={page} />;
   } else if (page.pageType === "contact") {
     layout = <ContactPage page={page} />;
+  } else if (page.pageType === "system") {
+    layout = <SystemPage page={page} />;
   } else {
     layout = (
       <StandardPage

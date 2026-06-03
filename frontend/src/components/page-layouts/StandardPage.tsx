@@ -100,7 +100,6 @@ function buildArticleMetadata(
     }
     return metadata;
   }
-  metadata.push(t.updatedClinicalReview);
   return metadata;
 }
 

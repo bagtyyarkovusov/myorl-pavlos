@@ -7,8 +7,6 @@ import type { LinkedResourceItemDTO } from "@/lib/cms/types";
 import styles from "./HomeMedicalGrid.module.css";
 
 type HomeMedicalGridProps = {
-  title: string;
-  intro?: string | null;
   items: LinkedResourceItemDTO[];
   locale: string;
   learnMoreLabel: string;
@@ -16,8 +14,6 @@ type HomeMedicalGridProps = {
 };
 
 export function HomeMedicalGrid({
-  title,
-  intro,
   items,
   locale,
   learnMoreLabel,

@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_sections_home_notices",
+  "info": {
+    "displayName": "Home Notice Section",
+    "description": "Short editor-owned homepage notice from the legacy content specification."
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "richtext"
+    }
+  }
+}

@@ -92,9 +92,9 @@
   font-size: clamp(0.62rem, 2.85vw + 0.42rem, 0.94rem);
   font-weight: 700;
   line-height: 1.12;
-  letter-spacing: -0.015em;
+  letter-spacing: 0;
   overflow-wrap: break-word;
-  hyphens: auto;
+  hyphens: manual;
   text-wrap: balance;
 }
 
@@ -174,7 +174,7 @@
   .menu-access-card__copy strong {
     font-size: 1rem;
     line-height: 1.18;
-    letter-spacing: -0.005em;
+    letter-spacing: 0;
   }
 
   .menu-access-card__arrow {

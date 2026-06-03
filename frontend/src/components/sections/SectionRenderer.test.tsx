@@ -245,7 +245,7 @@ describe("SectionRenderer", () => {
     expect(container.querySelector("section")?.getAttribute("data-background")).toBe("white");
   });
 
-  it("renders with home context", () => {
+  it("suppresses contact sections with home context", () => {
     const section = makeSection({
       __component: "sections.contact",
       heading: "Home Contact",
@@ -254,7 +254,7 @@ describe("SectionRenderer", () => {
     } as SectionDTO);
 
     const { container } = render(<SectionRenderer section={section} context="home" />);
-    expect(container.querySelector("section")).toBeTruthy();
+    expect(container.querySelectorAll("section")).toHaveLength(0);
   });
 
   it("delegates omitted home sections without adding an outer section wrapper", () => {

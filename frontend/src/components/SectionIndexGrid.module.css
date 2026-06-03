@@ -53,7 +53,7 @@
   color: var(--accent-ink);
   cursor: pointer;
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: var(--type-label-large);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -76,7 +76,7 @@
   width: fit-content;
   color: var(--accent-ink);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
   font-weight: 600;
   letter-spacing: 0.04em;
   list-style: none;
@@ -95,7 +95,7 @@
   margin: 0;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -105,7 +105,7 @@
   margin: 0 0 clamp(12px, 2vw, 18px);
   color: var(--color-stone-soft);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -229,7 +229,7 @@
   }
 
   .index-list--featured .index-row__body strong {
-    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-size: var(--type-card-title);
   }
 
   .index-list--featured .index-row__excerpt {
@@ -282,7 +282,7 @@
   }
 
   .index-list--featured .index-row:first-child .index-row__body strong {
-    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-size: var(--type-heading-2);
   }
 
   .index-list--featured .index-row__excerpt {
@@ -508,7 +508,7 @@
 
   .index-list--clinic-grid .index-row__body strong,
   .index-list--encyclopedia-list .index-row__body strong {
-    font-size: clamp(1.12rem, 1.2vw, 1.28rem);
+    font-size: var(--type-card-title);
     text-wrap: balance;
   }
 
@@ -674,7 +674,7 @@
   }
 
   .index-list--directory-list .index-row__body strong {
-    font-size: clamp(1.05rem, 1.1vw, 1.18rem);
+    font-size: var(--type-card-body);
     line-height: 1.2;
     text-wrap: balance;
   }
@@ -755,7 +755,7 @@
 .index-row__body strong {
   color: var(--foreground);
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: var(--type-card-title);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -765,7 +765,7 @@
   overflow: hidden;
   margin: 0;
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: var(--type-card-body);
   line-height: 1.42;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -775,7 +775,7 @@
   margin: 0;
   color: var(--color-stone-soft);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.35;
@@ -839,6 +839,7 @@
 .index-media[data-media-variant="section-grid"],
 .index-media[data-media-variant="video-grid"] {
   aspect-ratio: 16 / 9;
+  max-width: 480px;
 }
 
 .index-media[data-media-variant="clinic-grid"],
@@ -962,7 +963,7 @@
   background: rgba(255, 255, 255, 0.7);
   color: var(--foreground);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--type-label);
   font-weight: 600;
   text-decoration: none;
   transition:
@@ -1055,7 +1056,7 @@
 
 @media (min-width: 768px) {
   .index-row__body strong {
-    font-size: 1.25rem;
+    font-size: var(--type-card-title);
   }
 }
 
@@ -1071,7 +1072,7 @@
   }
 
   .index-list--directory-list .index-row__body strong {
-    font-size: 1.05rem;
+    font-size: var(--type-card-body);
   }
 
   .index-media[data-media-variant="directory-list"] {

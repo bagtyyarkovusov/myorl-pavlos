@@ -19,16 +19,16 @@ colors:
   teal-soft: "#e0f1f1"
 typography:
   display:
-    fontFamily: "Instrument Serif, Georgia, serif"
+    fontFamily: "Roboto Condensed, ui-sans-serif, system-ui, sans-serif"
     fontWeight: 400
     lineHeight: 1
   body:
-    fontFamily: "Source Sans 3, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Roboto Condensed, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.65
   label:
-    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontFamily: "Roboto Condensed, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.72rem"
     fontWeight: 500
     lineHeight: 1.25
@@ -75,14 +75,14 @@ components:
 
 A well-appointed consulting room: clean surfaces, intentional objects, nothing that doesn't serve the patient. The myORL design system prioritizes clarity as a form of care. Every element is placed to reduce cognitive load for anxious patients researching ENT symptoms — the interface should feel like a reassuring hand on the shoulder, not a medical textbook.
 
-The system is light-only by design. Patients and family members browse on phones and laptops at home, in waiting rooms, under office lighting. A light surface maximizes readability and signals clinical cleanliness. The palette is restrained: tinted blue-grey neutrals carrying a single blue accent at ≤10% surface coverage. Instrument Serif adds warmth and personal authority at display sizes; Source Sans 3 carries body text in both Greek and Russian with equal confidence.
+The system is light-only by design. Patients and family members browse on phones and laptops at home, in waiting rooms, under office lighting. A light surface maximizes readability and signals clinical cleanliness. The palette is restrained: tinted blue-grey neutrals carrying a single blue accent at ≤10% surface coverage. Roboto Condensed carries the full interface with a narrow, legible medical-office voice across Greek and Russian.
 
 This system explicitly rejects SaaS-cream card farms, hospital-corporate sterility, Mediterranean-tourism warmth, and crypto-dark aggressive styling. It is neither playful nor severe. It is calm, and the calm is earned by the doctor's credentials.
 
 **Key Characteristics:**
 - Restrained color strategy: one accent (trust blue) ≤10% of any screen
 - Light-only theme tuned for clinical readability
-- Serif display + sans body: warmth through typography, not decoration
+- Single-family Roboto Condensed system: clarity through consistent, narrow proportions
 - Density system (scanning / focused / theater) controls spacing and type scale globally
 - Flat-by-default elevation: shadows appear only on state change
 - Hairline grid patterns for structured content sections
@@ -133,18 +133,18 @@ CSS Modules use role-based aliases rather than palette names directly:
 
 ## 3. Typography
 
-**Display Font:** Instrument Serif (with Georgia fallback)
-**Body Font:** Source Sans 3 (with ui-sans-serif, system-ui, sans-serif fallback)
-**Label/Mono Font:** JetBrains Mono (with ui-monospace, monospace fallback)
+**Display Font:** Roboto Condensed (with ui-sans-serif, system-ui, sans-serif fallback)
+**Body Font:** Roboto Condensed (with ui-sans-serif, system-ui, sans-serif fallback)
+**Label Font:** Roboto Condensed (with ui-sans-serif, system-ui, sans-serif fallback)
 
-**Character:** A warm serif display paired with a clean, highly readable sans body. Instrument Serif brings personal, humanist warmth at large sizes — it signals "doctor's name on the door" rather than "hospital department signage." Source Sans 3 carries the information load across Greek and Cyrillic with excellent readability at all sizes. JetBrains Mono appears only at label size for meta information, kickers, and captions.
+**Character:** A single condensed sans family carries the whole public UI. Roboto Condensed matches the legacy site's narrow medical-office typography, reduces header pressure in Greek and Russian, and keeps labels, navigation, body text, and headings visually unified.
 
 ### Hierarchy
-- **Display** (400 weight, clamp between 2.62rem and 5.2rem, line-height 0.94–1.0): Hero titles only. Appears once per page. Tight line-height is intentional — the serif face holds structure at this density without feeling cramped.
-- **Headline** (400 weight, clamp(2.4rem, 13vw, 4.6rem), line-height 1.0): Section headings. Display font, capped at 680px width. Defined in the SectionHeading component.
-- **Title** (400 weight, 1.25rem–2.25rem depending on density, line-height 1.12): Card titles. Display font, size controlled by the density system (`--density-h2-*`).
+- **Display** (400 weight, clamp between 2.62rem and 5.2rem, line-height 0.94-1.0): Hero titles only. Appears once per page. Tight line-height is intentional, but line breaks must stay readable in Greek and Russian.
+- **Headline** (400 weight, clamp(2.4rem, 13vw, 4.6rem), line-height 1.0): Section headings. Display alias, capped at 680px width. Defined in the SectionHeading component.
+- **Title** (500-600 weight, 1.25rem-2.25rem depending on density, line-height 1.12): Card titles. Display alias, size controlled by the density system (`--density-h2-*`).
 - **Body** (400 weight, 1rem, line-height 1.65): Paragraphs, descriptions, UI text. Capped at ~65ch. CMS rich text uses 1.05rem / 1.76 line-height via the `.cms-html` class.
-- **Label** (500 weight, 0.72rem, line-height 1.25, uppercase): Kickers, eyebrow text, meta labels, media frame labels. Mono font. No letter-spacing beyond the font's natural width.
+- **Label** (500 weight, 0.72rem, line-height 1.25, uppercase): Kickers, eyebrow text, meta labels, media frame labels. Same family, no mono face, and no letter-spacing beyond the font's natural width.
 
 ### Density System
 The density system (scanning / focused / theater) adjusts type size and spacing through CSS custom properties:
@@ -153,11 +153,11 @@ The density system (scanning / focused / theater) adjusts type size and spacing 
 - **Theater** (generous): Body 1.125rem, H1 3rem, H2 2.25rem, paragraph 1.5em, section padding 96px.
 
 ### Named Rules
-**The Display Authority Rule.** Instrument Serif is reserved for hero titles, section headings, and card titles. It never appears in body copy, labels, UI chrome, or at sizes below 1.25rem.
+**The Single-Family Rule.** Roboto Condensed is the only public UI typeface. The semantic aliases (`--font-display`, `--font-sans`, `--font-mono`) remain for component roles, but they all resolve to Roboto Condensed.
 
 **The Bilingual Parity Rule.** All type sizes, line heights, and container widths must work in both Greek and Russian. Greek text tends to run 15–20% longer than Russian; Russian Cyrillic glyphs have different vertical metrics and ascender/descender profiles. Test every layout in both locales.
 
-**The Balance Rule.** Headings use `text-wrap: balance`; body text uses `text-wrap: pretty`. Overflow strategy is `overflow-wrap: break-word` (never `anywhere`) with `hyphens: auto` keyed to the correct `lang` attribute (`el` or `ru`).
+**The Balance Rule.** Headings use `text-wrap: balance`, `overflow-wrap: break-word`, and `hyphens: manual` so Greek and Russian words do not pick up automatic hyphen marks. Body text uses `text-wrap: pretty`, `overflow-wrap: break-word`, and `hyphens: auto` keyed to the correct `lang` attribute (`el` or `ru`).
 
 ## 4. Elevation
 
@@ -246,12 +246,12 @@ All hardcoded values have been migrated to CSS custom properties in `:root`:
 - **Do** use the semantic aliases (`--background`, `--foreground`, `--accent`, `--line`, `--surface`, `--muted`) in CSS Modules. Reserve palette names (`--color-*`) for cases where the literal color value matters.
 - **Do** use the density system (scanning / focused / theater) to control both spacing and type scale. Pick one density per section; don't mix densities within a single section.
 - **Do** keep the Trust accent to ≤10% of any screen. Its authority comes from scarcity.
-- **Do** use Instrument Serif only at display sizes (≥1.25rem) for hero titles, section headings, and card titles.
+- **Do** use Roboto Condensed across display, body, labels, buttons, and navigation. Keep role aliases (`--font-display`, `--font-sans`, `--font-mono`) for maintainability.
 - **Do** test every layout in both Greek and Russian. Greek runs longer; Cyrillic has different vertical metrics. Neither locale is a second-class citizen.
 - **Do** provide enhanced focus indicators: minimum 2px solid Trust outline with 2px offset, visible against both the component and the page background.
 - **Do** respect `prefers-reduced-motion` — skip all animations when active (use `animation-duration: 0.01ms` with `!important`, not just slower durations).
 - **Do** use the CSS custom property tokens for radius (`--radius-sm`, `--radius-md`, `--radius-full`) and motion (`--motion-duration-*`, `--motion-ease-*`) instead of hardcoded values. All legacy values have been migrated to these tokens.
-- **Do** use `overflow-wrap: break-word` (never `anywhere`) with `hyphens: auto` keyed to the correct `lang` attribute (`el` or `ru`).
+- **Do** use `overflow-wrap: break-word` (never `anywhere`). Keep heading hyphenation manual; keep body hyphenation automatic when it improves prose readability.
 
 ### Don't:
 - **Don't** use `#000` or `#fff`. Ink (`#0f2a4a`) is the darkest color; Bone 50 (`#fbfcfe`) is the lightest. Every neutral carries a blue undertone.

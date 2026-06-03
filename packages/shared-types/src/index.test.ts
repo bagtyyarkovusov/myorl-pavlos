@@ -57,17 +57,20 @@ describe("SectionComponent union", () => {
   it("accepts all expected literal values", () => {
     const values: SectionComponent[] = [
       "sections.promo-slider",
+      "sections.home-hero",
       "sections.linked-resources",
       "sections.social-links",
       "sections.video",
       "sections.advantages",
+      "sections.home-testimonials-teaser",
+      "sections.home-notice",
       "sections.accordion",
       "sections.faq",
       "sections.tabs",
       "sections.gallery",
       "sections.contact",
     ];
-    expect(values).toHaveLength(10);
+    expect(values).toHaveLength(13);
   });
 });
 

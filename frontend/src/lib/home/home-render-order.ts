@@ -1,13 +1,19 @@
 import type { SectionDTO } from "@/lib/cms/types";
 
 type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
+type TestimonialsSection = Extract<
+  SectionDTO,
+  { __component: "sections.home-testimonials-teaser" }
+>;
 type OrderedHomeSectionComponent = Extract<
   SectionDTO["__component"],
   | "sections.promo-slider"
   | "sections.advantages"
   | "sections.linked-resources"
+  | "sections.home-resource-group"
+  | "sections.home-testimonials-teaser"
+  | "sections.home-notice"
   | "sections.video"
-  | "sections.contact"
 >;
 
 type IndexedSection = {
@@ -31,6 +37,8 @@ export type HomeRenderItem =
     }
   | {
       kind: "home-testimonials";
+      section: TestimonialsSection;
+      sourceIndex: number;
     }
   | {
       kind: "home-visit-map";
@@ -39,9 +47,11 @@ export type HomeRenderItem =
 const HOME_SECTION_ORDER: OrderedHomeSectionComponent[] = [
   "sections.promo-slider",
   "sections.advantages",
+  "sections.home-resource-group",
   "sections.linked-resources",
+  "sections.home-testimonials-teaser",
+  "sections.home-notice",
   "sections.video",
-  "sections.contact",
 ];
 
 const ORDERED_HOME_SECTION_SET = new Set<string>(HOME_SECTION_ORDER);
@@ -80,13 +90,19 @@ export function orderHomeRenderItems(sections: readonly SectionDTO[]): HomeRende
     });
   }
 
+  appendSections(items, groups.get("sections.home-resource-group") ?? []);
   appendSections(items, linkedSections);
-  if (linkedSections.length > 0) {
-    items.push({ kind: "home-testimonials" });
+
+  for (const item of groups.get("sections.home-testimonials-teaser") ?? []) {
+    items.push({
+      kind: "home-testimonials",
+      section: item.section as TestimonialsSection,
+      sourceIndex: item.sourceIndex,
+    });
   }
 
+  appendSections(items, groups.get("sections.home-notice") ?? []);
   appendSections(items, groups.get("sections.video") ?? []);
-  appendSections(items, groups.get("sections.contact") ?? []);
   appendSections(items, unlistedSections);
   items.push({ kind: "home-visit-map" });
 
@@ -98,6 +114,8 @@ export function getHomeRenderItemKey(item: HomeRenderItem): string {
     case "section":
       return `${item.section.__component}-${item.sourceIndex}`;
     case "home-advantages":
+      return `${item.kind}-${item.sourceIndex}`;
+    case "home-testimonials":
       return `${item.kind}-${item.sourceIndex}`;
     default:
       return item.kind;

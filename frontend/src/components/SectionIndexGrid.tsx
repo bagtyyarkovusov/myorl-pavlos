@@ -12,6 +12,7 @@ import {
   getDirectoryNodeDescription,
   getDirectoryNodeMedia,
 } from "@/lib/cms/directory-node-presentation";
+import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import type { LayoutVariant, Locale, MediaDTO, NavigationNodeDTO } from "@/lib/cms/types";
 import type { TagDTO } from "@/lib/cms/types/tag";
 import { getPageStrings } from "@/lib/i18n/page";
@@ -216,7 +217,7 @@ export function SectionIndexGrid({
               >
                 {featuredItems.map((node) => (
                   <li key={node.documentId} className={styles["index-row"]}>
-                    <IndexCard node={node} variant="section-grid" featuredTier />
+                    <IndexCard node={node} variant="section-grid" locale={locale} featuredTier />
                   </li>
                 ))}
               </ol>
@@ -226,7 +227,7 @@ export function SectionIndexGrid({
           <ol className={`${styles["index-list"]} ${styles[`index-list--${listVariant}`]}`}>
             {listItems.map((node) => (
               <li key={node.documentId} className={styles["index-row"]}>
-                <IndexCard node={node} variant={listVariant} />
+                <IndexCard node={node} variant={listVariant} locale={locale} />
               </li>
             ))}
           </ol>
@@ -296,10 +297,12 @@ function FilterPill({
 function IndexCard({
   node,
   variant,
+  locale,
   featuredTier,
 }: {
   node: NavigationNodeDTO;
   variant: DirectoryVariant;
+  locale: Locale;
   featuredTier?: boolean;
 }) {
   const media = getDirectoryNodeMedia(node);
@@ -327,8 +330,11 @@ function IndexCard({
   }
 
   if (variant === "encyclopedia-list" || variant === "clinic-grid") {
+    // Clinic cards open the internal clinic page (description + photo gallery);
+    // the external hospital site is offered there as a secondary link.
+    const rowHref = variant === "clinic-grid" ? hrefForLocaleSlug(locale, node.slug) : node.href;
     return (
-      <IndexRowLink href={node.href} data-has-media={hasMediaLayout ? "true" : undefined}>
+      <IndexRowLink href={rowHref} data-has-media={hasMediaLayout ? "true" : undefined}>
         {showMediaSlot ? (
           <IndexMedia media={media} title={node.navLabel} variant={variant} />
         ) : null}

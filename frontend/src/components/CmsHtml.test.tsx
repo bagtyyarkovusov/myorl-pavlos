@@ -47,6 +47,14 @@ describe("CmsHtml", () => {
     );
   });
 
+  it("adds prose-dense class and data-variant for dense variant", () => {
+    render(<CmsHtml html="<p>Dense text</p>" variant="dense" />);
+
+    const prose = screen.getByText("Dense text").closest("div");
+    expect(prose?.className).toContain("prose-dense");
+    expect(prose?.getAttribute("data-variant")).toBe("dense");
+  });
+
   it("preserves editor callout classes while stripping unrelated classes", () => {
     render(
       <CmsHtml html='<div class="callout-teal unsafe-class">Clinical note</div><p class="unsafe-class">Body</p>' />,

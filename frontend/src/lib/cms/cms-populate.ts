@@ -40,6 +40,25 @@ export const PAGE_POPULATE = {
           },
         },
       },
+      "sections.home-hero": {
+        populate: {
+          media: true,
+          ctaTargetPage: { fields: ["documentId", "slug", "title"] },
+        },
+      },
+      "sections.home-resource-group": {
+        populate: {
+          items: {
+            populate: {
+              targetPage: {
+                fields: ["documentId", "slug", "title"],
+                populate: ["imageCenter", "featuredImage"],
+              },
+            },
+          },
+          viewAllTarget: { fields: ["documentId", "slug", "title"] },
+        },
+      },
       "sections.linked-resources": {
         populate: {
           items: {

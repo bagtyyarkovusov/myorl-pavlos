@@ -221,6 +221,7 @@ describe("getSite", () => {
     expect(result.settings.email).toBe("pavlos.tsolaridis@gmail.com");
     expect(result.settings.socialLinks).toHaveLength(4);
     expect(result.settings.hours).toBe("Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00");
+    expect(result.settings.footerTagline).toBe("CMS-managed footer tagline");
   });
 
   it("reuses Greek social links when the locale entry has none", async () => {

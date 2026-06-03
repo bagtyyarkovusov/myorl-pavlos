@@ -215,6 +215,64 @@ export interface SectionsGallery extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsHomeHero extends Struct.ComponentSchema {
+  collectionName: 'components_sections_home_heroes';
+  info: {
+    description: 'Editor-owned hero copy and primary CTA for the canonical home.';
+    displayName: 'Home Hero Section';
+  };
+  attributes: {
+    ctaLabel: Schema.Attribute.String;
+    ctaTargetPage: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
+    ctaUrl: Schema.Attribute.String;
+    heading: Schema.Attribute.String & Schema.Attribute.Required;
+    intro: Schema.Attribute.Text;
+    kicker: Schema.Attribute.String;
+    media: Schema.Attribute.Media<'images'>;
+  };
+}
+
+export interface SectionsHomeNotice extends Struct.ComponentSchema {
+  collectionName: 'components_sections_home_notices';
+  info: {
+    description: 'Short editor-owned homepage notice from the legacy content specification.';
+    displayName: 'Home Notice Section';
+  };
+  attributes: {
+    heading: Schema.Attribute.String;
+    intro: Schema.Attribute.RichText;
+  };
+}
+
+export interface SectionsHomeResourceGroup extends Struct.ComponentSchema {
+  collectionName: 'components_sections_home_resource_groups';
+  info: {
+    description: 'Editor-owned resource group for the homepage (operations or services) with heading, items, and view-all target.';
+    displayName: 'Home Resource Group';
+  };
+  attributes: {
+    group: Schema.Attribute.Enumeration<['operations', 'services']> &
+      Schema.Attribute.DefaultTo<'services'>;
+    heading: Schema.Attribute.String & Schema.Attribute.Required;
+    intro: Schema.Attribute.Text;
+    items: Schema.Attribute.Component<'items.linked-resource', true>;
+    viewAllLabel: Schema.Attribute.String;
+    viewAllTarget: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
+  };
+}
+
+export interface SectionsHomeTestimonialsTeaser extends Struct.ComponentSchema {
+  collectionName: 'components_sections_home_testimonials_teasers';
+  info: {
+    description: 'Editor-owned heading and intro for the homepage testimonials preview.';
+    displayName: 'Home Testimonials Teaser';
+  };
+  attributes: {
+    heading: Schema.Attribute.String & Schema.Attribute.Required;
+    intro: Schema.Attribute.Text;
+  };
+}
+
 export interface SectionsLinkedResources extends Struct.ComponentSchema {
   collectionName: 'components_sections_linked_resources';
   info: {
@@ -331,6 +389,10 @@ declare module '@strapi/strapi' {
       'sections.contact': SectionsContact;
       'sections.faq': SectionsFaq;
       'sections.gallery': SectionsGallery;
+      'sections.home-hero': SectionsHomeHero;
+      'sections.home-notice': SectionsHomeNotice;
+      'sections.home-resource-group': SectionsHomeResourceGroup;
+      'sections.home-testimonials-teaser': SectionsHomeTestimonialsTeaser;
       'sections.linked-resources': SectionsLinkedResources;
       'sections.promo-slider': SectionsPromoSlider;
       'sections.social-links': SectionsSocialLinks;

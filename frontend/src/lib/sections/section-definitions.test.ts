@@ -11,10 +11,14 @@ import {
 
 const SHARED_SECTION_COMPONENTS: SectionComponent[] = [
   "sections.promo-slider",
+  "sections.home-hero",
   "sections.linked-resources",
   "sections.social-links",
   "sections.video",
   "sections.advantages",
+  "sections.home-testimonials-teaser",
+  "sections.home-notice",
+  "sections.home-resource-group",
   "sections.accordion",
   "sections.faq",
   "sections.tabs",

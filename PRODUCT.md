@@ -45,7 +45,7 @@ Help patients:
 What myORL is explicitly **not**:
 
 - **Not WebMD / dense clinical encyclopedia** — We remove jargon; they add it. We guide; they dump.
-- **Not generic SaaS-cream template** — We have a serif display + custom hairline grids; templates are interchangeable sans-serif card farms.
+- **Not generic SaaS-cream template** — We have condensed medical-office typography + custom hairline grids; templates are interchangeable sans-serif card farms.
 - **Not hospital-corporate sterile** — We say "ήρεμη καθοδήγηση" (calm guidance); hospitals say "ΩΡΛ ΤΜΗΜΑ" (ENT DEPARTMENT).
 - **Not Mediterranean-tourism playful** — No warm sunsets, no olive branches, no "experience Athens." This is medicine, not hospitality.
 - **Not crypto/tech aggressive dark mode** — No neon, no glassmorphism as default, no gradient text. We are not trying to impress; we are trying to reassure.

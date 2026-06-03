@@ -8,6 +8,7 @@ import { isClinicChildPage, CLINIC_HUB_SLUG } from "@/lib/cms/clinic-pages";
 import { toPageMetadata } from "@/lib/cms/metadata";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { withRelatedTopics } from "@/lib/cms/related-topics";
+import { backfillSources } from "@/lib/cms/source-backfill";
 import { isLocale } from "@/lib/cms/types";
 import { findNodeByDocumentId } from "@/lib/cms/tab-bar";
 
@@ -62,16 +63,25 @@ export default async function CmsPage({ params }: CmsPageProps) {
   ]);
   const pageWithRelatedTopics = withRelatedTopics(page, directoryNavigation);
 
+  // Backfill missing sources from the paired locale article when both cover
+  // the same medical topic (shared parent or tags) and the target has none.
+  const pairedLocale = locale === "el" ? "ru" : "el";
+  const pairedPage = await getPage(pairedLocale, slug).catch(() => null);
+  const pageWithSources: typeof pageWithRelatedTopics = {
+    ...pageWithRelatedTopics,
+    sources: backfillSources(pageWithRelatedTopics, pairedPage),
+  };
+
   // Clinic location slugs are legacy URLs; the hub page holds both inline blocks.
-  if (isClinicChildPage(pageWithRelatedTopics)) {
+  if (isClinicChildPage(pageWithSources)) {
     permanentRedirect(
-      `${hrefForLocaleSlug(locale, CLINIC_HUB_SLUG)}#clinic-${pageWithRelatedTopics.slug}`,
+      `${hrefForLocaleSlug(locale, CLINIC_HUB_SLUG)}#clinic-${pageWithSources.slug}`,
     );
   }
 
   // Section-hub folder pages redirect to their first child.
-  if (pageWithRelatedTopics.layoutVariant === "section-hub" && pageWithRelatedTopics.isFolder) {
-    const self = findNodeByDocumentId(navigation, pageWithRelatedTopics.documentId);
+  if (pageWithSources.layoutVariant === "section-hub" && pageWithSources.isFolder) {
+    const self = findNodeByDocumentId(navigation, pageWithSources.documentId);
     const firstChild = self?.children[0];
     // Stays 307 (redirect, not permanentRedirect) — the first-child target
     // changes when editors reorder children. A permanent redirect would pin
@@ -88,12 +98,12 @@ export default async function CmsPage({ params }: CmsPageProps) {
   // + dynamic-island pattern is established (see follow-up task).
   return (
     <PageRenderer
-      page={pageWithRelatedTopics}
+      page={pageWithSources}
       navigation={navigation}
       directoryNavigation={directoryNavigation}
       globalSettings={settings}
       appointmentHref={appointmentHref}
-      directoryHref={hrefForLocaleSlug(pageWithRelatedTopics.locale, pageWithRelatedTopics.slug)}
+      directoryHref={hrefForLocaleSlug(pageWithSources.locale, pageWithSources.slug)}
     />
   );
 }

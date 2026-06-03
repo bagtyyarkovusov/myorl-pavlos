@@ -462,7 +462,25 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
           localized: true;
         };
       }>;
+    doctorName: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    doctorSpecialty: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     email: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    footerTagline: Schema.Attribute.Text &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -505,6 +523,12 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
+        };
+      }>;
+    transitNote: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
         };
       }>;
     updatedAt: Schema.Attribute.DateTime;
@@ -661,11 +685,15 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
       }>;
     pageSections: Schema.Attribute.DynamicZone<
       [
+        'sections.home-hero',
         'sections.promo-slider',
         'sections.linked-resources',
         'sections.social-links',
         'sections.video',
         'sections.advantages',
+        'sections.home-testimonials-teaser',
+        'sections.home-notice',
+        'sections.home-resource-group',
         'sections.accordion',
         'sections.faq',
         'sections.tabs',

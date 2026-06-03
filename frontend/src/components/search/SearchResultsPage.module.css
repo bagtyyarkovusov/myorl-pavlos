@@ -73,7 +73,7 @@
 }
 
 .resultCount {
-  font-family: var(--font-mono, JetBrains Mono, monospace);
+  font-family: var(--font-mono, "Roboto Condensed", ui-sans-serif, system-ui, sans-serif);
   font-size: 0.72rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -83,7 +83,7 @@
 }
 
 .pageTitle {
-  font-family: var(--font-display, Instrument Serif, Georgia, serif);
+  font-family: var(--font-display, "Roboto Condensed", ui-sans-serif, system-ui, sans-serif);
   font-size: clamp(1.4rem, 4vw, 2rem);
   font-weight: 400;
   line-height: 1.12;

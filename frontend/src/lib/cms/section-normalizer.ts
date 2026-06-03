@@ -81,6 +81,17 @@ function toSectionDTO(raw: StrapiSectionRaw): SectionDTO | null {
         intro,
         slides: toItemArray(raw.slides ?? raw.items, toPromoSlideItem),
       };
+    case "sections.home-hero":
+      return {
+        __component: component,
+        kicker: optionalString(raw.kicker),
+        heading: heading ?? "",
+        intro,
+        media: toMediaDTO(raw.media as StrapiMedia | null | undefined, undefined),
+        ctaLabel: optionalString(raw.ctaLabel),
+        ctaTargetPage: toPageRefDTO(raw.ctaTargetPage as StrapiPageRef | null | undefined),
+        ctaUrl: optionalString(raw.ctaUrl),
+      };
     case "sections.linked-resources":
       return {
         __component: component,
@@ -108,6 +119,28 @@ function toSectionDTO(raw: StrapiSectionRaw): SectionDTO | null {
         heading,
         intro,
         items: toItemArray(raw.items, toAdvantageItem),
+      };
+    case "sections.home-resource-group":
+      return {
+        __component: component,
+        group: (raw.group as "operations" | "services") ?? "services",
+        heading: heading ?? "",
+        intro,
+        items: toItemArray(raw.items, toLinkedResourceItem),
+        viewAllTarget: toPageRefDTO(raw.viewAllTarget as StrapiPageRef | null | undefined),
+        viewAllLabel: optionalString(raw.viewAllLabel),
+      };
+    case "sections.home-testimonials-teaser":
+      return {
+        __component: component,
+        heading,
+        intro,
+      };
+    case "sections.home-notice":
+      return {
+        __component: component,
+        heading,
+        intro,
       };
     case "sections.accordion":
       return {

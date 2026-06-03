@@ -35,8 +35,6 @@ describe("HomeMedicalGrid", () => {
   it("uses CMS alternativeText when available", () => {
     const { container } = render(
       <HomeMedicalGrid
-        title="Services"
-        intro="Our services"
         items={items}
         locale="el"
         learnMoreLabel="Learn more"
@@ -54,8 +52,6 @@ describe("HomeMedicalGrid", () => {
   it("falls back to item title when alternativeText is missing", () => {
     const { container } = render(
       <HomeMedicalGrid
-        title="Services"
-        intro="Our services"
         items={items}
         locale="el"
         learnMoreLabel="Learn more"
@@ -73,8 +69,6 @@ describe("HomeMedicalGrid", () => {
   it("suppresses the section header to sit flush against adjacent sections", () => {
     render(
       <HomeMedicalGrid
-        title="Medical Services"
-        intro="Our comprehensive medical services"
         items={items}
         locale="el"
         learnMoreLabel="Learn more"
@@ -90,8 +84,6 @@ describe("HomeMedicalGrid", () => {
   it("still renders title-only header metadata inside cards", () => {
     render(
       <HomeMedicalGrid
-        title="Medical Services"
-        intro="Our comprehensive medical services"
         items={items}
         locale="el"
         learnMoreLabel="Learn more"
@@ -104,7 +96,6 @@ describe("HomeMedicalGrid", () => {
   it("returns null when items array is empty", () => {
     const { container } = render(
       <HomeMedicalGrid
-        title="Medical Services"
         items={[]}
         locale="el"
         learnMoreLabel="Learn more"
@@ -125,7 +116,6 @@ describe("HomeMedicalGrid", () => {
 
     render(
       <HomeMedicalGrid
-        title="Medical Services"
         items={manyItems}
         locale="el"
         learnMoreLabel="Learn more"
@@ -146,7 +136,6 @@ describe("HomeMedicalGrid", () => {
 
     render(
       <HomeMedicalGrid
-        title="Medical Services"
         items={manyItems}
         locale="el"
         learnMoreLabel="Learn more"
@@ -161,7 +150,6 @@ describe("HomeMedicalGrid", () => {
   it("does not render the view-all link when there are 6 or fewer items", () => {
     render(
       <HomeMedicalGrid
-        title="Medical Services"
         items={items}
         locale="el"
         learnMoreLabel="Learn more"

@@ -17,68 +17,16 @@ const HOME_ACCESS_SLUGS = [
   "video",
 ] as const;
 
-const HOME_ACCESS_FALLBACKS: Record<
-  string,
-  Partial<Record<"el" | "ru", { title: string; description: string }>>
-> = {
-  yperesies: {
-    el: { title: "Υπηρεσίες", description: "Βρείτε γρήγορα τις βασικές υπηρεσίες του ιατρείου." },
-    ru: { title: "Услуги", description: "Свяжитесь с нами по любой ЛОР-проблеме." },
-  },
-  epemvaseis: {
-    el: {
-      title: "ΩΡΛ επεμβάσεις",
-      description: "Πληροφορίες για τις χειρουργικές επιλογές και τη διαδικασία.",
-    },
-    ru: {
-      title: "ЛОР Операции",
-      description: "Операции выполняются современными минимально-травматичными методами.",
-    },
-  },
-  diagnosi: {
-    el: {
-      title: "Διάγνωση",
-      description: "Εξετάσεις και εξοπλισμός για γρήγορη διάγνωση και θεραπεία.",
-    },
-    ru: {
-      title: "Диагностика",
-      description: "Современное оборудование для быстрой диагностики и лечения.",
-    },
-  },
-  klinikes: {
-    el: {
-      title: "Κλινικές",
-      description: "Συνεργασίες με ασφαλιστικά ταμεία και κλινικές στην Αθήνα.",
-    },
-    ru: {
-      title: "Больницы",
-      description: "Сотрудничаем со страховыми и ЛОР-клиниками в Афинах и Греции.",
-    },
-  },
-  timokatalogos: {
-    el: { title: "Τιμοκατάλογος", description: "Δείτε ενδεικτικά τις διαθέσιμες υπηρεσίες." },
-    ru: { title: "Прайс-лист", description: "По ссылке можно оценить перечень наших услуг." },
-  },
-  video: {
-    el: { title: "Βίντεο", description: "Συλλογή ιατρικών βίντεο από εξετάσεις και επεμβάσεις." },
-    ru: {
-      title: "Видео",
-      description: "Коллекция медицинских видео из диагностических тестов и операций.",
-    },
-  },
-};
-
-export function MenuAccessGrid({ navigation, locale }: MenuAccessGridProps) {
+export function MenuAccessGrid({ navigation }: MenuAccessGridProps) {
   const nodes = flattenNavigation(navigation);
   const items = HOME_ACCESS_SLUGS.flatMap((slug) => {
     const node = nodes.find((item) => item.slug === slug);
     if (!node) return [];
-    const fallback = HOME_ACCESS_FALLBACKS[slug]?.[locale];
     return [
       {
         node,
-        title: node.navLabel || fallback?.title || node.title,
-        description: node.excerpt?.trim() || fallback?.description || "",
+        title: node.navLabel || node.title,
+        description: node.excerpt?.trim() || "",
         slug,
       },
     ];

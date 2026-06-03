@@ -5,8 +5,9 @@ import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getPageStrings } from "@/lib/i18n/page";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { defaultAppointmentHref } from "@/lib/navigation/appointment-href";
+import { isBiographyPage } from "@/lib/cms/dense-pages";
 import type { PageRefDTO, PageDTO, LayoutVariant } from "@/lib/cms/types";
-import { cn, formatIsoDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import styles from "./_shared.module.css";
 
 const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
@@ -17,37 +18,6 @@ const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
   "service-tabs",
   "specialized-article",
 ]);
-
-function ArticleDateLine({ page }: { page: PageDTO }) {
-  if (!MEDICAL_LAYOUT_VARIANTS.has(page.layoutVariant)) return null;
-
-  const published = formatIsoDate(page.publishedAt);
-  const updated = formatIsoDate(page.updatedAt);
-
-  if (!published && !updated) return null;
-
-  const t = getPageStrings(page.locale);
-  const parts: string[] = [];
-  if (published) parts.push(`${t.publishedOn} ${published}`);
-  if (updated) parts.push(`${t.updatedOn} ${updated}`);
-
-  return <div className={styles["article-dates"]}>{parts.join(" · ")}</div>;
-}
-
-function ArticleReviewerLine({ page }: { page: PageDTO }) {
-  if (!MEDICAL_LAYOUT_VARIANTS.has(page.layoutVariant)) return null;
-
-  const reviewer = page.medicallyReviewedBy;
-  const lastReviewed = formatIsoDate(page.lastReviewedDate);
-
-  if (!reviewer || !lastReviewed) return null;
-
-  const t = getPageStrings(page.locale);
-
-  return (
-    <div className={styles["article-dates"]}>{t.medicallyReviewedBy(reviewer, lastReviewed)}</div>
-  );
-}
 
 function shouldShowDisclaimer(
   page: PageDTO,
@@ -112,6 +82,7 @@ type DefaultPageBodyProps = {
 };
 
 function hasProseAside(page: PageDTO): boolean {
+  if (page.pageType === "system") return false;
   return page.relatedTopics.length > 0 || extractHeadings(page.content).length > 0;
 }
 
@@ -121,15 +92,18 @@ function DefaultPageBody({
   hubChild = false,
   disclaimerText,
 }: DefaultPageBodyProps) {
+  const isDense = isBiographyPage(page);
+  const cmsVariant = isDense ? "dense" : "luxury";
+
   if (hasProseAside(page)) {
     return (
       <ArticleAsideBody
         page={page}
         hubChild={hubChild}
-        cmsVariant="luxury"
+        cmsVariant={cmsVariant}
         sectionDensity="focused"
         layoutAttribute="data-prose-layout"
-        layoutValue="standard"
+        layoutValue={isDense ? "dense" : "standard"}
         showAuthor={false}
         disclaimerText={disclaimerText}
       />
@@ -143,9 +117,7 @@ function DefaultPageBody({
         proseStackGap === "compact" && styles["prose-shell--compact-stack"],
       )}
     >
-      <ArticleDateLine page={page} />
-      <ArticleReviewerLine page={page} />
-      <CmsHtml html={page.content} locale={page.locale} />
+      <CmsHtml html={page.content} variant={cmsVariant} locale={page.locale} />
       {page.sections.map((section, index) => (
         <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
       ))}
@@ -153,6 +125,7 @@ function DefaultPageBody({
         <CmsHtml
           html={page.infoBlockBottom}
           className={`cms-html ${styles["note-block"]}`}
+          variant={cmsVariant}
           locale={page.locale}
         />
       ) : null}
@@ -160,6 +133,7 @@ function DefaultPageBody({
         <CmsHtml
           html={page.sources}
           className={`cms-html ${styles["sources-block"]}`}
+          variant={cmsVariant}
           locale={page.locale}
         />
       ) : null}
@@ -178,8 +152,12 @@ function ServiceArticleBody({
 }: PageBodyProps) {
   const t = getPageStrings(page.locale);
   const bookHref = appointmentHref ?? defaultAppointmentHref(page.locale);
-  const relatedTopics = page.relatedTopics;
-  const sectionLinks = page.sections
+  const linkedResourceRefs = extractLinkedResourceRefs(page.sections);
+  const relatedTopics = mergeUniqueRefs(page.relatedTopics, linkedResourceRefs);
+  const bodySections = page.sections.filter(
+    (section) => section.__component !== "sections.linked-resources",
+  );
+  const sectionLinks = bodySections
     .map((section, index) => ({
       id: `section-${index + 1}`,
       label: section.heading || section.__component.replace("sections.", ""),
@@ -238,10 +216,8 @@ function ServiceArticleBody({
         data-service-layout="true"
       >
         <article className={styles["service-layout__content"]}>
-          <ArticleDateLine page={page} />
-          <ArticleReviewerLine page={page} />
           <CmsHtml html={mainContentHtml} variant="service" locale={page.locale} />
-          {page.sections.map((section, index) => (
+          {bodySections.map((section, index) => (
             <SectionRenderer
               key={`${section.__component}-${index}`}
               id={`section-${index + 1}`}
@@ -326,13 +302,39 @@ function ReferenceArticleBody({ page, hubChild = false, disclaimerText }: PageBo
 type ArticleAsideBodyProps = {
   page: PageDTO;
   hubChild?: boolean;
-  cmsVariant: "luxury" | "encyclopedia" | "specialized";
+  cmsVariant: "luxury" | "encyclopedia" | "specialized" | "dense";
   sectionDensity: "scanning" | "focused";
   layoutAttribute: "data-article-layout" | "data-prose-layout";
   layoutValue: string;
   showAuthor: boolean;
   disclaimerText?: string | null;
 };
+
+/** Extracts target pages from linked-resources sections for use as Related Topics. */
+function extractLinkedResourceRefs(sections: PageDTO["sections"]): PageRefDTO[] {
+  const refs: PageRefDTO[] = [];
+  for (const section of sections) {
+    if (section.__component !== "sections.linked-resources") continue;
+    for (const item of section.items) {
+      if (item.targetPage?.documentId) {
+        refs.push(item.targetPage);
+      }
+    }
+  }
+  return refs;
+}
+
+function mergeUniqueRefs(existing: PageRefDTO[], incoming: PageRefDTO[]): PageRefDTO[] {
+  const seen = new Set(existing.map((r) => r.documentId));
+  const merged = [...existing];
+  for (const ref of incoming) {
+    if (!seen.has(ref.documentId)) {
+      seen.add(ref.documentId);
+      merged.push(ref);
+    }
+  }
+  return merged;
+}
 
 function ArticleAsideBody({
   page,
@@ -347,10 +349,11 @@ function ArticleAsideBody({
   const t = getPageStrings(page.locale);
   const headings = extractHeadings(page.content);
   const contentWithHeadingIds = addHeadingIds(page.content, headings);
-  const relatedTopics = page.relatedTopics;
   const bodySections = page.sections.filter(
     (section) => section.__component !== "sections.linked-resources",
   );
+  const linkedResourceRefs = extractLinkedResourceRefs(page.sections);
+  const relatedTopics = mergeUniqueRefs(page.relatedTopics, linkedResourceRefs);
 
   const mobileToc =
     headings.length > 0 ? (
@@ -386,8 +389,6 @@ function ArticleAsideBody({
       {mobileRelatedTopics}
       <main className={styles["reference-layout"]} {...layoutProps}>
         <article className={styles["reference-layout__content"]}>
-          <ArticleDateLine page={page} />
-          <ArticleReviewerLine page={page} />
           <CmsHtml html={contentWithHeadingIds} variant={cmsVariant} locale={page.locale} />
           {bodySections.map((section, index) => (
             <SectionRenderer

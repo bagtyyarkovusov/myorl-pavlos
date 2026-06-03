@@ -102,7 +102,7 @@ export function getAppointmentSlotsForDate(isoDate: string): string[] {
   if (!schedule) return [];
 
   const slots: string[] = [];
-  for (let hour = schedule.startHour; hour < schedule.endHour; hour += 1) {
+  for (let hour = schedule.startHour; hour < schedule.endHour; hour++) {
     slots.push(formatSlot(hour, 0), formatSlot(hour, 30));
   }
   return slots;

@@ -102,7 +102,7 @@ describe("parseContactFormPayload", () => {
     expect(result.ok).toBe(true);
   });
 
-  it("rejects Sunday appointment slots like the old MODX picker", () => {
+  it("rejects Sunday appointment slots", () => {
     const result = parseContactFormPayload({
       locale: "ru",
       name: "Maria",

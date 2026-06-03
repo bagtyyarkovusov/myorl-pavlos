@@ -12,6 +12,7 @@ import {
   resolveContactEmail,
   resolveDoctorName,
   resolveDoctorSpecialty,
+  resolvePrimaryPhoneLinks,
   resolveVisitAddressBlock,
   mapEmbedSrcFromAddress,
   mapsSearchUrl,
@@ -38,6 +39,7 @@ export async function ClinicHubPage({ page, appointmentHref, globalSettings }: P
   const email = globalSettings ? resolveContactEmail(globalSettings) : null;
   const mapSrc = addressBlock ? mapEmbedSrcFromAddress(addressBlock) : null;
   const mapsUrl = addressBlock ? mapsSearchUrl(addressBlock) : null;
+  const hasPhones = globalSettings ? resolvePrimaryPhoneLinks(globalSettings).length > 0 : false;
 
   return (
     <PageSection rhythm="page">
@@ -58,7 +60,7 @@ export async function ClinicHubPage({ page, appointmentHref, globalSettings }: P
         </div>
       ) : null}
 
-      {addressBlock || email || globalSettings ? (
+      {addressBlock || email || hasPhones ? (
         <section className={styles.visit} aria-label={t.officeVisitMapSectionLabel}>
           <div className={styles.visitMeta}>
             {addressBlock ? (
@@ -67,13 +69,13 @@ export async function ClinicHubPage({ page, appointmentHref, globalSettings }: P
                 <p className={styles.visitValue}>{addressBlock}</p>
               </div>
             ) : null}
-            {globalSettings ? (
+            {hasPhones ? (
               <div className={styles.visitGroup}>
                 <span className={styles.visitLabel}>{t.officeLabelPhone}</span>
                 <p className={styles.visitValue}>
                   <PrimaryContactPhones
                     locale={page.locale}
-                    settings={globalSettings}
+                    settings={globalSettings!}
                     linkClassName={styles.phoneLink}
                   />
                 </p>
@@ -106,8 +108,8 @@ export async function ClinicHubPage({ page, appointmentHref, globalSettings }: P
       ) : null}
 
       <nav className={styles.siblingLinks} aria-label={t.sectionNavLabel}>
-        {CLINIC_CHILD_SLUGS.map((slug, index) => {
-          const child = slug === "iatreio-alexandras" ? alexandras : koukaki;
+        {[alexandras, koukaki].map((child, index) => {
+          const slug = CLINIC_CHILD_SLUGS[index];
           return (
             <span key={slug}>
               {index > 0 ? (

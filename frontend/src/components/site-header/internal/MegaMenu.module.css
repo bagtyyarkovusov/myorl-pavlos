@@ -44,7 +44,7 @@
   margin-top: 6px;
   color: var(--color-stone-soft);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: var(--type-nav-label);
   font-weight: 500;
   letter-spacing: 0.04em;
   line-height: 1.2;
@@ -78,7 +78,7 @@
 .nav-panel__cta-more {
   margin: 8px 0 0;
   color: var(--color-stone-soft);
-  font-size: 0.78rem;
+  font-size: var(--type-nav-label);
   line-height: 1.35;
 }
 
@@ -117,7 +117,7 @@
 .nav-panel__cta-count {
   color: var(--color-stone-soft);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: var(--type-nav-label);
   font-weight: 500;
   letter-spacing: 0.04em;
   line-height: 1.2;
@@ -157,7 +157,7 @@
 .nav-panel__links .meta {
   margin-top: 4px;
   color: var(--color-stone-soft);
-  font-size: 0.78rem;
+  font-size: var(--type-nav-label);
   line-height: 1.35;
   font-feature-settings: "tnum";
   display: -webkit-box;

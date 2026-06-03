@@ -8,7 +8,7 @@ import { CmsHtmlEnhancer } from "@/components/cms/CmsHtmlEnhancer";
 type CmsHtmlProps = {
   html?: string | null;
   className?: string;
-  variant?: "luxury" | "service" | "encyclopedia" | "specialized";
+  variant?: "luxury" | "service" | "encyclopedia" | "specialized" | "dense";
   /** Localized LiteYouTube play control label. Defaults to Greek when omitted. */
   playLabel?: string;
   locale?: Locale;
@@ -19,6 +19,7 @@ const PROSE_VARIANT_CLASSES: Record<NonNullable<CmsHtmlProps["variant"]>, string
   service: "prose-service",
   encyclopedia: "prose-encyclopedia",
   specialized: "prose-specialized",
+  dense: "prose-dense",
 };
 
 export function CmsHtml({

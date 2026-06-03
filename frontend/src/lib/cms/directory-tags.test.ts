@@ -91,6 +91,51 @@ describe("partitionDirectoryTags", () => {
     expect(secondary).toHaveLength(2);
   });
 
+  it("caps total tags at max_directory_tags when more than 10 unique tags exist", () => {
+    const tags = Array.from({ length: 16 }, (_, index) => ({
+      name: `Tag ${index + 1}`,
+      slug: `tag-${index + 1}`,
+    }));
+
+    const { primary, secondary } = partitionDirectoryTags(tags, "default");
+
+    expect(primary).toHaveLength(4);
+    // 4 primary + at most 6 secondary = 10 total
+    expect(primary.length + secondary.length).toBeLessThanOrEqual(10);
+  });
+
+  it("keeps all tags when total is within the cap", () => {
+    const tags = Array.from({ length: 8 }, (_, index) => ({
+      name: `Tag ${index + 1}`,
+      slug: `tag-${index + 1}`,
+    }));
+
+    const { primary, secondary } = partitionDirectoryTags(tags, "default");
+
+    expect(primary).toHaveLength(4);
+    expect(secondary).toHaveLength(4);
+  });
+
+  it("caps to max_directory_tags on section-index hubs with deprioritized procedure tags", () => {
+    const tags = Array.from({ length: 14 }, (_, index) => ({
+      name: `Anatomy ${index + 1}`,
+      slug: `anatomy-${index + 1}`,
+    }));
+    tags.push(
+      { name: "Επεμβάσεις", slug: "procedures" },
+      { name: "Ενδοσκοπική Χειρουργική", slug: "endoskopiki-cheirourgiki" },
+    );
+
+    const { primary, secondary } = partitionDirectoryTags(tags, "section-index");
+
+    // procedure tags sink, anatomy tags float to primary
+    expect(primary.map((t) => t.slug)).not.toContain("procedures");
+    expect(primary.map((t) => t.slug)).not.toContain("endoskopiki-cheirourgiki");
+    expect(primary).toHaveLength(4);
+    // total capped at 10: 4 primary + at most 6 secondary
+    expect(primary.length + secondary.length).toBeLessThanOrEqual(10);
+  });
+
   it("deprioritizes procedure-category tags on section-index hubs", () => {
     const tags = [
       { name: "Επεμβάσεις", slug: "procedures" },

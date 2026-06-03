@@ -44,3 +44,23 @@ describe("SectionIndexGrid filter-pill styles", () => {
     expect(hoverMatches).toHaveLength(1);
   });
 });
+
+describe("SectionIndexGrid media dimension caps", () => {
+  it("caps index-media max-width so a single image cannot dominate the layout", () => {
+    // At least one index-media variant must declare a max-width pixel cap.
+    // The selector may be in a comma-separated group, so we search for the
+    // attribute followed by the max-width declaration in the same rule block.
+    expect(indexCss).toMatch(
+      /\[data-media-variant="section-grid"\][\s\S]*?\{[^}]*max-width:\s*\d+px/,
+    );
+    expect(indexCss).toMatch(
+      /\[data-media-variant="video-grid"\][\s\S]*?\{[^}]*max-width:\s*\d+px/,
+    );
+  });
+
+  it("constrains directory-list media width to a reasonable maximum", () => {
+    // The directory-list variant already has max-width at some breakpoints;
+    // it must have at least one explicit pixel max-width rule.
+    expect(indexCss).toMatch(/\[data-media-variant="directory-list"\]\s*\{[^}]*max-width:\s*\d+px/);
+  });
+});

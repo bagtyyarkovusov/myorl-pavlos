@@ -839,6 +839,7 @@
 .index-media[data-media-variant="section-grid"],
 .index-media[data-media-variant="video-grid"] {
   aspect-ratio: 16 / 9;
+  max-width: 480px;
 }
 
 .index-media[data-media-variant="clinic-grid"],

@@ -16,16 +16,6 @@ export type MediaAuditEntry = {
   mediaUrl: string;
 };
 
-/**
- * Audits the display-relevant media on a single directory node.
- *
- * The cascade matches getDirectoryNodeMedia: imageCenter is checked first,
- * falling back to featuredImage. Each distinct problem generates its own entry
- * so a single over-sized image can produce both a width and a height flag.
- *
- * Returns entries only when problems are found — an empty array means the node
- * passes all dimension checks (or has no media).
- */
 export function auditDirectoryNodeMedia(node: NavigationNodeDTO): MediaAuditEntry[] {
   const media = node.imageCenter ?? node.featuredImage;
   if (!media?.url) return [];

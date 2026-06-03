@@ -51,6 +51,8 @@ export function GalleryWithLightbox({
     )
     .filter((img): img is LightboxImage => img !== null);
 
+  if (images.length === 0) return null;
+
   return (
     <>
       <div className={className} data-gallery-grid>

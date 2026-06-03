@@ -1,7 +1,6 @@
 import type { Locale } from "@/lib/cms/types";
 
 export type FooterStrings = {
-  brandTagline: string;
   practiceLabel: string;
   patientsLabel: string;
   companyLabel: string;
@@ -16,8 +15,6 @@ export type FooterStrings = {
 
 const STRINGS: Record<Locale, FooterStrings> = {
   el: {
-    brandTagline:
-      "Ιδιωτικό ΩΡΛ ιατρείο του Δρ. Παύλου Τσολαρίδη, M.D. Εξυπηρέτηση ασθενών στην Αθήνα και διεθνώς από το 1998.",
     practiceLabel: "Ιατρείο",
     patientsLabel: "Ασθενείς",
     companyLabel: "Εταιρεία",
@@ -30,8 +27,6 @@ const STRINGS: Record<Locale, FooterStrings> = {
     brandLogoAlt: "MyORL",
   },
   ru: {
-    brandTagline:
-      "Частный ЛОР-кабинет доктора Павлоса Цоларидиса, M.D. Принимаем пациентов в Афинах и из-за рубежа с 1998 года.",
     practiceLabel: "Клиника",
     patientsLabel: "Пациентам",
     companyLabel: "Компания",

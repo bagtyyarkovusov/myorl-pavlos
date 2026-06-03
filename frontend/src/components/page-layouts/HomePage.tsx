@@ -38,9 +38,7 @@ export function HomePage({
           : appointmentHref))
       : appointmentHref;
   const heroCtaLabel =
-    heroSection?.__component === "sections.home-hero"
-      ? (heroSection.ctaLabel ?? t.heroCtaLabel)
-      : t.heroCtaLabel;
+    heroSection?.__component === "sections.home-hero" ? (heroSection.ctaLabel ?? "") : "";
   const orderedItems = orderHomeRenderItems(
     page.sections.filter((section) => section.__component !== "sections.home-hero"),
   );
@@ -50,9 +48,7 @@ export function HomePage({
       <div data-locale={page.locale}>
         <HomeHero
           kicker={
-            heroSection?.__component === "sections.home-hero"
-              ? (heroSection.kicker ?? "")
-              : ""
+            heroSection?.__component === "sections.home-hero" ? (heroSection.kicker ?? "") : ""
           }
           title={
             heroSection?.__component === "sections.home-hero" ? heroSection.heading : page.title

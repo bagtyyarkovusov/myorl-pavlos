@@ -64,7 +64,9 @@ export function SiteFooter({
               </span>
               <span className={styles["brand-word"]}>myorl</span>
             </Link>
-            <p className={styles["brand-tagline"]}>{settings.footerTagline ?? t.brandTagline}</p>
+            {settings.footerTagline ? (
+              <p className={styles["brand-tagline"]}>{settings.footerTagline}</p>
+            ) : null}
           </div>
 
           <div

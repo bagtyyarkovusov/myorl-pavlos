@@ -1,10 +1,6 @@
 import type { Locale } from "@/lib/cms/types";
 
 export type HomeStrings = {
-  heroKicker: string;
-  heroTitle: string;
-  heroLead: string;
-  heroCtaLabel: string;
   heroTrustItems: string[];
   /** Shown after CMS page title: italic word + rest of line */
   heroHighlightWord: string;
@@ -77,11 +73,6 @@ export type HomeStrings = {
 
 const STRINGS: Record<Locale, HomeStrings> = {
   el: {
-    heroKicker: "Δρ. Παύλος Τσολαρίδης, M.D. · Αθήνα",
-    heroTitle: "Σαφής ΩΡΛ διάγνωση και θεραπεία στην Αθήνα",
-    heroLead:
-      "Συνεδρίες για ενήλικες και παιδιά με καθαρή εξήγηση, ήρεμη καθοδήγηση και προσωπική φροντίδα από τον δρ. Παύλο Τσολαρίδη, M.D.",
-    heroCtaLabel: "Κλείστε ραντεβού",
     heroTrustItems: ["ΩΡΛ εξέταση", "Διάγνωση", "Πλάνο θεραπείας", "Αθήνα"],
     heroHighlightWord: "Κλινική εμπειρία",
     heroTagline: "που εξελίσσεται επί 25+ χρόνια.",
@@ -158,11 +149,6 @@ const STRINGS: Record<Locale, HomeStrings> = {
     testimonialsPaginationSummary: "{{current}} · {{total}}",
   },
   ru: {
-    heroKicker: "д-р Павлос Цоларидис, M.D. · Афины",
-    heroTitle: "Понятная ЛОР-диагностика и лечение в Афинах",
-    heroLead:
-      "Консультации для взрослых и детей с понятным объяснением, спокойной навигацией и внимательным приёмом у д-ра Павлоса Цоларидиса, M.D.",
-    heroCtaLabel: "Записаться на приём",
     heroTrustItems: ["ЛОР-осмотр", "Диагностика", "План лечения", "Афины"],
     heroHighlightWord: "клиническая работа",
     heroTagline: "более 25 лет.",

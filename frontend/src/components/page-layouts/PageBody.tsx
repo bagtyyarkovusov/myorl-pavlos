@@ -81,6 +81,7 @@ type DefaultPageBodyProps = {
 };
 
 function hasProseAside(page: PageDTO): boolean {
+  if (page.pageType === "system") return false;
   return page.relatedTopics.length > 0 || extractHeadings(page.content).length > 0;
 }
 

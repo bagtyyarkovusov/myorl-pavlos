@@ -2,6 +2,7 @@ import type { NavigationNodeDTO } from "@/lib/cms/types";
 import type { TagDTO } from "@/lib/cms/types/tag";
 
 export const PRIMARY_DIRECTORY_TAG_LIMIT = 4;
+export const MAX_DIRECTORY_TAGS = 10;
 export const SECTION_INDEX_FEATURED_COUNT = 3;
 
 const SECTION_INDEX_DEPRIORITIZED_TAG_SLUGS = new Set(["procedures", "endoscopic-surgery"]);
@@ -67,8 +68,11 @@ export function partitionDirectoryTags(
         })
       : tags;
 
+  const primary = ordered.slice(0, PRIMARY_DIRECTORY_TAG_LIMIT);
+  const allSecondary = ordered.slice(PRIMARY_DIRECTORY_TAG_LIMIT);
+  const maxSecondary = Math.max(0, MAX_DIRECTORY_TAGS - primary.length);
   return {
-    primary: ordered.slice(0, PRIMARY_DIRECTORY_TAG_LIMIT),
-    secondary: ordered.slice(PRIMARY_DIRECTORY_TAG_LIMIT),
+    primary,
+    secondary: allSecondary.slice(0, maxSecondary),
   };
 }

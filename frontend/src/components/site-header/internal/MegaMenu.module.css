@@ -55,8 +55,8 @@
 .nav-panel__feature p {
   margin-top: 12px;
   color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.55;
+  font-size: var(--type-nav-compact);
+  line-height: var(--type-leading-normal);
   display: -webkit-box;
   -webkit-line-clamp: 4;
   line-clamp: 4;
@@ -87,7 +87,7 @@
   align-items: center;
   gap: 4px;
   color: var(--accent-ink);
-  font-size: 0.86rem;
+  font-size: var(--type-nav-compact);
   font-weight: 500;
   white-space: nowrap;
   border-bottom: 1px solid currentColor;
@@ -149,7 +149,7 @@
 
 .nav-panel__links .title {
   color: var(--color-ink-soft);
-  font-size: 0.94rem;
+  font-size: var(--type-nav);
   font-weight: 500;
   line-height: 1.25;
 }

@@ -332,8 +332,7 @@ function IndexCard({
   if (variant === "encyclopedia-list" || variant === "clinic-grid") {
     // Clinic cards open the internal clinic page (description + photo gallery);
     // the external hospital site is offered there as a secondary link.
-    const rowHref =
-      variant === "clinic-grid" ? hrefForLocaleSlug(locale, node.slug) : node.href;
+    const rowHref = variant === "clinic-grid" ? hrefForLocaleSlug(locale, node.slug) : node.href;
     return (
       <IndexRowLink href={rowHref} data-has-media={hasMediaLayout ? "true" : undefined}>
         {showMediaSlot ? (

@@ -105,9 +105,7 @@ export function SiteHeaderClient({
               />
               {doctorName || doctorSpecialty ? (
                 <span className={styles["brand-identity"]}>
-                  {doctorName ? (
-                    <span className={styles["brand-doctor"]}>{doctorName}</span>
-                  ) : null}
+                  {doctorName ? <span className={styles["brand-doctor"]}>{doctorName}</span> : null}
                   {doctorSpecialty ? (
                     <span className={styles["brand-doctor-specialty"]}>{doctorSpecialty}</span>
                   ) : null}

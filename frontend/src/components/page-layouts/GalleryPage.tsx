@@ -16,10 +16,11 @@ export function GalleryPage({ page }: PageLayoutProps) {
       <PageHeader page={page} />
       <CmsHtml html={page.content} />
       {page.sections
-        .filter((section) => {
-          if (section.__component !== "sections.gallery") return true;
-          return section.items.some((item) => item.image?.url);
-        })
+        .filter(
+          (section) =>
+            section.__component !== "sections.gallery" ||
+            section.items.some((item) => item.image?.url),
+        )
         .map((section, index) => (
           <SectionRenderer
             key={`${section.__component}-${index}`}

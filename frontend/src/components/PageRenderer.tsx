@@ -77,6 +77,20 @@ export function PageRenderer({
     />
   );
 
+  const fallbackSettings: GlobalSettingsDTO = {
+    locale: page.locale,
+    address: null,
+    phoneTel: null,
+    phoneDisplay: null,
+    secondaryPhoneTel: null,
+    secondaryPhoneDisplay: null,
+    email: null,
+    hours: null,
+    footerTagline: null,
+    disclaimerText: null,
+    socialLinks: [],
+  };
+
   let layout: React.ReactNode;
 
   if (page.renderMode === "frontend-native") {
@@ -84,26 +98,7 @@ export function PageRenderer({
       <FrontendNativePage page={page} directoryNavigation={directoryNavigation ?? navigation} />
     );
   } else if (page.layoutVariant === "appointment-form") {
-    layout = (
-      <AppointmentPage
-        page={page}
-        settings={
-          globalSettings ?? {
-            locale: page.locale,
-            address: null,
-            phoneTel: null,
-            phoneDisplay: null,
-            secondaryPhoneTel: null,
-            secondaryPhoneDisplay: null,
-            email: null,
-            hours: null,
-            footerTagline: null,
-            disclaimerText: null,
-            socialLinks: [],
-          }
-        }
-      />
-    );
+    layout = <AppointmentPage page={page} settings={globalSettings ?? fallbackSettings} />;
   } else if (page.layoutVariant === "video-index") {
     layout = (
       <VideoDirectoryPage
@@ -129,21 +124,7 @@ export function PageRenderer({
         page={page}
         appointmentHref={appointmentHref ?? `/${page.locale}`}
         navigation={navigation}
-        settings={
-          globalSettings ?? {
-            locale: page.locale,
-            address: null,
-            phoneTel: null,
-            phoneDisplay: null,
-            secondaryPhoneTel: null,
-            secondaryPhoneDisplay: null,
-            email: null,
-            hours: null,
-            footerTagline: null,
-            disclaimerText: null,
-            socialLinks: [],
-          }
-        }
+        settings={globalSettings ?? fallbackSettings}
         homeTestimonials={homeTestimonials}
       />
     );

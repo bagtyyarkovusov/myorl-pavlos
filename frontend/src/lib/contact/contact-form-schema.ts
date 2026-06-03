@@ -7,12 +7,10 @@ const timeSlotPattern = /^([01]\d|2[0-3]):[0-5]\d$/;
 const emailSchema = z.string().email();
 
 const APPOINTMENT_SCHEDULE = {
-  1: { startHour: 0, endHour: 24 },
-  2: { startHour: 0, endHour: 24 },
-  3: { startHour: 0, endHour: 24 },
-  4: { startHour: 0, endHour: 24 },
-  5: { startHour: 0, endHour: 24 },
-  6: { startHour: 0, endHour: 24 },
+  1: { startHour: 9, endHour: 14 },
+  2: { startHour: 14, endHour: 20 },
+  4: { startHour: 14, endHour: 20 },
+  5: { startHour: 9, endHour: 14 },
 } as const satisfies Record<number, { startHour: number; endHour: number }>;
 
 export const contactFormSchema = z
@@ -104,7 +102,7 @@ export function getAppointmentSlotsForDate(isoDate: string): string[] {
   if (!schedule) return [];
 
   const slots: string[] = [];
-  for (let hour = schedule.startHour; hour < schedule.endHour; hour += 1) {
+  for (let hour = schedule.startHour; hour < schedule.endHour; hour++) {
     slots.push(formatSlot(hour, 0), formatSlot(hour, 30));
   }
   return slots;

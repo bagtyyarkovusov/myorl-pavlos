@@ -394,8 +394,6 @@ export function ContactForm({
                   <span aria-hidden="true">▦</span>
                 </button>
               </div>
-              <input type="hidden" name="preferredDate" value={preferredDate} />
-              <input type="hidden" name="preferredSlot" value={preferredSlot} />
               <p className={styles.fileHint} id={`${formId}-preferred-date-hint`}>
                 {preferredDate && appointmentSlots.length === 0
                   ? appointmentStrings.preferredSlotUnavailable

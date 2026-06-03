@@ -1998,21 +1998,20 @@ describe("AppointmentPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /календар/i }));
     fireEvent.click(screen.getByRole("button", { name: "19" }));
 
-    expect(screen.getByRole("button", { name: "0:00" })).toBeDefined();
-    expect(screen.getByRole("button", { name: "14:00" })).toBeDefined();
-    expect(screen.getByRole("button", { name: "23:00" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "9:00" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "13:00" })).toBeDefined();
 
-    fireEvent.click(screen.getByRole("button", { name: "2:00" }));
+    fireEvent.click(screen.getByRole("button", { name: "10:00" }));
 
-    expect(screen.getByRole("button", { name: "2:00" })).toBeDefined();
-    expect(screen.getByRole("button", { name: "2:30" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "10:00" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "10:30" })).toBeDefined();
 
-    fireEvent.click(screen.getByRole("button", { name: "2:30" }));
+    fireEvent.click(screen.getByRole("button", { name: "10:30" }));
 
-    expect(dateInput).toHaveValue("19/06/2026 2:30");
+    expect(dateInput).toHaveValue("19/06/2026 10:30");
   });
 
-  it("uses MODX weekday availability with Sunday disabled and Monday through Saturday open", () => {
+  it("enables Mon/Fri 09-14 and Tue/Thu 14-20, disables Wed/Sat/Sun", () => {
     const apptPage: PageDTO = {
       ...BASE_PAGE,
       locale: "ru",
@@ -2024,9 +2023,15 @@ describe("AppointmentPage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /календар/i }));
 
-    expect(screen.getByRole("button", { name: "10" })).not.toBeDisabled();
-    expect(screen.getByRole("button", { name: "13" })).not.toBeDisabled();
+    // June 2026: 4=Thu (enabled 14-20), 6=Sat (disabled), 14=Sun (disabled)
+    expect(screen.getByRole("button", { name: "4" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "6" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "14" })).toBeDisabled();
+
+    // 8=Mon (enabled 09-14), 9=Tue (enabled 14-20), 10=Wed (disabled)
+    expect(screen.getByRole("button", { name: "8" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "9" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "10" })).toBeDisabled();
   });
 
   it("renders sections through SectionRenderer", () => {

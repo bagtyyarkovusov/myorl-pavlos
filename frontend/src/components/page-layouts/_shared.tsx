@@ -1,5 +1,5 @@
 import { MediaFrame } from "@/components/design-system";
-import type { NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
+import type { GlobalSettingsDTO, NavigationNodeDTO, PageDTO } from "@/lib/cms/types";
 import { getPageStrings } from "@/lib/i18n/page";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -11,6 +11,7 @@ export type PageLayoutProps = {
   navigation?: NavigationNodeDTO[];
   appointmentHref?: string;
   disclaimerText?: string | null;
+  globalSettings?: GlobalSettingsDTO;
 };
 
 export function PageHeader({

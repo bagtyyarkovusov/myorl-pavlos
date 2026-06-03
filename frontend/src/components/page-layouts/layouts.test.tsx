@@ -1134,7 +1134,11 @@ describe("ClinicHubPage", () => {
       throw new Error(`Unexpected slug ${slug}`);
     });
 
-    const ui = await ClinicHubPage({ page: hubPage, appointmentHref: "/el/rantevou" });
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: MOCK_GLOBAL_SETTINGS,
+    });
     const { container } = render(ui);
 
     expect(screen.getByText("Doctor bio intro")).toBeDefined();
@@ -1150,6 +1154,184 @@ describe("ClinicHubPage", () => {
       "#clinic-iatreio-koukaki",
     );
     expect(container.querySelectorAll("button[data-gallery-trigger]")).toHaveLength(4);
+  });
+
+  it("renders visit/contact section with address, phone, and email", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: "<p>Doctor bio intro</p>",
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: MOCK_GLOBAL_SETTINGS,
+    });
+    render(ui);
+
+    const addressNodes = screen.getAllByText(
+      "Λεωφόρος Αλεξάνδρας 201 & Πανόρμου, Αμπελόκηποι, Αθήνα",
+    );
+    expect(addressNodes.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByRole("link", { name: "211-01 94 618" })).toHaveAttribute(
+      "href",
+      "tel:+302110194618",
+    );
+    expect(screen.getByRole("link", { name: "pavlos.tsolaridis@gmail.com" })).toHaveAttribute(
+      "href",
+      "mailto:pavlos.tsolaridis@gmail.com",
+    );
+  });
+
+  it("renders doctor identity when globalSettings has doctor fields", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: null,
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const settingsWithDoctor: GlobalSettingsDTO = {
+      ...MOCK_GLOBAL_SETTINGS,
+      doctorName: "Παύλος Τσολαρίδης",
+      doctorSpecialty: "Ωτορινολαρυγγολόγος",
+    };
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: settingsWithDoctor,
+    });
+    render(ui);
+
+    expect(screen.getByText("Παύλος Τσολαρίδης")).toBeDefined();
+    expect(screen.getByText("Ωτορινολαρυγγολόγος")).toBeDefined();
+  });
+
+  it("renders map facade button with show-map label", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: null,
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: MOCK_GLOBAL_SETTINGS,
+    });
+    render(ui);
+
+    expect(screen.getByRole("button", { name: "Εμφάνιση χάρτη" })).toBeDefined();
+  });
+
+  it("uses accent hero image variant for controlled office image sizing", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "ΛΟΡ Ιατρείο",
+      layoutVariant: "standard",
+      content: null,
+      sections: [],
+      imageCenter: {
+        url: "/uploads/office.jpg",
+        alternativeText: "Office photo",
+        width: 1200,
+        height: 800,
+      },
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Αμπελόκηποι");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Κουκάκι");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/el/rantevou",
+      globalSettings: MOCK_GLOBAL_SETTINGS,
+    });
+    const { container } = render(ui);
+
+    // Accent image uses band variant - constrained width with accent modifier class
+    const heroImage = container.querySelector("[class*='page-hero__image--accent']");
+    expect(heroImage).toBeTruthy();
+  });
+
+  it("hides visit section when globalSettings has no address", async () => {
+    const hubPage: PageDTO = {
+      ...BASE_PAGE,
+      slug: "iatreio",
+      title: "LOR Kabinet",
+      locale: "ru",
+      layoutVariant: "standard",
+      content: null,
+      sections: [],
+    };
+    const alexandras = makeClinicChildPage("iatreio-alexandras", "Ampelokipi");
+    const koukaki = makeClinicChildPage("iatreio-koukaki", "Koukaki");
+
+    vi.mocked(getPage).mockImplementation(async (_locale, slug) => {
+      if (slug === "iatreio-alexandras") return alexandras;
+      if (slug === "iatreio-koukaki") return koukaki;
+      throw new Error(`Unexpected slug ${slug}`);
+    });
+
+    const emptySettings: GlobalSettingsDTO = {
+      ...MOCK_GLOBAL_SETTINGS,
+      locale: "ru",
+      address: null,
+      phoneTel: null,
+      phoneDisplay: null,
+      secondaryPhoneTel: null,
+      secondaryPhoneDisplay: null,
+      email: null,
+    };
+
+    const ui = await ClinicHubPage({
+      page: hubPage,
+      appointmentHref: "/ru/zapis",
+      globalSettings: emptySettings,
+    });
+    render(ui);
+
+    expect(screen.queryByRole("button", { name: "Показать карту" })).toBeNull();
   });
 });
 

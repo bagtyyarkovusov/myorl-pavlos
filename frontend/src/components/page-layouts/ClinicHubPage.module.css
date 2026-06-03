@@ -3,6 +3,104 @@
   max-width: 72ch;
 }
 
+/* ── Doctor identity ── */
+
+.doctor {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: clamp(16px, 2.5vw, 28px);
+}
+
+.doctorName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.doctorSpecialty {
+  font-size: 0.95rem;
+  color: var(--color-stone-soft);
+}
+
+/* ── Visit / contact / map ── */
+
+.visit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 2.5vw, 28px);
+  margin-bottom: clamp(16px, 2.5vw, 28px);
+  padding: clamp(16px, 2.5vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md, 12px);
+  background: var(--surface, #ffffff);
+}
+
+@media (min-width: 720px) {
+  .visit {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.visitMeta {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vw, 20px);
+}
+
+.visitGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.visitLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-stone-soft);
+}
+
+.visitValue {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.phoneLink {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.phoneLink:hover,
+.phoneLink:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.emailLink {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.emailLink:hover,
+.emailLink:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mapWrap {
+  position: relative;
+  min-height: 240px;
+  border-radius: var(--radius-md, 12px);
+  overflow: hidden;
+}
+
+/* ── Sibling links ── */
+
 .siblingLinks {
   display: flex;
   flex-wrap: wrap;
@@ -27,6 +125,8 @@
 .separator {
   color: var(--color-stone-soft);
 }
+
+/* ── Clinic locations ── */
 
 .locations {
   display: grid;

@@ -1,7 +1,6 @@
 import dynamic from "next/dynamic";
 import { AlternateUrlsSetter } from "@/components/AlternateUrlsSetter";
 import { StructuredDataComposer } from "@/components/StructuredDataComposer";
-import { ClinicHubPage } from "@/components/page-layouts/ClinicHubPage";
 import { VideoDirectoryPage } from "@/components/page-layouts/VideoDirectoryPage";
 import { getSiteUrl } from "@/lib/cms/site-url";
 import { isClinicHubPage } from "@/lib/cms/clinic-pages";
@@ -17,6 +16,9 @@ const DIRECTORY_LAYOUT_VARIANTS = new Set<PageDTO["layoutVariant"]>([
 
 const AppointmentPage = dynamic(() =>
   import("@/components/page-layouts/AppointmentPage").then((m) => m.AppointmentPage),
+);
+const ClinicHubPage = dynamic(() =>
+  import("@/components/page-layouts/ClinicHubPage").then((m) => m.ClinicHubPage),
 );
 const ContactPage = dynamic(() =>
   import("@/components/page-layouts/ContactPage").then((m) => m.ContactPage),
@@ -129,7 +131,13 @@ export function PageRenderer({
       />
     );
   } else if (isClinicHubPage(page)) {
-    layout = <ClinicHubPage page={page} appointmentHref={appointmentHref} />;
+    layout = (
+      <ClinicHubPage
+        page={page}
+        appointmentHref={appointmentHref}
+        globalSettings={globalSettings ?? fallbackSettings}
+      />
+    );
   } else if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
     layout = (
       <QuestionListPage page={page} navigation={navigation} appointmentHref={appointmentHref} />

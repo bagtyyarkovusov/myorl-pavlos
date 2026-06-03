@@ -78,9 +78,19 @@ export type GalleryItemDTO = {
   image?: MediaDTO | null;
 };
 
+export type HomeResourceGroupSectionDTO = SectionBase & {
+  __component: "sections.home-resource-group";
+  group: "operations" | "services";
+  heading: string;
+  items: LinkedResourceItemDTO[];
+  viewAllTarget?: PageRefDTO | null;
+  viewAllLabel?: string | null;
+};
+
 export type SectionDTO =
   | (SectionBase & { __component: "sections.promo-slider"; slides: PromoSlideItemDTO[] })
   | HomeHeroSectionDTO
+  | HomeResourceGroupSectionDTO
   | (SectionBase & { __component: "sections.linked-resources"; items: LinkedResourceItemDTO[] })
   | (SectionBase & { __component: "sections.social-links"; links: SocialLinkItemDTO[] })
   | (SectionBase & { __component: "sections.video"; videos: VideoItemDTO[] })
@@ -116,4 +126,7 @@ export type StrapiSectionRaw = {
   videos?: unknown;
   details?: unknown;
   clinics?: unknown;
+  group?: unknown;
+  viewAllTarget?: unknown;
+  viewAllLabel?: unknown;
 };

@@ -7,6 +7,7 @@ export const HOME_ALLOWED_SECTION_COMPONENTS = [
   "sections.promo-slider",
   "sections.advantages",
   "sections.linked-resources",
+  "sections.home-resource-group",
   "sections.video",
   "sections.home-testimonials-teaser",
   "sections.home-notice",

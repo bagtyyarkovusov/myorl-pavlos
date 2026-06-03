@@ -18,6 +18,7 @@ const SHARED_SECTION_COMPONENTS: SectionComponent[] = [
   "sections.advantages",
   "sections.home-testimonials-teaser",
   "sections.home-notice",
+  "sections.home-resource-group",
   "sections.accordion",
   "sections.faq",
   "sections.tabs",

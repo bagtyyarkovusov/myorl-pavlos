@@ -19,6 +19,9 @@ const HomeAdvantagesSection = dynamic(() =>
 const HomeMedicalGrid = dynamic(() =>
   import("@/components/home/HomeMedicalGrid").then((m) => m.HomeMedicalGrid),
 );
+const HomeResourceGroup = dynamic(() =>
+  import("@/components/home/HomeResourceGroup").then((m) => m.HomeResourceGroup),
+);
 
 export function HomeSectionRenderer({
   section,
@@ -44,6 +47,8 @@ export function HomeSectionRenderer({
       );
     case "sections.advantages":
       return <HomeAdvantagesSection section={section} />;
+    case "sections.home-resource-group":
+      return <HomeResourceGroup section={section} locale={locale} learnMoreLabel={t.learnMore} />;
     case "sections.linked-resources":
       return (
         <HomeMedicalGrid

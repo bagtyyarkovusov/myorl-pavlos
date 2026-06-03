@@ -232,6 +232,22 @@ export interface SectionsHomeHero extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsHomeResourceGroup extends Struct.ComponentSchema {
+  collectionName: 'components_sections_home_resource_groups';
+  info: {
+    description: 'Editor-owned resource group for the homepage (operations or services) with heading, items, and view-all target.';
+    displayName: 'Home Resource Group';
+  };
+  attributes: {
+    group: Schema.Attribute.Enumeration<['operations', 'services']> & Schema.Attribute.DefaultTo<'services'>;
+    heading: Schema.Attribute.String & Schema.Attribute.Required;
+    intro: Schema.Attribute.Text;
+    items: Schema.Attribute.Component<'items.linked-resource', true>;
+    viewAllLabel: Schema.Attribute.String;
+    viewAllTarget: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
+  };
+}
+
 export interface SectionsHomeNotice extends Struct.ComponentSchema {
   collectionName: 'components_sections_home_notices';
   info: {

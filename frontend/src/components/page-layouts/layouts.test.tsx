@@ -22,11 +22,28 @@ import { ClinicLocationBlock } from "@/components/clinic/ClinicLocationBlock";
 import { getPage } from "@/lib/cms/cms-api";
 import { QuestionListPage } from "./QuestionListPage";
 import { FrontendNativePage } from "./FrontendNativePage";
-import type { NavigationNodeDTO, PageDTO, GlobalSettingsDTO } from "@/lib/cms/types";
+import type {
+  HomeResourceGroupSectionDTO,
+  NavigationNodeDTO,
+  PageDTO,
+  GlobalSettingsDTO,
+} from "@/lib/cms/types";
 
 beforeEach(() => {
   vi.stubEnv("STRAPI_URL", "http://localhost:1337");
   vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://myorl.example.com");
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn((query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
 });
 
 afterEach(() => {
@@ -568,6 +585,89 @@ describe("HomePage", () => {
 
     expect(screen.getByRole("link", { name: "Services" })).toBeDefined();
     expect(screen.queryByText("Βρείτε γρήγορα τις βασικές υπηρεσίες του ιατρείου.")).toBeNull();
+  });
+
+  it("renders home resource groups from CMS sections", async () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.promo-slider",
+          heading: "Topics",
+          slides: [
+            {
+              title: "Slide",
+              description: null,
+              targetPageExcerpt: null,
+              image: null,
+              targetPage: null,
+              targetUrl: null,
+            },
+          ],
+        },
+        {
+          __component: "sections.home-resource-group",
+          group: "operations",
+          heading: "Επεμβάσεις",
+          intro: null,
+          items: [
+            {
+              title: "Operation A",
+              description: "<p>Op desc</p>",
+              image: null,
+              targetPage: { documentId: "1", slug: "op-a", title: "Op A" },
+              targetUrl: null,
+            },
+          ],
+          viewAllTarget: { documentId: "3", slug: "epemvaseis", title: "Operations" },
+          viewAllLabel: "Όλες οι επεμβάσεις",
+        } as HomeResourceGroupSectionDTO,
+        {
+          __component: "sections.home-resource-group",
+          group: "services",
+          heading: "Υπηρεσίες",
+          intro: null,
+          items: [
+            {
+              title: "Service A",
+              description: "<p>Svc desc</p>",
+              image: null,
+              targetPage: { documentId: "2", slug: "svc-a", title: "Svc A" },
+              targetUrl: null,
+            },
+          ],
+          viewAllTarget: null,
+          viewAllLabel: null,
+        } as HomeResourceGroupSectionDTO,
+      ],
+    };
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/rantevou"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+
+    // Wait for dynamic imports to resolve
+    await vi.waitFor(() => {
+      expect(screen.getByRole("heading", { name: "Επεμβάσεις" })).toBeDefined();
+    });
+
+    expect(screen.getByRole("heading", { name: "Υπηρεσίες" })).toBeDefined();
+    expect(screen.getByText("Operation A")).toBeDefined();
+    expect(screen.getByText("Service A")).toBeDefined();
+    expect(screen.getByRole("link", { name: /Operation A/ })).toHaveAttribute("href", "/el/op-a");
+    expect(screen.getByRole("link", { name: /Service A/ })).toHaveAttribute("href", "/el/svc-a");
+    expect(screen.getByRole("link", { name: /Όλες οι επεμβάσεις/ })).toHaveAttribute(
+      "href",
+      "/el/epemvaseis",
+    );
   });
 });
 

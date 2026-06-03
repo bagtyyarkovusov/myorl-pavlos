@@ -12,6 +12,7 @@ describe("home section policy", () => {
       "sections.promo-slider",
       "sections.advantages",
       "sections.linked-resources",
+      "sections.home-resource-group",
       "sections.video",
       "sections.home-testimonials-teaser",
       "sections.home-notice",

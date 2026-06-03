@@ -67,6 +67,12 @@ export const SECTION_DEFINITIONS = {
     schemas: [],
     homeAdapter: "testimonials-teaser",
   },
+  "sections.home-resource-group": {
+    component: "sections.home-resource-group",
+    gridColumns: 2,
+    schemas: [],
+    homeAdapter: "default",
+  },
   "sections.home-notice": {
     component: "sections.home-notice",
     gridColumns: 1,

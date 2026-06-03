@@ -98,6 +98,24 @@ describe("orderHomeRenderItems", () => {
     ]);
   });
 
+  it("places home-resource-group sections after advantages and before linked-resources", () => {
+    const result = labelsFor([
+      makeSection("sections.linked-resources", "Links"),
+      makeSection("sections.home-resource-group", "Operations"),
+      makeSection("sections.advantages", "Advantages"),
+      makeSection("sections.promo-slider", "Promo"),
+    ]);
+
+    expect(result).toEqual([
+      "section:sections.promo-slider:Promo",
+      "menu-access-grid",
+      "home-advantages:Advantages",
+      "section:sections.home-resource-group:Operations",
+      "section:sections.linked-resources:Links",
+      "home-visit-map",
+    ]);
+  });
+
   it("builds stable keys for duplicate CMS sections and injected blocks", () => {
     const result = orderHomeRenderItems([
       makeSection("sections.promo-slider", "Promo A"),

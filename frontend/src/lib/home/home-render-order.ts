@@ -1,12 +1,16 @@
 import type { SectionDTO } from "@/lib/cms/types";
 
 type AdvantagesSection = Extract<SectionDTO, { __component: "sections.advantages" }>;
-type TestimonialsSection = Extract<SectionDTO, { __component: "sections.home-testimonials-teaser" }>;
+type TestimonialsSection = Extract<
+  SectionDTO,
+  { __component: "sections.home-testimonials-teaser" }
+>;
 type OrderedHomeSectionComponent = Extract<
   SectionDTO["__component"],
   | "sections.promo-slider"
   | "sections.advantages"
   | "sections.linked-resources"
+  | "sections.home-resource-group"
   | "sections.home-testimonials-teaser"
   | "sections.home-notice"
   | "sections.video"
@@ -43,6 +47,7 @@ export type HomeRenderItem =
 const HOME_SECTION_ORDER: OrderedHomeSectionComponent[] = [
   "sections.promo-slider",
   "sections.advantages",
+  "sections.home-resource-group",
   "sections.linked-resources",
   "sections.home-testimonials-teaser",
   "sections.home-notice",
@@ -85,6 +90,7 @@ export function orderHomeRenderItems(sections: readonly SectionDTO[]): HomeRende
     });
   }
 
+  appendSections(items, groups.get("sections.home-resource-group") ?? []);
   appendSections(items, linkedSections);
 
   for (const item of groups.get("sections.home-testimonials-teaser") ?? []) {

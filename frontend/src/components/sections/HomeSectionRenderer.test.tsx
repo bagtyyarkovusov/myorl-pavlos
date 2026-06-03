@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import type { SectionDTO } from "@/lib/cms/types";
+import type { HomeResourceGroupSectionDTO, SectionDTO } from "@/lib/cms/types";
 
 import { HomeSectionRenderer } from "./HomeSectionRenderer";
 
@@ -123,6 +123,48 @@ describe("HomeSectionRenderer", () => {
     expect(screen.getByRole("button", { name: "Q1" })).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByText("A1")).toBeDefined();
     expect(container.querySelectorAll("section")).toHaveLength(1);
+  });
+
+  it("renders home resource group with title and description", async () => {
+    const section = makeSection({
+      __component: "sections.home-resource-group",
+      group: "services",
+      heading: "Υπηρεσίες",
+      intro: null,
+      items: [
+        {
+          title: "Resource 1",
+          description: "<p>Text one</p>",
+          image: null,
+          targetPage: { documentId: "1", slug: "r1", title: "R1" },
+          targetUrl: null,
+        },
+        {
+          title: "Resource 2",
+          description: "<p>Text two</p>",
+          image: null,
+          targetPage: { documentId: "2", slug: "r2", title: "R2" },
+          targetUrl: null,
+        },
+      ],
+      viewAllTarget: { documentId: "3", slug: "yperesies", title: "Services" },
+      viewAllLabel: "Все услуги",
+    } as HomeResourceGroupSectionDTO);
+
+    const { container } = render(<HomeSectionRenderer section={section} locale="ru" />);
+
+    await waitFor(() => {
+      expect(container.querySelector("ol[role='list']")).toBeTruthy();
+    });
+
+    expect(screen.getByRole("heading", { name: "Υπηρεσίες" })).toBeDefined();
+    expect(screen.getByText("Resource 1")).toBeDefined();
+    expect(screen.getByText("Text one")).toBeDefined();
+    expect(screen.getByRole("link", { name: /Resource 1/ })).toHaveAttribute("href", "/ru/r1");
+    expect(screen.getByRole("link", { name: /Все услуги/ })).toHaveAttribute(
+      "href",
+      "/ru/yperesies",
+    );
   });
 
   it("renders linked resources once and renders HTML descriptions as content", async () => {

@@ -58,6 +58,12 @@ function makeRawSection(component: SectionComponent) {
         ...common,
         items: [{ caption: "Image", image: { url: "https://example.com/image.jpg" } }],
       };
+    case "sections.home-resource-group":
+      return {
+        ...common,
+        group: "services",
+        items: [{ title: "Resource", description: "<p>Text</p>" }],
+      };
     case "sections.contact":
       return {
         ...common,

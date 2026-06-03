@@ -120,6 +120,16 @@ function toSectionDTO(raw: StrapiSectionRaw): SectionDTO | null {
         intro,
         items: toItemArray(raw.items, toAdvantageItem),
       };
+    case "sections.home-resource-group":
+      return {
+        __component: component,
+        group: (raw.group as "operations" | "services") ?? "services",
+        heading: heading ?? "",
+        intro,
+        items: toItemArray(raw.items, toLinkedResourceItem),
+        viewAllTarget: toPageRefDTO(raw.viewAllTarget as StrapiPageRef | null | undefined),
+        viewAllLabel: optionalString(raw.viewAllLabel),
+      };
     case "sections.home-testimonials-teaser":
       return {
         __component: component,

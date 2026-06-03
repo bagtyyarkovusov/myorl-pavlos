@@ -5,6 +5,7 @@ import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getPageStrings } from "@/lib/i18n/page";
 import { hrefForLocaleSlug } from "@/lib/cms/navigation";
 import { defaultAppointmentHref } from "@/lib/navigation/appointment-href";
+import { isBiographyPage } from "@/lib/cms/dense-pages";
 import type { PageRefDTO, PageDTO, LayoutVariant } from "@/lib/cms/types";
 import { cn } from "@/lib/utils";
 import styles from "./_shared.module.css";
@@ -90,15 +91,17 @@ function DefaultPageBody({
   hubChild = false,
   disclaimerText,
 }: DefaultPageBodyProps) {
+  const cmsVariant = isBiographyPage(page) ? "dense" : "luxury";
+
   if (hasProseAside(page)) {
     return (
       <ArticleAsideBody
         page={page}
         hubChild={hubChild}
-        cmsVariant="luxury"
+        cmsVariant={cmsVariant}
         sectionDensity="focused"
         layoutAttribute="data-prose-layout"
-        layoutValue="standard"
+        layoutValue={isBiographyPage(page) ? "dense" : "standard"}
         showAuthor={false}
         disclaimerText={disclaimerText}
       />
@@ -112,7 +115,7 @@ function DefaultPageBody({
         proseStackGap === "compact" && styles["prose-shell--compact-stack"],
       )}
     >
-      <CmsHtml html={page.content} locale={page.locale} />
+      <CmsHtml html={page.content} variant={cmsVariant} locale={page.locale} />
       {page.sections.map((section, index) => (
         <SectionRenderer key={`${section.__component}-${index}`} section={section} index={index} />
       ))}
@@ -120,6 +123,7 @@ function DefaultPageBody({
         <CmsHtml
           html={page.infoBlockBottom}
           className={`cms-html ${styles["note-block"]}`}
+          variant={cmsVariant}
           locale={page.locale}
         />
       ) : null}
@@ -127,6 +131,7 @@ function DefaultPageBody({
         <CmsHtml
           html={page.sources}
           className={`cms-html ${styles["sources-block"]}`}
+          variant={cmsVariant}
           locale={page.locale}
         />
       ) : null}
@@ -295,7 +300,7 @@ function ReferenceArticleBody({ page, hubChild = false, disclaimerText }: PageBo
 type ArticleAsideBodyProps = {
   page: PageDTO;
   hubChild?: boolean;
-  cmsVariant: "luxury" | "encyclopedia" | "specialized";
+  cmsVariant: "luxury" | "encyclopedia" | "specialized" | "dense";
   sectionDensity: "scanning" | "focused";
   layoutAttribute: "data-article-layout" | "data-prose-layout";
   layoutValue: string;

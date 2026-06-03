@@ -34,6 +34,12 @@ describe("Typography Token Contract", () => {
     expect(v).toMatch(/^\d+(\.\d+)?rem$/);
   });
 
+  it("defines --type-prose-dense as a fixed rem value", () => {
+    const v = customPropValue(rootBlock(globalsCss), "--type-prose-dense");
+    expect(v).toBeDefined();
+    expect(v).toMatch(/^\d+(\.\d+)?rem$/);
+  });
+
   it("defines --type-heading-1 through --type-heading-6 as fixed rem values", () => {
     for (let i = 1; i <= 6; i++) {
       const v = customPropValue(rootBlock(globalsCss), `--type-heading-${i}`);
@@ -190,6 +196,37 @@ describe("Typography Token Contract", () => {
     expect(block!).not.toMatch(/font-size:\s*[\d.]+em/);
     expect(block!).not.toMatch(/font-size:.*vw/);
     expect(block!).not.toMatch(/font-size:.*clamp/);
+  });
+
+  it("sets .prose-dense body font-size to --type-prose-dense (not em / clamp / vw)", () => {
+    const rule = globalsCss.match(/\.prose-dense\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule![1]!).toMatch(/font-size:\s*var\(--type-prose-dense\)/);
+    expect(rule![1]!).not.toMatch(/font-size:\s*[\d.]+em/);
+    expect(rule![1]!).not.toMatch(/font-size:.*vw/);
+    expect(rule![1]!).not.toMatch(/font-size:.*clamp/);
+  });
+
+  it("sets .prose-dense headings to fixed rem heading tokens (not em / clamp / vw)", () => {
+    for (const [tag, token] of [
+      ["h2", "heading-4"],
+      ["h3", "heading-5"],
+      ["h4", "heading-6"],
+      ["h5", "heading-6"],
+      ["h6", "heading-6"],
+    ] as const) {
+      const matches = [
+        ...globalsCss.matchAll(new RegExp(String.raw`\.prose-dense\s+${tag}\s*\{([^}]*)`, "gs")),
+      ];
+      const block = matches.map((m) => m[1]!).find((b) => b.includes("font-size:"));
+      expect(block, `.prose-dense ${tag} must have a rule with font-size`).toBeDefined();
+      expect(block!, `.prose-dense ${tag} must use --type-${token}`).toMatch(
+        new RegExp(`font-size:\\s*var\\(--type-${token}\\)`),
+      );
+      expect(block!, `.prose-dense ${tag} must not use em`).not.toMatch(/font-size:\s*[\d.]+em/);
+      expect(block!, `.prose-dense ${tag} must not use vw`).not.toMatch(/font-size:.*vw/);
+      expect(block!, `.prose-dense ${tag} must not use clamp`).not.toMatch(/font-size:.*clamp/);
+    }
   });
 
   /* ── Table typography ── */

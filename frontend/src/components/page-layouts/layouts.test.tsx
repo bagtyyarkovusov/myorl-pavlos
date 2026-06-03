@@ -309,6 +309,98 @@ describe("StandardPage", () => {
   });
 });
 
+describe("Biography page", () => {
+  it("renders biography page with data-variant='dense'", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          slug: "viografiko",
+          title: "Βιογραφικό",
+          content: "<p>Curriculum vitae text</p>",
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByText("Curriculum vitae text").closest("div")?.getAttribute("data-variant"),
+    ).toBe("dense");
+  });
+
+  it("renders biography page tables with compact prose-dense styling", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          slug: "viografiko",
+          title: "Βιογραφικό",
+          content:
+            "<table><thead><tr><th>Year</th><th>Position</th></tr></thead><tbody><tr><td>2020</td><td>Chief</td></tr></tbody></table>",
+        }}
+      />,
+    );
+
+    const prose = screen.getByText("Chief").closest("div");
+    expect(prose?.className).toContain("prose-dense");
+    expect(prose?.getAttribute("data-variant")).toBe("dense");
+  });
+
+  it("renders Russian biography page (/ru/viografiko) with dense prose", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          locale: "ru",
+          slug: "viografiko",
+          title: "Биография",
+          content: "<p>Текст биографии</p>",
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Текст биографии").closest("div")?.getAttribute("data-variant")).toBe(
+      "dense",
+    );
+  });
+
+  it("renders biography page with headings in two-column aside with data-prose-layout='dense'", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          slug: "viografiko",
+          title: "Βιογραφικό",
+          content: "<h2>Εκπαίδευση</h2><p>Πανεπιστήμιο Αθηνών</p><h3>Ειδικότητα</h3><p>ΩΡΛ</p>",
+        }}
+      />,
+    );
+
+    const main = document.querySelector("main[data-prose-layout='dense']");
+    expect(main).toBeTruthy();
+    const contentsNavs = screen.getAllByRole("navigation", { name: "Περιεχόμενα" });
+    expect(contentsNavs.length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByText("Πανεπιστήμιο Αθηνών").closest("div")?.getAttribute("data-variant"),
+    ).toBe("dense");
+  });
+
+  it("does not apply dense variant to non-biography pages", () => {
+    render(
+      <StandardPage
+        page={{
+          ...BASE_PAGE,
+          slug: "ypiresies",
+          title: "Υπηρεσίες",
+          content: "<p>Regular page text</p>",
+        }}
+      />,
+    );
+
+    const prose = screen.getByText("Regular page text").closest("div");
+    expect(prose?.getAttribute("data-variant")).toBeNull();
+  });
+});
+
 describe("HomePage", () => {
   it("renders hero title", () => {
     const homePage: PageDTO = {

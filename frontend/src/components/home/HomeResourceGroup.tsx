@@ -22,7 +22,6 @@ export function HomeResourceGroup({ section, locale, learnMoreLabel }: HomeResou
   return (
     <PageSection
       rhythm="compact"
-      className={styles["resource-group"]}
       heading={
         section.heading ? { title: section.heading, intro: section.intro ?? undefined } : undefined
       }

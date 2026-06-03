@@ -133,14 +133,6 @@ describe("HomeResourceGroup", () => {
     expect(screen.getAllByRole("link")).toHaveLength(10);
   });
 
-  it("preserves group field from section", () => {
-    const opsSection = makeSection({ group: "operations", heading: "Επεμβάσεις" });
-    expect(opsSection.group).toBe("operations");
-
-    const svcSection = makeSection({ group: "services", heading: "Υπηρεσίες" });
-    expect(svcSection.group).toBe("services");
-  });
-
   it("renders group with operations heading", () => {
     const section = makeSection({ group: "operations", heading: "ЛОР Операции" });
     render(<HomeResourceGroup section={section} locale="ru" learnMoreLabel="Узнать больше" />);

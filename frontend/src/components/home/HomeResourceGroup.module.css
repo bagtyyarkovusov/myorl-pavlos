@@ -1,9 +1,3 @@
-/* ── Hairline grid container ── */
-
-.resource-group {
-  /* no extra top-level rules needed */
-}
-
 .resource-list {
   composes: hairline-grid from "../shared-layout.module.css";
   display: grid;

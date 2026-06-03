@@ -642,7 +642,7 @@ main[data-hub-child="true"] .cms-html h3[id] {
 .prose-service h3 {
   margin-top: 1.5em;
   margin-bottom: 0.4em;
-  font-size: 1.15em;
+  font-size: var(--type-heading-4);
   font-weight: 600;
   line-height: 1.35;
 }
@@ -674,7 +674,7 @@ main[data-hub-child="true"] .cms-html h3[id] {
 
 .prose-encyclopedia h2 {
   margin-bottom: 0.45em;
-  font-size: 1.35em;
+  font-size: var(--type-heading-3);
 }
 
 .prose-encyclopedia h2:not(:first-child) {
@@ -686,7 +686,7 @@ main[data-hub-child="true"] .cms-html h3[id] {
 .prose-encyclopedia h3 {
   margin-top: 1.35em;
   margin-bottom: 0.35em;
-  font-size: 1.12em;
+  font-size: var(--type-heading-5);
   font-weight: 600;
 }
 
@@ -701,15 +701,15 @@ main[data-hub-child="true"] .cms-html h3[id] {
 }
 
 .prose-encyclopedia h4 {
-  font-size: 1.08em;
+  font-size: var(--type-heading-5);
 }
 
 .prose-encyclopedia h5 {
-  font-size: 1.02em;
+  font-size: var(--type-heading-6);
 }
 
 .prose-encyclopedia h6 {
-  font-size: 0.98em;
+  font-size: var(--type-heading-6);
   color: var(--muted);
 }
 

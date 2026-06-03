@@ -152,6 +152,46 @@ describe("Typography Token Contract", () => {
     }
   });
 
+  /* ── Prose variant headings: fixed rem tokens, no viewport fragility ── */
+
+  it("sets .prose-encyclopedia headings to fixed rem heading tokens (not em / clamp / vw)", () => {
+    for (const [tag, token] of [
+      ["h2", "heading-3"],
+      ["h3", "heading-5"],
+      ["h4", "heading-5"],
+      ["h5", "heading-6"],
+      ["h6", "heading-6"],
+    ] as const) {
+      const matches = [
+        ...globalsCss.matchAll(
+          new RegExp(String.raw`\.prose-encyclopedia\s+${tag}\s*\{([^}]*)`, "gs"),
+        ),
+      ];
+      const block = matches.map((m) => m[1]!).find((b) => b.includes("font-size:"));
+      expect(block, `.prose-encyclopedia ${tag} must have a rule with font-size`).toBeDefined();
+      expect(block!, `.prose-encyclopedia ${tag} must use --type-${token}`).toMatch(
+        new RegExp(`font-size:\\s*var\\(--type-${token}\\)`),
+      );
+      expect(block!, `.prose-encyclopedia ${tag} must not use em`).not.toMatch(
+        /font-size:\s*[\d.]+em/,
+      );
+      expect(block!, `.prose-encyclopedia ${tag} must not use vw`).not.toMatch(/font-size:.*vw/);
+      expect(block!, `.prose-encyclopedia ${tag} must not use clamp`).not.toMatch(
+        /font-size:.*clamp/,
+      );
+    }
+  });
+
+  it("sets .prose-service h3 font-size to a heading token (not em / clamp / vw)", () => {
+    const matches = [...globalsCss.matchAll(/\.prose-service\s+h3\s*\{([^}]*)/g)];
+    const block = matches.map((m) => m[1]!).find((b) => b.includes("font-size:"));
+    expect(block).toBeDefined();
+    expect(block!).toMatch(/font-size:\s*var\(--type-heading-4\)/);
+    expect(block!).not.toMatch(/font-size:\s*[\d.]+em/);
+    expect(block!).not.toMatch(/font-size:.*vw/);
+    expect(block!).not.toMatch(/font-size:.*clamp/);
+  });
+
   /* ── Table typography ── */
 
   it("applies table typography tokens to .cms-html th", () => {

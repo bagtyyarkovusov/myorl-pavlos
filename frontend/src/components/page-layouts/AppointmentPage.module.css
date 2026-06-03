@@ -43,7 +43,7 @@
 .sidebarTitle {
   margin: 0;
   font-family: var(--font-display, "Roboto Condensed", ui-sans-serif, system-ui, sans-serif);
-  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  font-size: var(--type-heading-2);
   font-weight: 400;
   line-height: 1.1;
   color: var(--foreground, #0f2a4a);

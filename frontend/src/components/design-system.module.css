@@ -43,7 +43,7 @@
 .kicker {
   color: var(--color-stone-soft);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--type-label);
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.4;
@@ -67,17 +67,17 @@
 .section-heading h2 {
   max-width: 680px;
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(2.6rem, 5.2vw, 4.6rem);
-  line-height: 1;
+  font-weight: var(--type-weight-normal);
+  font-size: var(--type-heading-1);
+  line-height: var(--type-leading-tight);
   letter-spacing: 0;
 }
 
 .section-heading p {
   max-width: 520px;
   color: var(--muted);
-  font-size: clamp(1rem, 1.5vw, 1.14rem);
-  line-height: 1.6;
+  font-size: var(--type-prose);
+  line-height: var(--type-leading-normal);
 }
 
 .accent {
@@ -192,6 +192,6 @@
 
 @media (max-width: 680px) {
   .section-heading h2 {
-    font-size: clamp(2.4rem, 13vw, 3.4rem);
+    font-size: 1.75rem;
   }
 }

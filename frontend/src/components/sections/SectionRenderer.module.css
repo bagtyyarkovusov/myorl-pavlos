@@ -42,14 +42,14 @@
 }
 
 .content-card h2 {
-  font-size: 1.8rem;
-  line-height: 1.1;
+  font-size: var(--type-heading-2);
+  line-height: var(--type-leading-tight);
 }
 
 .content-card h3,
 .content-card summary {
-  font-size: 1.35rem;
-  line-height: 1.15;
+  font-size: var(--type-heading-3);
+  line-height: var(--type-leading-tight);
 }
 
 .content-card p,
@@ -74,17 +74,17 @@
 .question-list-section-heading h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-size: var(--type-heading-2);
   font-weight: 400;
-  line-height: 1.15;
+  line-height: var(--type-leading-tight);
 }
 
 .question-list-section-heading p {
   margin: 0;
   max-width: 65ch;
   color: var(--muted);
-  font-size: clamp(1rem, 1.6vw, 1.125rem);
-  line-height: 1.6;
+  font-size: var(--type-prose);
+  line-height: var(--type-leading-normal);
 }
 
 .disclosure-list {
@@ -109,9 +109,9 @@
   gap: 12px;
   cursor: pointer;
   font-family: var(--font-display);
-  font-size: clamp(1.05rem, 3.5vw, 1.35rem);
+  font-size: var(--type-heading-3);
   font-weight: 400;
-  line-height: 1.15;
+  line-height: var(--type-leading-tight);
   padding: 8px 0;
   text-align: left;
 }
@@ -160,8 +160,8 @@
   display: grid;
   grid-template-rows: 0fr;
   color: var(--foreground);
-  font-size: clamp(1rem, 2.5vw, 1.0625rem);
-  line-height: 1.65;
+  font-size: var(--type-prose);
+  line-height: var(--type-leading-normal);
   overflow: hidden;
   transition: grid-template-rows 0.3s ease;
 }
@@ -417,17 +417,6 @@
 
   .home-social {
     justify-content: flex-end;
-  }
-}
-
-@media (min-width: 768px) {
-  .content-card h2 {
-    font-size: 2.6rem;
-  }
-
-  .content-card h3,
-  .content-card summary {
-    font-size: 1.8rem;
   }
 }
 

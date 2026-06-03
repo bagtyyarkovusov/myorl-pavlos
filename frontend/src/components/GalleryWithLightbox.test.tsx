@@ -107,4 +107,19 @@ describe("GalleryWithLightbox", () => {
     expect(container.querySelector('[data-gallery-variant="clinic"]')).toBeTruthy();
     expect(container.querySelector("[data-gallery-trigger] img")).toBeTruthy();
   });
+
+  it("returns null when items array is empty", () => {
+    const { container } = render(<GalleryWithLightbox items={[]} />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("returns null when no items have a valid image url", () => {
+    const noImageItems: Array<{ caption: string; image: MediaDTO | null }> = [
+      { caption: "Photo 1", image: null },
+      { caption: "Photo 2", image: null },
+    ];
+
+    const { container } = render(<GalleryWithLightbox items={noImageItems} />);
+    expect(container.firstChild).toBeNull();
+  });
 });

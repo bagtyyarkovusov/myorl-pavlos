@@ -737,13 +737,18 @@ describe("GalleryPage", () => {
       sections: [
         {
           __component: "sections.gallery",
-          items: [{ caption: "Photo 1", image: null }],
+          items: [
+            {
+              caption: "Photo 1",
+              image: { url: "/img/1.jpg", alternativeText: "Pic 1", width: 800, height: 600 },
+            },
+          ],
         },
       ],
     };
 
     render(<GalleryPage page={galleryPage} />);
-    expect(screen.getByText("Photo 1")).toBeDefined();
+    expect(screen.getByRole("button", { name: "Pic 1" })).toBeDefined();
   });
 
   it("renders multiple gallery items through SectionRenderer", () => {
@@ -757,16 +762,22 @@ describe("GalleryPage", () => {
           __component: "sections.gallery",
           heading: "Our Work",
           items: [
-            { caption: "Photo A", image: null },
-            { caption: "Photo B", image: null },
+            {
+              caption: "Photo A",
+              image: { url: "/img/a.jpg", alternativeText: "Image A", width: 800, height: 600 },
+            },
+            {
+              caption: "Photo B",
+              image: { url: "/img/b.jpg", alternativeText: "Image B", width: 800, height: 600 },
+            },
           ],
         },
       ],
     };
 
     render(<GalleryPage page={galleryPage} />);
-    expect(screen.getByText("Photo A")).toBeDefined();
-    expect(screen.getByText("Photo B")).toBeDefined();
+    expect(screen.getByRole("button", { name: "Image A" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Image B" })).toBeDefined();
     expect(screen.getByText("Our Work")).toBeDefined();
   });
 
@@ -792,6 +803,77 @@ describe("GalleryPage", () => {
     const { container } = render(<GalleryPage page={galleryPage} />);
     const clickable = container.querySelector("button[data-gallery-trigger]");
     expect(clickable).toBeTruthy();
+  });
+
+  it("skips gallery sections that have no items with images", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Clinic Gallery",
+      sections: [
+        {
+          __component: "sections.gallery",
+          heading: "Empty Gallery",
+          items: [{ caption: "No Image", image: null }],
+        },
+      ],
+    };
+
+    const { container } = render(<GalleryPage page={galleryPage} />);
+    expect(screen.queryByText("Empty Gallery")).toBeNull();
+    expect(container.querySelector("[data-gallery-grid]")).toBeNull();
+  });
+
+  it("renders non-gallery sections even when gallery sections are empty", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Clinic Gallery",
+      content: "<p>Clinic intro text</p>",
+      sections: [
+        {
+          __component: "sections.gallery",
+          heading: "Empty Gallery",
+          items: [],
+        },
+      ],
+    };
+
+    render(<GalleryPage page={galleryPage} />);
+    expect(screen.getByText("Clinic intro text")).toBeDefined();
+  });
+
+  it("renders the official site button when externalUrl is set", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Hospital Gallery",
+      externalUrl: "https://www.mediterraneohospital.gr",
+      sections: [],
+    };
+
+    render(<GalleryPage page={galleryPage} />);
+    expect(screen.getByRole("link", { name: "Επίσημος ιστότοπος" })).toHaveAttribute(
+      "href",
+      "https://www.mediterraneohospital.gr",
+    );
+  });
+
+  it("does not render the official site button when externalUrl is absent", () => {
+    const galleryPage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "gallery",
+      layoutVariant: "clinic-gallery",
+      title: "Hospital Gallery",
+      externalUrl: null,
+      sections: [],
+    };
+
+    render(<GalleryPage page={galleryPage} />);
+    expect(screen.queryByRole("link", { name: "Επίσημος ιστότοπος" })).toBeNull();
   });
 });
 

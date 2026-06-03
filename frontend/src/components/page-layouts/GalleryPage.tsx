@@ -15,14 +15,19 @@ export function GalleryPage({ page }: PageLayoutProps) {
     <PageSection rhythm="page">
       <PageHeader page={page} />
       <CmsHtml html={page.content} />
-      {page.sections.map((section, index) => (
-        <SectionRenderer
-          key={`${section.__component}-${index}`}
-          section={section}
-          index={index}
-          galleryMode="lightbox"
-        />
-      ))}
+      {page.sections
+        .filter((section) => {
+          if (section.__component !== "sections.gallery") return true;
+          return section.items.some((item) => item.image?.url);
+        })
+        .map((section, index) => (
+          <SectionRenderer
+            key={`${section.__component}-${index}`}
+            section={section}
+            index={index}
+            galleryMode="lightbox"
+          />
+        ))}
       {officialSite ? (
         <div className={styles["official-site"]}>
           <ButtonLink href={officialSite} variant="secondary">

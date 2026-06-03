@@ -1,5 +1,12 @@
 # MYORL Client Requirements Gap
 
+> **Note (2026-06-03):** This report has been superseded by the canonical
+> [verification matrix](./myorl-client-requirements-verification-matrix.md)
+> built under [#187](../../../issues/187). The matrix adds route-by-route
+> mapping, workstream ownership, verification steps, and a repeatable
+> verification checklist. Use the matrix, not this document, as the
+> acceptance reference for child implementation issues.
+
 Source PDF: `/Users/bagtyyar/Downloads/MYORL.pdf`
 
 Extraction date: 2026-06-03

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { formatPreferredDate, parseContactFormPayload } from "@/lib/contact/contact-form-schema";
+import {
+  formatPreferredDate,
+  getAppointmentSlotsForDate,
+  isValidAppointmentSlot,
+  parseContactFormPayload,
+} from "@/lib/contact/contact-form-schema";
 import { cmsContentDuplicatesExcerpt } from "@/lib/i18n/appointment";
 
 describe("parseContactFormPayload", () => {
@@ -53,7 +58,7 @@ describe("parseContactFormPayload", () => {
     }
   });
 
-  it("accepts Wednesday and Saturday appointment slots like the old MODX picker", () => {
+  it("rejects Wednesday and Saturday appointment slots per client schedule", () => {
     const wednesday = parseContactFormPayload({
       locale: "ru",
       name: "Maria",
@@ -62,7 +67,7 @@ describe("parseContactFormPayload", () => {
       message: "",
       formType: "appointment",
       preferredDate: "2026-06-10",
-      preferredSlot: "23:30",
+      preferredSlot: "10:00",
       company: "",
     });
     const saturday = parseContactFormPayload({
@@ -73,12 +78,12 @@ describe("parseContactFormPayload", () => {
       message: "",
       formType: "appointment",
       preferredDate: "2026-06-13",
-      preferredSlot: "00:00",
+      preferredSlot: "10:00",
       company: "",
     });
 
-    expect(wednesday.ok).toBe(true);
-    expect(saturday.ok).toBe(true);
+    expect(wednesday).toEqual({ ok: false, error: "invalid_payload" });
+    expect(saturday).toEqual({ ok: false, error: "invalid_payload" });
   });
 
   it("accepts appointment payloads with empty message", () => {
@@ -111,6 +116,107 @@ describe("parseContactFormPayload", () => {
     });
 
     expect(result).toEqual({ ok: false, error: "invalid_payload" });
+  });
+});
+
+describe("appointment schedule", () => {
+  it("exposes Monday slots from 09:00 to 14:00 in 30-minute increments", () => {
+    const slots = getAppointmentSlotsForDate("2026-06-15"); // Monday
+    expect(slots).toEqual([
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "12:00",
+      "12:30",
+      "13:00",
+      "13:30",
+    ]);
+    expect(isValidAppointmentSlot("2026-06-15", "09:00")).toBe(true);
+    expect(isValidAppointmentSlot("2026-06-15", "13:30")).toBe(true);
+    expect(isValidAppointmentSlot("2026-06-15", "08:30")).toBe(false);
+    expect(isValidAppointmentSlot("2026-06-15", "14:00")).toBe(false);
+  });
+
+  it("exposes Friday slots from 09:00 to 14:00 in 30-minute increments", () => {
+    const slots = getAppointmentSlotsForDate("2026-06-19"); // Friday
+    expect(slots).toEqual([
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "12:00",
+      "12:30",
+      "13:00",
+      "13:30",
+    ]);
+    expect(isValidAppointmentSlot("2026-06-19", "09:00")).toBe(true);
+    expect(isValidAppointmentSlot("2026-06-19", "13:30")).toBe(true);
+    expect(isValidAppointmentSlot("2026-06-19", "08:30")).toBe(false);
+    expect(isValidAppointmentSlot("2026-06-19", "14:00")).toBe(false);
+  });
+
+  it("exposes Tuesday slots from 14:00 to 20:00 in 30-minute increments", () => {
+    const slots = getAppointmentSlotsForDate("2026-06-16"); // Tuesday
+    expect(slots).toEqual([
+      "14:00",
+      "14:30",
+      "15:00",
+      "15:30",
+      "16:00",
+      "16:30",
+      "17:00",
+      "17:30",
+      "18:00",
+      "18:30",
+      "19:00",
+      "19:30",
+    ]);
+    expect(isValidAppointmentSlot("2026-06-16", "14:00")).toBe(true);
+    expect(isValidAppointmentSlot("2026-06-16", "19:30")).toBe(true);
+    expect(isValidAppointmentSlot("2026-06-16", "13:30")).toBe(false);
+    expect(isValidAppointmentSlot("2026-06-16", "20:00")).toBe(false);
+  });
+
+  it("exposes Thursday slots from 14:00 to 20:00 in 30-minute increments", () => {
+    const slots = getAppointmentSlotsForDate("2026-06-18"); // Thursday
+    expect(slots).toEqual([
+      "14:00",
+      "14:30",
+      "15:00",
+      "15:30",
+      "16:00",
+      "16:30",
+      "17:00",
+      "17:30",
+      "18:00",
+      "18:30",
+      "19:00",
+      "19:30",
+    ]);
+    expect(isValidAppointmentSlot("2026-06-18", "14:00")).toBe(true);
+    expect(isValidAppointmentSlot("2026-06-18", "19:30")).toBe(true);
+    expect(isValidAppointmentSlot("2026-06-18", "13:30")).toBe(false);
+    expect(isValidAppointmentSlot("2026-06-18", "20:00")).toBe(false);
+  });
+
+  it("disables Wednesday", () => {
+    expect(getAppointmentSlotsForDate("2026-06-17")).toEqual([]); // Wednesday
+    expect(isValidAppointmentSlot("2026-06-17", "10:00")).toBe(false);
+  });
+
+  it("disables Saturday", () => {
+    expect(getAppointmentSlotsForDate("2026-06-20")).toEqual([]); // Saturday
+    expect(isValidAppointmentSlot("2026-06-20", "10:00")).toBe(false);
+  });
+
+  it("disables Sunday", () => {
+    expect(getAppointmentSlotsForDate("2026-06-21")).toEqual([]); // Sunday
+    expect(isValidAppointmentSlot("2026-06-21", "10:00")).toBe(false);
   });
 });
 

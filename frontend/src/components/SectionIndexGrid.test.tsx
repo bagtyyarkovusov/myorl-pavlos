@@ -157,7 +157,7 @@ describe("SectionIndexGrid", () => {
     expect(link.querySelector('[class*="index-row__arrow"]')).toBeNull();
   });
 
-  it("uses seo fallbacks and external link attributes for clinic rows", () => {
+  it("links clinic rows to the internal clinic page with seo fallbacks", () => {
     const children = [
       makeChild("mediterraneo", "Mediterraneo", {
         externalUrl: "http://www.mediterraneohospital.gr/",
@@ -177,10 +177,11 @@ describe("SectionIndexGrid", () => {
 
     render(<SectionIndexGrid items={children} locale="ru" variant="clinic-index" />);
 
+    // The card now opens the internal clinic page (gallery + details), not the
+    // external hospital site — that link lives on the clinic page itself.
     const link = screen.getByRole("link", { name: /Mediterraneo/i });
-    expect(link).toHaveAttribute("href", "http://www.mediterraneohospital.gr/");
-    expect(link).toHaveAttribute("target", "_blank");
-    expect(link).toHaveAttribute("rel", "noreferrer");
+    expect(link).toHaveAttribute("href", "/ru/mediterraneo");
+    expect(link).not.toHaveAttribute("target", "_blank");
     expect(screen.getByText("Private hospital partner in Athens")).toBeDefined();
     expect(link.querySelector('[data-media-variant="clinic-grid"] img')).toBeTruthy();
   });

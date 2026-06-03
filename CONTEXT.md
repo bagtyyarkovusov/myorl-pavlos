@@ -50,16 +50,60 @@ The editor-managed `relatedPages` relation on a **Page** that defines its **Rela
 _Avoid_: linked-resources section (for article cross-links), popular articles list
 
 **Appointment Page**:
-The locale-specific booking destination (`/el/rantevou`, `/ru/zapis`) rendered with `layoutVariant: appointment-form`. Patients submit an appointment request via the shared contact form (appointment-focused copy); phone and clinic hours are offered as a fast path. Distinct from the **Contact Page**, which handles general inquiries, clinic cards, and maps.
+The locale-specific booking destination (`/el/rantevou`, `/ru/zapis`) rendered with `layoutVariant: appointment-form`. Patients submit a lightweight booking request with minimal contact details plus preferred date and **Appointment Slot**; phone and clinic hours are offered as a fast path. Distinct from the **Contact Page**, which handles general inquiries, clinic cards, and maps.
 _Avoid_: contact page (when the intent is booking), booking widget, scheduler embed
+
+**Appointment Slot**:
+A selectable 30-minute appointment time in the current date → hour → minute picker flow; available slots follow the client requirement: Monday and Friday `09:00-14:00`, Tuesday and Thursday `14:00-20:00`, with other days disabled unless a later client correction changes the clinic policy. A selected slot is a requested time, not a confirmed booking, until clinic staff confirm it.
+_Avoid_: calendar reservation, confirmed appointment, free-text time preference
 
 **Contact Page**:
 The general reach-us page (`pageType: contact`) with clinic details, map, and message form for non-booking inquiries.
 _Avoid_: appointment page (when the intent is booking)
 
+**Clinic Index**:
+The locale-specific hospital/clinic directory at `/el/klinikes` and `/ru/klinikes`. It lists cooperating clinics and should send patients to internal **Clinic Gallery Pages** first, not directly away to external hospital websites.
+_Avoid_: external hospital link list, contact page clinic list
+
+**Clinic Gallery Page**:
+A clinic detail page under the **Clinic Index** (`layoutVariant: clinic-gallery`) that preserves the legacy MODX clinic content and photo gallery. The gallery photos come from the legacy `migxGallery` set and are represented in Strapi as a `sections.gallery` block.
+_Avoid_: generic gallery page, official hospital website
+
+**Office Page**:
+The practice-office page (`/el/iatreio`, `/ru/iatreio`) that presents doctor identity, specialization, office address/contact actions, map access, and office imagery in the modernized structure of the legacy page.
+_Avoid_: generic standard page, clinic index
+
+**Biography Page**:
+The doctor biography page (`/el/viografiko`, `/ru/viografiko`) that preserves the legacy CV/profile content and table-like structure while presenting it in a compact, readable, modernized layout.
+_Avoid_: generic service article, oversized journal article, marketing bio page
+
+**Typography Token System**:
+The sitewide type scale, font-role tokens, line-height rules, prose widths, table text rules, and responsive text behavior used across public pages. It is a design-system surface, not a one-off CSS pass.
+_Avoid_: ad hoc font-size fixes, page-specific clamp tuning, browser-font-size-fragile typography
+
+**Official Clinic Website**:
+The external website URL for a cooperating clinic or hospital. It is supporting reference information on a **Clinic Gallery Page**, not the primary destination for **Clinic Index** cards.
+_Avoid_: clinic page URL, gallery link, internal clinic page
+
 **Human Site Map**:
 The locale-specific HTML topic directory at `/el/sitemap` and `/ru/sitemap` — a nested link tree for patients browsing all main sections and articles. Frontend-native (`layoutVariant: sitemap`); rendered from the locale page tree (`directoryNavigation`), not CMS body content. Excludes system layouts (`not-found`, `search-results`, `sitemap`, `appointment-form`). Fully expanded nested lists (legacy parity), not collapsible sections.
 _Avoid_: XML sitemap, footer nav, search results
+
+**Home Hero Section**:
+The editor-managed lead section on the locale **Canonical Home**, containing the patient-facing opening message, primary call to action, and hero media.
+_Avoid_: homepage single type, hard-coded hero copy, page title as hero content
+
+**Home Quick Access Cards**:
+The six icon navigation cards on the **Canonical Home** that summarize key site areas from their Strapi page title/nav label and excerpt.
+_Avoid_: promo slider, hard-coded card descriptions, duplicate home-only summaries
+
+**Home Testimonials Teaser**:
+The patient-review preview on the **Canonical Home**, with editor-owned heading/intro and externally sourced review content.
+_Avoid_: hard-coded testimonials headline, review content section, manual review cards
+
+**Home Notice Section**:
+A short editor-owned homepage notice used for legacy clinic positioning or patient guidance that should stand apart from the hero, cards, and testimonials.
+_Avoid_: alert component, generic rich-text filler, hidden hard-coded homepage paragraph
 
 **Section Sub-page**:
 A published page with a valid `parentPage` that stays `hideFromMenu: true` — reachable via its section hub (tab bar, section index, office page) but omitted from the header mega-menu. Examples: office galleries under **Ιατρείο**, septum articles under the septum hub.
@@ -85,6 +129,10 @@ _Avoid_: homepage `sections.social-links`, per-locale social lists
 Sitewide chrome fields in **Global Settings**: localized address, hours, public email, and two callback phone pairs (landline + mobile). Distinct from per-clinic details on the **Contact Page** (`sections.contact` / `items.clinic`). Canonical numbers from legacy [myorl.gr](https://myorl.gr/): landline `211-01 94 618` (`+302110194618`), mobile `6945 77 30 77` (`+306945773077`). Public email: `pavlos.tsolaridis@gmail.com`. Do not use redesign placeholder `+30 210 6427 000`.
 _Avoid_: contact page fallback clinics, Resend delivery config
 
+**Footer Tagline**:
+The localized sitewide practice description shown beside the footer brand mark.
+_Avoid_: footer translation string, home tagline, copyright text
+
 **Contact Form Delivery**:
 Server-side email routing for `/api/contact` submissions via Resend (`CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `RESEND_API_KEY`). Independent of the public **Primary Contact** display email; uses a test Resend sender until production mail is configured.
 _Avoid_: primary contact email, Global Settings
@@ -94,6 +142,18 @@ _Avoid_: primary contact email, Global Settings
 **Loading Chrome**:
 Brief non-content UI shown while navigation or async work completes (skeleton bars, dimmed result lists, scroll-triggered section fade-in). myORL policy: CMS **Pages** ship real HTML on first paint via ISR; no route-level skeletons or section entrance animation. Loading feedback is limited to client search (header overlay stale-while-revalidate) and truly dynamic routes (`search-results`). Empty media slots use **Stripe Placeholder**, not loading chrome.
 _Avoid_: skeleton, shimmer, placeholder page, loading.tsx on CMS routes
+
+**Legacy Site Baseline**:
+The previous public myorl.gr site used to classify client-reported differences in content, URLs, contact facts, doctor identity, and appointment workflow, but not as a pixel-perfect visual design specification.
+_Avoid_: old design spec, MODX clone, pixel parity
+
+**Patient-facing Copy**:
+Visible clinic, doctor, medical, service, and appointment text that a non-technical editor expects to maintain in Strapi.
+_Avoid_: hard-coded content, frontend translation (when the text is clinic/medical content)
+
+**UI Chrome Copy**:
+Small interface labels, controls, affordances, and system messages that belong to the frontend translation files rather than Strapi editorial content.
+_Avoid_: article content, clinic facts, service descriptions
 
 ## Search
 
@@ -140,6 +200,8 @@ _Avoid_: apex home, root home, language picker, bare-domain canonical
 - **Related Topics** use a hybrid curation model: auto-suggest from shared tags and parent section, with editors overriding via **Related Pages** when needed.
 - **Related Topics** render in the article sidebar on desktop and in a mobile-friendly panel when the sidebar is hidden — not as a sitewide bottom carousel.
 - **Related Topics** appear on long-form medical article layouts: `encyclopedia-article`, `specialized-article`, and `service-article` — not on FAQ, accordion, contact, or directory index pages.
+- Reader-facing publication/update/review dates are not shown on pages, though invisible structured-data dates may remain when useful for search engines. Article **Sources** remain editor-managed and should be preserved or restored from the **Legacy Site Baseline** when they improve medical content quality, trust, or SEO.
+- Missing localized **Sources** may be backfilled from the paired locale article when both pages cover the same medical topic and the target locale has no source list of its own.
 - When **Related Pages** is empty, **Related Topics** auto-suggest from shared tags first, then fill remaining slots from sibling pages under the same parent section, up to six links. Editor-curated **Related Pages** replace auto-suggest entirely when present.
 - On article pages, **`sections.linked-resources`** is retired after a one-time migration into **Related Pages**; the section remains for home editorial grids only.
 - Auto-suggested **Related Topics** exclude the current page, parent hub/index pages, menu-hidden pages, and non-article layout variants — only other long-form medical articles qualify.
@@ -147,15 +209,45 @@ _Avoid_: apex home, root home, language picker, bare-domain canonical
 - Encyclopedia-style prose stored entirely in **`page.content`** with **`service-article`** layout and **empty** **`pageSections`** is an editorial mismatch when the cinematic service shell is unwanted: **`encyclopedia-article`** is the canonical long-form article layout — HTML normalization and optional layout normalization run through [`tools/repair_service_article_blob_pages.py`](tools/repair_service_article_blob_pages.py) (dry-run by default).
 - **Human Site Map** and **XML Sitemap** serve different audiences: patients browse the HTML tree; search engines consume `/sitemap.xml`. They must not be conflated on the human page.
 - The **Human Site Map** uses `directoryNavigation` (includes **Section Sub-pages** nested under their parent) and excludes system layouts. Header nav (`navigation`) remains menu-visible pages only.
+- **Legal/System Pages** such as privacy policy are text-first utility pages and should not inherit random medical hero/gallery imagery. They render without decorative medical images unless an editor explicitly attaches page-specific legal imagery.
+- **Section Index** pages use curated topic tags as a modernized replacement for legacy category browsing. Keep the visible tag set intentionally small and useful, roughly 5-10 patient-facing topics per index over time, rather than exposing every backend tag in the UI.
+- **Section Index** and article media must match the **Legacy Site Baseline** on production `myorl.gr` when the legacy page has a clear media precedent. Media that does not match the legacy page is removed automatically from the new CMS/page surface unless a later client correction explicitly approves it. Frontend layouts should also cap image dimensions so a bad media choice cannot dominate the page.
+- The **Typography Token System** should be redesigned around fixed `rem`-based role tokens, not scattered component font sizes or viewport-driven `clamp()` text. It should make article pages and dense content pages more compact than the current oversized treatment while preserving minimum readable body text, comfortable `65-75ch` prose line lengths, and bilingual Greek/Russian stability.
+- The **Typography Token System** must include article prose, headings, labels, navigation, cards, tables, CMS HTML, and responsive behavior. Acceptance checks should verify that Chrome/default browser font-size differences, zoom to 200%, and long Russian/Greek strings do not break key layouts.
+- `Roboto Condensed` remains the canonical public UI typeface. The typography redesign changes scale, weights, row/table rhythm, line-height, prose width, and responsive rules around that family rather than introducing a new font pairing.
+- A **Home Hero Section** belongs to the locale `index` **Page** as structured section content; seed it from existing home page title/excerpt/media when migrating, but do not use `page.title` or `page.excerpt` as the long-term hero content source.
+- **Home Hero Section** and other home editorial backfills should prefer the **Legacy Site Baseline** / MODX source data as the seed source; current Strapi page title/excerpt/media and frontend copy are fallbacks only when the legacy source has no suitable value.
+- For the **Canonical Home**, the **Legacy Site Baseline** is the content specification, not a visual layout specification: preserve legacy homepage messages, item choices, and editorial facts while fitting them into the new homepage design system.
+- Legacy home `pagetitle` values such as `Menu` / `Меню` are navigation labels, not patient-facing hero headings. Legacy SEO-style `longtitle` / `metaTitle` may seed SEO fields or be shortened into patient-readable **Home Hero Section** copy rather than rendered verbatim.
+- Homepage backfill should scrape live legacy `myorl.gr` when available and prefer visible legacy home copy for patient-facing fields. For RU, the live legacy identity string `Pavlos Tsolaridis, M.D. - ЛОР-врач` is a valid hero/kicker candidate, while the full `<title>` remains SEO metadata.
+- When homepage seed sources conflict, precedence is: explicit current client corrections first, **Legacy Site Baseline** second, current Strapi content third, and current hard-coded frontend copy last.
+- Homepage editorial backfill is delivered through a scripted dry-run/apply workflow with an auditable plan, not through one-off manual Strapi edits.
+- Homepage backfill must be plan-driven: fill missing safe fields by default, report non-empty Strapi-vs-legacy conflicts, and overwrite existing Strapi content only when explicitly approved.
+- **Home Quick Access Cards** derive their title and description from the target Strapi page's navigation label/title and excerpt; missing excerpts should remain visibly missing rather than being replaced by frontend fallback marketing copy.
+- **Home Resource Groups** are editor-managed homepage groups for legacy operation/service lists, with each group owning its heading, optional intro, item list, and view-all target. They replace flat home-only `sections.linked-resources` when the legacy baseline distinguishes groups such as **Επεμβάσεις / ЛОР Операции** and **Υπηρεσίες / Услуги**.
+- **Home Resource Groups** are assigned from live legacy homepage headings when available: items under **Επεμβάσεις / ЛОР Операции** become the operations group, and items under **Υπηρεσίες / Услуги** become the services group. MODX-only candidates not visible on live legacy are review items, not silent inserts.
+- The **Home Testimonials Teaser** heading and intro are **Patient-facing Copy** seeded into Strapi; controls, rating labels, review-count templates, and expand/collapse labels remain **UI Chrome Copy**.
+- Patient-facing headings and intros on the **Canonical Home** are **Patient-facing Copy**: seed and edit them in Strapi section fields, and do not replace missing values with hard-coded frontend marketing copy.
+- **Page Sections** stay as one shared DynamicZone for all page types; layout-specific correctness is enforced by validation rules rather than separate per-layout section fields.
+- Home `pageSections` allow-list: **Home Hero Section**, promo slider, advantages, linked resources during migration, **Home Resource Groups**, video, **Home Testimonials Teaser**, and **Home Notice Section**. Contact details, social links, FAQ, accordion, tabs, and gallery sections are not part of the current **Canonical Home** composition.
 - **Navigation Audit** canonical fixes: `viografiko` — unhide at Menu hub; `plirofories-gia-asfalismenous-edoeap-kai-trapeza-tis-ellados` — reparent under `timokatalogos` and unhide; `botulinotherapia-ru` — unhide under `plastika-litsa`; `ru-page` — unpublish and delete. **Section Sub-pages** (office galleries, septum cluster) stay `hideFromMenu: true`.
 - Sitewide **Записаться / Κλείσε ραντεβού** CTAs resolve to the locale **Appointment Page** via `findAppointmentHref()`; they do not route to the **Contact Page**.
-- The **Appointment Page** reuses the contact API (`/api/contact`) and form component with appointment-specific copy; clinic staff confirm bookings by callback.
+- The **Appointment Page** sends booking requests through the contact workflow, but the patient-facing form is intentionally smaller than the general contact form and includes an **Appointment Slot** selector; clinic staff confirm bookings by callback.
+- The **Clinic Index** links to internal **Clinic Gallery Pages** so patients can read the clinic details and open the migrated gallery before leaving the site. **Official Clinic Website** URLs may be shown as secondary links, but must not replace the internal gallery destination.
+- **Clinic Gallery Pages** preserve legacy MODX `migxGallery` photos as editor-managed Strapi `sections.gallery` items for both locales where the clinic page exists.
+- **Clinic Index**, **Clinic Gallery Pages**, and the **Office Page** are parity-sensitive visual/content surfaces: they should use modernized legacy structure for image sizing, address/contact placement, gallery density, and map access rather than generic article/page layouts.
+- The **Biography Page** is a parity-sensitive readability surface: preserve the legacy biography/CV structure, but redesign its table and typography so the content is scannable, compact, and readable on desktop and mobile.
 - **Global Settings** owns sitewide chrome only; multi-clinic addresses, transit directions, and coordinates stay on the **Contact Page** via `sections.contact`, not in Global.
 - **Primary Contact** in **Global Settings** feeds header, footer, appointment page, and home visit map; it does not replace per-clinic rows on the **Contact Page**.
 - **Primary Contact** stores two phone pairs (landline + mobile) matching legacy [myorl.gr](https://myorl.gr/); `+30 210 6427 000` is not canonical.
-- Localized **Primary Contact** `hours` renders in header, footer, home visit map, and appointment page; editors manage one `hours` string per locale in **Global Settings**. Seed format: two lines (weekdays + Saturday), e.g. Greek `Δευ–Παρ · 09:00 – 21:00` / `Σάβ · 10:00 – 14:00`.
+- **Doctor Identity** in **Global Settings** feeds the header brand area; desktop presentation should keep the doctor name on one line and keep the primary navigation visually separate beneath/beside it without wrapping into an unreadable stack.
+- Localized **Primary Contact** `hours` renders in the footer, home visit map, appointment page, and other contact surfaces that need hours; it does not render in the desktop utility bar unless that chrome is explicitly reintroduced. Editors manage one `hours` string per locale in **Global Settings**. Seed format: two lines (weekdays + Saturday), e.g. Greek `Δευ–Παρ · 09:00 – 21:00` / `Σάβ · 10:00 – 14:00`.
+- The **Footer Tagline** is localized **Patient-facing Copy** in **Global Settings**; it is edited once per locale and reused by the sitewide footer.
+- Home visit/map labels such as address, hours, direct contact, and show-map are **UI Chrome Copy**; the underlying address, hours, phones, email, and map destination are **Primary Contact** data in **Global Settings**.
+- Public map surfaces use a dimmed, user-activated map facade before any Google map interaction. Activating the facade opens Google Maps externally for the address instead of loading an embedded iframe in place, unless a future requirement explicitly needs an in-page map.
 - Public **Primary Contact** email (`pavlos.tsolaridis@gmail.com`) is editor-managed in **Global Settings**; **Contact Form Delivery** stays in server env and is not changed until production Resend is configured for the clinic mailbox.
 - **Social Links** on **Global Settings** are non-localized; the same list renders on Greek and Russian pages. Canonical set: Facebook `orlathens`, YouTube, Instagram, Google Maps; no Google Plus or `orl1.gr`. Footer and header read Global only; homepage `sections.social-links` is not used for chrome.
+- The legacy `sections.social-links` page section is not a valid editorial surface after **Social Links** moved to **Global Settings**; audit existing page data, migrate/discard duplicates, then remove it from the shared **Page Sections** DynamicZone.
 - Hard-coded **Primary Contact** fallbacks in frontend code remain until **Global Settings** is populated and verified in staging; then they are removed so Strapi is the sole source of truth.
 - Hard-coded **Contact Page** fallbacks (`contact-section-fallbacks.ts`) follow the same phased removal: keep until contact pages are verified from CMS, then delete.
 - **Global Settings** canonical Primary Contact and **Social Links** are seeded idempotently via `backend/src/bootstrap/seed-global.ts` (version marker); editors override in Strapi afterward.
@@ -166,6 +258,12 @@ _Avoid_: apex home, root home, language picker, bare-domain canonical
 - The **Search Synonym Dictionary** is part of the **Search Index** lifecycle: synonyms + stop words push as part of every full reindex via `tools/seed_search_index.py sync-synonyms`.
 - The **Search Query Log** stores no personally identifying data and is automatically pruned at 90 days; the privacy contract is encoded in code (table schema) and disclosed to users in the privacy notice.
 - Section Sub-pages (`hideFromMenu: true`) are present in the **Search Index** even though they are hidden from the header mega-menu — they are real content reachable via section hubs. System layouts (`not-found`, `search-results`, `sitemap`, `appointment-form`) are excluded.
+- Client-reported differences against the **Legacy Site Baseline** are treated as content/workflow parity issues when they involve missing pages, URLs, contact facts, doctor identity, appointment behavior, or editor visibility; visual differences are handled as design review items unless they break readability, accessibility, or responsiveness.
+- For a **Client Requirements PRD**, the **Legacy Site Baseline** is the primary source of truth for content parity; local MODX exports, local Strapi snapshots, and live legacy scrape evidence are acceptable evidence sources for proving what the baseline contained.
+- A **Client Requirements PRD** resolves client-reported parity gaps as content, CMS workflow, routing, and behavior requirements; it does not require legacy visual matching except where layout blocks readability, accessibility, or task completion.
+- **Content Parity** includes page existence, URL availability, patient-facing text and media, navigation visibility, and CMS editability for patient-facing copy.
+- The client-facing remediation PDF is written in Russian and explains outcomes in client-readable language rather than implementation jargon.
+- **Patient-facing Copy** should be CMS-managed when Strapi already has an appropriate field or section shape; **UI Chrome Copy** can remain in frontend i18n files.
 
 ---
 

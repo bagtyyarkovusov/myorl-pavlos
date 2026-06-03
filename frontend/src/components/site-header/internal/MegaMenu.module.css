@@ -132,6 +132,17 @@
   gap: 0 32px;
 }
 
+/* Long sections (e.g. Болезни) show every topic in a denser three-column grid
+   that scrolls within the panel rather than capping the list. */
+.nav-panel__links[data-dense="true"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 24px;
+  max-height: min(64vh, 560px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
 .nav-panel__links span {
   display: block;
 }

@@ -9,10 +9,12 @@ export type SectionSchemaType =
 
 export type SectionHomeAdapter =
   | "default"
+  | "hero"
   | "promo-carousel"
   | "advantages-band"
   | "video-theater"
-  | "contact-panel"
+  | "testimonials-teaser"
+  | "notice"
   | "hidden";
 
 export type SectionDefinition = {
@@ -28,6 +30,12 @@ export const SECTION_DEFINITIONS = {
     gridColumns: 2,
     schemas: [],
     homeAdapter: "promo-carousel",
+  },
+  "sections.home-hero": {
+    component: "sections.home-hero",
+    gridColumns: 1,
+    schemas: [],
+    homeAdapter: "hero",
   },
   "sections.linked-resources": {
     component: "sections.linked-resources",
@@ -52,6 +60,18 @@ export const SECTION_DEFINITIONS = {
     gridColumns: 3,
     schemas: [],
     homeAdapter: "advantages-band",
+  },
+  "sections.home-testimonials-teaser": {
+    component: "sections.home-testimonials-teaser",
+    gridColumns: 1,
+    schemas: [],
+    homeAdapter: "testimonials-teaser",
+  },
+  "sections.home-notice": {
+    component: "sections.home-notice",
+    gridColumns: 1,
+    schemas: [],
+    homeAdapter: "notice",
   },
   "sections.accordion": {
     component: "sections.accordion",
@@ -81,7 +101,7 @@ export const SECTION_DEFINITIONS = {
     component: "sections.contact",
     gridColumns: 1,
     schemas: ["ContactPoint", "MedicalBusiness"],
-    homeAdapter: "contact-panel",
+    homeAdapter: "hidden",
   },
 } as const satisfies Record<SectionComponent, SectionDefinition>;
 

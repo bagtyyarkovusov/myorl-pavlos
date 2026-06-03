@@ -319,10 +319,10 @@ describe("MegaMenu", () => {
     expect(screen.queryByText("0 topics")).toBeNull();
   });
 
-  it("shows an overflow hint when more topics exist than the dropdown displays", () => {
-    const overflowChildren = Array.from({ length: 15 }, (_, index) => ({
+  it("renders every child topic without capping the list", () => {
+    const manyChildren = Array.from({ length: 20 }, (_, index) => ({
       ...mockItem.children[0]!,
-      documentId: `overflow-${index}`,
+      documentId: `topic-${index}`,
       slug: `topic-${index}`,
       navLabel: `Topic ${index + 1}`,
       href: `/el/services/topic-${index}`,
@@ -330,7 +330,7 @@ describe("MegaMenu", () => {
 
     render(
       <MegaMenu
-        item={{ ...mockItem, children: overflowChildren }}
+        item={{ ...mockItem, children: manyChildren }}
         featureBlurb={mockItem.excerpt!}
         overviewLinkLabel={overviewLinkLabel}
         sectionOverviewMoreHint={sectionOverviewMoreHint}
@@ -338,9 +338,14 @@ describe("MegaMenu", () => {
       />,
     );
 
-    expect(screen.getByText("3 more inside")).toBeDefined();
-    expect(screen.getByText("Topic 12")).toBeDefined();
-    expect(screen.queryByText("Topic 13")).toBeNull();
+    // Old behaviour capped at 12 and showed a "+N more" hint; now every topic renders.
+    expect(screen.getByText("Topic 1")).toBeDefined();
+    expect(screen.getByText("Topic 13")).toBeDefined();
+    expect(screen.getByText("Topic 20")).toBeDefined();
+    expect(screen.queryByText(/more inside/i)).toBeNull();
+
+    const linksGrid = document.querySelector('[class*="nav-panel__links"]') as HTMLElement;
+    expect(linksGrid.getAttribute("data-dense")).toBe("true");
   });
 
   it("does not show an overflow hint when all topics fit in the dropdown", () => {

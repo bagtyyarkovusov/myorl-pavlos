@@ -104,6 +104,7 @@ const MOCK_GLOBAL_SETTINGS: GlobalSettingsDTO = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  footerTagline: null,
   disclaimerText: null,
   socialLinks: [],
 };

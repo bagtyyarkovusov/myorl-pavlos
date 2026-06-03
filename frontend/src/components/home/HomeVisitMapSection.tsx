@@ -1,3 +1,4 @@
+import { LiteMap } from "@/components/LiteMap";
 import { PrimaryContactPhones } from "@/components/PrimaryContactPhones";
 import {
   mapEmbedSrcFromAddress,
@@ -62,13 +63,11 @@ export function HomeVisitMapSection({ locale, settings }: HomeVisitMapSectionPro
 
         {mapSrc ? (
           <div className={styles["map-wrap"]}>
-            <iframe
-              className={styles["map"]}
-              title={t.visitMapMapTitle}
+            <LiteMap
               src={mapSrc}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
+              title={t.visitMapMapTitle}
+              loadLabel={t.visitMapShowLabel}
+              hint={addressBlock}
             />
           </div>
         ) : null}

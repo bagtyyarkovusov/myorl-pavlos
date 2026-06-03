@@ -17,9 +17,12 @@
   --color-trust-ink: #17406f;
   --color-teal: #0e7c7b;
   --color-teal-soft: #e0f1f1;
-  --font-display: var(--font-instrument-serif), Georgia, serif;
-  --font-sans: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-display:
+    var(--font-roboto-condensed), "Roboto Condensed", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    var(--font-roboto-condensed), "Roboto Condensed", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    var(--font-roboto-condensed), "Roboto Condensed", ui-sans-serif, system-ui, sans-serif;
   --spacing-section-scanning: 48px;
   --spacing-section-focused: 64px;
   --spacing-section-theater: 96px;
@@ -221,15 +224,19 @@ main[data-hub-child="true"] .cms-html h3[id] {
 .cms-html dd,
 .cms-html dt,
 .cms-html figcaption,
-.cms-html h2,
-.cms-html h3,
-.cms-html h4,
-.cms-html h5,
-.cms-html h6,
 .cms-html th,
 .cms-html td {
   overflow-wrap: break-word;
   hyphens: auto;
+}
+
+.cms-html h2,
+.cms-html h3,
+.cms-html h4,
+.cms-html h5,
+.cms-html h6 {
+  overflow-wrap: break-word;
+  hyphens: manual;
 }
 
 .cms-html h2,
@@ -276,12 +283,12 @@ main[data-hub-child="true"] .cms-html h3[id] {
 
 .cms-html h2 {
   font-size: clamp(1.625rem, 3.2vw, 2.125rem);
-  letter-spacing: -0.015em;
+  letter-spacing: 0;
 }
 
 .cms-html h3 {
   font-size: clamp(1.25rem, 2vw, 1.5rem);
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .cms-html strong,

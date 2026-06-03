@@ -5,29 +5,23 @@ import { leafMetaLabel, sectionEntryCount } from "./leafMetaLabel";
 import { showsSectionOverviewLink } from "./sectionOverviewLink";
 import styles from "./MegaMenu.module.css";
 
-export const MEGA_MENU_VISIBLE_CHILD_LIMIT = 12;
+/** Above this many direct children, the link grid switches to a denser multi-column layout. */
+export const MEGA_MENU_DENSE_THRESHOLD = 16;
 
 type MegaMenuProps = {
   item: NavigationNodeDTO;
   featureBlurb: string;
   overviewLinkLabel: string;
-  sectionOverviewMoreHint: (hiddenCount: number) => string;
+  /** Retained for caller compatibility; the menu now shows every child, so no "+N more" hint renders. */
+  sectionOverviewMoreHint?: (hiddenCount: number) => string;
   topicsLabel: (count: number) => string;
 };
 
-export function MegaMenu({
-  item,
-  featureBlurb,
-  overviewLinkLabel,
-  sectionOverviewMoreHint,
-  topicsLabel,
-}: MegaMenuProps) {
+export function MegaMenu({ item, featureBlurb, overviewLinkLabel, topicsLabel }: MegaMenuProps) {
   const entryCount = sectionEntryCount(item);
   const entryLabel = entryCount > 0 ? topicsLabel(entryCount) : null;
   const showOverviewLink = showsSectionOverviewLink(item);
-  const visibleChildren = item.children.slice(0, MEGA_MENU_VISIBLE_CHILD_LIMIT);
-  const hiddenCount = Math.max(0, entryCount - visibleChildren.length);
-  const showMoreHint = showOverviewLink && hiddenCount > 0;
+  const isDense = item.children.length > MEGA_MENU_DENSE_THRESHOLD;
 
   return (
     <div className={styles["nav-panel__grid"]}>
@@ -50,16 +44,11 @@ export function MegaMenu({
                 <span className={styles["nav-panel__cta-count"]}>{entryLabel}</span>
               ) : null}
             </div>
-            {showMoreHint ? (
-              <p className={styles["nav-panel__cta-more"]}>
-                {sectionOverviewMoreHint(hiddenCount)}
-              </p>
-            ) : null}
           </div>
         ) : null}
       </div>
-      <div className={styles["nav-panel__links"]}>
-        {visibleChildren.map((child, index) => {
+      <div className={styles["nav-panel__links"]} data-dense={isDense ? "true" : undefined}>
+        {item.children.map((child, index) => {
           const meta = leafMetaLabel(child, item, topicsLabel);
           return (
             <div

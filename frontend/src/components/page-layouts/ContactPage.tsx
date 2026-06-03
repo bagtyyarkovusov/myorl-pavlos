@@ -1,4 +1,5 @@
 import { CmsHtml } from "@/components/CmsHtml";
+import { LiteMap } from "@/components/LiteMap";
 import { ContactClinicAccordion } from "@/components/contact/ContactClinicAccordion";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { PageSection } from "@/components/PageSection";
@@ -52,14 +53,7 @@ export function ContactPage({ page }: ContactPageProps) {
 
           {mapSrc ? (
             <section className={styles.mapColumn} aria-label={t.mapLabel}>
-              <iframe
-                data-contact-map
-                src={mapSrc}
-                title={t.mapLabel}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className={styles.mapFrame}
-              />
+              <LiteMap src={mapSrc} title={t.mapLabel} loadLabel={t.mapShowLabel} />
             </section>
           ) : null}
         </div>

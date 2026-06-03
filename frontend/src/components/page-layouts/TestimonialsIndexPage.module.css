@@ -130,7 +130,7 @@
 }
 
 .toggleBtn {
-  font-family: var(--font-mono, ui-monospace);
+  font-family: var(--font-mono, "Roboto Condensed", ui-sans-serif, system-ui, sans-serif);
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -160,7 +160,7 @@
 }
 
 .status {
-  font-family: var(--font-mono, ui-monospace);
+  font-family: var(--font-mono, "Roboto Condensed", ui-sans-serif, system-ui, sans-serif);
   font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;

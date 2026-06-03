@@ -77,4 +77,37 @@ describe("parseContactRequest multipart", () => {
       expect(parsed.attachment?.filename).toBe("report.pdf");
     }
   });
+
+  it("parses appointment date and slot from multipart requests", async () => {
+    const formData = new FormData();
+    formData.append("locale", "ru");
+    formData.append("name", "Maria Ivanova");
+    formData.append("email", "");
+    formData.append("phone", "+30 694 000 0000");
+    formData.append("message", "");
+    formData.append("formType", "appointment");
+    formData.append("preferredDate", "2026-06-15");
+    formData.append("preferredSlot", "09:30");
+    formData.append("company", "");
+
+    const request = new NextRequest("http://localhost:3000/api/contact", {
+      method: "POST",
+    });
+    vi.spyOn(request.headers, "get").mockImplementation((name) =>
+      name === "content-type" ? "multipart/form-data; boundary=----test" : null,
+    );
+    vi.spyOn(request, "formData").mockResolvedValue(formData);
+
+    const parsed = await parseContactRequest(request);
+    expect(parsed.ok).toBe(true);
+    if (parsed.ok) {
+      expect(parsed.data).toMatchObject({
+        formType: "appointment",
+        preferredDate: "2026-06-15",
+        preferredSlot: "09:30",
+        email: "",
+      });
+      expect(parsed.attachment).toBeNull();
+    }
+  });
 });

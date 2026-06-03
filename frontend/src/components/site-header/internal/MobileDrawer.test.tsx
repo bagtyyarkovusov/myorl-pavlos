@@ -34,6 +34,7 @@ const mockSettings: GlobalSettingsDTO = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Mon-Fri 09:00-21:00",
+  footerTagline: null,
   disclaimerText: null,
   socialLinks: [],
 };

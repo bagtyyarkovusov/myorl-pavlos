@@ -85,9 +85,11 @@
 
 .title {
   max-width: 980px;
+  overflow-wrap: break-word;
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 7vw, 6rem);
   font-weight: 400;
+  hyphens: manual;
   letter-spacing: 0;
   line-height: 0.98;
 }

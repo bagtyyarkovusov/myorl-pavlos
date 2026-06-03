@@ -45,6 +45,7 @@ export type PageStrings = {
   humanSitemapNavLabel: string;
   clinicBookOnline: string;
   clinicViewGallery: string;
+  clinicOfficialSite: string;
   clinicBackToOverview: string;
   clinicGalleryPrevious: string;
   clinicGalleryNext: string;
@@ -96,6 +97,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     humanSitemapNavLabel: "Χάρτης θεμάτων",
     clinicBookOnline: "Κλείστε ραντεβού ηλεκτρονικά",
     clinicViewGallery: "Δείτε τη γκαλερί",
+    clinicOfficialSite: "Επίσημος ιστότοπος",
     clinicBackToOverview: "Επιστροφή στο ιατρείο",
     clinicGalleryPrevious: "Προηγούμενες φωτογραφίες",
     clinicGalleryNext: "Επόμενες φωτογραφίες",
@@ -151,6 +153,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     humanSitemapNavLabel: "Карта сайта",
     clinicBookOnline: "Записаться на приём онлайн",
     clinicViewGallery: "Открыть галерею",
+    clinicOfficialSite: "Официальный сайт",
     clinicBackToOverview: "Вернуться к кабинету",
     clinicGalleryPrevious: "Предыдущие фото",
     clinicGalleryNext: "Следующие фото",

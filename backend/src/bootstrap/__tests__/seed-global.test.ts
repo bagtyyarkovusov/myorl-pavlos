@@ -37,7 +37,7 @@ function createMockStrapi(overrides?: {
 
 describe("seedGlobal", () => {
   it("is idempotent — skips when marker matches SEED_VERSION", async () => {
-    const strapi = createMockStrapi({ markerValue: "v6" });
+    const strapi = createMockStrapi({ markerValue: "v8" });
 
     await seedGlobal(strapi);
 
@@ -64,6 +64,8 @@ describe("seedGlobal", () => {
         locale: "el",
         data: expect.objectContaining({
           address: "Λεωφόρος Αλεξάνδρας 201 & Πανόρμου, Αμπελόκηποι, Αθήνα",
+          footerTagline:
+            "ΩΡΛ ιατρείο στην Αθήνα για διάγνωση, θεραπεία και χειρουργική κεφαλής και τραχήλου.",
           disclaimerText:
             "Οι πληροφορίες σε αυτό το άρθρο έχουν εκπαιδευτικό χαρακτήρα και δεν αντικαθιστούν την εξατομικευμένη ιατρική γνωμάτευση. Συμβουλευθείτε γιατρό για διάγνωση και θεραπεία.",
         }),
@@ -84,7 +86,7 @@ describe("seedGlobal", () => {
     const store = strapi.store({ type: "plugin", name: "content-manager" });
     expect(store.set).toHaveBeenCalledWith({
       key: "seed_global_version",
-      value: "v6",
+      value: "v8",
     });
   });
 
@@ -125,7 +127,7 @@ describe("seedGlobal", () => {
     const store = strapi.store({ type: "plugin", name: "content-manager" });
     expect(store.set).toHaveBeenCalledWith({
       key: "seed_global_version",
-      value: "v6",
+      value: "v8",
     });
   });
 });

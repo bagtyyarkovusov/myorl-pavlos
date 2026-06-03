@@ -108,7 +108,7 @@
   padding-inline: 0.625rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   box-shadow: 0 2px 14px var(--shadow-ink-soft, rgba(15, 42, 74, 0.08));
   transition:
     transform var(--motion-duration-fast) var(--motion-ease-default),

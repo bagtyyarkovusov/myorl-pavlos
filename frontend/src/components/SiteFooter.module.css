@@ -102,7 +102,7 @@
 .brand-word {
   font-family: var(--font-display);
   font-size: clamp(1.28rem, 4vw, 1.5rem);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .brand-tagline {
@@ -150,8 +150,8 @@
   line-height: 1.55;
   text-decoration: none;
   transition: color 180ms ease;
-  hyphens: auto;
-  overflow-wrap: anywhere;
+  hyphens: manual;
+  overflow-wrap: break-word;
 }
 
 .link-list a:hover,

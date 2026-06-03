@@ -255,7 +255,11 @@ function buildFallbackSettings(locale: Locale): GlobalSettingsDTO {
     secondaryPhoneDisplay: null,
     email: null,
     hours: null,
+    footerTagline: null,
     disclaimerText: null,
+    doctorName: null,
+    doctorSpecialty: null,
+    transitNote: null,
     socialLinks: [],
   };
 }

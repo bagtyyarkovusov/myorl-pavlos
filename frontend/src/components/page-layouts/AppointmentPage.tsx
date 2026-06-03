@@ -13,7 +13,6 @@ import { getHomeStrings } from "@/lib/i18n/home";
 import type { GlobalSettingsDTO } from "@/lib/cms/types";
 import {
   resolveContactEmail,
-  resolvePhoneDisplay,
   resolvePhoneTel,
   resolveSecondaryPhoneDisplay,
   resolveSecondaryPhoneTel,
@@ -40,6 +39,7 @@ export function AppointmentPage({ page, settings }: AppointmentPageProps) {
     secondaryPhoneDisplay: null,
     email: null,
     hours: null,
+    footerTagline: null,
     disclaimerText: null,
     socialLinks: [],
   };

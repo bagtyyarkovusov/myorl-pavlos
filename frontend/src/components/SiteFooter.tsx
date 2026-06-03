@@ -27,21 +27,6 @@ type SiteFooterProps = {
   socialLinks: SocialLinkItemDTO[];
 };
 
-function isExternalUrl(href: string): boolean {
-  return /^https?:\/\//.test(href);
-}
-
-function SmartLink({ href, children }: { href: string; children: React.ReactNode }) {
-  if (isExternalUrl(href)) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
-        {children}
-      </a>
-    );
-  }
-  return <Link href={href}>{children}</Link>;
-}
-
 export function SiteFooter({
   locale,
   navigation,
@@ -79,7 +64,7 @@ export function SiteFooter({
               </span>
               <span className={styles["brand-word"]}>myorl</span>
             </Link>
-            <p className={styles["brand-tagline"]}>{t.brandTagline}</p>
+            <p className={styles["brand-tagline"]}>{settings.footerTagline ?? t.brandTagline}</p>
           </div>
 
           <div

@@ -100,7 +100,7 @@ describe("HomeSectionRenderer", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("renders a home contact section", () => {
+  it("suppresses contact sections in the home flow", () => {
     const section = makeSection({
       __component: "sections.contact",
       heading: "Home Contact",
@@ -109,7 +109,7 @@ describe("HomeSectionRenderer", () => {
     } as SectionDTO);
 
     const { container } = render(<HomeSectionRenderer section={section} locale="el" />);
-    expect(container.querySelector('[class*="home-contact"]')).toBeTruthy();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it("falls through to DefaultSectionRenderer for unknown components", () => {

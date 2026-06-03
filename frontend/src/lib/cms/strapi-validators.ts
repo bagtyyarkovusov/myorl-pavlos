@@ -159,7 +159,11 @@ const strapiGlobalEntitySchema = z
     secondaryPhoneDisplay: optionalStringTransform,
     email: optionalStringTransform,
     hours: optionalStringTransform,
+    footerTagline: optionalStringTransform,
     disclaimerText: optionalStringTransform,
+    doctorName: optionalStringTransform,
+    doctorSpecialty: optionalStringTransform,
+    transitNote: optionalStringTransform,
     socialLinks: z.array(strapiSocialLinkSchema).nullish(),
   })
   .passthrough();
@@ -192,7 +196,11 @@ export const globalResponseSchema = z
       secondaryPhoneDisplay: response.data.secondaryPhoneDisplay,
       email: response.data.email,
       hours: response.data.hours,
+      footerTagline: response.data.footerTagline,
       disclaimerText: response.data.disclaimerText,
+      doctorName: response.data.doctorName,
+      doctorSpecialty: response.data.doctorSpecialty,
+      transitNote: response.data.transitNote,
       socialLinks,
     };
   });

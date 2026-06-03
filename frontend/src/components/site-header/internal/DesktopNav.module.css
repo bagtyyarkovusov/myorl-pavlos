@@ -93,7 +93,7 @@
   [data-locale="ru"] .nav-trigger,
   [data-locale="ru"] .nav-link {
     font-size: 0.85rem;
-    letter-spacing: -0.012em;
+    letter-spacing: 0;
     padding-inline: clamp(6px, 0.55vw, 10px);
     min-height: 40px;
   }

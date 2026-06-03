@@ -156,7 +156,7 @@
   font-size: clamp(1.2rem, 4.75vw + 0.65rem, 1.78rem);
   line-height: 1.06;
   overflow-wrap: break-word;
-  hyphens: auto;
+  hyphens: manual;
   text-wrap: balance;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -359,7 +359,7 @@
   line-height: 1.14;
   overflow-wrap: break-word;
   text-decoration: none;
-  hyphens: auto;
+  hyphens: manual;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
@@ -496,7 +496,7 @@
   line-height: 1.12;
   overflow-wrap: break-word;
   text-decoration: none;
-  hyphens: auto;
+  hyphens: manual;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }

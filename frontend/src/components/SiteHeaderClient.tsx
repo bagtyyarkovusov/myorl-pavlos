@@ -5,7 +5,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { getHeaderStrings } from "@/lib/i18n/header";
-import { resolveFooterAddressLine, resolveVisitHours } from "@/lib/site/contact-fallbacks";
+import {
+  resolveDoctorName,
+  resolveDoctorSpecialty,
+  resolveFooterAddressLine,
+} from "@/lib/site/contact-fallbacks";
 import type { GlobalSettingsDTO, Locale, NavigationNodeDTO } from "@/lib/cms/types";
 
 import { DesktopNav } from "./site-header/internal/DesktopNav";
@@ -35,7 +39,8 @@ export function SiteHeaderClient({
 }: SiteHeaderClientProps) {
   const t = getHeaderStrings(locale);
   const address = resolveFooterAddressLine(settings, locale);
-  const hours = resolveVisitHours(settings, locale);
+  const doctorName = resolveDoctorName(settings);
+  const doctorSpecialty = resolveDoctorSpecialty(settings);
 
   const {
     isOpen: isDrawerOpen,
@@ -82,7 +87,6 @@ export function SiteHeaderClient({
       <div className={styles["header-anchor"]} data-locale={locale}>
         <UtilityBar
           address={address}
-          hours={hours}
           settings={settings}
           locale={locale}
           languageLabel={t.languageLabel}
@@ -99,23 +103,35 @@ export function SiteHeaderClient({
                 width={64}
                 height={64}
               />
+              {doctorName || doctorSpecialty ? (
+                <span className={styles["brand-identity"]}>
+                  {doctorName ? (
+                    <span className={styles["brand-doctor"]}>{doctorName}</span>
+                  ) : null}
+                  {doctorSpecialty ? (
+                    <span className={styles["brand-doctor-specialty"]}>{doctorSpecialty}</span>
+                  ) : null}
+                </span>
+              ) : null}
             </Link>
 
-            <DesktopNav
-              items={navigation}
-              pillStyle={pillStyle}
-              openMenuId={nav.openMenuId}
-              onItemHover={nav.setHoveredId}
-              onHoverClear={() => nav.setHoveredId(null)}
-              onMenuOpen={nav.openMenu}
-              onMenuClose={nav.closeMenus}
-              registerPillRect={registerRect}
-              overviewLinkLabel={t.sectionOverviewLink}
-              sectionOverviewMoreHint={t.sectionOverviewMoreHint}
-              featureBlurb={featureBlurb}
-              primaryNavLabel={t.primaryNavLabel}
-              topicsLabel={t.topicsLabel}
-            />
+            <div className={styles["header-nav"]}>
+              <DesktopNav
+                items={navigation}
+                pillStyle={pillStyle}
+                openMenuId={nav.openMenuId}
+                onItemHover={nav.setHoveredId}
+                onHoverClear={() => nav.setHoveredId(null)}
+                onMenuOpen={nav.openMenu}
+                onMenuClose={nav.closeMenus}
+                registerPillRect={registerRect}
+                overviewLinkLabel={t.sectionOverviewLink}
+                sectionOverviewMoreHint={t.sectionOverviewMoreHint}
+                featureBlurb={featureBlurb}
+                primaryNavLabel={t.primaryNavLabel}
+                topicsLabel={t.topicsLabel}
+              />
+            </div>
 
             <div className={styles["header-actions"]}>
               <CTAButton

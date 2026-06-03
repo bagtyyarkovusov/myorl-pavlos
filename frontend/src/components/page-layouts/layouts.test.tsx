@@ -1,8 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 
-import { fetchVideoEntries } from "@/lib/cms/video-entries";
-
 vi.mock("@/lib/cms/video-entries", () => ({
   fetchVideoEntries: vi.fn(async () => []),
 }));
@@ -44,6 +42,7 @@ const MOCK_GLOBAL_SETTINGS: GlobalSettingsDTO = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  footerTagline: null,
   disclaimerText: null,
   socialLinks: [],
 };
@@ -480,6 +479,96 @@ describe("HomePage", () => {
     expect(screen.getByRole("link", { name: /Services/ })).toHaveAttribute("href", "/el/yperesies");
     expect(screen.getByRole("link", { name: /Video/ })).toHaveAttribute("href", "/el/video");
   });
+
+  it("renders home hero, testimonials heading, and notice from Strapi sections", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.home-hero",
+          kicker: "CMS kicker",
+          heading: "CMS hero heading",
+          intro: "CMS hero intro",
+          media: null,
+          ctaLabel: "CMS CTA",
+          ctaUrl: "/el/rantevou",
+          ctaTargetPage: null,
+        },
+        {
+          __component: "sections.home-testimonials-teaser",
+          heading: "CMS testimonials heading",
+          intro: "CMS testimonials intro",
+        },
+        {
+          __component: "sections.home-notice",
+          heading: "CMS notice heading",
+          intro: "<p>CMS notice body</p>",
+        },
+      ],
+    };
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/fallback"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+        homeTestimonials={{
+          aggregateRating: 5,
+          userRatingCount: 12,
+          googleMapsUrl: "https://example.com/maps",
+          googleMapsReviewsUrl: "https://example.com/reviews",
+          source: "curated",
+          quotes: [],
+        }}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "CMS hero heading" })).toBeDefined();
+    expect(screen.getByText("CMS testimonials heading")).toBeDefined();
+    expect(screen.getByText("CMS notice body")).toBeDefined();
+    expect(screen.queryByText("Τι γράφουν στο Google Maps")).toBeNull();
+  });
+
+  it("does not use hard-coded quick access descriptions when excerpts are missing", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.promo-slider",
+          heading: "Topics",
+          slides: [
+            {
+              title: "Slide",
+              description: null,
+              targetPageExcerpt: null,
+              image: null,
+              targetPage: null,
+              targetUrl: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/rantevou"
+        navigation={[makeNav("yperesies", "Services", 1)]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+
+    expect(screen.getByRole("link", { name: "Services" })).toBeDefined();
+    expect(screen.queryByText("Βρείτε γρήγορα τις βασικές υπηρεσίες του ιατρείου.")).toBeNull();
+  });
 });
 
 describe("ContactPage", () => {
@@ -547,9 +636,11 @@ describe("ContactPage", () => {
     );
   });
 
-  it("expands a clinic panel on click without changing the map iframe src", () => {
+  it("keeps the loaded map stable when expanding clinic panels", () => {
     const { container } = render(<ContactPage page={CONTACT_PAGE} />);
-    const map = container.querySelector("iframe[data-contact-map]");
+    // Map is click-to-load: activate it before asserting on the iframe.
+    fireEvent.click(screen.getByRole("button", { name: "Εμφάνιση χάρτη" }));
+    const map = container.querySelector("iframe");
     expect(map).toBeTruthy();
     const initialSrc = map!.getAttribute("src");
 
@@ -560,7 +651,15 @@ describe("ContactPage", () => {
     const thessToggle = screen.getByRole("button", { name: /Thessaloniki/ });
     fireEvent.click(thessToggle);
 
-    expect(map!.getAttribute("src")).toBe(initialSrc);
+    expect(container.querySelector("iframe")!.getAttribute("src")).toBe(initialSrc);
+  });
+
+  it("loads the contact map only after the visitor activates the facade", () => {
+    const { container } = render(<ContactPage page={CONTACT_PAGE} />);
+    // No Google iframe on first paint — only the click-to-load facade.
+    expect(container.querySelector("iframe")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Εμφάνιση χάρτη" }));
+    expect(container.querySelector("iframe")).toBeTruthy();
   });
 
   it("renders phone/email links with tel: and mailto: schemes inside the expanded panel", () => {
@@ -577,7 +676,8 @@ describe("ContactPage", () => {
 
   it("renders the map from clinic coordinates per ADR-009", () => {
     const { container } = render(<ContactPage page={CONTACT_PAGE} />);
-    const map = container.querySelector("iframe[data-contact-map]");
+    fireEvent.click(screen.getByRole("button", { name: "Εμφάνιση χάρτη" }));
+    const map = container.querySelector("iframe");
     expect(map?.getAttribute("src")).toContain("37.9838");
   });
 
@@ -595,7 +695,8 @@ describe("ContactPage", () => {
       ],
     };
     const { container } = render(<ContactPage page={page} />);
-    expect(container.querySelector("iframe[data-contact-map]")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Εμφάνιση χάρτη" })).toBeNull();
+    expect(container.querySelector("iframe")).toBeNull();
   });
 
   it("renders only the contact form when CMS contact section is missing", () => {
@@ -1862,10 +1963,11 @@ describe("AppointmentPage", () => {
     expect(screen.getByRole("heading", { name: "Ραντεβού" })).toBeDefined();
     expect(screen.queryByRole("heading", { name: "Αίτημα ραντεβού" })).toBeNull();
     expect(screen.queryByText("appointment")).toBeNull();
-    expect(screen.getByLabelText(/Προτιμώμενη ημέρα/i)).toBeDefined();
-    expect(
-      screen.getByLabelText(/Λόγος επίσκεψης και προτιμώμενη ώρα \(προαιρετικά\)/i),
-    ).toBeDefined();
+    expect(screen.getByLabelText(/ημέρα επίσκεψης/i)).toBeDefined();
+    expect(screen.queryByRole("radio", { name: "09:00" })).toBeNull();
+    expect(screen.queryByLabelText(/Email/i)).toBeNull();
+    expect(screen.getByLabelText(/Μήνυμα/i)).toBeDefined();
+    expect(screen.queryByLabelText(/Επισύναψη αρχείου/i)).toBeNull();
     expect(screen.queryByText("Same text as body")).toBeNull();
     expect(screen.getByRole("link", { name: "Κλήση τώρα" })).toHaveAttribute(
       "href",
@@ -1875,6 +1977,56 @@ describe("AppointmentPage", () => {
       "href",
       "mailto:pavlos.tsolaridis@gmail.com",
     );
+  });
+
+  it("uses a MODX-style date-time picker with day, hour, then minute steps", () => {
+    const apptPage: PageDTO = {
+      ...BASE_PAGE,
+      locale: "ru",
+      layoutVariant: "appointment-form",
+      title: "Запись",
+    };
+
+    render(<AppointmentPage page={apptPage} />);
+
+    const dateInput = screen.getByLabelText(/день посещения/i);
+    expect(dateInput).toHaveAttribute("readonly");
+    expect(dateInput).toHaveValue("");
+    expect(screen.getByLabelText(/Сообщение/i)).toBeDefined();
+    expect(screen.queryByRole("radio", { name: "09:00" })).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: /календар/i }));
+    fireEvent.click(screen.getByRole("button", { name: "19" }));
+
+    expect(screen.getByRole("button", { name: "0:00" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "14:00" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "23:00" })).toBeDefined();
+
+    fireEvent.click(screen.getByRole("button", { name: "2:00" }));
+
+    expect(screen.getByRole("button", { name: "2:00" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "2:30" })).toBeDefined();
+
+    fireEvent.click(screen.getByRole("button", { name: "2:30" }));
+
+    expect(dateInput).toHaveValue("19/06/2026 2:30");
+  });
+
+  it("uses MODX weekday availability with Sunday disabled and Monday through Saturday open", () => {
+    const apptPage: PageDTO = {
+      ...BASE_PAGE,
+      locale: "ru",
+      layoutVariant: "appointment-form",
+      title: "Запись",
+    };
+
+    render(<AppointmentPage page={apptPage} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /календар/i }));
+
+    expect(screen.getByRole("button", { name: "10" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "13" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "14" })).toBeDisabled();
   });
 
   it("renders sections through SectionRenderer", () => {

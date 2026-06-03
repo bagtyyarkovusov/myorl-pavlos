@@ -54,7 +54,7 @@
 }
 
 .sheetTitle {
-  font-family: var(--font-display, Instrument Serif, Georgia, serif);
+  font-family: var(--font-display, "Roboto Condensed", ui-sans-serif, system-ui, sans-serif);
   font-size: 1.2rem;
   font-weight: 400;
   color: var(--foreground);

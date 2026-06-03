@@ -25,6 +25,13 @@ function makeRawSection(component: SectionComponent) {
   switch (component) {
     case "sections.promo-slider":
       return { ...common, slides: [{ title: "Slide", description: "<p>Text</p>" }] };
+    case "sections.home-hero":
+      return {
+        ...common,
+        kicker: "Kicker",
+        ctaLabel: "Book",
+        ctaUrl: "/el/rantevou",
+      };
     case "sections.linked-resources":
       return { ...common, items: [{ title: "Resource", description: "<p>Text</p>" }] };
     case "sections.social-links":
@@ -36,6 +43,10 @@ function makeRawSection(component: SectionComponent) {
       };
     case "sections.advantages":
       return { ...common, items: [{ title: "Advantage", description: "<p>Text</p>" }] };
+    case "sections.home-testimonials-teaser":
+      return common;
+    case "sections.home-notice":
+      return { ...common, intro: "<p>Notice</p>" };
     case "sections.accordion":
       return { ...common, items: [{ title: "Topic", content: "<p>Body</p>" }] };
     case "sections.faq":

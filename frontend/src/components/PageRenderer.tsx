@@ -97,6 +97,7 @@ export function PageRenderer({
             secondaryPhoneDisplay: null,
             email: null,
             hours: null,
+            footerTagline: null,
             disclaimerText: null,
             socialLinks: [],
           }
@@ -138,6 +139,7 @@ export function PageRenderer({
             secondaryPhoneDisplay: null,
             email: null,
             hours: null,
+            footerTagline: null,
             disclaimerText: null,
             socialLinks: [],
           }

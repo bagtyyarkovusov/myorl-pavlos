@@ -25,19 +25,44 @@ export function HomePage({
   homeTestimonials = null,
 }: HomePageProps) {
   const t = getHomeStrings(page.locale);
-  const heroMedia = page.imageCenter ?? page.featuredImage ?? null;
-  const orderedItems = orderHomeRenderItems(page.sections);
+  const heroSection = page.sections.find((section) => section.__component === "sections.home-hero");
+  const heroMedia =
+    heroSection?.__component === "sections.home-hero"
+      ? (heroSection.media ?? page.imageCenter ?? page.featuredImage ?? null)
+      : (page.imageCenter ?? page.featuredImage ?? null);
+  const heroCtaHref =
+    heroSection?.__component === "sections.home-hero"
+      ? (heroSection.ctaUrl ??
+        (heroSection.ctaTargetPage?.slug
+          ? `/${page.locale}/${heroSection.ctaTargetPage.slug}`
+          : appointmentHref))
+      : appointmentHref;
+  const heroCtaLabel =
+    heroSection?.__component === "sections.home-hero"
+      ? (heroSection.ctaLabel ?? t.heroCtaLabel)
+      : t.heroCtaLabel;
+  const orderedItems = orderHomeRenderItems(
+    page.sections.filter((section) => section.__component !== "sections.home-hero"),
+  );
 
   return (
     <>
       <div data-locale={page.locale}>
         <HomeHero
-          kicker={t.heroKicker}
-          title={t.heroTitle}
-          excerpt={t.heroLead}
+          kicker={
+            heroSection?.__component === "sections.home-hero"
+              ? (heroSection.kicker ?? "")
+              : ""
+          }
+          title={
+            heroSection?.__component === "sections.home-hero" ? heroSection.heading : page.title
+          }
+          excerpt={
+            heroSection?.__component === "sections.home-hero" ? heroSection.intro : page.excerpt
+          }
           media={heroMedia}
-          ctaHref={appointmentHref}
-          ctaLabel={t.heroCtaLabel}
+          ctaHref={heroCtaHref}
+          ctaLabel={heroCtaLabel}
         />
 
         {orderedItems.map((item, index) => {
@@ -70,6 +95,8 @@ export function HomePage({
                   key={getHomeRenderItemKey(item)}
                   locale={page.locale}
                   payload={homeTestimonials}
+                  heading={item.section.heading}
+                  intro={item.section.intro}
                 />
               ) : null;
             case "home-visit-map":

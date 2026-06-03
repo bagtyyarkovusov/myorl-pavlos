@@ -59,6 +59,7 @@ export type HomeStrings = {
   visitMapLabelHours: string;
   visitMapLabelDirect: string;
   visitMapMapTitle: string;
+  visitMapShowLabel: string;
   testimonialsEyebrow: string;
   testimonialsTitle: string;
   testimonialsIntro: string;
@@ -143,6 +144,7 @@ const STRINGS: Record<Locale, HomeStrings> = {
     visitMapLabelHours: "Ώρες",
     visitMapLabelDirect: "Απευθείας",
     visitMapMapTitle: "Τοποθεσία ιατρείου στο χάρτη",
+    visitMapShowLabel: "Εμφάνιση χάρτη",
     testimonialsEyebrow: "Κριτικές ασθενών",
     testimonialsTitle: "Τι γράφουν στο Google Maps",
     testimonialsIntro: "Σύντομα αποσπάσματα από δημόσιες κριτικές· πηγή: Google Maps.",
@@ -222,6 +224,7 @@ const STRINGS: Record<Locale, HomeStrings> = {
     visitMapLabelHours: "Часы",
     visitMapLabelDirect: "Контакты",
     visitMapMapTitle: "Кабинет на карте",
+    visitMapShowLabel: "Показать карту",
     testimonialsEyebrow: "Отзывы пациентов",
     testimonialsTitle: "Отзывы в Google Maps",
     testimonialsIntro: "Короткие цитаты из публичных отзывов; источник: Google Maps.",

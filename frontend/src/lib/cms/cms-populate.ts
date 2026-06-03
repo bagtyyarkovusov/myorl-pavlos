@@ -40,6 +40,12 @@ export const PAGE_POPULATE = {
           },
         },
       },
+      "sections.home-hero": {
+        populate: {
+          media: true,
+          ctaTargetPage: { fields: ["documentId", "slug", "title"] },
+        },
+      },
       "sections.linked-resources": {
         populate: {
           items: {

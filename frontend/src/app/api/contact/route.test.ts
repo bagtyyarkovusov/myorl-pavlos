@@ -90,11 +90,12 @@ describe("POST /api/contact", () => {
         body: JSON.stringify({
           locale: "ru",
           name: "Maria Ivanova",
-          email: "maria@example.com",
+          email: "",
           phone: "+30 694 000 0000",
-          message: "Ear pain, prefer afternoon.",
+          message: "",
           formType: "appointment",
-          preferredDate: "2026-06-20",
+          preferredDate: "2026-06-19",
+          preferredSlot: "09:30",
           company: "",
         }),
       }),
@@ -105,7 +106,8 @@ describe("POST /api/contact", () => {
       expect.objectContaining({
         payload: expect.objectContaining({
           formType: "appointment",
-          preferredDate: "2026-06-20",
+          preferredDate: "2026-06-19",
+          preferredSlot: "09:30",
         }),
       }),
     );
@@ -120,11 +122,12 @@ describe("POST /api/contact", () => {
         body: JSON.stringify({
           locale: "ru",
           name: "Maria Ivanova",
-          email: "maria@example.com",
+          email: "",
           phone: "+30 694 000 0000",
           message: "",
           formType: "appointment",
-          preferredDate: "2026-06-20",
+          preferredDate: "2026-06-19",
+          preferredSlot: "09:00",
           company: "",
         }),
       }),

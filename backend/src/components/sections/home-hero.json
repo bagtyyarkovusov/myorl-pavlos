@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_sections_home_heroes",
+  "info": {
+    "displayName": "Home Hero Section",
+    "description": "Editor-owned hero copy and primary CTA for the canonical home."
+  },
+  "options": {},
+  "attributes": {
+    "kicker": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "intro": {
+      "type": "text"
+    },
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "ctaTargetPage": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::page.page"
+    },
+    "ctaUrl": {
+      "type": "string"
+    }
+  }
+}

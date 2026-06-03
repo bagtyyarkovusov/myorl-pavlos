@@ -13,6 +13,10 @@ export type SeedPrimaryContact = {
   secondaryPhoneDisplay: string;
   email: string;
   hours: string;
+  footerTagline: string;
+  doctorName: string;
+  doctorSpecialty: string;
+  transitNote: string;
 };
 
 /** Canonical shared social links (non-localized). Greek homepage set. */
@@ -59,6 +63,11 @@ export const SEED_PRIMARY_CONTACT: Record<SeedLocale, SeedPrimaryContact> = {
     secondaryPhoneDisplay: "6945 77 30 77",
     email: "pavlos.tsolaridis@gmail.com",
     hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+    footerTagline:
+      "ΩΡΛ ιατρείο στην Αθήνα για διάγνωση, θεραπεία και χειρουργική κεφαλής και τραχήλου.",
+    doctorName: "Δρ. Παύλος Τσολαρίδης, M.D.",
+    doctorSpecialty: "Ωτορινολαρυγγολόγος (ΩΡΛ) · Χειρουργός κεφαλής & τραχήλου",
+    transitNote: "Μετρό Αμπελόκηποι",
   },
   ru: {
     address: "Проспект Alexandras 201 & Panormou, Амбелокипи, Афины",
@@ -68,5 +77,10 @@ export const SEED_PRIMARY_CONTACT: Record<SeedLocale, SeedPrimaryContact> = {
     secondaryPhoneDisplay: "6945 77 30 77",
     email: "pavlos.tsolaridis@gmail.com",
     hours: "Пн–Пт · 09:00 – 21:00\nСб · 10:00 – 14:00",
+    footerTagline:
+      "ЛОР кабинет в Афинах: диагностика, лечение и хирургия головы и шеи.",
+    doctorName: "Д-р Павлос Цоларидис, M.D.",
+    doctorSpecialty: "Оториноларинголог (ЛОР) · Хирург головы и шеи",
+    transitNote: "Метро Амбелокипи",
   },
 };

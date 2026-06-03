@@ -89,7 +89,11 @@ const defaultSettings = {
   secondaryPhoneDisplay: "6945 77 30 77",
   email: "pavlos.tsolaridis@gmail.com",
   hours: "Δευ–Παρ · 09:00 – 21:00\nΣάβ · 10:00 – 14:00",
+  footerTagline: null,
   disclaimerText: null,
+  doctorName: "Δρ. Παύλος Τσολαρίδης, M.D.",
+  doctorSpecialty: "Ωτορινολαρυγγολόγος (ΩΡΛ) · Χειρουργός κεφαλής & τραχήλου",
+  transitNote: "Μετρό Αμπελόκηποι",
   socialLinks: [],
 };
 
@@ -224,7 +228,7 @@ describe("SiteHeaderClient", () => {
     expect(addressElements.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders utility bar hours as a single formatted line", () => {
+  it("does not render clinic hours in the header utility bar", () => {
     render(
       <SiteHeaderClient
         locale="el"
@@ -234,9 +238,54 @@ describe("SiteHeaderClient", () => {
       />,
     );
 
-    const hoursEl = screen.getByText("Δευ–Παρ · 09:00 – 21:00 · Σάβ · 10:00 – 14:00");
-    expect(hoursEl.closest('[class*="site-utility__zone--start"]')).toBeTruthy();
-    expect(hoursEl.textContent).not.toContain("\n");
+    expect(screen.queryByText(/09:00 – 21:00/)).toBeNull();
+  });
+
+  it("renders the doctor name and specialty in the brand area", () => {
+    render(
+      <SiteHeaderClient
+        locale="el"
+        navigation={mockNavigation}
+        appointmentHref="/el/rantevou"
+        settings={defaultSettings}
+      />,
+    );
+
+    expect(screen.getByText("Δρ. Παύλος Τσολαρίδης, M.D.")).toBeDefined();
+    expect(
+      screen.getByText("Ωτορινολαρυγγολόγος (ΩΡΛ) · Χειρουργός κεφαλής & τραχήλου"),
+    ).toBeDefined();
+  });
+
+  it("renders the metro transit note in the utility bar", () => {
+    render(
+      <SiteHeaderClient
+        locale="el"
+        navigation={mockNavigation}
+        appointmentHref="/el/rantevou"
+        settings={defaultSettings}
+      />,
+    );
+
+    expect(screen.getByText("Μετρό Αμπελόκηποι")).toBeDefined();
+  });
+
+  it("links the utility bar address to Google Maps", () => {
+    render(
+      <SiteHeaderClient
+        locale="el"
+        navigation={mockNavigation}
+        appointmentHref="/el/rantevou"
+        settings={defaultSettings}
+      />,
+    );
+
+    const mapsLink = screen
+      .getAllByText(/Λεωφόρος Αλεξάνδρας 201/)
+      .map((el) => el.closest("a"))
+      .find((a) => a?.getAttribute("href")?.includes("google.com/maps/search/"));
+    expect(mapsLink).toBeTruthy();
+    expect(mapsLink?.getAttribute("target")).toBe("_blank");
   });
 
   it("renders Russian CTA with full and short label spans for container-query switching", () => {

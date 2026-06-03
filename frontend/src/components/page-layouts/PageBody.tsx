@@ -18,22 +18,6 @@ const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
   "specialized-article",
 ]);
 
-function ArticleDateLine({ page }: { page: PageDTO }) {
-  if (!MEDICAL_LAYOUT_VARIANTS.has(page.layoutVariant)) return null;
-
-  const published = formatIsoDate(page.publishedAt);
-  const updated = formatIsoDate(page.updatedAt);
-
-  if (!published && !updated) return null;
-
-  const t = getPageStrings(page.locale);
-  const parts: string[] = [];
-  if (published) parts.push(`${t.publishedOn} ${published}`);
-  if (updated) parts.push(`${t.updatedOn} ${updated}`);
-
-  return <div className={styles["article-dates"]}>{parts.join(" · ")}</div>;
-}
-
 function ArticleReviewerLine({ page }: { page: PageDTO }) {
   if (!MEDICAL_LAYOUT_VARIANTS.has(page.layoutVariant)) return null;
 
@@ -143,7 +127,6 @@ function DefaultPageBody({
         proseStackGap === "compact" && styles["prose-shell--compact-stack"],
       )}
     >
-      <ArticleDateLine page={page} />
       <ArticleReviewerLine page={page} />
       <CmsHtml html={page.content} locale={page.locale} />
       {page.sections.map((section, index) => (
@@ -238,7 +221,6 @@ function ServiceArticleBody({
         data-service-layout="true"
       >
         <article className={styles["service-layout__content"]}>
-          <ArticleDateLine page={page} />
           <ArticleReviewerLine page={page} />
           <CmsHtml html={mainContentHtml} variant="service" locale={page.locale} />
           {page.sections.map((section, index) => (
@@ -386,7 +368,6 @@ function ArticleAsideBody({
       {mobileRelatedTopics}
       <main className={styles["reference-layout"]} {...layoutProps}>
         <article className={styles["reference-layout__content"]}>
-          <ArticleDateLine page={page} />
           <ArticleReviewerLine page={page} />
           <CmsHtml html={contentWithHeadingIds} variant={cmsVariant} locale={page.locale} />
           {bodySections.map((section, index) => (

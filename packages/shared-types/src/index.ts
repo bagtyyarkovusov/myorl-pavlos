@@ -36,10 +36,13 @@ export type LayoutVariant =
 
 export type SectionComponent =
   | "sections.promo-slider"
+  | "sections.home-hero"
   | "sections.linked-resources"
   | "sections.social-links"
   | "sections.video"
   | "sections.advantages"
+  | "sections.home-testimonials-teaser"
+  | "sections.home-notice"
   | "sections.accordion"
   | "sections.faq"
   | "sections.tabs"
@@ -72,4 +75,3 @@ export type DisclaimerOverride = "default" | "force-show" | "force-hide";
 
 // RenderMode is frontend-native and not derived from Strapi schema
 export type RenderMode = "cms" | "frontend-native";
-

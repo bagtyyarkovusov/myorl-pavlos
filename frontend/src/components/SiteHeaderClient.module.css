@@ -94,17 +94,25 @@
   min-width: 0;
 }
 
-.site-utility__hours {
+.site-utility__transit {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   border-left: 1px solid var(--line);
-  font-family: var(--font-mono);
-  letter-spacing: 0.02em;
   padding-left: clamp(10px, 1vw, 14px);
+  color: var(--color-stone-soft);
   white-space: nowrap;
 }
 
+.site-utility__transit-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 @media (max-width: 1180px) {
-  .site-utility__hours {
+  .site-utility__transit {
     display: none;
   }
 }
@@ -259,6 +267,55 @@
   font-family: var(--font-mono);
   font-size: 0.66rem;
   text-transform: uppercase;
+}
+
+/* Doctor name + specialty beside the logo (desktop only). Width-capped so the
+   nav column (minmax(0,1fr)) absorbs all shrink — never forces header overflow. */
+.brand-identity {
+  display: none;
+}
+
+.brand-doctor {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 1vw, 1rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brand-doctor-specialty {
+  display: -webkit-box;
+  margin-top: 2px;
+  color: var(--color-stone-soft);
+  font-size: 0.7rem;
+  line-height: 1.2;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (min-width: 1181px) {
+  .brand-identity {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    max-width: clamp(180px, 17vw, 280px);
+    margin-inline-start: 2px;
+    padding-inline-start: 12px;
+    border-inline-start: 1px solid var(--line);
+  }
+}
+
+/* Transparent by default so the nav stays a direct header child below the
+   full-nav breakpoint; becomes its own grid row at >=1321px (see below). */
+.header-nav {
+  display: contents;
 }
 
 .header-actions {
@@ -694,20 +751,37 @@
     display: none;
   }
 
+  /* Two-row header: brand + actions share row 1; the full nav gets its own
+     row 2 (matches the legacy site and gives the long RU nav full width). */
   .site-header__inner {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand . actions"
+      "nav nav nav";
     align-items: center;
+    row-gap: clamp(4px, 0.6vw, 10px);
     column-gap: clamp(20px, 2.4vw, 36px);
+    min-height: 116px;
+  }
+
+  .header-spacer__main {
+    min-height: 116px;
   }
 
   .brand {
-    grid-column: 1;
+    grid-area: brand;
   }
 
   .header-actions {
-    grid-column: 3;
+    grid-area: actions;
     justify-self: end;
+  }
+
+  .header-nav {
+    display: block;
+    grid-area: nav;
+    min-width: 0;
   }
 
   /*

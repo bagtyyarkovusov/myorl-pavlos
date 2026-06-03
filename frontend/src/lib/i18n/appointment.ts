@@ -7,8 +7,15 @@ export type AppointmentStrings = {
   callNowLabel: string;
   emailActionLabel: string;
   preferredDateLabel: string;
+  preferredDatePlaceholder: string;
   preferredDateHint: string;
   preferredDateRequired: string;
+  calendarActionLabel: string;
+  preferredSlotLabel: string;
+  preferredSlotPlaceholder: string;
+  preferredSlotHint: string;
+  preferredSlotRequired: string;
+  preferredSlotUnavailable: string;
 };
 
 const STRINGS: Record<Locale, AppointmentStrings> = {
@@ -18,9 +25,16 @@ const STRINGS: Record<Locale, AppointmentStrings> = {
       "Για επείγοντα ραντεβού ή γρήγορη επιβεβαίωση, καλέστε την κλινική κατά τις ώρες λειτουργίας.",
     callNowLabel: "Κλήση τώρα",
     emailActionLabel: "Email",
-    preferredDateLabel: "Προτιμώμενη ημέρα",
-    preferredDateHint: "Η ώρα μπορεί να αναφερθεί στο μήνυμα· θα επικοινωνήσουμε για επιβεβαίωση.",
+    preferredDateLabel: "Επιλέξτε ημέρα επίσκεψης",
+    preferredDatePlaceholder: "Επιλέξτε ημέρα επίσκεψης",
+    preferredDateHint: "Διαθέσιμες ημέρες: Δευτέρα έως Σάββατο.",
     preferredDateRequired: "Επιλέξτε προτιμώμενη ημέρα.",
+    calendarActionLabel: "Άνοιγμα ημερολογίου",
+    preferredSlotLabel: "Προτιμώμενη ώρα",
+    preferredSlotPlaceholder: "Επιλέξτε ώρα",
+    preferredSlotHint: "Τα διαθέσιμα ραντεβού εμφανίζονται ανά 30 λεπτά.",
+    preferredSlotRequired: "Επιλέξτε προτιμώμενη ώρα.",
+    preferredSlotUnavailable: "Δεν υπάρχουν διαθέσιμες ώρες για αυτή την ημέρα.",
   },
   ru: {
     quickContactLabel: "Или позвоните напрямую",
@@ -28,9 +42,16 @@ const STRINGS: Record<Locale, AppointmentStrings> = {
       "Для срочной записи или быстрого подтверждения позвоните в клинику в часы работы.",
     callNowLabel: "Позвонить",
     emailActionLabel: "Email",
-    preferredDateLabel: "Предпочтительная дата",
-    preferredDateHint: "Время можно указать в сообщении — мы перезвоним для подтверждения.",
+    preferredDateLabel: "Выберите день посещения",
+    preferredDatePlaceholder: "Выберите день посещения",
+    preferredDateHint: "Доступные дни: понедельник-суббота.",
     preferredDateRequired: "Выберите предпочтительную дату.",
+    calendarActionLabel: "Открыть календарь",
+    preferredSlotLabel: "Предпочтительное время",
+    preferredSlotPlaceholder: "Выберите время",
+    preferredSlotHint: "Доступное время показано с шагом 30 минут.",
+    preferredSlotRequired: "Выберите предпочтительное время.",
+    preferredSlotUnavailable: "На этот день нет доступного времени.",
   },
 };
 
@@ -38,8 +59,7 @@ const FORM_COPY: Record<Locale, Partial<ContactStrings>> = {
   el: {
     formTitle: "",
     formIntro:
-      "Συμπληρώστε τα στοιχεία σας και την προτιμώμενη ημέρα· θα επικοινωνήσουμε για επιβεβαίωση.",
-    messageLabel: "Λόγος επίσκεψης και προτιμώμενη ώρα (προαιρετικά)",
+      "Συμπληρώστε το όνομά σας, το τηλέφωνο και την προτιμώμενη ημέρα/ώρα· θα επικοινωνήσουμε για επιβεβαίωση.",
     submitLabel: "Αποστολή αιτήματος",
     successTitle: "Το αίτημά σας στάλθηκε.",
     successBody: "Θα επικοινωνήσουμε μαζί σας σύντομα για να επιβεβαιώσουμε το ραντεβού.",
@@ -47,8 +67,7 @@ const FORM_COPY: Record<Locale, Partial<ContactStrings>> = {
   },
   ru: {
     formTitle: "",
-    formIntro: "Укажите контакты и удобную дату — мы перезвоним для подтверждения.",
-    messageLabel: "Причина визита и удобное время (необязательно)",
+    formIntro: "Укажите имя, телефон, удобную дату и время — мы перезвоним для подтверждения.",
     submitLabel: "Отправить заявку",
     successTitle: "Заявка отправлена.",
     successBody: "Мы свяжемся с вами в ближайшее время, чтобы подтвердить приём.",

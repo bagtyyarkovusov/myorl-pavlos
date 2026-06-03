@@ -17,7 +17,7 @@ describe("parseContactFormPayload", () => {
     expect(result.ok).toBe(true);
   });
 
-  it("requires preferredDate for appointment submissions", () => {
+  it("requires preferredDate and preferredSlot for appointment submissions", () => {
     const result = parseContactFormPayload({
       locale: "ru",
       name: "Maria",
@@ -31,15 +31,16 @@ describe("parseContactFormPayload", () => {
     expect(result).toEqual({ ok: false, error: "invalid_payload" });
   });
 
-  it("accepts appointment payloads with preferredDate", () => {
+  it("accepts appointment payloads with preferredDate and preferredSlot", () => {
     const result = parseContactFormPayload({
       locale: "el",
       name: "Maria",
-      email: "maria@example.com",
+      email: "",
       phone: "+30 694 000 0000",
-      message: "Ear pain for two days, prefer 17:00.",
+      message: "",
       formType: "appointment",
       preferredDate: "2026-06-15",
+      preferredSlot: "09:30",
       company: "",
     });
 
@@ -47,22 +48,69 @@ describe("parseContactFormPayload", () => {
     if (result.ok) {
       expect(result.data.formType).toBe("appointment");
       expect(result.data.preferredDate).toBe("2026-06-15");
+      expect(result.data.preferredSlot).toBe("09:30");
+      expect(result.data.email).toBe("");
     }
+  });
+
+  it("accepts Wednesday and Saturday appointment slots like the old MODX picker", () => {
+    const wednesday = parseContactFormPayload({
+      locale: "ru",
+      name: "Maria",
+      email: "",
+      phone: "+30 694 000 0000",
+      message: "",
+      formType: "appointment",
+      preferredDate: "2026-06-10",
+      preferredSlot: "23:30",
+      company: "",
+    });
+    const saturday = parseContactFormPayload({
+      locale: "ru",
+      name: "Maria",
+      email: "",
+      phone: "+30 694 000 0000",
+      message: "",
+      formType: "appointment",
+      preferredDate: "2026-06-13",
+      preferredSlot: "00:00",
+      company: "",
+    });
+
+    expect(wednesday.ok).toBe(true);
+    expect(saturday.ok).toBe(true);
   });
 
   it("accepts appointment payloads with empty message", () => {
     const result = parseContactFormPayload({
       locale: "ru",
       name: "Maria",
-      email: "maria@example.com",
+      email: "",
       phone: "+30 694 000 0000",
       message: "",
       formType: "appointment",
       preferredDate: "2026-06-15",
+      preferredSlot: "09:00",
       company: "",
     });
 
     expect(result.ok).toBe(true);
+  });
+
+  it("rejects Sunday appointment slots like the old MODX picker", () => {
+    const result = parseContactFormPayload({
+      locale: "ru",
+      name: "Maria",
+      email: "",
+      phone: "+30 694 000 0000",
+      message: "",
+      formType: "appointment",
+      preferredDate: "2026-06-14",
+      preferredSlot: "15:00",
+      company: "",
+    });
+
+    expect(result).toEqual({ ok: false, error: "invalid_payload" });
   });
 });
 

@@ -91,7 +91,8 @@ function DefaultPageBody({
   hubChild = false,
   disclaimerText,
 }: DefaultPageBodyProps) {
-  const cmsVariant = isBiographyPage(page) ? "dense" : "luxury";
+  const isDense = isBiographyPage(page);
+  const cmsVariant = isDense ? "dense" : "luxury";
 
   if (hasProseAside(page)) {
     return (
@@ -101,7 +102,7 @@ function DefaultPageBody({
         cmsVariant={cmsVariant}
         sectionDensity="focused"
         layoutAttribute="data-prose-layout"
-        layoutValue={isBiographyPage(page) ? "dense" : "standard"}
+        layoutValue={isDense ? "dense" : "standard"}
         showAuthor={false}
         disclaimerText={disclaimerText}
       />

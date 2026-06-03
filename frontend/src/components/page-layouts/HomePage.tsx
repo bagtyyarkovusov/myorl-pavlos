@@ -5,7 +5,6 @@ import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getHomeRenderItemKey, orderHomeRenderItems } from "@/lib/home/home-render-order";
-import { getHomeStrings } from "@/lib/i18n/home";
 import type { GlobalSettingsDTO, NavigationNodeDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 import type { PageLayoutProps } from "./_shared";
@@ -24,38 +23,28 @@ export function HomePage({
   settings,
   homeTestimonials = null,
 }: HomePageProps) {
-  const t = getHomeStrings(page.locale);
-  const heroSection = page.sections.find((section) => section.__component === "sections.home-hero");
-  const heroMedia =
-    heroSection?.__component === "sections.home-hero"
-      ? (heroSection.media ?? page.imageCenter ?? page.featuredImage ?? null)
-      : (page.imageCenter ?? page.featuredImage ?? null);
-  const heroCtaHref =
-    heroSection?.__component === "sections.home-hero"
-      ? (heroSection.ctaUrl ??
-        (heroSection.ctaTargetPage?.slug
-          ? `/${page.locale}/${heroSection.ctaTargetPage.slug}`
-          : appointmentHref))
-      : appointmentHref;
-  const heroCtaLabel =
-    heroSection?.__component === "sections.home-hero" ? (heroSection.ctaLabel ?? "") : "";
+  const heroSection = page.sections.find((s) => s.__component === "sections.home-hero");
+  const homeHero = heroSection?.__component === "sections.home-hero" ? heroSection : undefined;
+
+  const heroMedia = homeHero?.media ?? page.imageCenter ?? page.featuredImage ?? null;
+  const heroCtaHref = homeHero
+    ? (homeHero.ctaUrl ??
+      (homeHero.ctaTargetPage?.slug
+        ? `/${page.locale}/${homeHero.ctaTargetPage.slug}`
+        : appointmentHref))
+    : appointmentHref;
+  const heroCtaLabel = homeHero?.ctaLabel ?? "";
   const orderedItems = orderHomeRenderItems(
-    page.sections.filter((section) => section.__component !== "sections.home-hero"),
+    page.sections.filter((s) => s.__component !== "sections.home-hero"),
   );
 
   return (
     <>
       <div data-locale={page.locale}>
         <HomeHero
-          kicker={
-            heroSection?.__component === "sections.home-hero" ? (heroSection.kicker ?? "") : ""
-          }
-          title={
-            heroSection?.__component === "sections.home-hero" ? heroSection.heading : page.title
-          }
-          excerpt={
-            heroSection?.__component === "sections.home-hero" ? heroSection.intro : page.excerpt
-          }
+          kicker={homeHero?.kicker ?? ""}
+          title={homeHero?.heading ?? page.title}
+          excerpt={homeHero?.intro ?? page.excerpt}
           media={heroMedia}
           ctaHref={heroCtaHref}
           ctaLabel={heroCtaLabel}

@@ -1,10 +1,6 @@
 import type { Locale } from "@/lib/cms/types";
 
 export type HomeStrings = {
-  heroTrustItems: string[];
-  /** Shown after CMS page title: italic word + rest of line */
-  heroHighlightWord: string;
-  heroTagline: string;
   statYears: string;
   statYearsValue: string;
   statLangs: string;
@@ -73,9 +69,6 @@ export type HomeStrings = {
 
 const STRINGS: Record<Locale, HomeStrings> = {
   el: {
-    heroTrustItems: ["ΩΡΛ εξέταση", "Διάγνωση", "Πλάνο θεραπείας", "Αθήνα"],
-    heroHighlightWord: "Κλινική εμπειρία",
-    heroTagline: "που εξελίσσεται επί 25+ χρόνια.",
     statYears: "Χρόνια πρακτικής",
     statYearsValue: "25+",
     statLangs: "Γλώσσες συνεδρίας",
@@ -149,9 +142,6 @@ const STRINGS: Record<Locale, HomeStrings> = {
     testimonialsPaginationSummary: "{{current}} · {{total}}",
   },
   ru: {
-    heroTrustItems: ["ЛОР-осмотр", "Диагностика", "План лечения", "Афины"],
-    heroHighlightWord: "клиническая работа",
-    heroTagline: "более 25 лет.",
     statYears: "лет практики",
     statYearsValue: "25+",
     statLangs: "языка консультаций",

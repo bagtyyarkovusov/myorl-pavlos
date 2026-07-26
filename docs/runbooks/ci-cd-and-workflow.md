@@ -166,6 +166,8 @@ Brings up the full Docker Compose stack:
 - Hot reload on all services via bind mounts
 - `npm ci` / `npm install` auto-runs when lockfile changes
 - Named `node_modules` volumes persist across restarts
+- Next.js waits for the Strapi health endpoint before starting, avoiding cached
+  CMS failures during a cold stack launch.
 - Next.js rewrites `/uploads/*` → Strapi for media proxy
 - Strapi CORS allows `localhost:3000` by default
 - The PostgreSQL host port defaults to `55432`. If another local project owns

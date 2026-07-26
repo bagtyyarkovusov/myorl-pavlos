@@ -47,6 +47,12 @@ services:
       ENCRYPTION_KEY: ${ENCRYPTION_KEY:-key}
     ports:
       - "1337:1337"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:1337/_health"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 5s
     depends_on:
       postgres:
         condition: service_healthy
@@ -86,7 +92,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - strapi
+      strapi:
+        condition: service_healthy
     volumes:
       - ./frontend:/app
       - nextjs_node_modules:/app/node_modules

@@ -158,7 +158,7 @@ Brings up the full Docker Compose stack:
 
 | Service | Container | Image | Port | Volume |
 |---------|-----------|-------|------|--------|
-| PostgreSQL | `myorl-pg` | `postgres:18` | `55432:5432` | `pgdata_dev` |
+| PostgreSQL | `myorl-pg` | `postgres:18` | `${MYORL_POSTGRES_PORT:-55432}:5432` | `pgdata_dev` |
 | Strapi | `myorl-strapi-dev` | `node:20-alpine` | `1337:1337` | `./backend:/app` |
 | Next.js | `myorl-nextjs-dev` | `node:24-slim` (Dockerfile.dev) | `3000:3000` | `./frontend:/app` |
 
@@ -168,6 +168,10 @@ Brings up the full Docker Compose stack:
 - Named `node_modules` volumes persist across restarts
 - Next.js rewrites `/uploads/*` → Strapi for media proxy
 - Strapi CORS allows `localhost:3000` by default
+- The PostgreSQL host port defaults to `55432`. If another local project owns
+  that port, start MYORL with an unused host port, for example
+  `MYORL_POSTGRES_PORT=55433 npm run dev`; service-to-service traffic continues
+  to use `postgres:5432` inside the Compose network.
 
 **Alternative commands:**
 

@@ -30,37 +30,13 @@ describe("LiteMap", () => {
     expect(iframe?.getAttribute("title")).toBe("Clinic location");
   });
 
-  describe("external mode", () => {
-    it("opens Google Maps in a new tab when externalHref is set", () => {
-      const openSpy = vi.spyOn(window, "open").mockReturnValue(null);
-      render(
-        <LiteMap
-          {...props}
-          externalHref="https://www.google.com/maps/search/?api=1&query=Athens"
-        />,
-      );
+  it("does not open an external Google Maps tab from page map blocks", () => {
+    const openSpy = vi.spyOn(window, "open").mockReturnValue(null);
+    const { container } = render(<LiteMap {...props} />);
 
-      fireEvent.click(screen.getByRole("button", { name: "Show map" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show map" }));
 
-      expect(openSpy).toHaveBeenCalledWith(
-        "https://www.google.com/maps/search/?api=1&query=Athens",
-        "_blank",
-        "noopener,noreferrer",
-      );
-      // No iframe should appear in external mode
-      expect(document.querySelector("iframe")).toBeNull();
-    });
-
-    it("renders the facade and hint text in external mode", () => {
-      const { container } = render(
-        <LiteMap
-          {...props}
-          externalHref="https://www.google.com/maps/search/?api=1&query=Athens"
-        />,
-      );
-      expect(container.querySelector("iframe")).toBeNull();
-      expect(screen.getByRole("button", { name: "Show map" })).toBeTruthy();
-      expect(screen.getByText("201 Alexandras Ave")).toBeTruthy();
-    });
+    expect(openSpy).not.toHaveBeenCalled();
+    expect(container.querySelector("iframe")).not.toBeNull();
   });
 });

@@ -1297,7 +1297,8 @@ describe("ClinicHubPage", () => {
     expect(screen.getByText("Ωτορινολαρυγγολόγος")).toBeDefined();
   });
 
-  it("renders map facade button with show-map label", async () => {
+  it("loads the office map in place after the visitor activates the facade", async () => {
+    const openSpy = vi.spyOn(window, "open").mockReturnValue(null);
     const hubPage: PageDTO = {
       ...BASE_PAGE,
       slug: "iatreio",
@@ -1322,7 +1323,12 @@ describe("ClinicHubPage", () => {
     });
     render(ui);
 
-    expect(screen.getByRole("button", { name: "Εμφάνιση χάρτη" })).toBeDefined();
+    fireEvent.click(screen.getByRole("button", { name: "Εμφάνιση χάρτη" }));
+
+    expect(openSpy).not.toHaveBeenCalled();
+    const iframe = document.querySelector("iframe");
+    expect(iframe?.getAttribute("src")).toContain("maps.google.com/maps");
+    expect(iframe?.getAttribute("src")).toContain("output=embed");
   });
 
   it("uses accent hero image variant for controlled office image sizing", async () => {

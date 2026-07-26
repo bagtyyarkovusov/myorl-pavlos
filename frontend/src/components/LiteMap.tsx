@@ -11,29 +11,17 @@ type LiteMapProps = {
   loadLabel: string;
   /** Optional secondary line on the facade, e.g. the clinic address. */
   hint?: string | null;
-  /**
-   * When set, the facade opens this URL in a new tab instead of loading the
-   * iframe in-place. Use for surfaces that should open Google Maps externally.
-   */
-  externalHref?: string;
 };
 
 /**
  * Privacy-friendly, click-to-load map. Renders a dimmed placeholder (no Google
  * request) until the visitor activates it — avoids third-party calls on first
  * paint and the "Google blocks the embed" problem. Modeled on {@link LiteYouTube}.
- *
- * When `externalHref` is set, clicking the facade opens Google Maps in a new
- * tab rather than embedding the map in-page.
  */
-export function LiteMap({ src, title, loadLabel, hint, externalHref }: LiteMapProps) {
+export function LiteMap({ src, title, loadLabel, hint }: LiteMapProps) {
   const [loaded, setLoaded] = useState(false);
 
   if (loaded) {
-    if (externalHref) {
-      return null;
-    }
-
     return (
       <iframe
         className={styles.frame}
@@ -47,11 +35,6 @@ export function LiteMap({ src, title, loadLabel, hint, externalHref }: LiteMapPr
   }
 
   const handleClick = () => {
-    if (externalHref) {
-      window.open(externalHref, "_blank", "noopener,noreferrer");
-      setLoaded(true);
-      return;
-    }
     setLoaded(true);
   };
 

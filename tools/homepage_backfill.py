@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
 
 from tools.strapi_client import StrapiClient
 MODX_FLAT_PATH = ROOT / "data/source/modx/published_resources_flat.json"
+HOMEPAGE_LINK_REPORT_PATH = ROOT / "artifacts/reports/homepage_link_recovery_live_report.json"
 DEFAULT_PLAN_PATH = ROOT / "artifacts/reports/homepage_backfill_plan.json"
 
 CONTEXT_TO_LOCALE = {"web": "el", "rus": "ru"}
@@ -33,6 +34,33 @@ SECTION_SPECS = {
     "hero": "sections.home-hero",
     "testimonials": "sections.home-testimonials-teaser",
     "notice": "sections.home-notice",
+}
+
+RESOURCE_GROUP_HEADINGS = {
+    "el": {
+        "operations": "Επεμβάσεις",
+        "services": "Υπηρεσίες",
+    },
+    "ru": {
+        "operations": "ЛОР Операции",
+        "services": "Услуги",
+    },
+}
+
+RESOURCE_GROUP_VIEW_ALL_LABELS = {
+    "el": {
+        "operations": "Όλες οι επεμβάσεις",
+        "services": "Όλες οι υπηρεσίες",
+    },
+    "ru": {
+        "operations": "Все операции",
+        "services": "Все услуги",
+    },
+}
+
+RESOURCE_GROUP_VIEW_ALL_TARGETS = {
+    "operations": "a113qd6vmow3krxzimy1rtut",
+    "services": "jdsakp5pldnhyiu5bv60mbii",
 }
 
 FALLBACK_TESTIMONIALS = {
@@ -111,6 +139,52 @@ def build_homepage_backfill_plan(
             if updated:
                 updated_count += 1
 
+        for resource_group in source.get("resourceGroups") or []:
+            if not isinstance(resource_group, dict):
+                continue
+            group = resource_group.get("group")
+            if group not in ("operations", "services"):
+                skipped.append(
+                    {"locale": locale, "reason": "invalid-resource-group", "group": group}
+                )
+                continue
+
+            component = "sections.home-resource-group"
+            existing = find_home_resource_group(sections, group)
+            if existing is None:
+                sections.append(build_section(component, resource_group))
+                created_count += 1
+                continue
+
+            updated = False
+            for field, source_value in build_section_fields(component, resource_group).items():
+                if is_blank(source_value):
+                    continue
+                current_value = existing.get(field)
+                if is_blank(current_value):
+                    existing[field] = source_value
+                    updated = True
+                    continue
+                if normalize(current_value) == normalize(source_value):
+                    continue
+                if (locale, component, field) in approved_overwrites:
+                    existing[field] = source_value
+                    updated = True
+                    continue
+                conflicts.append(
+                    {
+                        "locale": locale,
+                        "documentId": page.get("documentId"),
+                        "component": component,
+                        "group": group,
+                        "field": field,
+                        "current": current_value,
+                        "source": source_value,
+                    }
+                )
+            if updated:
+                updated_count += 1
+
         updates.append(
             {
                 "documentId": page.get("documentId"),
@@ -148,6 +222,15 @@ def build_section_fields(component: str, source: dict[str, Any]) -> dict[str, An
             "ctaLabel": source.get("ctaLabel"),
             "ctaUrl": source.get("ctaUrl"),
         }
+    if component == "sections.home-resource-group":
+        return {
+            "group": source.get("group"),
+            "heading": source.get("heading"),
+            "intro": source.get("intro"),
+            "items": source.get("items") or [],
+            "viewAllTarget": source.get("viewAllTarget"),
+            "viewAllLabel": source.get("viewAllLabel"),
+        }
     return {
         "heading": source.get("heading"),
         "intro": source.get("intro"),
@@ -161,6 +244,17 @@ def find_section(sections: list[dict[str, Any]], component: str) -> dict[str, An
     return None
 
 
+def find_home_resource_group(sections: list[dict[str, Any]], group: str) -> dict[str, Any] | None:
+    for section in sections:
+        if (
+            isinstance(section, dict)
+            and section.get("__component") == "sections.home-resource-group"
+            and section.get("group") == group
+        ):
+            return section
+    return None
+
+
 def is_blank(value: Any) -> bool:
     return value is None or (isinstance(value, str) and value.strip() == "")
 
@@ -169,8 +263,12 @@ def normalize(value: Any) -> str:
     return str(value).strip()
 
 
-def load_home_sources(path: Path = MODX_FLAT_PATH) -> list[dict[str, Any]]:
+def load_home_sources(
+    path: Path = MODX_FLAT_PATH,
+    resource_report_path: Path = HOMEPAGE_LINK_REPORT_PATH,
+) -> list[dict[str, Any]]:
     resources = json.loads(path.read_text(encoding="utf-8"))
+    resource_groups_by_locale = load_home_resource_groups(resource_report_path)
     sources: list[dict[str, Any]] = []
     for resource in resources:
         if not isinstance(resource, dict):
@@ -186,7 +284,9 @@ def load_home_sources(path: Path = MODX_FLAT_PATH) -> list[dict[str, Any]]:
                 "locale": locale,
                 "hero": {
                     "kicker": tvs.get("articleAuthor") or None,
-                    "heading": (resource.get("longtitle") or resource.get("description") or "").strip(),
+                    "heading": (
+                        resource.get("longtitle") or resource.get("description") or ""
+                    ).strip(),
                     "intro": hero_intro,
                     "media": tvs.get("imageVideo") or None,
                     "ctaLabel": None,
@@ -197,9 +297,110 @@ def load_home_sources(path: Path = MODX_FLAT_PATH) -> list[dict[str, Any]]:
                     "heading": None,
                     "intro": notice_intro,
                 },
+                "resourceGroups": resource_groups_by_locale.get(locale, []),
             }
         )
     return sources
+
+
+def load_home_resource_groups(
+    path: Path = HOMEPAGE_LINK_REPORT_PATH,
+) -> dict[str, list[dict[str, Any]]]:
+    if not path.exists():
+        return {}
+
+    report = json.loads(path.read_text(encoding="utf-8"))
+    groups_by_locale: dict[str, list[dict[str, Any]]] = {}
+    for update in report.get("plannedHomepageUpdates") or []:
+        if not isinstance(update, dict):
+            continue
+        locale = update.get("locale")
+        if locale not in LOCALES:
+            continue
+
+        sections = ((update.get("payload") or {}).get("pageSections") or [])
+        promo_section = next(
+            (
+                section
+                for section in sections
+                if isinstance(section, dict)
+                and section.get("__component") == "sections.promo-slider"
+            ),
+            None,
+        )
+        linked_section = next(
+            (
+                section
+                for section in sections
+                if isinstance(section, dict)
+                and section.get("__component") == "sections.linked-resources"
+            ),
+            None,
+        )
+
+        groups: list[dict[str, Any]] = []
+        if promo_section:
+            groups.append(
+                build_resource_group_from_items(
+                    locale,
+                    "operations",
+                    promo_section.get("slides") or [],
+                )
+            )
+        if linked_section:
+            groups.append(
+                build_resource_group_from_items(
+                    locale,
+                    "services",
+                    linked_section.get("items") or [],
+                )
+            )
+        groups_by_locale[locale] = groups
+
+    return groups_by_locale
+
+
+def build_resource_group_from_items(
+    locale: str,
+    group: str,
+    items: list[dict[str, Any]],
+) -> dict[str, Any]:
+    return {
+        "group": group,
+        "heading": RESOURCE_GROUP_HEADINGS[locale][group],
+        "intro": None,
+        "items": [to_linked_resource_item(item) for item in items if isinstance(item, dict)],
+        "viewAllTarget": {
+            "connect": [
+                RESOURCE_GROUP_VIEW_ALL_TARGETS[group],
+            ]
+        },
+        "viewAllLabel": RESOURCE_GROUP_VIEW_ALL_LABELS[locale][group],
+    }
+
+
+def to_linked_resource_item(item: dict[str, Any]) -> dict[str, Any]:
+    allowed_keys = ("title", "description", "targetPage", "targetUrl", "legacySourceResourceId")
+    out = {key: item[key] for key in allowed_keys if key in item}
+    out["targetPage"] = normalize_relation_payload(out.get("targetPage"))
+    return {key: value for key, value in out.items() if value is not None}
+
+
+def normalize_relation_payload(value: Any) -> Any:
+    if not isinstance(value, dict):
+        return value
+    if "connect" not in value:
+        return value
+
+    connected: list[Any] = []
+    raw_connect = value.get("connect")
+    if isinstance(raw_connect, list):
+        for entry in raw_connect:
+            if isinstance(entry, str):
+                connected.append(entry)
+            elif isinstance(entry, dict) and entry.get("documentId"):
+                connected.append(str(entry["documentId"]))
+    return {"connect": connected} if connected else None
 
 
 def fetch_current_home_pages(client: StrapiClient) -> list[dict[str, Any]]:
@@ -210,7 +411,22 @@ def fetch_current_home_pages(client: StrapiClient) -> list[dict[str, Any]]:
             **{
                 "locale": locale,
                 "filters[slug][$eq]": "index",
-                "populate[pageSections][populate]": "*",
+                "populate[pageSections][on][sections.promo-slider][populate][slides][populate][targetPage][fields][0]": "documentId",
+                "populate[pageSections][on][sections.promo-slider][populate][slides][populate][targetPage][fields][1]": "slug",
+                "populate[pageSections][on][sections.promo-slider][populate][slides][populate][targetPage][fields][2]": "title",
+                "populate[pageSections][on][sections.promo-slider][populate][slides][populate][image]": "true",
+                "populate[pageSections][on][sections.linked-resources][populate][items][populate][targetPage][fields][0]": "documentId",
+                "populate[pageSections][on][sections.linked-resources][populate][items][populate][targetPage][fields][1]": "slug",
+                "populate[pageSections][on][sections.linked-resources][populate][items][populate][targetPage][fields][2]": "title",
+                "populate[pageSections][on][sections.social-links][populate][links]": "true",
+                "populate[pageSections][on][sections.video][populate][videos]": "true",
+                "populate[pageSections][on][sections.advantages][populate][items]": "true",
+                "populate[pageSections][on][sections.home-hero][populate][media]": "true",
+                "populate[pageSections][on][sections.home-hero][populate][ctaTargetPage][fields][0]": "documentId",
+                "populate[pageSections][on][sections.home-resource-group][populate][items][populate][targetPage][fields][0]": "documentId",
+                "populate[pageSections][on][sections.home-resource-group][populate][items][populate][targetPage][fields][1]": "slug",
+                "populate[pageSections][on][sections.home-resource-group][populate][items][populate][targetPage][fields][2]": "title",
+                "populate[pageSections][on][sections.home-resource-group][populate][viewAllTarget][fields][0]": "documentId",
             },
         )
         data = response.get("data") or []
@@ -224,13 +440,59 @@ def apply_plan(client: StrapiClient, plan: dict[str, Any]) -> list[dict[str, Any
     for update in plan.get("updates", []):
         document_id = update["documentId"]
         locale = update["locale"]
+        payload = sanitize_payload_for_write(deepcopy(update["payload"]))
         result = client.put(
             f"/api/pages/{document_id}",
-            {"data": update["payload"]},
+            {"data": payload},
             locale=locale,
         )
         results.append({"documentId": document_id, "locale": locale, "result": result})
     return results
+
+
+RELATION_FIELD_NAMES = {"targetPage", "viewAllTarget", "ctaTargetPage"}
+MEDIA_FIELD_NAMES = {"image", "media", "thumbnail", "videoMp4", "videoWebm"}
+
+
+def sanitize_payload_for_write(payload: dict[str, Any]) -> dict[str, Any]:
+    sections = payload.get("pageSections")
+    if isinstance(sections, list):
+        payload["pageSections"] = [sanitize_write_value(section, field_name=None) for section in sections]
+    return payload
+
+
+def sanitize_write_value(value: Any, *, field_name: str | None) -> Any:
+    if field_name in RELATION_FIELD_NAMES:
+        return relation_write_value(value)
+    if field_name in MEDIA_FIELD_NAMES:
+        return media_write_value(value)
+    if isinstance(value, list):
+        return [sanitize_write_value(item, field_name=None) for item in value]
+    if isinstance(value, dict):
+        return {
+            key: sanitize_write_value(child, field_name=key)
+            for key, child in value.items()
+        }
+    return value
+
+
+def relation_write_value(value: Any) -> Any:
+    if value is None:
+        return None
+    normalized = normalize_relation_payload(value)
+    if isinstance(normalized, dict) and normalized.get("connect"):
+        return normalized
+    if isinstance(value, dict) and value.get("documentId"):
+        return {"connect": [str(value["documentId"])]}
+    if isinstance(value, str):
+        return {"connect": [value]}
+    return value
+
+
+def media_write_value(value: Any) -> Any:
+    if isinstance(value, dict) and value.get("id") is not None:
+        return value["id"]
+    return value
 
 
 def parse_overwrite(value: str) -> tuple[str, str, str]:

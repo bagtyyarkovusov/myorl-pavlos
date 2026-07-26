@@ -15,7 +15,6 @@ import {
   resolvePrimaryPhoneLinks,
   resolveVisitAddressBlock,
   mapEmbedSrcFromAddress,
-  mapsSearchUrl,
 } from "@/lib/site/contact-fallbacks";
 import { PageHeader, type PageLayoutProps } from "./_shared";
 
@@ -38,7 +37,6 @@ export async function ClinicHubPage({ page, appointmentHref, globalSettings }: P
     : null;
   const email = globalSettings ? resolveContactEmail(globalSettings) : null;
   const mapSrc = addressBlock ? mapEmbedSrcFromAddress(addressBlock) : null;
-  const mapsUrl = addressBlock ? mapsSearchUrl(addressBlock) : null;
   const hasPhones = globalSettings ? resolvePrimaryPhoneLinks(globalSettings).length > 0 : false;
 
   return (
@@ -100,7 +98,6 @@ export async function ClinicHubPage({ page, appointmentHref, globalSettings }: P
                 title={t.officeMapTitle}
                 loadLabel={t.officeMapShowLabel}
                 hint={addressBlock}
-                externalHref={mapsUrl ?? undefined}
               />
             </div>
           ) : null}

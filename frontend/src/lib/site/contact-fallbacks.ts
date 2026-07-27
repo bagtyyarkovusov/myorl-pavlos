@@ -5,8 +5,8 @@ export type ResolvedPhoneLink = {
   display: string;
 };
 
-/** Stable coordinates from the clinic's legacy Google Business listing. */
-export const PRIMARY_CLINIC_COORDINATES = "37.983315,23.738826";
+/** Verified location of the clinic at Alexandras Avenue 201. */
+export const PRIMARY_CLINIC_COORDINATES = "37.9873467,23.7580431";
 
 function compactAddressFromCms(raw: string): string {
   return raw

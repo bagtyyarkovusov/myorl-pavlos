@@ -7,15 +7,15 @@ describe("canonical clinic map links", () => {
     const el = primaryClinicMapEmbedSrc("el");
     const ru = primaryClinicMapEmbedSrc("ru");
 
-    expect(el).toContain("37.983315%2C23.738826");
-    expect(ru).toContain("37.983315%2C23.738826");
+    expect(el).toContain("37.9873467%2C23.7580431");
+    expect(ru).toContain("37.9873467%2C23.7580431");
     expect(el).toContain("hl=el");
     expect(ru).toContain("hl=ru");
   });
 
   it("builds the secondary Google Maps destination from the same coordinates", () => {
     expect(primaryClinicMapsUrl()).toBe(
-      "https://www.google.com/maps/search/?api=1&query=37.983315%2C23.738826",
+      "https://www.google.com/maps/search/?api=1&query=37.9873467%2C23.7580431",
     );
   });
 });

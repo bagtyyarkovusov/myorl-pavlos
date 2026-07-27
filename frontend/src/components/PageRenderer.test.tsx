@@ -305,17 +305,29 @@ describe("PageRenderer", () => {
     });
   });
 
-  it("renders QuestionListPage for accordion page type", async () => {
+  it("renders stored article details in QuestionListPage for accordion articles", async () => {
     const accordionPage: PageDTO = {
       ...BASE_PAGE,
       pageType: "accordion",
-      layoutVariant: "standard",
+      layoutVariant: "service-accordion",
       title: "Accordion",
+      articleAuthor: "Dr Expert, MD",
+      sources: "<ol><li>Stored journal source</li></ol>",
+      tags: [{ name: "Hidden article taxonomy", slug: "hidden-topic" }],
     };
-    render(<PageRenderer page={accordionPage} />);
+    render(
+      <PageRenderer
+        page={accordionPage}
+        globalSettings={{ ...MOCK_GLOBAL_SETTINGS, disclaimerText: "Stored medical disclaimer." }}
+      />,
+    );
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: "Accordion" })).toBeDefined();
     });
+    expect(screen.getByText("Dr Expert, MD")).toBeDefined();
+    expect(screen.getByText("Stored journal source")).toBeDefined();
+    expect(screen.getByRole("note")).toHaveTextContent("Stored medical disclaimer.");
+    expect(screen.queryByLabelText("Tags")).toBeNull();
   });
 
   it("renders QuestionListPage for tabs page type", async () => {

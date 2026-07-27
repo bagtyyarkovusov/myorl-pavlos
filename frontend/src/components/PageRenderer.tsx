@@ -143,7 +143,12 @@ export function PageRenderer({
     );
   } else if (page.pageType === "faq" || page.pageType === "accordion" || page.pageType === "tabs") {
     layout = (
-      <QuestionListPage page={page} navigation={navigation} appointmentHref={appointmentHref} />
+      <QuestionListPage
+        page={page}
+        navigation={navigation}
+        appointmentHref={appointmentHref}
+        disclaimerText={globalSettings?.disclaimerText}
+      />
     );
   } else if (page.pageType === "gallery") {
     layout = <GalleryPage page={page} />;

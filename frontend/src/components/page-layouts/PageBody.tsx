@@ -19,7 +19,7 @@ const MEDICAL_LAYOUT_VARIANTS: ReadonlySet<LayoutVariant> = new Set([
   "specialized-article",
 ]);
 
-function shouldShowDisclaimer(
+export function shouldShowArticleDisclaimer(
   page: PageDTO,
   disclaimerText?: string | null,
 ): disclaimerText is string {
@@ -137,7 +137,7 @@ function DefaultPageBody({
           locale={page.locale}
         />
       ) : null}
-      {shouldShowDisclaimer(page, disclaimerText) ? (
+      {shouldShowArticleDisclaimer(page, disclaimerText) ? (
         <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
       ) : null}
     </div>
@@ -241,7 +241,7 @@ function ServiceArticleBody({
               locale={page.locale}
             />
           ) : null}
-          {shouldShowDisclaimer(page, disclaimerText) ? (
+          {shouldShowArticleDisclaimer(page, disclaimerText) ? (
             <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
           ) : null}
         </article>
@@ -418,7 +418,7 @@ function ArticleAsideBody({
               />
             </section>
           ) : null}
-          {shouldShowDisclaimer(page, disclaimerText) ? (
+          {shouldShowArticleDisclaimer(page, disclaimerText) ? (
             <ArticleDisclaimer disclaimerText={disclaimerText} locale={page.locale} />
           ) : null}
         </article>

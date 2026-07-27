@@ -20,6 +20,7 @@ export function PageHeader({
   breadcrumbsEnabled = true,
   heroImageVariant = "default",
   showExcerpt = true,
+  showTags = true,
   showHeroImage = true,
 }: {
   page: PageDTO;
@@ -30,6 +31,8 @@ export function PageHeader({
   heroImageVariant?: "default" | "accent";
   /** When false, suppresses CMS excerpt under the page title. */
   showExcerpt?: boolean;
+  /** Article taxonomy remains available to CMS/search; show it only on intended discovery surfaces. */
+  showTags?: boolean;
   /** When false, suppresses featured/center image even if CMS provides one. */
   showHeroImage?: boolean;
 }) {
@@ -54,7 +57,7 @@ export function PageHeader({
       ) : null}
       <h1>{page.title}</h1>
       {showExcerpt && page.excerpt ? <p className={styles.excerpt}>{page.excerpt}</p> : null}
-      {page.tags.length > 0 ? (
+      {showTags && page.tags.length > 0 ? (
         <ul className={styles["tag-list"]} aria-label="Tags">
           {page.tags.map((tag) => (
             <li key={tag.slug}>{tag.name}</li>

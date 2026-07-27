@@ -428,6 +428,27 @@
   margin-bottom: clamp(16px, 2.5vw, 26px);
 }
 
+.article-byline {
+  display: grid;
+  gap: 4px;
+  margin: calc(-1 * clamp(12px, 2vw, 20px)) 0 0;
+}
+
+.article-byline span {
+  color: var(--color-stone-soft);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.article-byline strong {
+  color: var(--foreground);
+  font-size: var(--type-prose);
+  font-weight: 600;
+}
+
 .sources-block {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);

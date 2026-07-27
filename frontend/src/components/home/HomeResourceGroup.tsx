@@ -27,7 +27,7 @@ export function HomeResourceGroup({ section, locale, learnMoreLabel }: HomeResou
       }
     >
       <ol className={styles["resource-list"]} role="list">
-        {section.items.map((item, index) => {
+        {section.items.slice(0, 6).map((item, index) => {
           const href =
             item.targetUrl ??
             (item.targetPage?.slug ? `/${locale}/${item.targetPage.slug}` : `/${locale}/sitemap`);

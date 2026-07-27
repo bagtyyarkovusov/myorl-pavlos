@@ -120,7 +120,7 @@ describe("HomeResourceGroup", () => {
     expect(screen.getAllByRole("link")).toHaveLength(2);
   });
 
-  it("renders all items (no slice limit)", () => {
+  it("renders at most six homepage items and keeps the view-all link", () => {
     const items = Array.from({ length: 10 }, (_, i) => ({
       title: `Item ${i + 1}`,
       description: null,
@@ -128,9 +128,19 @@ describe("HomeResourceGroup", () => {
       targetPage: { documentId: `${i}`, slug: `item-${i + 1}`, title: `Item ${i + 1}` },
       targetUrl: null,
     }));
-    const section = makeSection({ items });
+    const section = makeSection({
+      items,
+      viewAllLabel: "Όλες οι υπηρεσίες",
+      viewAllTarget: { documentId: "services", slug: "yperesies", title: "Services" },
+    });
     render(<HomeResourceGroup section={section} locale="el" learnMoreLabel="Learn more" />);
-    expect(screen.getAllByRole("link")).toHaveLength(10);
+    expect(screen.getAllByRole("link")).toHaveLength(7);
+    expect(screen.getByRole("link", { name: /Item 6/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Item 7/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Όλες οι υπηρεσίες/ })).toHaveAttribute(
+      "href",
+      "/el/yperesies",
+    );
   });
 
   it("renders group with operations heading", () => {

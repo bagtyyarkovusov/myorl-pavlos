@@ -76,6 +76,7 @@ export function orderHomeRenderItems(sections: readonly SectionDTO[]): HomeRende
   const items: HomeRenderItem[] = [];
   const promoSections = groups.get("sections.promo-slider") ?? [];
   const linkedSections = groups.get("sections.linked-resources") ?? [];
+  const resourceGroups = groups.get("sections.home-resource-group") ?? [];
 
   appendSections(items, promoSections);
   if (promoSections.length > 0) {
@@ -90,8 +91,10 @@ export function orderHomeRenderItems(sections: readonly SectionDTO[]): HomeRende
     });
   }
 
-  appendSections(items, groups.get("sections.home-resource-group") ?? []);
-  appendSections(items, linkedSections);
+  appendSections(items, resourceGroups);
+  if (resourceGroups.length === 0) {
+    appendSections(items, linkedSections);
+  }
 
   for (const item of groups.get("sections.home-testimonials-teaser") ?? []) {
     items.push({

@@ -1,7 +1,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  z-index: 30;
+  z-index: 70;
   background: var(--overlay-backdrop);
   opacity: 0;
   transition: opacity var(--motion-duration-default) var(--motion-ease-out);
@@ -15,7 +15,7 @@
   position: fixed;
   top: calc(88px + 36px + 4px); /* header height + utility bar + gap */
   right: max(16px, calc((100vw - 1280px) / 2 + 16px));
-  z-index: 31;
+  z-index: 71;
   width: min(520px, calc(100vw - 32px));
   border: 1px solid var(--line);
   border-radius: var(--radius-md);

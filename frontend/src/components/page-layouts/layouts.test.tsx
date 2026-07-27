@@ -486,7 +486,28 @@ describe("SystemPage", () => {
 });
 
 describe("HomePage", () => {
-  it("renders hero title", () => {
+  it("does not render a fallback hero while the homepage hero is hidden", () => {
+    render(
+      <HomePage
+        page={{
+          ...BASE_PAGE,
+          pageType: "home",
+          layoutVariant: "home",
+          title: "Меню",
+          seoTitle: "ЛОР Врач в Афинах",
+          seo: { ...BASE_PAGE.seo, metaTitle: "ЛОР Врач в Афинах" },
+        }}
+        appointmentHref="/ru/zapis"
+        navigation={[]}
+        settings={{ ...MOCK_GLOBAL_SETTINGS, locale: "ru" }}
+      />,
+    );
+
+    expect(screen.queryByRole("heading", { name: "ЛОР Врач в Афинах" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Меню" })).toBeNull();
+  });
+
+  it("renders the homepage locale wrapper", () => {
     const homePage: PageDTO = {
       ...BASE_PAGE,
       pageType: "home",
@@ -656,7 +677,7 @@ describe("HomePage", () => {
     expect(screen.getByRole("link", { name: /Video/ })).toHaveAttribute("href", "/el/video");
   });
 
-  it("renders home hero, testimonials heading, and notice from Strapi sections", () => {
+  it("keeps the home hero hidden while rendering testimonials and notice from Strapi", () => {
     const homePage: PageDTO = {
       ...BASE_PAGE,
       pageType: "home",
@@ -703,7 +724,7 @@ describe("HomePage", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "CMS hero heading" })).toBeDefined();
+    expect(screen.queryByRole("heading", { name: "CMS hero heading" })).toBeNull();
     expect(screen.getByText("CMS testimonials heading")).toBeDefined();
     expect(screen.getByText("CMS notice body")).toBeDefined();
     expect(screen.queryByText("Τι γράφουν στο Google Maps")).toBeNull();

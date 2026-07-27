@@ -74,6 +74,11 @@ FALLBACK_TESTIMONIALS = {
     },
 }
 
+HOME_CTA_LABELS = {
+    "el": "Κλείσε ραντεβού",
+    "ru": "Записаться на приём",
+}
+
 
 def build_homepage_backfill_plan(
     sources: list[dict[str, Any]],
@@ -185,6 +190,22 @@ def build_homepage_backfill_plan(
             if updated:
                 updated_count += 1
 
+        has_resource_groups = any(
+            isinstance(section, dict)
+            and section.get("__component") == "sections.home-resource-group"
+            for section in sections
+        )
+        if has_resource_groups:
+            sections = [
+                section
+                for section in sections
+                if not (
+                    isinstance(section, dict)
+                    and section.get("__component")
+                    in {"sections.linked-resources", "sections.social-links"}
+                )
+            ]
+
         updates.append(
             {
                 "documentId": page.get("documentId"),
@@ -278,18 +299,17 @@ def load_home_sources(
             continue
         tvs = resource.get("template_variables") or {}
         hero_intro = (resource.get("introtext") or "").strip()
+        legacy_title = (resource.get("longtitle") or resource.get("description") or "").strip()
         notice_intro = (tvs.get("infoBlockBottom") or hero_intro or "").strip()
         sources.append(
             {
                 "locale": locale,
                 "hero": {
-                    "kicker": tvs.get("articleAuthor") or None,
-                    "heading": (
-                        resource.get("longtitle") or resource.get("description") or ""
-                    ).strip(),
+                    "kicker": legacy_home_kicker(locale, legacy_title),
+                    "heading": legacy_home_heading(legacy_title),
                     "intro": hero_intro,
-                    "media": tvs.get("imageVideo") or None,
-                    "ctaLabel": None,
+                    "media": None,
+                    "ctaLabel": HOME_CTA_LABELS[locale],
                     "ctaUrl": f"/{locale}/rantevou" if locale == "el" else f"/{locale}/zapis",
                 },
                 "testimonials": FALLBACK_TESTIMONIALS[locale],
@@ -301,6 +321,19 @@ def load_home_sources(
             }
         )
     return sources
+
+
+def legacy_home_heading(long_title: str) -> str:
+    return long_title.split(" - ", 1)[0].strip()
+
+
+def legacy_home_kicker(locale: str, long_title: str) -> str | None:
+    if locale == "ru":
+        parts = [part.strip() for part in long_title.split(" - ")]
+        return parts[1] if len(parts) > 1 else None
+
+    parts = [part.strip() for part in long_title.split("|")]
+    return parts[1] if len(parts) > 1 else None
 
 
 def load_home_resource_groups(

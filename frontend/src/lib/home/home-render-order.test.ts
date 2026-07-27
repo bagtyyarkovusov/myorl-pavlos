@@ -98,7 +98,7 @@ describe("orderHomeRenderItems", () => {
     ]);
   });
 
-  it("places home-resource-group sections after advantages and before linked-resources", () => {
+  it("uses home resource groups instead of the legacy linked resources section", () => {
     const result = labelsFor([
       makeSection("sections.linked-resources", "Links"),
       makeSection("sections.home-resource-group", "Operations"),
@@ -111,7 +111,6 @@ describe("orderHomeRenderItems", () => {
       "menu-access-grid",
       "home-advantages:Advantages",
       "section:sections.home-resource-group:Operations",
-      "section:sections.linked-resources:Links",
       "home-visit-map",
     ]);
   });

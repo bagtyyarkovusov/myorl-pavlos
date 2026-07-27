@@ -20,6 +20,24 @@ test.describe("search overlay — desktop", () => {
     await expect(input).toBeFocused();
   });
 
+  test("search overlay layers above the fixed site header", async ({ page }) => {
+    await page.goto("/ru");
+    await page.locator('button[aria-label="Поиск"]').click();
+
+    const overlay = page.locator("#search-overlay");
+    const backdrop = overlay.locator("..");
+    const fixedHeader = page.locator('[class*="header-anchor"]');
+
+    await expect(overlay).toBeVisible();
+
+    const [backdropZIndex, headerZIndex] = await Promise.all([
+      backdrop.evaluate((element) => Number(getComputedStyle(element).zIndex)),
+      fixedHeader.evaluate((element) => Number(getComputedStyle(element).zIndex)),
+    ]);
+
+    expect(backdropZIndex).toBeGreaterThan(headerZIndex);
+  });
+
   test("typing 2+ characters shows results", async ({ page }) => {
     await page.goto("/el");
     await page.locator('button[aria-label="Αναζήτηση"]').click();

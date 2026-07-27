@@ -1,4 +1,25 @@
-from tools.homepage_backfill import build_homepage_backfill_plan
+from tools.homepage_backfill import build_homepage_backfill_plan, load_home_sources
+
+
+def test_homepage_backfill_uses_patient_facing_legacy_title_copy_for_home_heroes():
+    sources = {source["locale"]: source for source in load_home_sources()}
+
+    assert sources["ru"]["hero"] == {
+        "kicker": "Pavlos Tsolaridis, M.D.",
+        "heading": "ЛОР Врач в Афинах",
+        "intro": (
+            "Pavlos Tsolaridis, M.D. является хирургом-оториноларингологом в Афинах. "
+            "Высокоспециализированное обследование, диагностика, лечение ЛОР-заболеваний "
+            "у взрослых и детей по предварительной записи."
+        ),
+        "media": None,
+        "ctaLabel": "Записаться на приём",
+        "ctaUrl": "/ru/zapis",
+    }
+    assert sources["el"]["hero"]["kicker"] == "Παύλος Τσολαρίδης του Αλεξίου, M.D"
+    assert sources["el"]["hero"]["heading"] == "ΩΡΛ Αθήνα"
+    assert sources["el"]["hero"]["media"] is None
+    assert sources["el"]["hero"]["ctaLabel"] == "Κλείσε ραντεβού"
 
 
 def test_homepage_backfill_fills_missing_sections_and_reports_conflicts():
@@ -69,6 +90,43 @@ def test_homepage_backfill_creates_home_resource_groups_from_legacy_sources():
     assert sections[0]["items"][0]["targetPage"]["connect"][0]["documentId"] == "operation-page"
     assert sections[1]["group"] == "services"
     assert sections[1]["heading"] == "Услуги"
+
+
+def test_homepage_backfill_removes_legacy_linked_resources_after_resource_groups_exist():
+    source = {
+        "locale": "ru",
+        "resourceGroups": [
+            {
+                "group": "services",
+                "heading": "Услуги",
+                "items": [{"title": "Услуга 1"}],
+                "viewAllLabel": "Все услуги",
+            }
+        ],
+    }
+    current_page = {
+        "documentId": "home-ru",
+        "locale": "ru",
+        "pageSections": [
+            {
+                "__component": "sections.linked-resources",
+                "heading": None,
+                "items": [{"title": "Услуга 1"}],
+            },
+            {
+                "__component": "sections.social-links",
+                "heading": None,
+                "links": [{"label": "Legacy social link"}],
+            },
+        ],
+    }
+
+    plan = build_homepage_backfill_plan([source], [current_page])
+    sections = plan["updates"][0]["payload"]["pageSections"]
+
+    assert [section["__component"] for section in sections] == [
+        "sections.home-resource-group"
+    ]
 
 
 def test_homepage_backfill_does_not_overwrite_non_empty_resource_group_items():

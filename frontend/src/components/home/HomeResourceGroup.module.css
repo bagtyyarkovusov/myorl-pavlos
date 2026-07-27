@@ -202,13 +202,14 @@
   }
 
   .resource-row__visual {
-    align-self: stretch;
+    width: 100%;
+    align-self: center;
   }
 
   .resource-row__frame {
     aspect-ratio: 1 / 1 !important;
-    height: 100%;
-    width: auto;
+    width: 100%;
+    height: auto;
   }
 
   .resource-row__title {

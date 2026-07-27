@@ -20,10 +20,28 @@ describe("home section policy", () => {
   });
 
   it("accepts the approved home components", () => {
-    const sections = HOME_ALLOWED_SECTION_COMPONENTS.map((component) => ({ __component: component }));
+    for (const component of HOME_ALLOWED_SECTION_COMPONENTS) {
+      expect(() =>
+        validatePageSectionsForLayout({
+          layoutVariant: "home",
+          pageSections: [{ __component: component }],
+        }),
+      ).not.toThrow();
+    }
+  });
 
-    expect(() => validatePageSectionsForLayout({ layoutVariant: "home", pageSections: sections }))
-      .not.toThrow();
+  it("rejects the legacy linked resources section when home resource groups are present", () => {
+    expect(() =>
+      validatePageSectionsForLayout({
+        layoutVariant: "home",
+        pageSections: [
+          { __component: "sections.linked-resources" },
+          { __component: "sections.home-resource-group" },
+        ],
+      }),
+    ).toThrow(
+      "Home pages cannot combine sections.linked-resources with sections.home-resource-group",
+    );
   });
 
   it("rejects contact, social, FAQ, accordion, tabs, and gallery sections on home", () => {

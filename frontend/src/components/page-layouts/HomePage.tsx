@@ -1,4 +1,3 @@
-import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAdvantagesSection } from "@/components/home/HomeAdvantagesSection";
 import { HomeTestimonialsTeaser } from "@/components/home/HomeTestimonialsTeaser";
 import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
@@ -16,24 +15,8 @@ type HomePageProps = PageLayoutProps & {
   homeTestimonials?: HomeTestimonialsPayload | null;
 };
 
-export function HomePage({
-  page,
-  appointmentHref,
-  navigation,
-  settings,
-  homeTestimonials = null,
-}: HomePageProps) {
-  const heroSection = page.sections.find((s) => s.__component === "sections.home-hero");
-  const homeHero = heroSection?.__component === "sections.home-hero" ? heroSection : undefined;
-
-  const heroMedia = homeHero?.media ?? page.imageCenter ?? page.featuredImage ?? null;
-  const heroCtaHref = homeHero
-    ? (homeHero.ctaUrl ??
-      (homeHero.ctaTargetPage?.slug
-        ? `/${page.locale}/${homeHero.ctaTargetPage.slug}`
-        : appointmentHref))
-    : appointmentHref;
-  const heroCtaLabel = homeHero?.ctaLabel ?? "";
+export function HomePage({ page, navigation, settings, homeTestimonials = null }: HomePageProps) {
+  // Keep the CMS hero content intact while the client-requested homepage presentation hides it.
   const orderedItems = orderHomeRenderItems(
     page.sections.filter((s) => s.__component !== "sections.home-hero"),
   );
@@ -41,15 +24,6 @@ export function HomePage({
   return (
     <>
       <div data-locale={page.locale}>
-        <HomeHero
-          kicker={homeHero?.kicker ?? ""}
-          title={homeHero?.heading ?? page.title}
-          excerpt={homeHero?.intro ?? page.excerpt}
-          media={heroMedia}
-          ctaHref={heroCtaHref}
-          ctaLabel={heroCtaLabel}
-        />
-
         {orderedItems.map((item, index) => {
           switch (item.kind) {
             case "section":

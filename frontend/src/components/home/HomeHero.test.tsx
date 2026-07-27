@@ -43,4 +43,13 @@ describe("HomeHero", () => {
 
     expect(screen.getByRole("img", { name: "Custom hero image" })).toBeDefined();
   });
+
+  it("does not render empty kicker or appointment controls", () => {
+    const { container } = render(
+      <HomeHero kicker="" title="MyORL Clinic" excerpt={null} ctaHref="/el/contact" ctaLabel="" />,
+    );
+
+    expect(container.querySelector("p")).toBeNull();
+    expect(screen.queryByRole("link")).toBeNull();
+  });
 });

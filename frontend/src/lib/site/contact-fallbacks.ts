@@ -5,6 +5,9 @@ export type ResolvedPhoneLink = {
   display: string;
 };
 
+/** Stable coordinates from the clinic's legacy Google Business listing. */
+export const PRIMARY_CLINIC_COORDINATES = "37.983315,23.738826";
+
 function compactAddressFromCms(raw: string): string {
   return raw
     .trim()
@@ -112,9 +115,9 @@ export function resolvePrimaryPhoneLinks(settings: GlobalSettingsDTO): ResolvedP
   return links;
 }
 
-export function mapEmbedSrcFromAddress(addressBlock: string): string {
-  const q = encodeURIComponent(compactAddressFromCms(addressBlock));
-  return `https://maps.google.com/maps?q=${q}&z=16&output=embed&hl=el`;
+export function primaryClinicMapEmbedSrc(locale: Locale = "el"): string {
+  const q = encodeURIComponent(PRIMARY_CLINIC_COORDINATES);
+  return `https://maps.google.com/maps?q=${q}&z=16&output=embed&hl=${locale}`;
 }
 
 /**
@@ -122,7 +125,11 @@ export function mapEmbedSrcFromAddress(addressBlock: string): string {
  * new tab — unlike the embedded map, this needs no consent gating because the
  * user initiates it.
  */
-export function mapsSearchUrl(addressBlock: string): string {
-  const q = encodeURIComponent(compactAddressFromCms(addressBlock));
+export function primaryClinicMapsUrl(): string {
+  return mapsSearchUrlFromQuery(PRIMARY_CLINIC_COORDINATES);
+}
+
+export function mapsSearchUrlFromQuery(query: string): string {
+  const q = encodeURIComponent(query);
   return `https://www.google.com/maps/search/?api=1&query=${q}`;
 }

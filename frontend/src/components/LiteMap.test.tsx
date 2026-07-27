@@ -13,6 +13,8 @@ describe("LiteMap", () => {
     title: "Clinic location",
     loadLabel: "Show map",
     hint: "201 Alexandras Ave",
+    externalHref: "https://www.google.com/maps/search/?api=1&query=37.983315%2C23.738826",
+    externalLabel: "Open in Google Maps",
   };
 
   it("renders a click-to-load facade with no Google iframe on first paint", () => {
@@ -30,13 +32,19 @@ describe("LiteMap", () => {
     expect(iframe?.getAttribute("title")).toBe("Clinic location");
   });
 
-  it("does not open an external Google Maps tab from page map blocks", () => {
-    const openSpy = vi.spyOn(window, "open").mockReturnValue(null);
+  it("shows a secondary external Google Maps link after activation", () => {
     const { container } = render(<LiteMap {...props} />);
 
     fireEvent.click(screen.getByRole("button", { name: "Show map" }));
 
-    expect(openSpy).not.toHaveBeenCalled();
     expect(container.querySelector("iframe")).not.toBeNull();
+    expect(screen.getByRole("link", { name: "Open in Google Maps" })).toHaveAttribute(
+      "href",
+      props.externalHref,
+    );
+    expect(screen.getByRole("link", { name: "Open in Google Maps" })).toHaveAttribute(
+      "target",
+      "_blank",
+    );
   });
 });

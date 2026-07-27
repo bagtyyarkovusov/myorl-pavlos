@@ -1,7 +1,8 @@
 import { LiteMap } from "@/components/LiteMap";
 import { PrimaryContactPhones } from "@/components/PrimaryContactPhones";
 import {
-  mapEmbedSrcFromAddress,
+  primaryClinicMapEmbedSrc,
+  primaryClinicMapsUrl,
   resolveContactEmail,
   resolvePrimaryPhoneLinks,
   resolveVisitAddressBlock,
@@ -22,7 +23,8 @@ export function HomeVisitMapSection({ locale, settings }: HomeVisitMapSectionPro
   const addressBlock = resolveVisitAddressBlock(settings, locale);
   const hours = resolveVisitHours(settings, locale);
   const email = resolveContactEmail(settings);
-  const mapSrc = addressBlock ? mapEmbedSrcFromAddress(addressBlock) : null;
+  const mapSrc = addressBlock ? primaryClinicMapEmbedSrc(locale) : null;
+  const mapHref = addressBlock ? primaryClinicMapsUrl() : null;
 
   return (
     <section className={styles["section"]} aria-label={t.visitMapSectionLabel}>
@@ -68,6 +70,8 @@ export function HomeVisitMapSection({ locale, settings }: HomeVisitMapSectionPro
               title={t.visitMapMapTitle}
               loadLabel={t.visitMapShowLabel}
               hint={addressBlock}
+              externalHref={mapHref}
+              externalLabel={t.visitMapOpenLabel}
             />
           </div>
         ) : null}

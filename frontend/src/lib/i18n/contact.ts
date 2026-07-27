@@ -22,6 +22,7 @@ export type ContactStrings = {
   contactDetailsLabel: string;
   mapLabel: string;
   mapShowLabel: string;
+  mapOpenLabel: string;
 };
 
 const STRINGS: Record<Locale, ContactStrings> = {
@@ -47,6 +48,7 @@ const STRINGS: Record<Locale, ContactStrings> = {
     contactDetailsLabel: "Στοιχεία επικοινωνίας",
     mapLabel: "Χάρτης",
     mapShowLabel: "Εμφάνιση χάρτη",
+    mapOpenLabel: "Άνοιγμα στο Google Maps",
   },
   ru: {
     formTitle: "Отправить сообщение",
@@ -70,6 +72,7 @@ const STRINGS: Record<Locale, ContactStrings> = {
     contactDetailsLabel: "Контактная информация",
     mapLabel: "Карта",
     mapShowLabel: "Показать карту",
+    mapOpenLabel: "Открыть в Google Maps",
   },
 };
 

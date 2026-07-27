@@ -1,6 +1,6 @@
 import type { GlobalSettingsDTO, Locale } from "@/lib/cms/types";
 import { PrimaryContactPhones } from "@/components/PrimaryContactPhones";
-import { mapsSearchUrl, resolveTransitNote } from "@/lib/site/contact-fallbacks";
+import { mapsSearchUrlFromQuery, resolveTransitNote } from "@/lib/site/contact-fallbacks";
 
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import styles from "../../SiteHeaderClient.module.css";
@@ -48,7 +48,7 @@ export function UtilityBar({
               <span className={styles["status-dot"]} aria-hidden="true" />
               <a
                 className={`${styles["u-link"]} ${styles["site-utility__address"]}`}
-                href={mapsSearchUrl(address)}
+                href={mapsSearchUrlFromQuery(address)}
                 target="_blank"
                 rel="noopener noreferrer"
               >

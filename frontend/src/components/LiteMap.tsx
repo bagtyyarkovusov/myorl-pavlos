@@ -11,6 +11,9 @@ type LiteMapProps = {
   loadLabel: string;
   /** Optional secondary line on the facade, e.g. the clinic address. */
   hint?: string | null;
+  /** Optional direct Maps destination shown after the privacy-gated embed loads. */
+  externalHref?: string | null;
+  externalLabel?: string | null;
 };
 
 /**
@@ -18,19 +21,38 @@ type LiteMapProps = {
  * request) until the visitor activates it — avoids third-party calls on first
  * paint and the "Google blocks the embed" problem. Modeled on {@link LiteYouTube}.
  */
-export function LiteMap({ src, title, loadLabel, hint }: LiteMapProps) {
+export function LiteMap({
+  src,
+  title,
+  loadLabel,
+  hint,
+  externalHref,
+  externalLabel,
+}: LiteMapProps) {
   const [loaded, setLoaded] = useState(false);
 
   if (loaded) {
     return (
-      <iframe
-        className={styles.frame}
-        title={title}
-        src={src}
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        allowFullScreen
-      />
+      <>
+        <iframe
+          className={styles.frame}
+          title={title}
+          src={src}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
+        />
+        {externalHref && externalLabel ? (
+          <a
+            className={styles.externalLink}
+            href={externalHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {externalLabel}
+          </a>
+        ) : null}
+      </>
     );
   }
 

@@ -62,6 +62,8 @@ export type PageStrings = {
   officeMapTitle: string;
   /** Office page: show map CTA label */
   officeMapShowLabel: string;
+  /** Office page: direct Google Maps link after activation */
+  officeMapOpenLabel: string;
 };
 
 const STRINGS: Record<Locale, PageStrings> = {
@@ -120,6 +122,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     officeLabelEmail: "Email",
     officeMapTitle: "Τοποθεσία ιατρείου στο χάρτη",
     officeMapShowLabel: "Εμφάνιση χάρτη",
+    officeMapOpenLabel: "Άνοιγμα στο Google Maps",
   },
   ru: {
     home: "Главная",
@@ -182,6 +185,7 @@ const STRINGS: Record<Locale, PageStrings> = {
     officeLabelEmail: "Email",
     officeMapTitle: "Кабинет на карте",
     officeMapShowLabel: "Показать карту",
+    officeMapOpenLabel: "Открыть в Google Maps",
   },
 };
 

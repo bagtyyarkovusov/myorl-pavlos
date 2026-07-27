@@ -1,5 +1,6 @@
 import { CmsHtml } from "@/components/CmsHtml";
 import { LiteMap } from "@/components/LiteMap";
+import { mapsSearchUrlFromQuery } from "@/lib/site/contact-fallbacks";
 import { ContactClinicAccordion } from "@/components/contact/ContactClinicAccordion";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { PageSection } from "@/components/PageSection";
@@ -53,7 +54,13 @@ export function ContactPage({ page }: ContactPageProps) {
 
           {mapSrc ? (
             <section className={styles.mapColumn} aria-label={t.mapLabel}>
-              <LiteMap src={mapSrc} title={t.mapLabel} loadLabel={t.mapShowLabel} />
+              <LiteMap
+                src={mapSrc}
+                title={t.mapLabel}
+                loadLabel={t.mapShowLabel}
+                externalHref={mapsSearchUrlFromQuery(model.map?.query ?? "")}
+                externalLabel={t.mapOpenLabel}
+              />
             </section>
           ) : null}
         </div>

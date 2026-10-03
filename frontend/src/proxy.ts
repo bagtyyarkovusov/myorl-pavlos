@@ -87,6 +87,15 @@ export function proxy(request: NextRequest) {
   const segments = pathname.split("/").filter(Boolean);
   const locale: string | undefined = segments[0];
 
+  // TEMPORARY: the ru locale has zero published pages in Strapi, so /ru 404s.
+  // 307 (temporary) /ru/* → /el/* until Russian content lands.
+  // Remove once ru pages are published: https://github.com/bagtyyarkovusov/myorl-pavlos/issues/216
+  if (locale === "ru") {
+    const url = request.nextUrl.clone();
+    url.pathname = `/el${pathname.slice("/ru".length)}`;
+    return NextResponse.redirect(url, 307);
+  }
+
   if (locale && (LOCALES as readonly string[]).includes(locale)) {
     return continueWithPathname(request);
   }

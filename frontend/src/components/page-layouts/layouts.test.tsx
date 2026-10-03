@@ -2563,6 +2563,7 @@ describe("AppointmentPage", () => {
   });
 
   it("uses a MODX-style date-time picker with day, hour, then minute steps", () => {
+    vi.useFakeTimers({ now: new Date(2026, 5, 1, 12, 0, 0) });
     const apptPage: PageDTO = {
       ...BASE_PAGE,
       locale: "ru",
@@ -2592,9 +2593,11 @@ describe("AppointmentPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "10:30" }));
 
     expect(dateInput).toHaveValue("19/06/2026 10:30");
+    vi.useRealTimers();
   });
 
   it("enables Mon/Fri 09-14 and Tue/Thu 14-20, disables Wed/Sat/Sun", () => {
+    vi.useFakeTimers({ now: new Date(2026, 5, 1, 12, 0, 0) });
     const apptPage: PageDTO = {
       ...BASE_PAGE,
       locale: "ru",
@@ -2615,6 +2618,7 @@ describe("AppointmentPage", () => {
     expect(screen.getByRole("button", { name: "8" })).not.toBeDisabled();
     expect(screen.getByRole("button", { name: "9" })).not.toBeDisabled();
     expect(screen.getByRole("button", { name: "10" })).toBeDisabled();
+    vi.useRealTimers();
   });
 
   it("renders sections through SectionRenderer", () => {

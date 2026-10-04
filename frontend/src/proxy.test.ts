@@ -64,24 +64,11 @@ describe("proxy", () => {
     expect(response).toEqual({ type: "next" });
   });
 
-  it("redirects /ru/* to the /el equivalent with 307 while ru content is pending (#216)", async () => {
+  it("does not redirect when locale is already ru", async () => {
     const { proxy } = await import("@/proxy");
     const request = makeRequest("/ru/contact");
-    proxy(request);
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toContain("/el/contact");
-    expect(lastRedirectStatus).toBe(307);
-  });
-
-  it("redirects bare /ru to /el with 307 while ru content is pending (#216)", async () => {
-    const { proxy } = await import("@/proxy");
-    const request = makeRequest("/ru");
-    proxy(request);
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    const url = mockRedirect.mock.calls[0]![0];
-    expect(url.toString()).toBe("http://localhost:3000/el");
-    expect(lastRedirectStatus).toBe(307);
+    const response = proxy(request);
+    expect(response).toEqual({ type: "next" });
   });
 
   it("passes through bare slugs — handled by next.config.ts redirects()", async () => {

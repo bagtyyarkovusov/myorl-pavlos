@@ -726,9 +726,10 @@ describe("HomePage", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("link", { name: "Κλείσε ραντεβού" }),
-    ).toHaveAttribute("href", "/el/rantevou");
+    expect(screen.getByRole("link", { name: "Κλείσε ραντεβού" })).toHaveAttribute(
+      "href",
+      "/el/rantevou",
+    );
   });
 
   it("falls back to the localized appointment label when the hero section leaves ctaLabel empty", () => {
@@ -760,9 +761,10 @@ describe("HomePage", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("link", { name: "Κλείσε ραντεβού" }),
-    ).toHaveAttribute("href", "/el/rantevou");
+    expect(screen.getByRole("link", { name: "Κλείσε ραντεβού" })).toHaveAttribute(
+      "href",
+      "/el/rantevou",
+    );
   });
 
   it("does not use hard-coded quick access descriptions when excerpts are missing", () => {

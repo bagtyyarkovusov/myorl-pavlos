@@ -43,4 +43,19 @@ describe("HomeHero", () => {
 
     expect(screen.getByRole("img", { name: "Custom hero image" })).toBeDefined();
   });
+
+  it("omits the kicker paragraph when the kicker is empty", () => {
+    const { container } = render(
+      <HomeHero kicker="" title="MyORL Clinic" ctaHref="/el/contact" ctaLabel="Contact us" />,
+    );
+
+    expect(container.querySelector('[class*="hero-kicker"]')).toBeNull();
+  });
+
+  it("omits the CTA button when the label is empty", () => {
+    render(<HomeHero kicker="Welcome" title="MyORL Clinic" ctaHref="/el/contact" ctaLabel="" />);
+
+    expect(screen.queryByRole("link")).toBeNull();
+    expect(document.querySelector('[class*="hero-cta"]')).toBeNull();
+  });
 });

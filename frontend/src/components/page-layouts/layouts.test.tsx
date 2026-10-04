@@ -709,6 +709,64 @@ describe("HomePage", () => {
     expect(screen.queryByText("Τι γράφουν στο Google Maps")).toBeNull();
   });
 
+  it("falls back to the localized appointment label when the hero CTA label is missing", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+    };
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/rantevou"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+
+    expect(screen.getByRole("link", { name: "Κλείσε ραντεβού" })).toHaveAttribute(
+      "href",
+      "/el/rantevou",
+    );
+  });
+
+  it("falls back to the localized appointment label when the hero section leaves ctaLabel empty", () => {
+    const homePage: PageDTO = {
+      ...BASE_PAGE,
+      pageType: "home",
+      layoutVariant: "home",
+      title: "Home",
+      sections: [
+        {
+          __component: "sections.home-hero",
+          kicker: null,
+          heading: "CMS hero heading",
+          intro: null,
+          media: null,
+          ctaLabel: "",
+          ctaUrl: null,
+          ctaTargetPage: null,
+        },
+      ],
+    };
+
+    render(
+      <HomePage
+        page={homePage}
+        appointmentHref="/el/rantevou"
+        navigation={[]}
+        settings={MOCK_GLOBAL_SETTINGS}
+      />,
+    );
+
+    expect(screen.getByRole("link", { name: "Κλείσε ραντεβού" })).toHaveAttribute(
+      "href",
+      "/el/rantevou",
+    );
+  });
+
   it("does not use hard-coded quick access descriptions when excerpts are missing", () => {
     const homePage: PageDTO = {
       ...BASE_PAGE,

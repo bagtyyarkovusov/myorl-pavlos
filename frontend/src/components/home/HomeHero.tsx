@@ -29,16 +29,18 @@ export function HomeHero({ kicker, title, excerpt, media, ctaHref, ctaLabel }: H
     <PageSection ariaLabelledBy="home-hero-title" rhythm="hero" className={styles["hero-section"]}>
       <div className={styles["hero-grid"]}>
         <div className={styles["hero-copy"]}>
-          <p className={styles["hero-kicker"]}>{kicker}</p>
+          {kicker ? <p className={styles["hero-kicker"]}>{kicker}</p> : null}
           <h1 id="home-hero-title" className={styles["hero-title"]}>
             {title}
           </h1>
           {excerpt ? <p className={styles["hero-lead"]}>{excerpt}</p> : null}
-          <div className={styles["hero-cta"]}>
-            <ButtonLink href={ctaHref} className={styles["hero-cta-button"]}>
-              {ctaLabel}
-            </ButtonLink>
-          </div>
+          {ctaLabel ? (
+            <div className={styles["hero-cta"]}>
+              <ButtonLink href={ctaHref} className={styles["hero-cta-button"]}>
+                {ctaLabel}
+              </ButtonLink>
+            </div>
+          ) : null}
         </div>
 
         <div className={styles["hero-media-wrap"]}>

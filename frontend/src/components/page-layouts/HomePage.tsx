@@ -5,6 +5,7 @@ import { HomeVisitMapSection } from "@/components/home/HomeVisitMapSection";
 import { MenuAccessGrid } from "@/components/home/MenuAccessGrid";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import { getHomeRenderItemKey, orderHomeRenderItems } from "@/lib/home/home-render-order";
+import { getHeaderStrings } from "@/lib/i18n/header";
 import type { GlobalSettingsDTO, NavigationNodeDTO } from "@/lib/cms/types";
 import type { HomeTestimonialsPayload } from "@/lib/testimonials/home-payload";
 import type { PageLayoutProps } from "./_shared";
@@ -33,7 +34,7 @@ export function HomePage({
         ? `/${page.locale}/${homeHero.ctaTargetPage.slug}`
         : appointmentHref))
     : appointmentHref;
-  const heroCtaLabel = homeHero?.ctaLabel ?? "";
+  const heroCtaLabel = homeHero?.ctaLabel || getHeaderStrings(page.locale).bookAppointment;
   const orderedItems = orderHomeRenderItems(
     page.sections.filter((s) => s.__component !== "sections.home-hero"),
   );
